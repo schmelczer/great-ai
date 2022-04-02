@@ -1,27 +1,30 @@
 import re
 from typing import Dict, Iterable, List
 
-from helper import preprocess
+from config import model_key
+from preprocess import preprocess
 from models import DomainPrediction
 from sklearn.pipeline import Pipeline
 
-# from sus.use_model import use_model
+from good_ai import use_model
+from sus.clean import clean
 
-
-# @use_model(model_key, version="latest")
-def predict(
+@use_model(model_key, version="latest")
+def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
 ) -> List[DomainPrediction]:
     assert 0 <= cut_off_probability <= 1
+    cleaned = clean(text, convert_to_ascii=True)
+    text = re.sub(r"[^a-zA-Z0-9]", " ", cleaned)
 
     feature_names = model.named_steps["vectorizer"].get_feature_names_out()
 
     token_mapping = {
         preprocess(original): original
-        for original in re.sub(r"[^a-zA-Z0-9]", " ", text).split(" ")
+        for original in text.split(" ")
     }
 
-    features = model.named_steps["vectorizer"].transform([text])
+    features = model.named_steps["vectorizer"].transform([" ".join(token_mapping.keys())])
     prediction = model.named_steps["classifier"].predict_proba(features)[0]
     best_classes = sorted(enumerate(prediction), key=lambda v: v[1], reverse=True)
 

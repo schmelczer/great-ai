@@ -8,7 +8,8 @@ from types import TracebackType
 from typing import IO, Any, Dict, List, Optional, Type, Union
 
 import boto3
-from helper import DownloadProgressBar, UploadProgressBar, human_readable_to_byte
+
+from .helper import DownloadProgressBar, UploadProgressBar, human_readable_to_byte
 
 logger = logging.getLogger("open_s3")
 
@@ -158,6 +159,10 @@ class LargeFile:
     def version_ids(self) -> List[int]:
         return [self._get_version_from_key(key) for key in self._versions]
 
+    @property
+    def version(self) -> int:
+        return self._version
+
     def get(self, hide_progress: bool = False) -> Path:
         key = next(
             key
@@ -194,7 +199,7 @@ class LargeFile:
 
         return destination
 
-    def push(self, path: Union[Path, str], hide_progress: bool = False) -> None:
+    def push(self, path: Union[Path, str], hide_progress: bool = False) -> int:
         if isinstance(path, str):
             path = Path(path)
 

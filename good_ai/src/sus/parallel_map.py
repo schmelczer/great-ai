@@ -10,9 +10,11 @@ def parallel_map(
     function: Callable[[Any], Any],
     values: Iterable[Any],
     chunk_size: Optional[int] = None,
-    concurrency: int = psutil.cpu_count(),
+    concurrency: Optional[int] = None,
     disable_progress: bool = False,
 ) -> List[Any]:
+    if concurrency is None:
+        concurrency = psutil.cpu_count()
     assert concurrency > 0
     assert chunk_size is None or chunk_size > 0
 
