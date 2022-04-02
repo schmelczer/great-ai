@@ -7,7 +7,7 @@ from models import DomainPrediction
 from sklearn.pipeline import Pipeline
 
 from good_ai import use_model
-from sus.clean import clean
+from good_ai.utilities.clean import clean
 
 @use_model(model_key, version="latest")
 def predict_domain(

@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union
 
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString, Tag
-from sus.publication_tei.models.element import Paragraph
+from good_ai.utilities.publication_tei.models.element import Paragraph
 
 from ..clean import clean
 from .models import Affiliation, Author, Element, Meta, PublicationMetadata, Text, Title

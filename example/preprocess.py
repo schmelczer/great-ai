@@ -1,7 +1,7 @@
 import re
 
-from sus.clean import clean
-from sus.lemmatize_text import lemmatize_text
+from good_ai.utilities.clean import clean
+from good_ai.utilities.lemmatize_text import lemmatize_text
 
 
 def preprocess(text: str) -> str:

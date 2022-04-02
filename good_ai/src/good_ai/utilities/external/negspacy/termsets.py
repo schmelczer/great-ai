@@ -40,7 +40,7 @@ preceding = [
     "doubt",
     "negative for",
     "no",
-    "versus",
+    "vergood_ai.utilities",
     "without",
     "doesn't",
     "doesnt",
@@ -104,7 +104,7 @@ pseudo_clinical = pseudo + [
     "not ruled out",
     "not been ruled out",
     "not drain",
-    "no suspicious change",
+    "no good_ai.utilitiespicious change",
     "no interval change",
     "no significant interval change",
 ]

@@ -2,7 +2,7 @@ import logging
 from typing import Any, Optional
 
 from joblib import load
-from open_s3 import LargeFile
+from good_ai.open_s3 import LargeFile
 
 logger = logging.getLogger("models")
 
