@@ -6,9 +6,8 @@ import tempfile
 from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, Dict, List, Optional, Type, Union
-import boto3
-from botocore.exceptions import ClientError
 
+import boto3
 from helper import DownloadProgressBar, UploadProgressBar, human_readable_to_byte
 
 logger = logging.getLogger("open_s3")
@@ -62,7 +61,7 @@ class LargeFile:
         newline: Optional[str] = None,
         version: Optional[int] = None,
         keep_last_n: Optional[int] = None,
-        offline_mode: bool = False
+        offline_mode: bool = False,
     ):
         self._name: str = name
         self._version = version
@@ -79,7 +78,7 @@ class LargeFile:
 
         self._find_versions()
         self._check_mode_and_set_version()
-        
+
     @classmethod
     def configure_credentials(
         cls,
@@ -154,7 +153,7 @@ class LargeFile:
             logger.exception("Could not finish operation.")
 
         return True
-    
+
     @property
     def version_ids(self) -> List[int]:
         return [self._get_version_from_key(key) for key in self._versions]
@@ -175,8 +174,17 @@ class LargeFile:
             with tempfile.TemporaryDirectory() as tmp:
                 tmp_file_archive = Path(tmp) / f"{self._local_name}.tar.gz"
 
-                size = self._client.head_object(Bucket=self.bucket_name, Key=key)['ContentLength']
-                self._client.download_file(Bucket=self.bucket_name, Key=key, Filename=str(tmp_file_archive), Callback=None if hide_progress else DownloadProgressBar(size=size, name=key, logger=logger))
+                size = self._client.head_object(Bucket=self.bucket_name, Key=key)[
+                    "ContentLength"
+                ]
+                self._client.download_file(
+                    Bucket=self.bucket_name,
+                    Key=key,
+                    Filename=str(tmp_file_archive),
+                    Callback=None
+                    if hide_progress
+                    else DownloadProgressBar(size=size, name=key, logger=logger),
+                )
                 logger.info(f"Decompressing {self._local_name}")
                 shutil.unpack_archive(str(tmp_file_archive), tmp, "gztar")
                 tmp_file = Path(tmp) / self._local_name
@@ -193,7 +201,7 @@ class LargeFile:
         with tempfile.TemporaryDirectory() as tmp:
             if path.is_file():
                 logger.info(f"Copying file for {self._local_name}")
-                copy = shutil.copy 
+                copy: Any = shutil.copy
             else:
                 logger.info(f"Copying directory for {self._local_name}")
                 copy = shutil.copytree
@@ -216,7 +224,14 @@ class LargeFile:
             logger.info(f"Uploading {self._local_name} to S3 from {path}")
 
             file_to_be_uploaded = Path(tmp) / f"{self._local_name}.tar.gz"
-            self._client.upload_file(Filename=str(file_to_be_uploaded), Bucket=self.bucket_name, Key=self._s3_name, Callback=None if hide_progress else UploadProgressBar(file_to_be_uploaded, logger=logger))
+            self._client.upload_file(
+                Filename=str(file_to_be_uploaded),
+                Bucket=self.bucket_name,
+                Key=self._s3_name,
+                Callback=None
+                if hide_progress
+                else UploadProgressBar(file_to_be_uploaded, logger=logger),
+            )
 
         self.clean_up()
 
@@ -239,15 +254,21 @@ class LargeFile:
                 "Please configure the S3 access options by calling LargeFile.configure_credentials or set offline_mode=True in the constructor."
             )
 
-        self._client = boto3.client('s3', aws_access_key_id=self.access_key_id, aws_secret_access_key=self.secret_access_key, region_name=self.region_name, endpoint_url=self.endpoint_url)
-        
+        self._client = boto3.client(
+            "s3",
+            aws_access_key_id=self.access_key_id,
+            aws_secret_access_key=self.secret_access_key,
+            region_name=self.region_name,
+            endpoint_url=self.endpoint_url,
+        )
+
     def _find_versions(self) -> None:
         if self._offline_mode:
             self._fetch_versions_from_cache()
         else:
             self._create_client()
             self._fetch_versions_from_s3()
-        
+
         if self._versions:
             logger.info(f"Found versions: {self.version_ids}")
         else:
@@ -257,8 +278,7 @@ class LargeFile:
         logger.info(f"Fetching offline versions of {self._name}")
 
         self._versions = [
-            path
-            for path in self.cache_path.glob(f'{self._local_name}-*')
+            path for path in self.cache_path.glob(f"{self._local_name}-*")
         ]
 
     def _fetch_versions_from_s3(self) -> None:
@@ -267,10 +287,7 @@ class LargeFile:
             Bucket=self.bucket_name, Prefix=self._name
         )
         self._versions = (
-            sorted(
-                o["Key"]
-                for o in found_objects["Contents"]
-            )
+            sorted(o["Key"] for o in found_objects["Contents"])
             if "Contents" in found_objects
             else []
         )
@@ -309,22 +326,25 @@ class LargeFile:
     @property
     def _s3_name(self) -> str:
         return f"{self._name}/{self._version}"
-        
+
     @staticmethod
     def _get_version_from_key(key: Union[str, Path]) -> int:
         if isinstance(key, Path):
             return int(key.name.split("-")[-1])
         return int(key.split("/")[-1])
 
-
     def _delete_old_versions_from_s3(self) -> None:
         if self._keep_last_n is not None:
-            for key in (self._versions[: -self._keep_last_n] if self._keep_last_n > 0 else self._versions):
+            for key in (
+                self._versions[: -self._keep_last_n]
+                if self._keep_last_n > 0
+                else self._versions
+            ):
                 logger.info(
                     f"Removing old version (keep_last_n={self._keep_last_n}): {key}"
                 )
                 self._client.delete_object(Bucket=self.bucket_name, Key=key)
-                
+
     def _delete_old_versions_from_disk(self) -> None:
         self.cache_path.mkdir(parents=True, exist_ok=True)
 

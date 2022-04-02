@@ -1,5 +1,6 @@
-from pathlib import Path
 import unittest
+from pathlib import Path
+from typing import Any
 from unittest.mock import Mock, create_autospec, patch
 
 import botocore.session
@@ -14,23 +15,22 @@ credentials = {
     "aws_access_key_id": "YOUR_ACCESS_KEY_ID",
     "aws_secret_access_key": "YOUR_VERY_SECRET_ACCESS_KEY",
     "large_files_bucket_name": "create_a_bucket_and_put_its_name_here",
-    "other_key": 23,
     "endpoint_url": "this is optional, for backblaze, use this: https://s3.us-west-002.backblazeb2.com",
 }
 
 
 class TestLargeFile(unittest.TestCase):
-    def test_uninitialized(self):
+    def test_uninitialized(self) -> None:
         self.assertRaises(ValueError, LargeFile, "test-file")
 
-    def test_bad_file_modes(self):
+    def test_bad_file_modes(self) -> None:
         self.assertRaises(ValueError, LargeFile, "test-file", "w", version=3)
         self.assertRaises(ValueError, LargeFile, "test-file", "wb", version=3)
         self.assertRaises(ValueError, LargeFile, "test-file", "w+r")
         self.assertRaises(ValueError, LargeFile, "test-file", "test")
 
     @patch("botocore.session")
-    def test_initialized_with_dict(self, session):
+    def test_initialized_with_dict(self, session) -> None:
         session_mock = Mock()
         session.get_session = create_autospec(
             botocore.session.get_session, return_value=session_mock
@@ -79,7 +79,7 @@ class TestLargeFile(unittest.TestCase):
         self.assertEqual(lf._s3_name, "test-file/2")
 
     @patch("botocore.session")
-    def test_initialized_with_file(self, session):
+    def test_initialized_with_file(self, session: Any) -> None:
         session_mock = Mock()
         session.get_session = create_autospec(
             botocore.session.get_session, return_value=session_mock
