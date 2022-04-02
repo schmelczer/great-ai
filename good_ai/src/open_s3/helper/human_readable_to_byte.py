@@ -27,5 +27,5 @@ def human_readable_to_byte(size: str) -> int:
 
     scalar = float(results["scalar"])
     idx = possible_units.index(results["unit"].upper())
-    factor = 1024 ** idx
+    factor = 1024**idx
     return round(scalar * factor)
