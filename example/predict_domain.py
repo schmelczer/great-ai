@@ -2,12 +2,13 @@ import re
 from typing import Dict, Iterable, List
 
 from config import model_key
-from preprocess import preprocess
 from models import DomainPrediction
+from preprocess import preprocess
 from sklearn.pipeline import Pipeline
 
 from good_ai import use_model
 from good_ai.utilities.clean import clean
+
 
 @use_model(model_key, version="latest")
 def predict_domain(
@@ -19,12 +20,11 @@ def predict_domain(
 
     feature_names = model.named_steps["vectorizer"].get_feature_names_out()
 
-    token_mapping = {
-        preprocess(original): original
-        for original in text.split(" ")
-    }
+    token_mapping = {preprocess(original): original for original in text.split(" ")}
 
-    features = model.named_steps["vectorizer"].transform([" ".join(token_mapping.keys())])
+    features = model.named_steps["vectorizer"].transform(
+        [" ".join(token_mapping.keys())]
+    )
     prediction = model.named_steps["classifier"].predict_proba(features)[0]
     best_classes = sorted(enumerate(prediction), key=lambda v: v[1], reverse=True)
 

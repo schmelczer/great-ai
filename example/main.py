@@ -1,8 +1,8 @@
 import json
 
-from good_ai import LargeFile, process_batch
 from predict_domain import predict_domain
 
+from good_ai import LargeFile, process_batch
 
 if __name__ == "__main__":
     with open("data/s2-corpus-1583.json") as f:

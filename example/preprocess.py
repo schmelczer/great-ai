@@ -1,6 +1,5 @@
 import re
 
-from good_ai.utilities.clean import clean
 from good_ai.utilities.lemmatize_text import lemmatize_text
 
 
