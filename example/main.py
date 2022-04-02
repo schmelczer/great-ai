@@ -1,9 +1,8 @@
 import json
 
-from open_s3 import LargeFile
-from predict import predict_domain
+from good_ai import LargeFile, process_batch
+from predict_domain import predict_domain
 
-from good_ai import process_batch
 
 if __name__ == "__main__":
     with open("data/s2-corpus-1583.json") as f:

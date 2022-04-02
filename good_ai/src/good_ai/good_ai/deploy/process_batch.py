@@ -1,7 +1,7 @@
 from functools import partial, reduce
 from typing import Any, Callable, Iterable, Optional, Sequence
 
-from sus.parallel_map import parallel_map
+from good_ai.utilities.parallel_map import parallel_map
 
 from ..core import function_registry
 
