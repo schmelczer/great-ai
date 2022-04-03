@@ -3,6 +3,8 @@ import threading
 from logging import Logger
 from pathlib import Path
 
+from .bytes_to_megabytes import bytes_to_megabytes
+
 
 class ProgressBar:
     def __init__(self, file_size: int, logger: Logger, prefix: str):
@@ -17,10 +19,12 @@ class ProgressBar:
         with self._lock:
             self._seen_so_far += bytes_amount
             percentage = (self._seen_so_far / float(self._file_size)) * 100
-            size_length = len(str(self._file_size))
-            progress = str(self._seen_so_far).rjust(size_length)
+
+            file_size_mb = bytes_to_megabytes(self._file_size)
+            seen_so_far_mb = bytes_to_megabytes(self._seen_so_far)
+            progress = seen_so_far_mb.rjust(len(file_size_mb))
             self._logger.info(
-                f"{self._prefix} {progress}/{self._file_size} bytes ({percentage:.1f}%)"
+                f"{self._prefix} {progress}/{file_size_mb} MB ({percentage:.1f}%)"
             )
 
 

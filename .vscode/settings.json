@@ -1,3 +1,19 @@
 {
-  "cSpell.words": ["pydantic", "pyplot", "sklearn", "Tfidf", "Vectorizer"]
+  "cSpell.words": [
+    "botocore",
+    "pydantic",
+    "pyplot",
+    "sklearn",
+    "Tfidf",
+    "tinydb",
+    "Vectorizer",
+    "xmargin"
+  ],
+  "files.exclude": {
+    ".env": true,
+    "**/.cache": true,
+    "**/.ipynb_checkpoints": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true
+  }
 }

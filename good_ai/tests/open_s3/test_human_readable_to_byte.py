@@ -1,6 +1,6 @@
 import unittest
 
-from src.open_s3.helper import human_readable_to_byte
+from src.good_ai.open_s3.helper import human_readable_to_byte
 
 
 class TestHumanReadableToByte(unittest.TestCase):

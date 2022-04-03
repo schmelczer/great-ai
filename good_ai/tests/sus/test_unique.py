@@ -1,6 +1,6 @@
 import unittest
 
-from src.sus.unique import unique
+from src.good_ai.utilities.unique import unique
 
 original = [
     ("a", 1),

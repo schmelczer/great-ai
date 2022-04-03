@@ -1,7 +1,7 @@
 import unittest
 
-from src.sus.lemmatize_text import lemmatize_token
-from src.sus.nlp import nlp
+from src.good_ai.utilities.lemmatize_text import lemmatize_token
+from src.good_ai.utilities.nlp import nlp
 
 
 class TestLemmatizeToken(unittest.TestCase):

@@ -45,7 +45,7 @@ def predict_domain(
             )
         )
 
-        if sum(r.probability for r in results) >= cut_off_probability:
+        if sum(r.probability for r in results) >= cut_off_probability * 100:
             break
 
     return results

@@ -1,16 +1,23 @@
-from functools import partial, reduce
 from typing import Any, Callable, Iterable, Optional, Sequence
 
 from good_ai.utilities.parallel_map import parallel_map
 
-from ..core import function_registry
+from ..set_default_config import set_default_config_if_uninitialized
+from ..tracing import Trace, TracingContext
 
 
 def process_batch(
     function: Callable[..., Any],
     batch: Iterable[Any],
     concurrency: Optional[int] = None,
-) -> Sequence[Any]:
-    plugins = function_registry.get_plugins(function)
-    composed = partial(reduce, lambda r, f: f(r), plugins)
-    return parallel_map(composed, batch, concurrency=concurrency)
+) -> Sequence[Trace]:
+    set_default_config_if_uninitialized()
+
+    def inner(input: Any) -> Trace:
+        with TracingContext() as t:
+            t.log_input(input)
+            result = function(input)
+            output = t.log_output(result)
+        return output
+
+    return parallel_map(inner, batch, concurrency=concurrency)

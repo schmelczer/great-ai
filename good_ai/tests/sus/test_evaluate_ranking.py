@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from src.sus.evaluate_ranking import evaluate_ranking
+from src.good_ai.utilities.evaluate_ranking import evaluate_ranking
 
 
 class TestEvaluateRanking(unittest.TestCase):

@@ -1,4 +1,4 @@
-from sus.publication_tei.models import (
+from good_ai.utilities.publication_tei.models import (
     Affiliation,
     Author,
     Meta,

@@ -3,8 +3,8 @@
 import logging
 from pathlib import Path
 
-from large_file import LargeFile
-from parse_arguments import parse_arguments
+from .large_file import LargeFile
+from .parse_arguments import parse_arguments
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

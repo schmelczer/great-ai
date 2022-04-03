@@ -8,7 +8,7 @@ import botocore.session
 PATH = Path(__file__).parent.resolve()
 
 
-from src.open_s3 import LargeFile
+from src.good_ai import LargeFile
 
 credentials = {
     "aws_region_name": "your_region_like_eu-west-2",
@@ -30,7 +30,7 @@ class TestLargeFile(unittest.TestCase):
         self.assertRaises(ValueError, LargeFile, "test-file", "test")
 
     @patch("botocore.session")
-    def test_initialized_with_dict(self, session) -> None:
+    def test_initialized_with_dict(self, session: Any) -> None:
         session_mock = Mock()
         session.get_session = create_autospec(
             botocore.session.get_session, return_value=session_mock
@@ -58,7 +58,13 @@ class TestLargeFile(unittest.TestCase):
 
         session_mock.create_client = Mock(return_value=s3)
 
-        LargeFile.configure_credentials(**credentials)
+        LargeFile.configure_credentials(
+            aws_region_name=credentials["aws_region_name"],
+            aws_access_key_id=credentials["aws_access_key_id"],
+            aws_secret_access_key=credentials["aws_secret_access_key"],
+            large_files_bucket_name=credentials["large_files_bucket_name"],
+            endpoint_url=credentials["endpoint_url"],
+        )
         lf = LargeFile("test-file")
         session_mock.set_credentials.assert_called_once_with(
             access_key=credentials["aws_access_key_id"],
