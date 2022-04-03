@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from src.sus.publication_tei import PublicationTEI
+from src.good_ai.utilities.publication_tei import PublicationTEI
 
 from .data.parsed import authors, content, metadata, sentences
 

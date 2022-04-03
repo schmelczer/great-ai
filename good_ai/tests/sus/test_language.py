@@ -1,6 +1,10 @@
 import unittest
 
-from src.sus.language import english_name_of_language, is_english, predict_language
+from src.good_ai.utilities.language import (
+    english_name_of_language,
+    is_english,
+    predict_language,
+)
 
 
 class TestLanguage(unittest.TestCase):

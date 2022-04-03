@@ -5,7 +5,7 @@ import shutil
 import tempfile
 from pathlib import Path
 from types import TracebackType
-from typing import IO, Any, Dict, List, Optional, Type, Union
+from typing import IO, Any, List, Mapping, Optional, Type, Union, cast
 
 import boto3
 
@@ -65,7 +65,7 @@ class LargeFile:
         offline_mode: bool = False,
     ):
         self._name: str = name
-        self._version = version
+        self._version: int = cast(int, version)
         self._mode: str = mode
         self._keep_last_n = keep_last_n
         self._offline_mode = offline_mode
@@ -89,7 +89,7 @@ class LargeFile:
         aws_secret_access_key: str,
         large_files_bucket_name: str,
         endpoint_url: Optional[str] = None,
-        **_: Dict[str, Any],
+        **_: Mapping[str, Any],
     ) -> None:
         cls.region_name = aws_region_name
         cls.access_key_id = aws_access_key_id
@@ -188,7 +188,7 @@ class LargeFile:
                     Filename=str(tmp_file_archive),
                     Callback=None
                     if hide_progress
-                    else DownloadProgressBar(size=size, name=key, logger=logger),
+                    else DownloadProgressBar(name=str(key), size=size, logger=logger),
                 )
                 logger.info(f"Decompressing {self._local_name}")
                 shutil.unpack_archive(str(tmp_file_archive), tmp, "gztar")
@@ -199,7 +199,7 @@ class LargeFile:
 
         return destination
 
-    def push(self, path: Union[Path, str], hide_progress: bool = False) -> int:
+    def push(self, path: Union[Path, str], hide_progress: bool = False) -> None:
         if isinstance(path, str):
             path = Path(path)
 
@@ -235,7 +235,7 @@ class LargeFile:
                 Key=self._s3_name,
                 Callback=None
                 if hide_progress
-                else UploadProgressBar(file_to_be_uploaded, logger=logger),
+                else UploadProgressBar(path=file_to_be_uploaded, logger=logger),
             )
 
         self.clean_up()

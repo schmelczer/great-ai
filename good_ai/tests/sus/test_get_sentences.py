@@ -1,6 +1,6 @@
 import unittest
 
-from src.sus.get_sentences import get_sentences
+from src.good_ai.utilities.get_sentences import get_sentences
 
 
 class TestGetSentences(unittest.TestCase):

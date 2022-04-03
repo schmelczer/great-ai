@@ -1,6 +1,6 @@
 import unittest
 
-from src.sus.match_names.match_names import match_names
+from src.good_ai.utilities.match_names.match_names import match_names
 
 
 class TestMatchNames(unittest.TestCase):
