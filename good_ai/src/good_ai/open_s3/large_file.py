@@ -218,24 +218,26 @@ class LargeFile:
 
             copy(str(path), str(Path(tmp) / self._local_name))
 
-            logger.info(f"Compressing {self._local_name}")
-            shutil.make_archive(
-                str(Path(tmp) / self._local_name),
-                "gztar",
-                tmp,
-            )
+            with tempfile.TemporaryDirectory() as tmp2:
+                # A directory has to be zipped and it cannot contain the output of the zipping
+                logger.info(f"Compressing {self._local_name}")
+                shutil.make_archive(
+                    str(Path(tmp2) / self._local_name),
+                    "gztar",
+                    tmp,
+                )
 
-            logger.info(f"Uploading {self._local_name} to S3 from {path}")
+                logger.info(f"Uploading {self._local_name} to S3 from {path}")
 
-            file_to_be_uploaded = Path(tmp) / f"{self._local_name}.tar.gz"
-            self._client.upload_file(
-                Filename=str(file_to_be_uploaded),
-                Bucket=self.bucket_name,
-                Key=self._s3_name,
-                Callback=None
-                if hide_progress
-                else UploadProgressBar(path=file_to_be_uploaded, logger=logger),
-            )
+                file_to_be_uploaded = Path(tmp2) / f"{self._local_name}.tar.gz"
+                self._client.upload_file(
+                    Filename=str(file_to_be_uploaded),
+                    Bucket=self.bucket_name,
+                    Key=self._s3_name,
+                    Callback=None
+                    if hide_progress
+                    else UploadProgressBar(path=file_to_be_uploaded, logger=logger),
+                )
 
         self.clean_up()
 
