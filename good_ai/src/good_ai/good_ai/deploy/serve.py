@@ -1,15 +1,14 @@
 from typing import Any, Callable
 
 import uvicorn
-from fastapi import FastAPI, status
-from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi.responses import RedirectResponse
-from starlette.responses import HTMLResponse
+from fastapi import status
 from typing_extensions import Never
+
+from good_ai.good_ai.deploy.create_fastapi_app import create_fastapi_app
 
 from ..set_default_config import set_default_config_if_uninitialized
 from ..tracing import TracingContext
-from ..views import HealthCheckResponse, Trace
+from ..views import Trace
 
 
 def serve(
@@ -17,24 +16,7 @@ def serve(
 ) -> Never:
     set_default_config_if_uninitialized()
 
-    app = FastAPI(
-        title=function.__name__.capitalize().replace("_", " "),
-        description=f"REST API wrapper for interacting with the {function.__name__} function.",
-        docs_url=None,
-        redoc_url=None,
-    )
-
-    @app.get("/", include_in_schema=False)
-    def redirect_to_docs() -> RedirectResponse:
-        return RedirectResponse("/docs")
-
-    @app.get("/docs", include_in_schema=False)
-    def custom_swagger_ui_html() -> HTMLResponse:
-        return get_swagger_ui_html(openapi_url="openapi.json", title=app.title)
-
-    @app.get("/health", status_code=status.HTTP_200_OK)
-    def check_health() -> HealthCheckResponse:
-        return HealthCheckResponse(is_healthy=True)
+    app = create_fastapi_app(function.__name__)
 
     @app.post("/score", status_code=status.HTTP_200_OK, response_model=Trace)
     def process(input: Any) -> Trace:

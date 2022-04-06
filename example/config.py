@@ -1,1 +1,1 @@
-model_key = "domain-prediction-v2"
+model_key = "small-domain-prediction-v2"
