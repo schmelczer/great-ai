@@ -81,28 +81,10 @@ class LargeFile:
         self._check_mode_and_set_version()
 
     @classmethod
-    def configure_credentials(
-        cls,
-        *,
-        aws_region_name: str,
-        aws_access_key_id: str,
-        aws_secret_access_key: str,
-        large_files_bucket_name: str,
-        endpoint_url: Optional[str] = None,
-        **_: Mapping[str, Any],
-    ) -> None:
-        cls.region_name = aws_region_name
-        cls.access_key_id = aws_access_key_id
-        cls.secret_access_key = aws_secret_access_key
-        cls.bucket_name = large_files_bucket_name
-        cls.endpoint_url = endpoint_url
-
-    @classmethod
     def configure_credentials_from_file(
         cls,
         secrets_path: Union[Path, str],
     ) -> None:
-
         if isinstance(secrets_path, str):
             secrets_path = Path(secrets_path)
 
@@ -113,6 +95,25 @@ class LargeFile:
         credentials.read(secrets_path)
         credentials.default_section
         cls.configure_credentials(**credentials[credentials.default_section])
+
+    
+    @classmethod
+    def configure_credentials(
+        cls,
+        *,
+        aws_region_name: str,
+        aws_access_key_id: str,
+        aws_secret_access_key: str,
+        large_files_bucket_name: str,
+        aws_endpoint_url: Optional[str] = None,
+        **_: Mapping[str, Any],
+    ) -> None:
+        cls.region_name = aws_region_name
+        cls.access_key_id = aws_access_key_id
+        cls.secret_access_key = aws_secret_access_key
+        cls.bucket_name = large_files_bucket_name
+        cls.endpoint_url = aws_endpoint_url
+
 
     def __enter__(self) -> IO:
         self._file: IO[Any] = (
