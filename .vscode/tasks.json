@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Format and lint Python",
+      "type": "shell",
+      "command": "source .env/bin/activate && scripts/format-python.sh good_ai && scripts/check-python.sh good_ai",
+      "windows": {
+        "command": ".env/bin/activate.bat; scripts/format-python.sh good_ai; scripts\\check-python.sh good_ai"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Test Python",
+      "type": "shell",
+      "command": "source .env/bin/activate && python3 -m pytest good_ai",
+      "windows": {
+        "command": ".env/bin/activate.bat; python3 -m pytest good_ai"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}
