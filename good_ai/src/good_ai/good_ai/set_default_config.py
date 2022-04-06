@@ -33,7 +33,7 @@ def set_default_config(
 
     _initialized = True
 
-    logger.info(f"Defaults: configured ✅")
+    logger.info("Defaults: configured ✅")
 
 
 def _initialize_large_file(s3_config: Path) -> None:

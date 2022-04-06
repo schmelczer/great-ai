@@ -1,11 +1,14 @@
 {
   "cSpell.words": [
+    "boto",
     "botocore",
     "pydantic",
     "pyplot",
     "sklearn",
+    "starlette",
     "Tfidf",
     "tinydb",
+    "uvicorn",
     "Vectorizer",
     "xmargin"
   ],

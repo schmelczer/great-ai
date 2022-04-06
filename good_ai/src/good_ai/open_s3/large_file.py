@@ -96,7 +96,6 @@ class LargeFile:
         credentials.default_section
         cls.configure_credentials(**credentials[credentials.default_section])
 
-    
     @classmethod
     def configure_credentials(
         cls,
@@ -113,7 +112,6 @@ class LargeFile:
         cls.secret_access_key = aws_secret_access_key
         cls.bucket_name = large_files_bucket_name
         cls.endpoint_url = aws_endpoint_url
-
 
     def __enter__(self) -> IO:
         self._file: IO[Any] = (
