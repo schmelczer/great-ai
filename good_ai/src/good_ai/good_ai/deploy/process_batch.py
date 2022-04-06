@@ -3,7 +3,8 @@ from typing import Any, Callable, Iterable, Optional, Sequence
 from good_ai.utilities.parallel_map import parallel_map
 
 from ..set_default_config import set_default_config_if_uninitialized
-from ..tracing import Trace, TracingContext
+from ..tracing import TracingContext
+from ..views import Trace
 
 
 def process_batch(

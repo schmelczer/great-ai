@@ -5,12 +5,10 @@ from datetime import datetime
 from types import TracebackType
 from typing import Any, DefaultDict, List, Optional, Type
 
+from ..views import Model, Trace
 from .persistence import PersistenceDriver
 
 logger = logging.getLogger("good_ai")
-
-from .model import Model
-from .trace import Trace
 
 
 class TracingContext:

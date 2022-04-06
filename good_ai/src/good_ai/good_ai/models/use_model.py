@@ -1,7 +1,8 @@
 from functools import wraps
 from typing import Any, Callable, Literal, Union
 
-from ..tracing import Model, TracingContext
+from ..tracing import TracingContext
+from ..views import Model
 from .load_model import load_model
 
 
