@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Any, Callable, Literal, Union
+from typing import Any, Callable, Dict, List, Literal, Union
 
 from ..tracing import TracingContext
 from ..views import Model
@@ -23,7 +23,7 @@ def use_model(
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
+        def wrapper(*args: List[Any], **kwargs: Dict[str, Any]) -> Any:
             context = TracingContext.get_current_context()
             if context:
                 context.log_model(Model(key=key, version=actual_version))

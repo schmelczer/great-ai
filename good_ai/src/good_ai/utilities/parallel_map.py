@@ -23,7 +23,7 @@ def parallel_map(
     if not chunk_size:
         chunk_size = max(1, ceil(len(values) / concurrency / 10))
 
-    if concurrency == 1:
+    if concurrency == 1 or len(values) <= chunk_size:
         iterable = values if disable_progress else tqdm(values)
         return [function(v) for v in iterable]
 

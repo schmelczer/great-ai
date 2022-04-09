@@ -32,7 +32,6 @@ def serve(
     @app.post("/score", status_code=status.HTTP_200_OK, response_model=Trace)
     def process(input: Any) -> Trace:
         with TracingContext() as t:
-            t.log_input(input)
             result = function(input)
             output = t.log_output(result)
         return output
