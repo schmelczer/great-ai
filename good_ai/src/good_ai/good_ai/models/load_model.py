@@ -5,7 +5,7 @@ from joblib import load
 
 from good_ai.open_s3 import LargeFile
 
-from ..set_default_config import set_default_config_if_uninitialized
+from ..context import get_context
 
 logger = logging.getLogger("models")
 
@@ -13,7 +13,7 @@ logger = logging.getLogger("models")
 def load_model(
     key: str, version: Optional[int] = None, return_path: bool = False
 ) -> Tuple[Any, int]:
-    set_default_config_if_uninitialized()
+    get_context()  # will setup LargeFile if there was no config set
 
     file = LargeFile(name=key, mode="rb", version=version)
 

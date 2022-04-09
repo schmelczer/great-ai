@@ -15,6 +15,7 @@ def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
 ) -> List[DomainPrediction]:
     assert 0 <= cut_off_probability <= 1
+    
     cleaned = clean(text, convert_to_ascii=True)
     text = re.sub(r"[^a-zA-Z0-9]", " ", cleaned)
 

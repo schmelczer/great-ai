@@ -3,12 +3,13 @@ import plotly.express as px
 from dash import Dash, dcc, html
 from flask import Flask
 
-from ..config import METRICS_PATH
+from good_ai.good_ai.context.get_context import get_context
+
 from ..helper import snake_case_to_text
 
 
 def create_dash_app(function_name: str) -> Flask:
-    app = Dash(function_name, requests_pathname_prefix=METRICS_PATH + "/")
+    app = Dash(function_name, requests_pathname_prefix=get_context().metrics_path + "/")
 
     markdown_text = f"""
     # {snake_case_to_text(function_name)} - metrics

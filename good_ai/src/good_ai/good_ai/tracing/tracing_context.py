@@ -5,14 +5,13 @@ from datetime import datetime
 from types import TracebackType
 from typing import Any, DefaultDict, List, Optional, Type
 
+from ..context import get_context
 from ..views import Model, Trace
-from .persistence import PersistenceDriver
 
 logger = logging.getLogger("good_ai")
 
 
 class TracingContext:
-    persistence_driver: PersistenceDriver
     _contexts: DefaultDict[int, List["TracingContext"]] = defaultdict(lambda: [])
 
     def __init__(self) -> None:
@@ -62,7 +61,7 @@ class TracingContext:
 
         if type is None:
             assert self._trace is not None
-            self.persistence_driver.save_document(self._trace.dict())
+            get_context().persistence.save_document(self._trace.dict())
         else:
             logger.exception(f"Could not finish operation: {exception}")
 
