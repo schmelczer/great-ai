@@ -2,6 +2,8 @@
   "cSpell.words": [
     "boto",
     "botocore",
+    "iloc",
+    "inplace",
     "plotly",
     "pydantic",
     "pyplot",

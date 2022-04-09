@@ -11,6 +11,7 @@ from .context import Context
 
 logger = logging.getLogger("good_ai")
 
+
 _context: Optional[Context] = None
 PRODUCTION_KEY = "production"
 
@@ -36,10 +37,14 @@ def set_default_config(
     _initialize_large_file(s3_config)
     _set_seed(seed)
 
+    is_threadsafe = not isinstance(persistence_driver, TinyDbDriver)
+    if not is_threadsafe:
+        logger.warn("The selected persistence driver (TinyDbDriver) is not threadsafe")
     _context = Context(
         metrics_path="/metrics",
         persistence=persistence_driver,
         is_production=is_production,
+        is_threadsafe=is_threadsafe,
     )
 
     logger.info("Defaults: configured ✅")

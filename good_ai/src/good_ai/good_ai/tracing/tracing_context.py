@@ -3,7 +3,7 @@ import threading
 from collections import defaultdict
 from datetime import datetime
 from types import TracebackType
-from typing import Any, DefaultDict, List, Optional, Type
+from typing import Any, DefaultDict, Dict, List, Optional, Type
 
 from ..context import get_context
 from ..views import Model, Trace
@@ -16,25 +16,26 @@ class TracingContext:
 
     def __init__(self) -> None:
         self._models: List[Model] = []
-        self._input: Any = None
+        self._values: Dict[str, Any] = {}
         self._output: Any = None
         self._trace: Optional[Trace] = None
         self._start_time = datetime.utcnow()
 
-    def log_input(self, input: Any) -> None:
-        self._input = input
+    def log_value(self, name: str, value: Any) -> None:
+        self._values[name] = value
 
     def log_model(self, model: Model) -> None:
         self._models.append(model)
 
-    def log_output(self, output: Any) -> Trace:
+    def log_output(self, output: Any, evaluation_id: Optional[str] = None) -> Trace:
         self._output = output
 
         delta_time = (datetime.utcnow() - self._start_time).microseconds / 1000
         self._trace = Trace(
+            evaluation_id=evaluation_id,
             created=self._start_time.isoformat(),
             execution_time_ms=delta_time,
-            input=self._input,
+            logged_values=self._values,
             models=self._models,
             output=self._output,
         )
@@ -61,7 +62,7 @@ class TracingContext:
 
         if type is None:
             assert self._trace is not None
-            get_context().persistence.save_document(self._trace.dict())
+            get_context().persistence.save_document(self._trace)
         else:
             logger.exception(f"Could not finish operation: {exception}")
 

@@ -1,0 +1,2 @@
+class ArgumentValidationError(Exception):
+    pass
