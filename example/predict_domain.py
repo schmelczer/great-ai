@@ -1,23 +1,22 @@
 import re
 from typing import Dict, Iterable, List
 
-
 from config import model_key
 from models import DomainPrediction
 from preprocess import preprocess
 from sklearn.pipeline import Pipeline
 
-from good_ai import use_model, log_argument, log_metric
+from good_ai import log_argument, log_metric, use_model
 from good_ai.utilities.clean import clean
 
 
 @use_model(model_key, version="latest")
-@log_argument('text', validator=lambda t: len(t) > 0)
+@log_argument("text", validator=lambda t: len(t) > 0)
 def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
 ) -> List[DomainPrediction]:
     assert 0 <= cut_off_probability <= 1
-    log_metric('text_length', len(text))
+    log_metric("text_length", len(text))
 
     cleaned = clean(text, convert_to_ascii=True)
     text = re.sub(r"[^a-zA-Z0-9]", " ", cleaned)

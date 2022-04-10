@@ -1,10 +1,12 @@
+from typing import Any, Dict, List, Optional, Union
+
 import pandas as pd
 from dash import Dash, dash_table, html
 from dash.dependencies import Input, Output
 from flask import Flask
 
-from good_ai.good_ai.context.get_context import get_context
-
+from ..context import get_context
+from ..views import Filter, SortBy, operators
 from .get_description import get_description
 
 
@@ -12,21 +14,7 @@ def create_dash_app(function_name: str) -> Flask:
     app = Dash(function_name, requests_pathname_prefix=get_context().metrics_path + "/")
 
     documents = get_context().persistence.get_documents()
-
-    df = pd.DataFrame(
-        [
-            {
-                "id": d.evaluation_id,
-                "created": d.created,
-                "execution_time_ms": d.execution_time_ms,
-                "models": ", ".join(f"{m.key}:{m.version}" for m in d.models),
-                "evaluation": d.evaluation,
-                **d.logged_values,
-            }
-            for d in documents
-        ]
-    )
-    print(df)
+    df = pd.DataFrame(documents)
 
     app.layout = html.Div(
         children=[
@@ -45,45 +33,10 @@ def create_dash_app(function_name: str) -> Flask:
                     sort_by=[],
                 ),
                 style={"height": 750, "overflowY": "scroll"},
-                className="six columns",
             ),
-            html.Div(id="table-paging-with-graph-container", className="five columns"),
+            html.Div(id="table-paging-with-graph-container"),
         ]
     )
-
-    operators = [
-        ["ge ", ">="],
-        ["le ", "<="],
-        ["lt ", "<"],
-        ["gt ", ">"],
-        ["ne ", "!="],
-        ["eq ", "="],
-        ["contains "],
-        ["datestartswith "],
-    ]
-
-    def split_filter_part(filter_part):
-        for operator_type in operators:
-            for operator in operator_type:
-                if operator in filter_part:
-                    name_part, value_part = filter_part.split(operator, 1)
-                    name = name_part[name_part.find("{") + 1 : name_part.rfind("}")]
-
-                    value_part = value_part.strip()
-                    v0 = value_part[0]
-                    if v0 == value_part[-1] and v0 in ("'", '"', "`"):
-                        value = value_part[1:-1].replace("\\" + v0, v0)
-                    else:
-                        try:
-                            value = float(value_part)
-                        except ValueError:
-                            value = value_part
-
-                    # word operators need spaces after them in the filter string,
-                    # but we don't want these later
-                    return name, operator_type[0].strip(), value
-
-        return [None] * 3
 
     @app.callback(
         Output("table-paging-with-graph", "data"),
@@ -92,32 +45,18 @@ def create_dash_app(function_name: str) -> Flask:
         Input("table-paging-with-graph", "sort_by"),
         Input("table-paging-with-graph", "filter_query"),
     )
-    def update_table(page_current, page_size, sort_by, filter):
-        filtering_expressions = filter.split(" && ")
-        dff = df
-        for filter_part in filtering_expressions:
-            col_name, operator, filter_value = split_filter_part(filter_part)
+    def update_table(
+        page_current: int, page_size: int, sort_by: List[SortBy], filter: str
+    ) -> List[Dict[str, Any]]:
+        conjunctive_filters = [get_filter(f) for f in filter.split(" && ")]
+        non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
 
-            if operator in ("eq", "ne", "lt", "le", "gt", "ge"):
-                # these operators match pandas series operator method names
-                dff = dff.loc[getattr(dff[col_name], operator)(filter_value)]
-            elif operator == "contains":
-                dff = dff.loc[dff[col_name].str.contains(filter_value)]
-            elif operator == "datestartswith":
-                # this is a simplification of the front-end filtering logic,
-                # only works with complete fields in standard format
-                dff = dff.loc[dff[col_name].str.startswith(filter_value)]
-
-        if len(sort_by):
-            dff = dff.sort_values(
-                [col["column_id"] for col in sort_by],
-                ascending=[col["direction"] == "asc" for col in sort_by],
-                inplace=False,
-            )
-
-        return dff.iloc[
-            page_current * page_size : (page_current + 1) * page_size
-        ].to_dict("records")
+        return get_context().persistence.query(
+            conjunctive_filters=non_null_conjunctive_filters,
+            sort_by=sort_by,
+            skip=page_current * page_size,
+            take=page_size,
+        )
 
     # @app.callback(
     #     Output('table-paging-with-graph-container', "children"),
@@ -150,3 +89,24 @@ def create_dash_app(function_name: str) -> Flask:
     #     )
 
     return app.server
+
+
+def get_filter(description: str) -> Optional[Filter]:
+    print(description)
+    for operator in operators:
+        if operator in description:
+            name_part, value_part = description.split(operator, 1)
+            value_part = value_part.strip()
+            name_part = name_part[name_part.find("{") + 1 : name_part.rfind("}")]
+
+            v0 = value_part[0]
+            if v0 == value_part[-1] and v0 in ("'", '"', "`"):
+                value: Union[str, float] = value_part[1:-1].replace("\\" + v0, v0)
+            else:
+                try:
+                    value = float(value_part)
+                except ValueError:
+                    value = value_part
+            return Filter(property=name_part, operator=operator, value=value)
+
+    return None

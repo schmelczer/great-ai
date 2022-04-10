@@ -2,7 +2,7 @@ import threading
 from collections import defaultdict
 from datetime import datetime
 from types import TracebackType
-from typing import Any, DefaultDict, Dict, List, Optional, Type
+from typing import Any, DefaultDict, Dict, List, Literal, Optional, Type
 
 from ..context import get_context
 from ..views import Model, Trace
@@ -53,7 +53,7 @@ class TracingContext:
         type: Optional[Type[BaseException]],
         exception: Optional[BaseException],
         traceback: Optional[TracebackType],
-    ) -> bool:
+    ) -> Literal[False]:
         assert self._contexts[threading.get_ident()][-1] == self
         self._contexts[threading.get_ident()].remove(self)
 

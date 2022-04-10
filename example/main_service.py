@@ -1,10 +1,9 @@
-import json
-from random import shuffle
+#!/usr/bin/env python3
 
-from devtools import debug
+
 from predict_domain import predict_domain
 
-from good_ai import process_batch, serve
+from good_ai import serve
 
 if __name__ == "__main__":
     serve(predict_domain)
