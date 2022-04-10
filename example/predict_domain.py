@@ -1,16 +1,21 @@
 import re
 from typing import Dict, Iterable, List
 
-from config import model_key
-from models import DomainPrediction
 from preprocess import preprocess
+from pydantic import BaseModel
 from sklearn.pipeline import Pipeline
 
 from good_ai import log_argument, log_metric, use_model
 from good_ai.utilities.clean import clean
 
 
-@use_model(model_key, version="latest")
+class DomainPrediction(BaseModel):
+    domain: str
+    probability: float
+    explanation: List[str]
+
+
+@use_model("small-domain-prediction-v2", version="latest")
 @log_argument("text", validator=lambda t: len(t) > 0)
 def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
