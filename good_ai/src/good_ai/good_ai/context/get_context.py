@@ -1,16 +1,14 @@
-import logging
 import os
 import random
+from logging import INFO, Logger
 from pathlib import Path
 from typing import Optional, cast
 
 from good_ai.open_s3 import LargeFile
+from good_ai.utilities.logger import create_logger
 
 from ..persistence import PersistenceDriver, TinyDbDriver
 from .context import Context
-
-logger = logging.getLogger("good_ai")
-
 
 _context: Optional[Context] = None
 PRODUCTION_KEY = "production"
@@ -24,17 +22,20 @@ def get_context() -> Context:
 
 
 def set_default_config(
-    log_level: int = logging.INFO,
+    log_level: int = INFO,
     s3_config: Path = Path("s3.ini"),
     seed: int = 42,
     persistence_driver: PersistenceDriver = TinyDbDriver(Path("tracing_database.json")),
     is_production_mode_override: Optional[bool] = None,
 ) -> None:
     global _context
-    logging.basicConfig(level=log_level)
 
-    is_production = _is_in_production_mode(override=is_production_mode_override)
-    _initialize_large_file(s3_config)
+    logger = create_logger("good_ai", level=log_level)
+
+    is_production = _is_in_production_mode(
+        override=is_production_mode_override, logger=logger
+    )
+    _initialize_large_file(s3_config, logger=logger)
     _set_seed(seed)
 
     is_threadsafe = not isinstance(persistence_driver, TinyDbDriver)
@@ -45,12 +46,13 @@ def set_default_config(
         persistence=persistence_driver,
         is_production=is_production,
         is_threadsafe=is_threadsafe,
+        logger=logger,
     )
 
     logger.info("Defaults: configured ✅")
 
 
-def _is_in_production_mode(override: Optional[bool]) -> bool:
+def _is_in_production_mode(override: Optional[bool], logger: Logger) -> bool:
     environment = os.environ.get("ENVIRONMENT", PRODUCTION_KEY).lower()
     is_production = environment == PRODUCTION_KEY if override is None else override
 
@@ -62,7 +64,7 @@ def _is_in_production_mode(override: Optional[bool]) -> bool:
     return is_production
 
 
-def _initialize_large_file(s3_config: Path) -> None:
+def _initialize_large_file(s3_config: Path, logger: Logger) -> None:
     if s3_config.exists():
         LargeFile.configure_credentials_from_file(s3_config)
     else:

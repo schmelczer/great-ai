@@ -1,5 +1,4 @@
 import configparser
-import logging
 import os
 import shutil
 import tempfile
@@ -9,9 +8,11 @@ from typing import IO, Any, List, Mapping, Optional, Type, Union, cast
 
 import boto3
 
+from good_ai.utilities.logger import create_logger
+
 from .helper import DownloadProgressBar, UploadProgressBar, human_readable_to_byte
 
-logger = logging.getLogger("open_s3")
+logger = create_logger("open_s3")
 
 
 class LargeFile:

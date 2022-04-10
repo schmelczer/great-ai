@@ -1,4 +1,3 @@
-import logging
 import threading
 from collections import defaultdict
 from datetime import datetime
@@ -7,8 +6,6 @@ from typing import Any, DefaultDict, Dict, List, Optional, Type
 
 from ..context import get_context
 from ..views import Model, Trace
-
-logger = logging.getLogger("good_ai")
 
 
 class TracingContext:
@@ -64,6 +61,6 @@ class TracingContext:
             assert self._trace is not None
             get_context().persistence.save_document(self._trace)
         else:
-            logger.exception(f"Could not finish operation: {exception}")
+            get_context().logger.exception(f"Could not finish operation: {exception}")
 
         return True

@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Optional, Tuple
 
 from joblib import load
@@ -6,8 +5,6 @@ from joblib import load
 from good_ai.open_s3 import LargeFile
 
 from ..context import get_context
-
-logger = logging.getLogger("models")
 
 
 def load_model(
