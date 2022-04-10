@@ -9,6 +9,7 @@
     "psutil",
     "pydantic",
     "pyplot",
+    "redoc",
     "sklearn",
     "starlette",
     "Tfidf",
