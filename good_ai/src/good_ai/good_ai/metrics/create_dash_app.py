@@ -1,27 +1,34 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 
 import pandas as pd
-from dash import Dash, dash_table, html
+import plotly.express as px
+import plotly.graph_objects as go
+from dash import Dash, dash_table, dcc, html
 from dash.dependencies import Input, Output
 from flask import Flask
 
 from ..context import get_context
-from ..views import Filter, SortBy, operators
+from ..helper import snake_case_to_text
+from ..views import SortBy
 from .get_description import get_description
+from .get_filter_from_datatable import get_filter_from_datatable
 
 
 def create_dash_app(function_name: str) -> Flask:
-    app = Dash(function_name, requests_pathname_prefix=get_context().metrics_path + "/")
+    app = Dash(
+        function_name,
+        requests_pathname_prefix=get_context().metrics_path + "/",
+        title=snake_case_to_text(function_name),
+    )
 
     documents = get_context().persistence.get_documents()
     df = pd.DataFrame(documents)
 
     app.layout = html.Div(
-        children=[
+        [
             get_description(function_name),
             html.Div(
-                dash_table.DataTable(
-                    id="table-paging-with-graph",
+                table := dash_table.DataTable(
                     columns=[{"name": i, "id": i} for i in df.columns],
                     page_current=0,
                     page_size=20,
@@ -32,23 +39,34 @@ def create_dash_app(function_name: str) -> Flask:
                     sort_mode="multi",
                     sort_by=[],
                 ),
-                style={"height": 750, "overflowY": "scroll"},
             ),
-            html.Div(id="table-paging-with-graph-container"),
+            execution_time_histogram := dcc.Graph(),
+            parallel_coords := dcc.Graph(),
+            interval := dcc.Interval(
+                interval=4 * 1000,  # in milliseconds
+                n_intervals=0,
+            ),
         ]
     )
 
     @app.callback(
-        Output("table-paging-with-graph", "data"),
-        Input("table-paging-with-graph", "page_current"),
-        Input("table-paging-with-graph", "page_size"),
-        Input("table-paging-with-graph", "sort_by"),
-        Input("table-paging-with-graph", "filter_query"),
+        Output(table, "data"),
+        Input(table, "page_current"),
+        Input(table, "page_size"),
+        Input(table, "sort_by"),
+        Input(table, "filter_query"),
+        Input(interval, "n_intervals"),
     )
     def update_table(
-        page_current: int, page_size: int, sort_by: List[SortBy], filter: str
+        page_current: int,
+        page_size: int,
+        sort_by: List[SortBy],
+        filter: str,
+        n_intervals: int,
     ) -> List[Dict[str, Any]]:
-        conjunctive_filters = [get_filter(f) for f in filter.split(" && ")]
+        conjunctive_filters = [
+            get_filter_from_datatable(f) for f in filter.split(" && ")
+        ]
         non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
 
         return get_context().persistence.query(
@@ -58,55 +76,49 @@ def create_dash_app(function_name: str) -> Flask:
             take=page_size,
         )
 
-    # @app.callback(
-    #     Output('table-paging-with-graph-container', "children"),
-    #     Input('table-paging-with-graph', "data"))
-    # def update_graph(rows):
-    #     dff = pd.DataFrame(rows)
-    #     return html.Div(
-    #         [
-    #             dcc.Graph(
-    #                 id=column,
-    #                 figure={
-    #                     "data": [
-    #                         {
-    #                             "x": dff["country"],
-    #                             "y": dff[column] if column in dff else [],
-    #                             "type": "bar",
-    #                             "marker": {"color": "#0074D9"},
-    #                         }
-    #                     ],
-    #                     "layout": {
-    #                         "xaxis": {"automargin": True},
-    #                         "yaxis": {"automargin": True},
-    #                         "height": 250,
-    #                         "margin": {"t": 10, "l": 10, "r": 10},
-    #                     },
-    #                 },
-    #             )
-    #             for column in ["pop", "lifeExp", "gdpPercap"]
-    #         ]
-    #     )
+    @app.callback(
+        Output(execution_time_histogram, "figure"),
+        Input(table, "filter_query"),
+        Input(interval, "n_intervals"),
+    )
+    def update_execution_times(filter: str, _n_intervals: int) -> go.Figure:
+        conjunctive_filters = [
+            get_filter_from_datatable(f) for f in filter.split(" && ")
+        ]
+        non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
+
+        rows = get_context().persistence.query(
+            conjunctive_filters=non_null_conjunctive_filters
+        )
+        df = pd.DataFrame(rows)
+
+        return px.histogram(
+            df,
+            x="execution_time_ms",
+            labels={"execution_time_ms": "Execution time (ms)"},
+            nbins=20,
+            title="Execution times",
+            log_y=True,
+        )
+
+    @app.callback(
+        Output(parallel_coords, "figure"),
+        Input(table, "filter_query"),
+        Input(interval, "n_intervals"),
+    )
+    def update_parallel_coords(filter: str, _n_intervals: int) -> go.Figure:
+        conjunctive_filters = [
+            get_filter_from_datatable(f) for f in filter.split(" && ")
+        ]
+        non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
+
+        rows = get_context().persistence.query(
+            conjunctive_filters=non_null_conjunctive_filters
+        )
+
+        df = pd.DataFrame(rows)
+        return px.parallel_coordinates(
+            df, labels={c: snake_case_to_text(c) for c in df.columns}
+        )
 
     return app.server
-
-
-def get_filter(description: str) -> Optional[Filter]:
-    print(description)
-    for operator in operators:
-        if operator in description:
-            name_part, value_part = description.split(operator, 1)
-            value_part = value_part.strip()
-            name_part = name_part[name_part.find("{") + 1 : name_part.rfind("}")]
-
-            v0 = value_part[0]
-            if v0 == value_part[-1] and v0 in ("'", '"', "`"):
-                value: Union[str, float] = value_part[1:-1].replace("\\" + v0, v0)
-            else:
-                try:
-                    value = float(value_part)
-                except ValueError:
-                    value = value_part
-            return Filter(property=name_part, operator=operator, value=value)
-
-    return None

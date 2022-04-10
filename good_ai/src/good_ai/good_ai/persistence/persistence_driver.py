@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from black import List
 
@@ -25,8 +25,8 @@ class PersistenceDriver(ABC):
     def query(
         self,
         conjunctive_filters: List[Filter],
-        sort_by: List[SortBy],
-        skip: int,
-        take: int,
+        sort_by: List[SortBy] = [],
+        skip: int = 0,
+        take: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
         pass

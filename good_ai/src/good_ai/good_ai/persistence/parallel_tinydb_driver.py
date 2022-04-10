@@ -1,6 +1,6 @@
 from multiprocessing import Lock
 from pathlib import Path
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 import pandas as pd
 from black import List
@@ -35,9 +35,9 @@ class ParallelTinyDbDriver(PersistenceDriver):
     def query(
         self,
         conjunctive_filters: List[Filter],
-        sort_by: List[SortBy],
-        skip: int,
-        take: int,
+        sort_by: List[SortBy] = [],
+        skip: int = 0,
+        take: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
         documents = self.get_documents()
         df = pd.DataFrame(documents)
@@ -57,7 +57,9 @@ class ParallelTinyDbDriver(PersistenceDriver):
                 inplace=False,
             )
 
-        return df.iloc[skip : skip + take].to_dict("records")
+        result = df.iloc[skip:] if take is None else df.iloc[skip : skip + take]
+
+        return result.to_dict("records")
 
     def _safe_execute(self, func: Callable[[TinyDB], Any]) -> Any:
         with lock:
