@@ -20,6 +20,6 @@ def process_batch(
 
     if not get_context().persistence.is_threadsafe:
         concurrency = 1
-        get_context().logger.warn("Concurrency is ignored")
+        get_context().logger.warning("Concurrency is ignored")
 
     return parallel_map(inner, batch, concurrency=concurrency)
