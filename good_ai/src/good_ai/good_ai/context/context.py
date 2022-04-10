@@ -9,7 +9,6 @@ class Context(BaseModel):
     metrics_path: str
     persistence: PersistenceDriver
     is_production: bool
-    is_threadsafe: bool
     logger: Logger
 
     class Config:
