@@ -63,4 +63,4 @@ class TracingContext:
         else:
             get_context().logger.exception(f"Could not finish operation: {exception}")
 
-        return True
+        return False

@@ -6,6 +6,7 @@
     "inplace",
     "levelno",
     "plotly",
+    "psutil",
     "pydantic",
     "pyplot",
     "sklearn",

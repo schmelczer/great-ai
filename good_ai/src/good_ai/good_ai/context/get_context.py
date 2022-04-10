@@ -7,7 +7,7 @@ from typing import Optional, cast
 from good_ai.open_s3 import LargeFile
 from good_ai.utilities.logger import create_logger
 
-from ..persistence import PersistenceDriver, TinyDbDriver
+from ..persistence import PersistenceDriver, TinyDbDriver, ParallelTinyDbDriver
 from .context import Context
 
 _context: Optional[Context] = None
@@ -25,7 +25,7 @@ def set_default_config(
     log_level: int = INFO,
     s3_config: Path = Path("s3.ini"),
     seed: int = 42,
-    persistence_driver: PersistenceDriver = TinyDbDriver(Path("tracing_database.json")),
+    persistence_driver: PersistenceDriver = ParallelTinyDbDriver(Path("tracing_database.json")),
     is_production_mode_override: Optional[bool] = None,
 ) -> None:
     global _context
@@ -38,14 +38,12 @@ def set_default_config(
     _initialize_large_file(s3_config, logger=logger)
     _set_seed(seed)
 
-    is_threadsafe = not isinstance(persistence_driver, TinyDbDriver)
-    if not is_threadsafe:
-        logger.warn("The selected persistence driver (TinyDbDriver) is not threadsafe")
+    if not persistence_driver.is_threadsafe:
+        logger.warn(f"The selected persistence driver ({type(persistence_driver).__name__}) is not threadsafe")
     _context = Context(
         metrics_path="/metrics",
         persistence=persistence_driver,
         is_production=is_production,
-        is_threadsafe=is_threadsafe,
         logger=logger,
     )
 

@@ -6,6 +6,8 @@ from good_ai.good_ai.views.trace import Trace
 
 
 class PersistenceDriver(ABC):
+    is_threadsafe: bool
+
     @abstractmethod
     def save_document(self, document: Trace) -> str:
         pass

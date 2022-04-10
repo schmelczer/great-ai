@@ -18,7 +18,7 @@ def process_batch(
             output = t.log_output(result)
         return output
 
-    if not get_context().is_threadsafe:
+    if not get_context().persistence.is_threadsafe:
         concurrency = 1
         get_context().logger.warn("Concurrency is ignored")
 

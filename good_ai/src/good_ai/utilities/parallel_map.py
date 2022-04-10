@@ -4,6 +4,9 @@ from typing import Any, Callable, Iterable, List, Optional
 import multiprocess as mp
 import psutil
 from tqdm.auto import tqdm
+from .logger import create_logger
+
+logger = create_logger('parallel_map')
 
 
 def parallel_map(
@@ -23,7 +26,10 @@ def parallel_map(
     if not chunk_size:
         chunk_size = max(1, ceil(len(values) / concurrency / 10))
 
+    logger.info(f"Starting parallel map, concurrency: {concurrency}, chunk size: {chunk_size}")
+
     if concurrency == 1 or len(values) <= chunk_size:
+        logger.warn(f"Running in series, there is no reason for parallelism")
         iterable = values if disable_progress else tqdm(values)
         return [function(v) for v in iterable]
 
