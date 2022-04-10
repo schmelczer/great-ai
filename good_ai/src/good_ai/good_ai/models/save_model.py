@@ -1,13 +1,11 @@
-import logging
 from pathlib import Path
 from typing import Optional, Union
 
 from joblib import dump
 
-from good_ai.good_ai.context.get_context import get_context
 from good_ai.open_s3 import LargeFile
 
-logger = logging.getLogger("models")
+from ..context import get_context
 
 
 def save_model(
@@ -23,6 +21,6 @@ def save_model(
         with file as f:
             dump(model, f)
 
-    logger.info(f"Model {key} uploaded with version {file.version}")
+    get_context().logger.info(f"Model {key} uploaded with version {file.version}")
 
     return file.version

@@ -1,5 +1,4 @@
 import html
-import logging
 import re
 import unicodedata
 
@@ -7,8 +6,10 @@ import unidecode
 
 from .data import left_regular_punctuations, right_regular_punctuations
 from .external.pylatexenc.latex2text import LatexNodes2Text
+from .logger.create_logger import create_logger
 
-logger = logging.getLogger("clean")
+logger = create_logger("clean")
+
 latex = LatexNodes2Text()
 
 

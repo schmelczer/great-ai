@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
-import logging
 from pathlib import Path
+
+from good_ai.utilities.logger import create_logger
 
 from .large_file import LargeFile
 from .parse_arguments import parse_arguments
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    logger = create_logger("open_s3")
     parser, args = parse_arguments()
 
     LargeFile.configure_credentials_from_file(args.secrets)
 
     if not args.cache and not args.push and not args.delete:
-        logging.warn("No action required.")
+        logger.warn("No action required.")
         parser.print_help()
     try:
         if args.cache:
@@ -32,4 +33,4 @@ if __name__ == "__main__":
             for f in args.delete:
                 LargeFile(f).delete()
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
