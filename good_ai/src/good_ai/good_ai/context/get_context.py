@@ -41,7 +41,7 @@ def set_default_config(
     _set_seed(seed)
 
     if not persistence_driver.is_threadsafe:
-        logger.warn(
+        logger.warning(
             f"The selected persistence driver ({type(persistence_driver).__name__}) is not threadsafe"
         )
     _context = Context(
@@ -61,7 +61,7 @@ def _is_in_production_mode(override: Optional[bool], logger: Logger) -> bool:
     if is_production:
         logger.info("Running in production mode ✅")
     else:
-        logger.warn("Running in development mode ‼️")
+        logger.warning("Running in development mode ‼️")
 
     return is_production
 

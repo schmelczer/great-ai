@@ -14,7 +14,7 @@ if __name__ == "__main__":
     LargeFile.configure_credentials_from_file(args.secrets)
 
     if not args.cache and not args.push and not args.delete:
-        logger.warn("No action required.")
+        logger.warning("No action required.")
         parser.print_help()
     try:
         if args.cache:

@@ -317,7 +317,7 @@ class LargeFile:
 
             if self._version is None:
                 self._version = self.version_ids[-1]
-                logger.info(f"Lastest version of {self._local_name} is {self._version}")
+                logger.info(f"Latest version of {self._name} is {self._version}")
 
             elif self._version not in self.version_ids:
                 raise FileNotFoundError(
