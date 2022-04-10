@@ -1,15 +1,19 @@
+from pathlib import Path
 from typing import Any, Dict, List
 
 from fastapi import FastAPI, status
 from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.responses import HTMLResponse
 
 from ..context import get_context
 from ..helper import snake_case_to_text
 from ..metrics import create_dash_app
 from ..views import HealthCheckResponse, Query
+
+PATH = Path(__file__).parent.resolve()
 
 
 def create_fastapi_app(
@@ -39,6 +43,10 @@ def create_fastapi_app(
         @app.get("/", include_in_schema=False)
         def redirect_to_entrypoint() -> RedirectResponse:
             return RedirectResponse("/metrics")
+
+        app.mount(
+            "/assets", StaticFiles(directory=PATH / "../metrics/assets"), name="static"
+        )
 
         @app.post("/query", status_code=status.HTTP_200_OK)
         def query_metrics(query: Query) -> List[Dict[str, Any]]:

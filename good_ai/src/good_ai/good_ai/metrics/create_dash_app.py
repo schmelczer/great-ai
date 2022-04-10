@@ -7,6 +7,8 @@ from dash import Dash, dash_table, dcc, html
 from dash.dependencies import Input, Output
 from flask import Flask
 
+from good_ai.utilities.unique import unique
+
 from ..context import get_context
 from ..helper import snake_case_to_text
 from ..views import SortBy
@@ -15,10 +17,16 @@ from .get_filter_from_datatable import get_filter_from_datatable
 
 
 def create_dash_app(function_name: str) -> Flask:
+    flask_app = Flask(__name__)
     app = Dash(
         function_name,
         requests_pathname_prefix=get_context().metrics_path + "/",
+        server=flask_app,
         title=snake_case_to_text(function_name),
+        update_title=None,
+        external_stylesheets=[
+            "/assets/index.css",
+        ],
     )
 
     documents = get_context().persistence.get_documents()
@@ -117,8 +125,34 @@ def create_dash_app(function_name: str) -> Flask:
         )
 
         df = pd.DataFrame(rows)
-        return px.parallel_coordinates(
-            df, labels={c: snake_case_to_text(c) for c in df.columns}
+        return go.Figure(
+            go.Parcoords(
+                dimensions=[
+                    get_dimension_descriptor(df, c)
+                    for c in df.columns
+                    if not c.startswith("arg:") and c not in {"id", "created"}
+                ]
+            )
         )
 
-    return app.server
+    return flask_app
+
+
+def get_dimension_descriptor(df: pd.DataFrame, column: str) -> Dict[str, Any]:
+    dimension: Dict[str, Any] = {
+        "label": snake_case_to_text(column),
+    }
+
+    values = df[column]
+
+    try:
+        dimension["values"] = [float(v) for v in values]
+    except (TypeError, ValueError):
+        unique_values = unique(values)
+        value_mapping = {str(v): i for i, v in enumerate(unique_values)}
+
+        dimension["values"] = [value_mapping[str(v)] for v in values]
+        dimension["tickvals"] = list(value_mapping.values())
+        dimension["ticktext"] = list(value_mapping.keys())
+
+    return dimension

@@ -2,6 +2,7 @@ from typing import Any, Callable
 
 import uvicorn
 from fastapi import FastAPI, status
+from uvicorn.config import LOGGING_CONFIG
 
 from ..tracing import TracingContext
 from ..views import Trace
@@ -32,8 +33,7 @@ def serve(
         host="0.0.0.0",
         port=5050,
         log_config={
-            "version": 1,
-            "disable_existing_loggers": False,
+            **LOGGING_CONFIG,
             "formatters": {
                 "default": {
                     "()": "good_ai.logger.CustomFormatter",
@@ -42,27 +42,6 @@ def serve(
                 "access": {
                     "()": "good_ai.logger.CustomFormatter",
                     "fmt": "%(asctime)s | %(levelname)8s | %(message)s",  # noqa: E501
-                },
-            },
-            "handlers": {
-                "default": {
-                    "formatter": "default",
-                    "class": "logging.StreamHandler",
-                    "stream": "ext://sys.stderr",
-                },
-                "access": {
-                    "formatter": "access",
-                    "class": "logging.StreamHandler",
-                    "stream": "ext://sys.stdout",
-                },
-            },
-            "loggers": {
-                "uvicorn": {"handlers": ["default"], "level": "INFO"},
-                "uvicorn.error": {"level": "INFO"},
-                "uvicorn.access": {
-                    "handlers": ["access"],
-                    "level": "INFO",
-                    "propagate": False,
                 },
             },
         },
