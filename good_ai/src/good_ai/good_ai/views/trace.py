@@ -23,5 +23,15 @@ class Trace(BaseModel):
             return str(uuid4())
         return v
 
+    def to_flat_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.evaluation_id,
+            "created": self.created,
+            "execution_time_ms": self.execution_time_ms,
+            "models": ", ".join(f"{m.key}:{m.version}" for m in self.models),
+            "evaluation": self.evaluation,
+            **self.logged_values,
+        }
+
     def __hash__(self) -> int:
         return hash((type(self),) + tuple(self.__dict__.values()))

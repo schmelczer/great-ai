@@ -1,9 +1,9 @@
 import inspect
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, Mapping, Sequence
 
 
 def get_args(
-    func: Callable[..., Any], args: List[Any], kwargs: Dict[str, Any]
+    func: Callable[..., Any], args: Sequence[Any], kwargs: Mapping[str, Any]
 ) -> Dict[str, Any]:
     signature = inspect.signature(func)
     filter_keys = [
