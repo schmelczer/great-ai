@@ -10,13 +10,16 @@ from flask import Flask
 from good_ai.utilities.unique import unique
 
 from ..context import get_context
-from ..helper import snake_case_to_text
+from ..helper import snake_case_to_text, text_to_hex_color
 from ..views import SortBy
 from .get_description import get_description
 from .get_filter_from_datatable import get_filter_from_datatable
+from .get_footer import get_footer
 
 
 def create_dash_app(function_name: str) -> Flask:
+    accent_color = text_to_hex_color(function_name)
+
     flask_app = Flask(__name__)
     app = Dash(
         function_name,
@@ -32,24 +35,37 @@ def create_dash_app(function_name: str) -> Flask:
     documents = get_context().persistence.get_documents()
     df = pd.DataFrame(documents)
 
+    execution_time_histogram = dcc.Graph(config={"displaylogo": False})
+    table = dash_table.DataTable(
+        columns=[{"name": i, "id": i} for i in df.columns],
+        page_current=0,
+        page_size=20,
+        page_action="custom",
+        filter_action="custom",
+        filter_query="",
+        sort_action="custom",
+        sort_mode="multi",
+        sort_by=[
+            {"column_id": "created", "direction": "desc"},
+        ],
+    )
+
     app.layout = html.Div(
         [
-            get_description(function_name),
             html.Div(
-                table := dash_table.DataTable(
-                    columns=[{"name": i, "id": i} for i in df.columns],
-                    page_current=0,
-                    page_size=20,
-                    page_action="custom",
-                    filter_action="custom",
-                    filter_query="",
-                    sort_action="custom",
-                    sort_mode="multi",
-                    sort_by=[],
-                ),
+                [
+                    get_description(
+                        function_name=function_name, accent_color=accent_color
+                    ),
+                    execution_time_histogram,
+                ],
+                className="glance",
             ),
-            execution_time_histogram := dcc.Graph(),
-            parallel_coords := dcc.Graph(),
+            html.Div([html.H2("Latest traces"), table], className="table-container"),
+            parallel_coords := dcc.Graph(
+                className="parallel-coords", config={"displaylogo": False}
+            ),
+            get_footer(),
             interval := dcc.Interval(
                 interval=4 * 1000,  # in milliseconds
                 n_intervals=0,
@@ -100,14 +116,22 @@ def create_dash_app(function_name: str) -> Flask:
         )
         df = pd.DataFrame(rows)
 
-        return px.histogram(
+        fig = px.histogram(
             df,
             x="execution_time_ms",
             labels={"execution_time_ms": "Execution time (ms)"},
             nbins=20,
-            title="Execution times",
+            height=400,
             log_y=True,
+            color_discrete_sequence=[accent_color],
         )
+
+        fig.update_layout(
+            autosize=True,
+            margin=dict(l=0, r=0, b=0, t=0, pad=0),
+        )
+
+        return fig
 
     @app.callback(
         Output(parallel_coords, "figure"),
@@ -131,7 +155,8 @@ def create_dash_app(function_name: str) -> Flask:
                     get_dimension_descriptor(df, c)
                     for c in df.columns
                     if not c.startswith("arg:") and c not in {"id", "created"}
-                ]
+                ],
+                line_color=accent_color,
             )
         )
 

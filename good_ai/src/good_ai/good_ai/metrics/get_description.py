@@ -1,12 +1,11 @@
-from dash.dcc import Markdown
+from dash import dcc, html
 
 from ..helper import snake_case_to_text
 
 
-def get_description(function_name: str) -> Markdown:
+def get_description(function_name: str, accent_color: str) -> html.Div:
     markdown_text = f"""
-    # {snake_case_to_text(function_name)} - metrics
-    > A human-friendly framework for robust end-to-end AI deployments
+    View the live data of your deployments here.
 
     ## Using the API
 
@@ -14,7 +13,15 @@ def get_description(function_name: str) -> Markdown:
 
     ## Metrics
 
-    The recent traces and aggregated metrics are presented below.
+    Recent traces and aggregated metrics are presented below. Try filtering the table.
     """
 
-    return Markdown(markdown_text)
+    return html.Div(
+        [
+            html.H1(
+                f"{snake_case_to_text(function_name)} - metrics",
+                style={"color": accent_color},
+            ),
+            dcc.Markdown(markdown_text, className="description"),
+        ]
+    )
