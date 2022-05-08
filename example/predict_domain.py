@@ -5,8 +5,8 @@ from preprocess import preprocess
 from pydantic import BaseModel
 from sklearn.pipeline import Pipeline
 
-from good_ai import log_argument, log_metric, use_model
-from good_ai.utilities.clean import clean
+from great_ai import log_argument, log_metric, use_model
+from great_ai.utilities.clean import clean
 
 
 class DomainPrediction(BaseModel):
