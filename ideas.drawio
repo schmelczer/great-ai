@@ -167,7 +167,7 @@
                 <mxCell id="62" value="Output" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="1020" y="1112" width="80" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="65" value="GoodAI" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                <mxCell id="65" value="GreatAI" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="-160" y="960" width="80" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="66" value="Wrapper" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">

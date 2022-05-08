@@ -3,7 +3,7 @@
 
 from predict_domain import predict_domain
 
-from good_ai import serve
+from great_ai import serve
 
 if __name__ == "__main__":
     serve(predict_domain)
