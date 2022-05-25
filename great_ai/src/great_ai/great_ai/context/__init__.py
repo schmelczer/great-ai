@@ -1,2 +1,2 @@
 from .context import Context
-from .get_context import get_context, set_default_config
+from .get_context import configure, get_context

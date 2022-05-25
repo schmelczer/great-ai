@@ -20,7 +20,10 @@ class DomainPrediction(BaseModel):
 def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
 ) -> List[DomainPrediction]:
-    assert 0 <= cut_off_probability <= 1
+    """
+    Predict the scientific domain of the input text.
+    Return labels until their sum likelihood is larger than cut_off_probability.
+    """
     log_metric("text_length", len(text))
 
     cleaned = clean(text, convert_to_ascii=True)

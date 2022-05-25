@@ -4,9 +4,9 @@
     {
       "label": "Format and lint Python",
       "type": "shell",
-      "command": "source .env/bin/activate && scripts/format-python.sh great_ai && scripts/format-python.sh example",
+      "command": "source .env/bin/activate && scripts/format-python.sh great_ai && scripts/format-python.sh examples",
       "windows": {
-        "command": ".env/bin/activate.bat; scripts/format-python.sh great_ai; scripts\\format-python.sh example"
+        "command": ".env/bin/activate.bat; scripts/format-python.sh great_ai; scripts\\format-python.sh examples"
       },
       "group": "test",
       "presentation": {

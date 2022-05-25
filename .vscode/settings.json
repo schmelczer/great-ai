@@ -2,6 +2,7 @@
   "cSpell.words": [
     "boto",
     "botocore",
+    "fastapi",
     "iloc",
     "inplace",
     "levelno",

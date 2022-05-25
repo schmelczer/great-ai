@@ -17,7 +17,7 @@ from .get_filter_from_datatable import get_filter_from_datatable
 from .get_footer import get_footer
 
 
-def create_dash_app(function_name: str) -> Flask:
+def create_dash_app(function_name: str, function_docs: str) -> Flask:
     accent_color = text_to_hex_color(function_name)
 
     flask_app = Flask(__name__)
@@ -55,7 +55,9 @@ def create_dash_app(function_name: str) -> Flask:
             html.Div(
                 [
                     get_description(
-                        function_name=function_name, accent_color=accent_color
+                        function_name=function_name,
+                        function_docs=function_docs,
+                        accent_color=accent_color,
                     ),
                     execution_time_histogram,
                 ],

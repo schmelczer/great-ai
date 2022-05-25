@@ -16,26 +16,35 @@ PRODUCTION_KEY = "production"
 
 def get_context() -> Context:
     if _context is None:
-        set_default_config()
+        configure()
 
     return cast(Context, _context)
 
 
-def set_default_config(
+def configure(
     log_level: int = INFO,
     s3_config: Path = Path("s3.ini"),
     seed: int = 42,
     persistence_driver: PersistenceDriver = ParallelTinyDbDriver(
         Path("tracing_database.json")
     ),
-    is_production_mode_override: Optional[bool] = None,
+    development_mode_override: Optional[bool] = None,
 ) -> None:
     global _context
 
     logger = create_logger("great_ai", level=log_level)
 
+    if _context is not None:
+        logger.warn(
+            "Configuration has been already initialised, overwriting.\n"
+            + 'Make sure to call "configure()" before importing your application code.'
+        )
+
     is_production = _is_in_production_mode(
-        override=is_production_mode_override, logger=logger
+        override=None
+        if development_mode_override is None
+        else not development_mode_override,
+        logger=logger,
     )
     _initialize_large_file(s3_config, logger=logger)
     _set_seed(seed)
@@ -51,7 +60,7 @@ def set_default_config(
         logger=logger,
     )
 
-    logger.info("Defaults: configured ✅")
+    logger.info("Options: configured ✅")
 
 
 def _is_in_production_mode(override: Optional[bool], logger: Logger) -> bool:
