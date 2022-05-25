@@ -32,5 +32,8 @@ if __name__ == "__main__":
         if args.delete:
             for f in args.delete:
                 LargeFile(f).delete()
+    except KeyboardInterrupt:
+        logger.warning("Exiting")
+        exit()
     except Exception as e:
         logger.error(e)
