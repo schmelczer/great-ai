@@ -1,39 +1,51 @@
 #!/usr/bin/env python3
 import re
 from importlib import import_module
-from sys import argv
 
 import uvicorn
 from uvicorn.config import LOGGING_CONFIG
 
 from .great_ai.context import get_context
 from .great_ai.exceptions import MissingArgumentError
+from .parse_arguments import parse_arguments
+from .utilities.logger import create_logger
+
+logger = create_logger("GreatAI-Server")
 
 
 def main() -> None:
-    if len(argv) < 2:
-        raise MissingArgumentError(f"Provide a filename such as: {argv[0]} my_app.py")
+    args = parse_arguments()
 
-    module_name = re.sub(r"\.py\b", "", argv[1])
+    file_name = re.sub(r"\.py$", "", args.file_name)
+    function_name = args.function_name
 
-    base = module_name.split(":")[0]
+    module = import_module(file_name)
 
-    import_module(base)
-    get_context().logger.info("Starting server")
+    if not function_name:
+        logger.warning(f"Argument function_name not provided, trying to guess it")
 
-    if ":" not in module_name:
-        module_name += ":app"
-        get_context().logger.warning(
-            'Service name (name of variable) is assumed to be "app",'
-            + " such as: `app = create_service(predict_domain)`"
-        )
+        if not function_name and "app" in module.__dict__:
+            function_name = "app"
+
+        if not function_name and file_name in module.__dict__:
+            function_name = file_name
+
+        if function_name:
+            logger.warning(f"Found `{function_name}` as the value of function_name")
+        else:
+            raise MissingArgumentError(
+                "Argument function_name not provided and could not be guessed"
+            )
+
+    app_name = f"{file_name}:{function_name}"
+    logger.info(f"Starting uvicorn server with app={app_name}")
 
     uvicorn.run(
-        module_name,
-        host="0.0.0.0",
-        port=6060,
-        timeout_keep_alive=600,
-        workers=1,
+        app_name,
+        host=args.host,
+        port=args.port,
+        timeout_keep_alive=args.timeout_keep_alive,
+        workers=args.workers,
         reload=not get_context().is_production,
         log_config={
             **LOGGING_CONFIG,
@@ -55,6 +67,6 @@ if __name__ == "__main__":
     try:
         main()
     except (MissingArgumentError, ModuleNotFoundError) as e:
-        get_context().logger.error(e)
+        logger.error(e)
     except KeyboardInterrupt:
         exit()
