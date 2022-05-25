@@ -9,7 +9,6 @@ from .external.pylatexenc.latex2text import LatexNodes2Text
 from .logger.create_logger import create_logger
 
 logger = create_logger("clean")
-
 latex = LatexNodes2Text()
 
 
@@ -45,6 +44,10 @@ def clean(
         except UnicodeEncodeError:
             text = "".join([c for c in text if not unicodedata.combining(c)])
             text = unidecode.unidecode(text)
+
+    text = re.sub(
+        r"\b[a-zA-Z](?:[\t ]+[a-zA-Z]\b)+", lambda m: re.sub(r"[\t ]", "", m[0]), text
+    )  # A R T I C L E => ARTICLE
 
     if remove_brackets:
         text = re.sub(r"\[[^\]]*\]", " ", text)

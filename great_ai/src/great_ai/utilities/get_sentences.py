@@ -1,12 +1,15 @@
 from typing import List
 
+from segtok.segmenter import split_multi
+
 from .data import sentence_ending_punctuations
-from .nlp import nlp
 
 
 def get_sentences(text: str, ignore_partial: bool = False) -> List[str]:
-    doc = nlp(text)
-    possible_sentences = [s.text for s in doc.sents]
+    if text.strip() == "":
+        return []
+
+    possible_sentences = [s for s in split_multi(text) if s]
 
     if ignore_partial:
         possible_sentences = [

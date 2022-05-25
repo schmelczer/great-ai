@@ -287,7 +287,7 @@ def placeholder_node_formatter(placeholdertext, block=True):
     r"""
     This function returns a callable that can be used in
     :py:class:`MacroTextSpec`, :py:class:`EnvironmentTextSpec`, or
-    :py:class:`SpecialsTextSpec` for latex nodes that do not have a great textual
+    :py:class:`SpecialsTextSpec` for latex nodes that do not have a good textual
     representation, providing as text replacement the simple placeholder text
     ``'< P L A C E H O L D E R   T E X T >'``.
 
@@ -316,7 +316,7 @@ def fmt_placeholder_node(node, l2tobj):
     r"""
     This function can be used as callable in :py:class:`MacroTextSpec`,
     :py:class:`EnvironmentTextSpec`, or :py:class:`SpecialsTextSpec` for latex
-    nodes that do not have a great textual representation.  The text replacement
+    nodes that do not have a good textual representation.  The text replacement
     is the placeholder text
     ``'< N A M E   O F   T H E   M A C R O   O R   E N V I R O N M E N T >'``.
 
