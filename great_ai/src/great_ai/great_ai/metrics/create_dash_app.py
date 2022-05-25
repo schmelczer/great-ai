@@ -70,7 +70,6 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
             get_footer(),
             interval := dcc.Interval(
                 interval=4 * 1000,  # in milliseconds
-                n_intervals=0,
             ),
         ]
     )
@@ -116,6 +115,10 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         rows = get_context().persistence.query(
             conjunctive_filters=non_null_conjunctive_filters
         )
+
+        if not rows:
+            return go.Figure()
+
         df = pd.DataFrame(rows)
 
         fig = px.histogram(
@@ -150,13 +153,16 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
             conjunctive_filters=non_null_conjunctive_filters
         )
 
+        if not rows:
+            return go.Figure()
+
         df = pd.DataFrame(rows)
         return go.Figure(
             go.Parcoords(
                 dimensions=[
                     get_dimension_descriptor(df, c)
                     for c in df.columns
-                    if not c.startswith("arg:") and c not in {"id", "created"}
+                    if not c.startswith("arg:") and c not in {"id", "created", "output"}
                 ],
                 line_color=accent_color,
             )

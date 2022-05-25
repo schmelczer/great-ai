@@ -1,3 +1,4 @@
+from json import dumps
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
@@ -29,7 +30,7 @@ class Trace(BaseModel):
             "created": self.created,
             "execution_time_ms": self.execution_time_ms,
             "models": ", ".join(f"{m.key}:{m.version}" for m in self.models),
-            "output": self.output,
+            "output": dumps(self.output),
             "evaluation": self.evaluation,
             **self.logged_values,
         }
