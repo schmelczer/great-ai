@@ -10,7 +10,7 @@ def unique(
     for v in values:
         k = key(v)
         if k not in key_values:
-            # dicts maintin insertion order: https://mail.python.org/pipermail/python-dev/2017-December/151283.html
+            # dicts maintain insertion order: https://mail.python.org/pipermail/python-dev/2017-December/151283.html
             key_values[k] = v
 
     return list(key_values.values())
