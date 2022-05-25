@@ -1,5 +1,5 @@
 import re
-from typing import Dict, Iterable, List
+from typing import  Dict, Iterable, List
 
 from preprocess import preprocess
 from pydantic import BaseModel
@@ -20,6 +20,8 @@ class DomainPrediction(BaseModel):
 def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
 ) -> List[DomainPrediction]:
+    assert 0 <= cut_off_probability <= 1
+
     """
     Predict the scientific domain of the input text.
     Return labels until their sum likelihood is larger than cut_off_probability.
@@ -42,10 +44,11 @@ def predict_domain(
     results: List[DomainPrediction] = []
     for class_index, probability in best_classes:
         weights = model.named_steps["classifier"].feature_log_prob_[class_index]
+        domain = model.named_steps["classifier"].classes_[class_index]
 
         results.append(
             DomainPrediction(
-                domain=model.named_steps["classifier"].classes_[class_index],
+                domain=domain,
                 probability=round(probability * 100),
                 explanation=_get_explanation(
                     feature_names=feature_names,
@@ -69,11 +72,11 @@ def _get_explanation(
     token_mapping: Dict[str, str],
 ) -> List[str]:
     influential = [
-        (value * weight, name)
-        for name, value, weight in zip(feature_names, features, weights)
+        (weight, name)
+        for weight, value, name in zip(weights, features, feature_names)
         if value
     ]
 
     most_influential = sorted(influential, reverse=True)[:5]
 
-    return [token_mapping[v[1]] for v in most_influential]
+    return [token_mapping[name] for _, name in most_influential]
