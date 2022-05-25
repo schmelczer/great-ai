@@ -1,6 +1,10 @@
 import unittest
 from pathlib import Path
 
+import matplotlib
+
+matplotlib.use("Agg")  # don't show a window for each test
+
 from src.great_ai.utilities.evaluate_ranking import evaluate_ranking
 
 
