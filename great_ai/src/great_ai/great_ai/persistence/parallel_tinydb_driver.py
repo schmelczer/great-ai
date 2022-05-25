@@ -22,8 +22,24 @@ class ParallelTinyDbDriver(PersistenceDriver):
         super().__init__()
         self._path_to_db = path_to_db
 
-    def save_document(self, trace: Trace) -> str:
+    def save_trace(self, trace: Trace) -> str:
         return self._safe_execute(lambda db: db.insert(trace.dict()))
+
+    def add_evaluation(self, id: str, evaluation: Any) -> None:
+        self._safe_execute(
+            lambda db: db.update(
+                fields={"evaluation": evaluation},
+                cond=lambda d: d["evaluation_id"] == id,
+            )
+        )
+
+    def get_trace(self, id: str) -> Optional[Trace]:
+        value = self._safe_execute(
+            lambda db: db.get(lambda d: d["evaluation_id"] == id)
+        )
+        if value:
+            value = Trace.parse_obj(value)
+        return value
 
     def get_traces(self) -> List[Trace]:
         return self._safe_execute(lambda db: [Trace.parse_obj(t) for t in db.all()])

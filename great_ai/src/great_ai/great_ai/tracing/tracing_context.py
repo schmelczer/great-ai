@@ -59,7 +59,7 @@ class TracingContext:
 
         if type is None:
             assert self._trace is not None
-            get_context().persistence.save_document(self._trace)
+            get_context().persistence.save_trace(self._trace)
         else:
             get_context().logger.exception(f"Could not finish operation: {exception}")
 

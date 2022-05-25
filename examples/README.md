@@ -1,4 +1,4 @@
-# Train Domain classifier from the [semantic scholar dataset](https://api.semanticscholar.org/corpus)
+# Train Domain classifier on the [semantic scholar dataset](https://api.semanticscholar.org/corpus)
 
 ## Upload the dataset (or a part of it) to shared infrastructure
 
