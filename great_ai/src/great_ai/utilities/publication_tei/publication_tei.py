@@ -6,7 +6,6 @@ from typing import Any, List, Optional, Pattern, Tuple, Union
 
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString, Tag
-from sus.publication_tei.models.element import Paragraph
 
 from ..clean import clean
 from ..lemmatize_text import lemmatize_text
@@ -20,6 +19,7 @@ from .models import (
     Element,
     Meta,
     MetaType,
+    Paragraph,
     PublicationMetadata,
     Text,
     Title,
@@ -30,8 +30,8 @@ THIS_FOLDER = Path(os.path.dirname(os.path.abspath(__file__)))
 
 
 class PublicationTEI:
-    # remove template sentenaces, such as copyright notices
-    agressive_cleaning_enabled = True
+    # remove template sentences, such as copyright notices
+    aggressive_cleaning_enabled = True
 
     def __init__(self, tei: str):
         self._document_order_counter = 0
@@ -324,7 +324,7 @@ class PublicationTEI:
         if text is None:
             return None
 
-        if self.agressive_cleaning_enabled:
+        if self.aggressive_cleaning_enabled:
             filtered = filter_sentences(
                 text,
                 THIS_FOLDER / "templates.yaml",

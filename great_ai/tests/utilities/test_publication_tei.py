@@ -3,7 +3,6 @@ from pathlib import Path
 
 from src.great_ai.utilities.publication_tei import PublicationTEI
 
-
 from .data.parsed import (
     abstract,
     authors,

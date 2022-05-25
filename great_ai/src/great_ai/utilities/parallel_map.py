@@ -9,6 +9,7 @@ from .logger import create_logger
 
 logger = create_logger("parallel_map")
 
+
 def parallel_map(
     function: Callable[[Any], Any],
     values: Iterable[Any],
@@ -27,7 +28,7 @@ def parallel_map(
     logger.info(
         f"Starting parallel map, concurrency: {concurrency}, chunk size: {chunk_size}"
     )
-    
+
     if concurrency == 1 or len(values) <= chunk_size:
         logger.warning(f"Running in series, there is no reason for parallelism")
         iterable = values if disable_progress else tqdm(values)

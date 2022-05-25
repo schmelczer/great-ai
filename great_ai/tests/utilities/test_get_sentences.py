@@ -3,7 +3,6 @@ import unittest
 from src.great_ai.utilities.get_sentences import get_sentences
 
 
-
 class TestGetSentences(unittest.TestCase):
     def test_default(self) -> None:
         text = "This is a complete sentence. So is this. However this is n"  # ot.
