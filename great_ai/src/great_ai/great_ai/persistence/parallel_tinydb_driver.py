@@ -56,6 +56,9 @@ class ParallelTinyDbDriver(PersistenceDriver):
         take: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
         documents = self.get_documents()
+        if not documents:
+            return []
+
         df = pd.DataFrame(documents)
 
         for f in conjunctive_filters:
