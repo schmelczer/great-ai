@@ -1,5 +1,5 @@
 import re
-from typing import  Dict, Iterable, List
+from typing import Dict, Iterable, List
 
 from preprocess import preprocess
 from pydantic import BaseModel
