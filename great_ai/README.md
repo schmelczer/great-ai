@@ -9,6 +9,7 @@
 - [parallel_map](src/sus/parallel_map.py)
 - [match_names](src/sus/match_names/match_names.py)
 - [evaluate_ranking](src/sus/evaluate_ranking/evaluate_ranking.py)
+- [get_sentences](src/sus/get_sentences.py)
 
 ### Requires loading spacy model
 
@@ -17,14 +18,14 @@
 > Add this to the Dockerfile for caching the spaCy model:
 >
 > ```docker
-> RUN pip install --no-cache-dir en-core-web-lg@https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.2.0/en_core_web_lg-3.2.0-py3-none-any.whl
+> RUN pip install --no-cache-dir en-core-web-sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.3.0/en_core_web_sm-3.3.0-py3-none-any.whl
 > ```
 
-- [spacy model (nlp)](src/sus/nlp.py)
-- [get_sentences](src/sus/get_sentences.py)
+- [publication TEI](src/sus/publication_tei/publication_tei.py)
 - [lemmatize_text](src/sus/lemmatize_text.py)
 - [lemmatize_token](src/sus/lemmatize_token.py)
-- [publication TEI](src/sus/publication_tei/publication_tei.py)
+- [spacy model (nlp)](src/sus/nlp.py)
+- [filter_sentences](src/sus/matcher/filter_sentences.py)
 
 ## Development
 

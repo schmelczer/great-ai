@@ -4,7 +4,7 @@ from typing import Any, Callable, Iterable, List
 def unique(
     values: Iterable[Any], *, key: Callable[[Any], Any] = lambda v: v
 ) -> List[Any]:
-    """Only keep first occurrences and maintian order"""
+    """Only keep first occurrences and maintain order"""
 
     key_values = {}
     for v in values:

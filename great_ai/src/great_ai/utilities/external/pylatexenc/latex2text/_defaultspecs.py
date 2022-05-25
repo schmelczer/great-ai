@@ -266,7 +266,7 @@ _latex_specs_approximations = {
             ("fcolorbox", "%(5)s"),
             ("hspace", ""),
             ("vspace", "\n"),
-            # \\ is treated as an "approximation" because a great text renderer would
+            # \\ is treated as an "approximation" because a good text renderer would
             # have to actually note that this is a end-of-line marker which is not
             # to be confused with other newlines in the paragraph (which can be
             # reflowed)

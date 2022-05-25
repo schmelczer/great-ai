@@ -33,7 +33,7 @@
 #
 #       - tests pass: https://travis-ci.org/github/phfaist/pylatexenc
 #
-#       - LGTM looks great: https://lgtm.com/projects/g/phfaist/pylatexenc/
+#       - LGTM looks good: https://lgtm.com/projects/g/phfaist/pylatexenc/
 #
 #       - python package creation works: (python setup.py sdist, pip install
 #         dist/pylatexenc-xxx.tar.gz)

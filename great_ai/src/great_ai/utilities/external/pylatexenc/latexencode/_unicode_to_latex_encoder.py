@@ -342,7 +342,7 @@ class UnicodeToLatexEncoder(object):
 
        Possible protection schemes are:
 
-         - 'braces' (the default):  Any great_ai.utilitiespicious replacement text (that
+         - 'braces' (the default):  Any suspicious replacement text (that
            might look fragile) is placed in curly braces ``{...}``.
 
          - 'braces-all':  All replacement latex escapes are surrounded in

@@ -3,6 +3,7 @@ import unittest
 from src.great_ai.utilities.clean import clean
 
 
+
 class TestClean(unittest.TestCase):
     def test_xml_handling(self) -> None:
         xml = '<strong>Hi, </strong> my name<br/>is <span style="color: hotpink;"> András</span>! &lt;&#51; <> < ></><> &lt;&gt; <|'
@@ -56,6 +57,13 @@ class TestClean(unittest.TestCase):
             break-\tword
         """
         cleaned = "break - word break-word break-word break-word break-word"
+
+        self.assertEqual(clean(text), cleaned)
+
+    def test_T_I_T_L_E_case(self) -> None:
+        text = "an a r t i  c l e is to F I N   D the purpose of a tree"
+
+        cleaned = "an article is to FIND the purpose of a tree"
 
         self.assertEqual(clean(text), cleaned)
 

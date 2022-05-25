@@ -3,7 +3,17 @@ from pathlib import Path
 
 from src.great_ai.utilities.publication_tei import PublicationTEI
 
-from .data.parsed import authors, content, metadata, sentences
+
+from .data.parsed import (
+    abstract,
+    authors,
+    bookmarks,
+    conclusion,
+    content,
+    introduction,
+    metadata,
+    sentences,
+)
 
 DATA_PATH = Path(__file__).parent.resolve() / "data"
 
@@ -29,6 +39,20 @@ class TestPublicationTEI(unittest.TestCase):
 
     def test_sentences(self) -> None:
         self.assertEqual(PublicationTEI(self.test_xml).sentences, sentences)
+
+    def test_bookmarks(self) -> None:
+        self.assertEqual(PublicationTEI(self.test_xml).bookmarks, bookmarks)
+
+    def test_abstract(self) -> None:
+        self.assertEqual(PublicationTEI(self.test_xml).abstract_sentences, abstract)
+
+    def test_introduction(self) -> None:
+        self.assertEqual(
+            PublicationTEI(self.test_xml).introduction_sentences, introduction
+        )
+
+    def test_conclusion(self) -> None:
+        self.assertEqual(PublicationTEI(self.test_xml).conclusion_sentences, conclusion)
 
     def test_empty1(self) -> None:
         tei = PublicationTEI("<TEI/>")
