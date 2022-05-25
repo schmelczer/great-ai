@@ -2,20 +2,20 @@
 import re
 from importlib import import_module
 from sys import argv
+
 import uvicorn
 from uvicorn.config import LOGGING_CONFIG
 
-from .great_ai.exceptions import MissingArgumentError
 from .great_ai.context import get_context
+from .great_ai.exceptions import MissingArgumentError
 
 
-
-def main():
+def main() -> None:
     if len(argv) < 2:
         raise MissingArgumentError(f"Provide a filename such as: {argv[0]} my_app.py")
 
     module_name = re.sub(r"\.py\b", "", argv[1])
-    
+
     base = module_name.split(":")[0]
 
     import_module(base)
@@ -25,7 +25,7 @@ def main():
         module_name += ":app"
         get_context().logger.warning(
             'Service name (name of variable) is assumed to be "app",'
-            + ' such as: `app = create_service(predict_domain)`'
+            + " such as: `app = create_service(predict_domain)`"
         )
 
     uvicorn.run(
@@ -49,6 +49,7 @@ def main():
             },
         },
     )
+
 
 if __name__ == "__main__":
     try:

@@ -2,7 +2,6 @@ import unittest
 
 from src.great_ai.utilities.unique import unique
 
-
 original = [
     ("a", 1),
     ("b", 5),

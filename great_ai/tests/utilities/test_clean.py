@@ -3,7 +3,6 @@ import unittest
 from src.great_ai.utilities.clean import clean
 
 
-
 class TestClean(unittest.TestCase):
     def test_xml_handling(self) -> None:
         xml = '<strong>Hi, </strong> my name<br/>is <span style="color: hotpink;"> András</span>! &lt;&#51; <> < ></><> &lt;&gt; <|'
