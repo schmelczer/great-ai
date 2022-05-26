@@ -12,5 +12,5 @@ def preprocess(text: str) -> str:
 
 def lemmatize(text: str) -> str:
     lemmatized = lemmatize_text(text)
-    clean_lemmas = [re.sub(r"\d[\d.,]*", "NUM", lemma) for lemma in lemmatized]
+    clean_lemmas = [re.sub(r"\d[\d.,]*", "NUM", lemma.lower()) for lemma in lemmatized]
     return " ".join(clean_lemmas)
