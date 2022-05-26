@@ -23,7 +23,7 @@ def main() -> None:
     module = import_module(file_name)
 
     if not function_name:
-        logger.warning(f"Argument function_name not provided, trying to guess it")
+        logger.warning("Argument function_name not provided, trying to guess it")
 
         if not function_name and "app" in module.__dict__:
             function_name = "app"

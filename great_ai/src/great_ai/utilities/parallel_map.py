@@ -30,7 +30,7 @@ def parallel_map(
     )
 
     if concurrency == 1 or len(values) <= chunk_size:
-        logger.warning(f"Running in series, there is no reason for parallelism")
+        logger.warning("Running in series, there is no reason for parallelism")
         iterable = values if disable_progress else tqdm(values)
         return [function(v) for v in iterable]
 
