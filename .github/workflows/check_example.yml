@@ -13,14 +13,14 @@ jobs:
   lint:
     uses: ./.github/workflows/generic-lint-python.yml
     with:
-      path_to_project: great_ai
+      path_to_project: examples/complex
 
   sonar:
     needs: lint
     uses: ./.github/workflows/generic-sonarqube-python.yml
     with:
       project_name: great_ai
-      path_to_project: great_ai
+      path_to_project: examples/complex
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
       sonar_host: ${{ secrets.SONAR_HOST_URL }}
