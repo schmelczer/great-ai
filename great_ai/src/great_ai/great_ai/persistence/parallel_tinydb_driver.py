@@ -1,9 +1,8 @@
 from multiprocessing import Lock
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import pandas as pd
-from black import List
 from tinydb import TinyDB
 
 from ..views import Filter, SortBy, Trace

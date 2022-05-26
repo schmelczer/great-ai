@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
-
-from black import List
+from typing import Any, Dict, List, Optional
 
 from ..views import Filter, SortBy, Trace
 
