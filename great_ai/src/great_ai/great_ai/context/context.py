@@ -1,4 +1,5 @@
 from logging import Logger
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -13,3 +14,6 @@ class Context(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
+
+_context: Optional[Context] = None
