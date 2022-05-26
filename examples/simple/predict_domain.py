@@ -1,15 +1,10 @@
-from great_ai import configure, create_service, log_argument, log_metric, use_model
-
-configure(development_mode_override=True)
-
-import re
 from typing import Dict, Iterable, List
 
-from preprocess import preprocess
+from great_ai import GreatAI, use_model
 from pydantic import BaseModel
 from sklearn.pipeline import Pipeline
 
-from great_ai.utilities.clean import clean
+from helpers import lemmatize, preprocess
 
 
 class DomainPrediction(BaseModel):
@@ -18,26 +13,22 @@ class DomainPrediction(BaseModel):
     explanation: List[str]
 
 
-@create_service
+@GreatAI.deploy()
 @use_model("small-domain-prediction-v2", version="latest")
-@log_argument("text", validator=lambda t: len(t) > 0)
 def predict_domain(
     text: str, model: Pipeline, cut_off_probability: float = 0.2
 ) -> List[DomainPrediction]:
-    assert 0 <= cut_off_probability <= 1
-
     """
     Predict the scientific domain of the input text.
     Return labels until their sum likelihood is larger than cut_off_probability.
     """
-    log_metric("text_length", len(text))
+    assert 0 <= cut_off_probability <= 1
 
-    cleaned = clean(text, convert_to_ascii=True)
-    text = re.sub(r"[^a-zA-Z0-9]", " ", cleaned)
+    text = preprocess(text)
 
     feature_names = model.named_steps["vectorizer"].get_feature_names_out()
 
-    token_mapping = {preprocess(original): original for original in text.split(" ")}
+    token_mapping = {lemmatize(original): original for original in text.split(" ")}
 
     features = model.named_steps["vectorizer"].transform(
         [" ".join(token_mapping.keys())]
