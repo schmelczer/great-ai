@@ -11,13 +11,13 @@ on:
 
 jobs:
   lint:
-    uses: ./.github/workflows/generic-lint-node.yml
+    uses: ./.github/workflows/generic-lint-python.yml
     with:
       path_to_project: projects/great_ai
 
   sonar:
     needs: lint
-    uses: ./.github/workflows/generic-sonarqube-node.yml
+    uses: ./.github/workflows/generic-sonarqube-python.yml
     with:
       project_name: great_ai
       path_to_project: projects/great_ai
