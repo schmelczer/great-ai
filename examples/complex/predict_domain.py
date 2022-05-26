@@ -1,12 +1,12 @@
 import re
 from typing import Dict, Iterable, List
 
-from preprocess import preprocess
+from great_ai import log_argument, log_metric, use_model
+from great_ai.utilities.clean import clean
 from pydantic import BaseModel
 from sklearn.pipeline import Pipeline
 
-from great_ai import log_argument, log_metric, use_model
-from great_ai.utilities.clean import clean
+from preprocess import preprocess
 
 
 class DomainPrediction(BaseModel):

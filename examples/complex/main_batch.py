@@ -4,9 +4,9 @@ import json
 from random import shuffle
 
 from devtools import debug
-from predict_domain import predict_domain
-
 from great_ai import process_batch
+
+from predict_domain import predict_domain
 
 if __name__ == "__main__":
     with open(".cache/data-1/s2-corpus-323.json") as f:
