@@ -1,6 +1,7 @@
 from functools import wraps
 from typing import Any, Callable, Dict, List, Literal, Union
 
+from ..helper import get_function_metadata_store
 from ..tracing import TracingContext
 from ..views import Model
 from .load_model import load_model
@@ -11,7 +12,7 @@ def use_model(
     *,
     version: Union[int, Literal["latest"]],
     return_path: bool = False,
-    model_kwarg_name: str = "model"
+    model_kwarg_name: str = "model",
 ) -> Callable[..., Any]:
     assert isinstance(version, int) or version == "latest"
 
@@ -22,6 +23,12 @@ def use_model(
     )
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        store = get_function_metadata_store(func)
+        store.model_parameter_names.append(model_kwarg_name)
+        if store.version:
+            store.version += "|"
+        store.version += f"{key}:{actual_version}"
+
         @wraps(func)
         def wrapper(*args: List[Any], **kwargs: Dict[str, Any]) -> Any:
             context = TracingContext.get_current_context()

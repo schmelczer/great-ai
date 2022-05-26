@@ -162,7 +162,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
                 dimensions=[
                     get_dimension_descriptor(df, c)
                     for c in df.columns
-                    if not c.startswith("arg:") and c not in {"id", "created", "output"}
+                    if c not in {"id", "created", "output"}
                 ],
                 line_color=accent_color,
             )
@@ -181,11 +181,12 @@ def get_dimension_descriptor(df: pd.DataFrame, column: str) -> Dict[str, Any]:
     try:
         dimension["values"] = [float(v) for v in values]
     except (TypeError, ValueError):
+        MAX_LENGTH = 40
         unique_values = unique(values)
-        value_mapping = {str(v): i for i, v in enumerate(unique_values)}
+        value_mapping = {str(v)[-MAX_LENGTH:]: i for i, v in enumerate(unique_values)}
 
-        dimension["values"] = [value_mapping[str(v)] for v in values]
+        dimension["values"] = [value_mapping[str(v)[-MAX_LENGTH:]] for v in values]
         dimension["tickvals"] = list(value_mapping.values())
-        dimension["ticktext"] = list(value_mapping.keys())
+        dimension["ticktext"] = [k[-MAX_LENGTH:] for k in value_mapping.keys()]
 
     return dimension
