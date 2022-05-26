@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import re
 from importlib import import_module
 
@@ -33,9 +34,7 @@ def main() -> None:
         if function_name:
             logger.warning(f"Found `{function_name}` as the value of function_name")
         else:
-            raise MissingArgumentError(
-                "Argument function_name not provided and could not be guessed"
-            )
+            raise MissingArgumentError("Argument function_name could not be guessed")
 
     app_name = f"{file_name}:{function_name}"
     logger.info(f"Starting uvicorn server with app={app_name}")

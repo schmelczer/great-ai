@@ -13,6 +13,7 @@ class Trace(BaseModel):
     execution_time_ms: float
     logged_values: Dict[str, Any]
     models: List[Model]
+    exception: Optional[str]
     output: Any
     evaluation: Any = None
 
@@ -31,6 +32,7 @@ class Trace(BaseModel):
             "execution_time_ms": self.execution_time_ms,
             "models": ", ".join(f"{m.key}:{m.version}" for m in self.models),
             "output": dumps(self.output),
+            "exception": self.exception or "null",
             "evaluation": self.evaluation,
             **self.logged_values,
         }
