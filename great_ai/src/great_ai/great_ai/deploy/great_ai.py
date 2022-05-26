@@ -1,6 +1,18 @@
 import inspect
+from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Type, cast
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Type,
+    Union,
+    cast,
+)
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.wsgi import WSGIMiddleware
@@ -10,6 +22,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, create_model
 from starlette.responses import HTMLResponse
 
+from great_ai.great_ai.helper.use_http_exceptions import use_http_exceptions
 from great_ai.utilities.parallel_map import parallel_map
 
 from ..context import get_context
@@ -26,22 +39,12 @@ class GreatAI(FastAPI):
     def __init__(self, func: Callable[..., Any], *args: Any, **kwargs: Any):
         self._func = automatically_decorate_parameters(func)
 
-        signature = inspect.signature(func)
-        parameters = {
-            p.name: (
-                p.annotation if p.annotation != inspect._empty else Any,
-                p.default if p.default != inspect._empty else ...,
-            )
-            for p in signature.parameters.values()
-            if p.name in get_function_metadata_store(func).input_parameter_names
-        }
-
-        schema: Type[BaseModel] = create_model("InputModel", **parameters)  # type: ignore
+        schema = self._get_schema()
 
         def process_single(input_value: schema) -> Trace:  # type: ignore
             with TracingContext() as t:
                 result = self._func(**cast(BaseModel, input_value).dict())
-                output = t.log_output(result)
+                output = t.finalise(output=result)
             return output
 
         self.process_single = process_single
@@ -58,14 +61,24 @@ class GreatAI(FastAPI):
 
     @staticmethod
     def deploy(
-        disable_docs: bool = False, disable_metrics: bool = False
-    ) -> Callable[[Callable[..., Any]], "GreatAI"]:
-        def decorator(func: Callable[..., Any]) -> GreatAI:
-            return GreatAI(func)._bootstrap_rest_api(
-                disable_docs=disable_docs, disable_metrics=disable_metrics
+        func: Optional[Callable[..., Any]] = None,
+        *,
+        disable_docs: bool = False,
+        disable_metrics: bool = False,
+    ) -> Union[Callable[[Callable[..., Any]], "GreatAI"], "GreatAI"]:
+        if func is None:
+            return cast(
+                Callable[..., Any],
+                partial(
+                    GreatAI.deploy,
+                    disable_docs=disable_docs,
+                    disable_metrics=disable_metrics,
+                ),
             )
 
-        return decorator
+        return GreatAI(func)._bootstrap_rest_api(
+            disable_docs=disable_docs, disable_metrics=disable_metrics
+        )
 
     def process_batch(
         self,
@@ -85,11 +98,25 @@ class GreatAI(FastAPI):
             + (self._func.__doc__ or "")
         )
 
+    def _get_schema(self) -> Type[BaseModel]:
+        signature = inspect.signature(self._func)
+        parameters = {
+            p.name: (
+                p.annotation if p.annotation != inspect._empty else Any,
+                p.default if p.default != inspect._empty else ...,
+            )
+            for p in signature.parameters.values()
+            if p.name in get_function_metadata_store(self._func).input_parameter_names
+        }
+
+        schema: Type[BaseModel] = create_model("InputModel", **parameters)  # type: ignore
+        return schema
+
     def _bootstrap_rest_api(
         self, disable_docs: bool, disable_metrics: bool
     ) -> "GreatAI":
         self.post("/evaluations", status_code=status.HTTP_200_OK, response_model=Trace)(
-            self.process_single
+            use_http_exceptions(self.process_single)
         )
 
         @self.get("/evaluations/:evaluation_id", status_code=status.HTTP_200_OK)

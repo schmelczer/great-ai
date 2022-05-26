@@ -10,6 +10,7 @@ def parameter(
     parameter_name: str,
     *,
     validator: Callable[[Any], bool] = lambda _: True,
+    disable_logging: bool = False,
 ) -> Callable[..., Any]:
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         get_function_metadata_store(func).input_parameter_names.append(parameter_name)
@@ -34,7 +35,7 @@ def parameter(
                 )
 
             context = TracingContext.get_current_context()
-            if context:
+            if context and not disable_logging:
                 context.log_value(name=actual_name, value=argument)
                 if isinstance(argument, str):
                     context.log_value(name=f"{actual_name}:length", value=len(argument))
