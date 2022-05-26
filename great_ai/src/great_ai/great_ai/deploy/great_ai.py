@@ -139,7 +139,7 @@ class GreatAI(FastAPI):
                 return get_swagger_ui_html(openapi_url="openapi.json", title=self.title)
 
             @self.get("/docs/index.html", include_in_schema=False)
-            def redirect_to_entrypoint() -> RedirectResponse:
+            def redirect_to_docs() -> RedirectResponse:
                 return RedirectResponse("/docs")
 
         if not disable_metrics:

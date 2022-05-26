@@ -3,7 +3,7 @@
 set -e
 
 echo "Installing dependencies if necessary"
-python3 -m pip install --upgrade autoflake isort black[jupyter] mypy
+python3 -m pip install --upgrade autoflake isort black[jupyter] mypy flake8
 
 echo "Formatting and checking $1"
 
@@ -20,5 +20,8 @@ python3 -m black . --exclude .env
 
 echo Running mypy
 python3 -m mypy --namespace-packages --ignore-missing-imports --install-types --non-interactive --disallow-untyped-defs --disallow-incomplete-defs --pretty --follow-imports=silent --exclude=external/ --exclude=/build/ .
+
+echo Running Flake8
+python3 -m flake8 . --count --show-source --statistics --exclude=__init__.py,.env,external --ignore=E501,E722,E402,W503,E203
 
 cd -
