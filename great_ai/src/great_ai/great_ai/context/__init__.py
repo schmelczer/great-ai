@@ -1,2 +1,3 @@
+from .configure import configure
 from .context import Context
-from .get_context import configure, get_context
+from .get_context import get_context
