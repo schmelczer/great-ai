@@ -1,5 +1,6 @@
 from .evaluation_feedback_request import EvaluationFeedbackRequest
 from .filter import Filter
+from .function_metadata import FunctionMetadata
 from .health_check_response import HealthCheckResponse
 from .model import Model
 from .operators import operators
