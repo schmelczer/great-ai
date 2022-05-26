@@ -7,3 +7,4 @@ __pycache__
 **/.ipynb_checkpoints
 **/tracing_database.json
 **/s3.ini
+*.egg-info
