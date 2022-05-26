@@ -1,0 +1,26 @@
+name: Check library
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+    paths:
+      - "projects/great_ai/**"
+      - ".github/workflows/*"
+
+jobs:
+  lint:
+    uses: ./.github/workflows/generic-lint-node.yml
+    with:
+      path_to_project: projects/great_ai
+
+  sonar:
+    needs: lint
+    uses: ./.github/workflows/generic-sonarqube-node.yml
+    with:
+      project_name: great_ai
+      path_to_project: projects/great_ai
+    secrets:
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
+      sonar_host: ${{ secrets.SONAR_HOST_URL }}
