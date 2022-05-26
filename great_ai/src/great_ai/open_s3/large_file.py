@@ -157,7 +157,7 @@ class LargeFile:
 
     @property
     def version_ids(self) -> List[int]:
-        return [self._get_version_from_key(key) for key in self._versions]
+        return sorted(self._get_version_from_key(key) for key in self._versions)
 
     @property
     def version(self) -> int:
