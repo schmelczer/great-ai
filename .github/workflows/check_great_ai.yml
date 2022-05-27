@@ -19,7 +19,7 @@ jobs:
     needs: lint
     uses: ./.github/workflows/generic-sonarqube-python.yml
     with:
-      project_name: great_ai
+      project_name: great-ai
       path_to_project: great_ai
     secrets:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
