@@ -7,11 +7,14 @@ from .bytes_to_megabytes import bytes_to_megabytes
 
 
 class ProgressBar:
+    min_progress_percentage_change = 10
+
     def __init__(self, file_size: int, logger: Logger, prefix: str):
         self._file_size = file_size
         self._logger = logger
         self._prefix = prefix
 
+        self._last_percentage: float = 0
         self._seen_so_far = 0
         self._lock = threading.Lock()
 
@@ -19,6 +22,15 @@ class ProgressBar:
         with self._lock:
             self._seen_so_far += bytes_amount
             percentage = (self._seen_so_far / float(self._file_size)) * 100
+
+            if (
+                percentage != 100
+                and percentage - self._last_percentage
+                < self.min_progress_percentage_change
+            ):
+                return
+
+            self._last_percentage = percentage
 
             file_size_mb = bytes_to_megabytes(self._file_size)
             seen_so_far_mb = bytes_to_megabytes(self._seen_so_far)
