@@ -157,7 +157,7 @@ class LargeFile:
 
     @property
     def version_ids(self) -> List[int]:
-        return sorted(self._get_version_from_key(key) for key in self._versions)
+        return [self._get_version_from_key(key) for key in self._versions]
 
     @property
     def version(self) -> int:
@@ -271,30 +271,31 @@ class LargeFile:
 
     def _find_versions(self) -> None:
         if self._offline_mode:
-            self._fetch_versions_from_cache()
+            versions: Union[List[str], List[Path]] = self._fetch_versions_from_cache()
         else:
             self._create_client()
-            self._fetch_versions_from_s3()
+            versions = self._fetch_versions_from_s3()
+
+        self._versions = sorted(versions, key=self._get_version_from_key)
 
         if self._versions:
             logger.info(f"Found versions: {self.version_ids}")
         else:
             logger.info("No versions found")
 
-    def _fetch_versions_from_cache(self) -> None:
+    def _fetch_versions_from_cache(self) -> List[Path]:
         logger.info(f"Fetching offline versions of {self._name}")
 
-        self._versions = [
-            path for path in self.cache_path.glob(f"{self._local_name}-*")
-        ]
+        return list(self.cache_path.glob(f"{self._local_name}-*"))
 
-    def _fetch_versions_from_s3(self) -> None:
+    def _fetch_versions_from_s3(self) -> List[str]:
         logger.info(f"Fetching online versions of {self._name}")
+
         found_objects = self._client.list_objects_v2(
             Bucket=self.bucket_name, Prefix=self._name
         )
-        self._versions = (
-            sorted(o["Key"] for o in found_objects["Contents"])
+        return (
+            [o["Key"] for o in found_objects["Contents"]]
             if "Contents" in found_objects
             else []
         )
