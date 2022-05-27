@@ -1262,9 +1262,6 @@ class LatexWalker(object):
             "keep_inline_math": None,
         }
 
-    def _report_ignore_parse_error(self, exc):
-        logger.info("Ignoring parse error (tolerant parsing mode): %s", exc)
-
     def get_token(
         self,
         pos,
@@ -1362,7 +1359,6 @@ class LatexWalker(object):
                 s=s, pos=pos, msg=msg, **self.pos_to_lineno_colno(pos, as_dict=True)
             )
             if self.tolerant_parsing:
-                self._report_ignore_parse_error(e)
                 return None, LatexToken(
                     tok="char", arg=placeholder, pos=pos, len=len, pre_space=space
                 )
@@ -1995,7 +1991,6 @@ class LatexWalker(object):
         )
 
         if self.tolerant_parsing:
-            self._report_ignore_parse_error(e)
             return None
         return e
 
@@ -2544,15 +2539,13 @@ class LatexWalker(object):
                         **self.pos_to_lineno_colno(len(self.s), as_dict=True)
                     )
                     if self.tolerant_parsing:
-                        self._report_ignore_parse_error(e)
                         r_endnow = True
                     else:
                         raise e
                 else:
                     r_endnow = e
-            except LatexWalkerParseError as e:
+            except LatexWalkerParseError:
                 if self.tolerant_parsing:
-                    self._report_ignore_parse_error(e)
                     r_endnow = False
                 else:
                     raise
