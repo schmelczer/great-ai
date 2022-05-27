@@ -38,7 +38,8 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip setuptools pytest pytest-cov pytest-subtests pytest-asyncio
           cd ${{ inputs.path_to_project }}
-          python3 -m pip install -r requirements.txt --upgrade
+          (pip install --editable .) || true
+          (test -f requirements.txt && pip install -r requirements.txt --upgrade) || true
           (test -f dev-requirements.txt && pip install -r dev-requirements.txt --upgrade) || true
 
       - name: Run tests
