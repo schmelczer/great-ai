@@ -30,7 +30,7 @@ class ProgressBar:
             ):
                 return
 
-            self._last_percentage = percentage
+            self._last_percentage += self.min_progress_percentage_change
 
             file_size_mb = bytes_to_megabytes(self._file_size)
             seen_so_far_mb = bytes_to_megabytes(self._seen_so_far)
