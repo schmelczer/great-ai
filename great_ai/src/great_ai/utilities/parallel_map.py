@@ -5,9 +5,9 @@ import multiprocess as mp
 import psutil
 from tqdm.auto import tqdm
 
-from .logger import create_logger
+from .logger import get_logger
 
-logger = create_logger("parallel_map")
+logger = get_logger("parallel_map")
 
 
 def parallel_map(
@@ -25,8 +25,15 @@ def parallel_map(
     if not chunk_size:
         chunk_size = max(1, ceil(len(values) / concurrency / 10))
 
+    chunk_count = ceil(len(values) / chunk_size)
+    if chunk_count < concurrency:
+        logger.warning(
+            f"Limiting concurrency to {chunk_count} because there are only {chunk_count} chunks"
+        )
+        concurrency = chunk_count
+
     logger.info(
-        f"Starting parallel map, concurrency: {concurrency}, chunk size: {chunk_size}"
+        f"Starting parallel map (concurrency: {concurrency}, chunk size: {chunk_size})"
     )
 
     if concurrency == 1 or len(values) <= chunk_size:
