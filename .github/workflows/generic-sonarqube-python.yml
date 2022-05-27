@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip setuptools pytest pytest-cov pytest-subtests
+          python3 -m pip install --upgrade pip setuptools pytest pytest-cov pytest-subtests pytest-asyncio
           cd ${{ inputs.path_to_project }}
           python3 -m pip install -r requirements.txt --upgrade
           (test -f dev-requirements.txt && pip install -r dev-requirements.txt --upgrade) || true
