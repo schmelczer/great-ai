@@ -10,7 +10,7 @@ from ..context import get_context
 
 def save_model(
     model: Union[Path, str, object], key: str, keep_last_n: Optional[int] = None
-) -> int:
+) -> str:
     get_context()  # will setup LargeFile if there was no config set
 
     file = LargeFile(name=key, mode="wb", keep_last_n=keep_last_n)
@@ -23,4 +23,4 @@ def save_model(
 
     get_context().logger.info(f"Model {key} uploaded with version {file.version}")
 
-    return file.version
+    return f"{key}:{file.version}"
