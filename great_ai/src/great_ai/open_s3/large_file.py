@@ -8,11 +8,11 @@ from typing import IO, Any, List, Mapping, Optional, Type, Union, cast
 
 import boto3
 
-from great_ai.utilities.logger import create_logger
+from great_ai.utilities.logger import get_logger
 
 from .helper import DownloadProgressBar, UploadProgressBar, human_readable_to_byte
 
-logger = create_logger("open_s3")
+logger = get_logger("open_s3")
 
 
 class LargeFile:

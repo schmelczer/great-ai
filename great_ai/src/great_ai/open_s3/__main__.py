@@ -2,12 +2,12 @@
 
 from pathlib import Path
 
-from great_ai.utilities.logger import create_logger
+from great_ai.utilities.logger import get_logger
 
 from .large_file import LargeFile
 from .parse_arguments import parse_arguments
 
-logger = create_logger("open_s3")
+logger = get_logger("open_s3")
 
 
 def main() -> None:
