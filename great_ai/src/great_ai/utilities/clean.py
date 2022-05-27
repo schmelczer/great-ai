@@ -6,9 +6,9 @@ import unidecode
 
 from .data import left_regular_punctuations, right_regular_punctuations
 from .external.pylatexenc.latex2text import LatexNodes2Text
-from .logger.create_logger import create_logger
+from .logger import get_logger
 
-logger = create_logger("clean")
+logger = get_logger("clean")
 latex = LatexNodes2Text()
 
 

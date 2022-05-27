@@ -5,7 +5,7 @@ from pathlib import Path
 
 import great_ai.great_ai.context.context as context
 from great_ai.open_s3 import LargeFile
-from great_ai.utilities.logger import create_logger
+from great_ai.utilities.logger import get_logger
 
 from ..constants import DEFAULT_TRACING_DB_FILENAME, ENV_VAR_KEY, PRODUCTION_KEY
 from ..persistence import ParallelTinyDbDriver, PersistenceDriver
@@ -19,7 +19,7 @@ def configure(
         Path(DEFAULT_TRACING_DB_FILENAME)
     ),
 ) -> None:
-    logger = create_logger("great_ai", level=log_level)
+    logger = get_logger("great_ai", level=log_level)
 
     if context._context is not None:
         logger.warn(

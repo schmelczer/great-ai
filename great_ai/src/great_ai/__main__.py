@@ -9,9 +9,9 @@ from uvicorn.config import LOGGING_CONFIG
 from .great_ai.context import get_context
 from .great_ai.exceptions import MissingArgumentError
 from .parse_arguments import parse_arguments
-from .utilities.logger import create_logger
+from .utilities.logger import get_logger
 
-logger = create_logger("GreatAI-Server")
+logger = get_logger("GreatAI-Server")
 
 
 def main() -> None:
