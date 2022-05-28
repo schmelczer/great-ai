@@ -61,12 +61,12 @@ class TracingContext:
 
         if exception is not None and type is not None:
             self.finalise(exception=exception)
-            if get_context().is_production:
+            if get_context().should_log_exception_stack:
+                get_context().logger.exception("Could not finish operation")
+            else:
                 get_context().logger.error(
                     f"Could not finish operation because of {type.__name__}: {exception}"
                 )
-            else:
-                get_context().logger.exception("Could not finish operation")
 
         assert self._trace is not None
         get_context().persistence.save_trace(self._trace)

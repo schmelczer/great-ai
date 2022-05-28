@@ -9,6 +9,7 @@ from flask import Flask
 
 from great_ai.utilities.unique import unique
 
+from ..constants import METRICS_PATH
 from ..context import get_context
 from ..helper import snake_case_to_text, text_to_hex_color
 from ..views import SortBy
@@ -23,7 +24,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
     flask_app = Flask(__name__)
     app = Dash(
         function_name,
-        requests_pathname_prefix=get_context().metrics_path + "/",
+        requests_pathname_prefix=METRICS_PATH + "/",
         server=flask_app,
         title=snake_case_to_text(function_name),
         update_title=None,
@@ -103,10 +104,11 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
 
     @app.callback(
         Output(execution_time_histogram, "figure"),
+        Output(parallel_coords, "figure"),
         Input(table, "filter_query"),
         Input(interval, "n_intervals"),
     )
-    def update_execution_times(filter: str, _n_intervals: int) -> go.Figure:
+    def update_charts(filter: str, n_intervals: int) -> go.Figure:
         conjunctive_filters = [
             get_filter_from_datatable(f) for f in filter.split(" && ")
         ]
@@ -117,7 +119,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         )
 
         if not rows:
-            return go.Figure()
+            return go.Figure(), go.Figure()
 
         df = pd.DataFrame(rows)
 
@@ -136,36 +138,18 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
             margin=dict(l=0, r=0, b=0, t=0, pad=0),
         )
 
-        return fig
-
-    @app.callback(
-        Output(parallel_coords, "figure"),
-        Input(table, "filter_query"),
-        Input(interval, "n_intervals"),
-    )
-    def update_parallel_coords(filter: str, _n_intervals: int) -> go.Figure:
-        conjunctive_filters = [
-            get_filter_from_datatable(f) for f in filter.split(" && ")
-        ]
-        non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
-
-        rows = get_context().persistence.query(
-            conjunctive_filters=non_null_conjunctive_filters
-        )
-
-        if not rows:
-            return go.Figure()
-
-        df = pd.DataFrame(rows)
-        return go.Figure(
-            go.Parcoords(
-                dimensions=[
-                    get_dimension_descriptor(df, c)
-                    for c in df.columns
-                    if c not in {"id", "created", "output"}
-                ],
-                line_color=accent_color,
-            )
+        return (
+            fig,
+            go.Figure(
+                go.Parcoords(
+                    dimensions=[
+                        get_dimension_descriptor(df, c)
+                        for c in df.columns
+                        if c not in {"id", "created", "output"}
+                    ],
+                    line_color=accent_color,
+                )
+            ),
         )
 
     return flask_app

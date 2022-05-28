@@ -1,3 +1,4 @@
+from .api_metadata import ApiMetadata
 from .evaluation_feedback_request import EvaluationFeedbackRequest
 from .filter import Filter
 from .function_metadata import FunctionMetadata
