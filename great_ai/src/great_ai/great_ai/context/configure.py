@@ -1,7 +1,8 @@
 import os
 import random
-from logging import INFO, Logger
+from logging import DEBUG, Logger
 from pathlib import Path
+from typing import Optional
 
 import great_ai.great_ai.context.context as context
 from great_ai.open_s3 import LargeFile
@@ -12,12 +13,15 @@ from ..persistence import ParallelTinyDbDriver, PersistenceDriver
 
 
 def configure(
-    log_level: int = INFO,
+    version: str = "0.0.1",
+    log_level: int = DEBUG,
     s3_config: Path = Path("s3.ini"),
     seed: int = 42,
     persistence_driver: PersistenceDriver = ParallelTinyDbDriver(
         Path(DEFAULT_TRACING_DB_FILENAME)
     ),
+    should_log_exception_stack: Optional[bool] = None,
+    prediction_cache_size: int = 512,
 ) -> None:
     logger = get_logger("great_ai", level=log_level)
 
@@ -27,9 +31,7 @@ def configure(
             + 'Make sure to call "configure()" before importing your application code.'
         )
 
-    is_production = _is_in_production_mode(
-        logger=logger,
-    )
+    is_production = _is_in_production_mode(logger=logger)
     _initialize_large_file(s3_config, logger=logger)
     _set_seed(seed)
 
@@ -39,34 +41,38 @@ def configure(
         )
 
     context._context = context.Context(
-        metrics_path="/metrics",
+        version=version,
         persistence=persistence_driver,
         is_production=is_production,
         logger=logger,
+        should_log_exception_stack=not is_production
+        if should_log_exception_stack is None
+        else should_log_exception_stack,
+        prediction_cache_size=prediction_cache_size,
     )
 
     logger.info("Options: configured ✅")
 
 
-def _is_in_production_mode(logger: Logger) -> bool:
+def _is_in_production_mode(logger: Optional[Logger]) -> bool:
     environment = os.environ.get(ENV_VAR_KEY)
 
     if environment is None:
-        logger.info(
-            f"Environment variable {ENV_VAR_KEY} is not set, defaulting to development mode"
-        )
+        if logger:
+            logger.warning(
+                f"Environment variable {ENV_VAR_KEY} is not set, defaulting to development mode ‼️"
+            )
         is_production = False
     else:
         is_production = environment.lower() == PRODUCTION_KEY
-        if not is_production:
-            logger.info(
-                f"Value of {ENV_VAR_KEY} is `{environment}` which is not equal to `{PRODUCTION_KEY}`"
-            )
-
-    if is_production:
-        logger.info("Running in production mode ✅")
-    else:
-        logger.warning("Running in development mode ‼️")
+        if logger:
+            if not is_production:
+                logger.info(
+                    f"Value of {ENV_VAR_KEY} is `{environment}` which is not equal to `{PRODUCTION_KEY}`"
+                    + "defaulting to development mode ‼️"
+                )
+            else:
+                logger.info("Running in production mode ✅")
 
     return is_production
 

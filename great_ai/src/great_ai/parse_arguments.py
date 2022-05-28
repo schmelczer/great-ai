@@ -13,14 +13,6 @@ def parse_arguments() -> Namespace:
     )
 
     parser.add_argument(
-        "--function_name",
-        type=str,
-        help="name of your inference function, defaults to the base name of the filename or the literal `app`",
-        default="",
-        required=False,
-    )
-
-    parser.add_argument(
         "--host",
         type=str,
         help="it is passed to uvicorn which starts a server listening on this address",

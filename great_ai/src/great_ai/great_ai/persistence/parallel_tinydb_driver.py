@@ -24,7 +24,7 @@ class ParallelTinyDbDriver(PersistenceDriver):
     def save_trace(self, trace: Trace) -> str:
         return self._safe_execute(lambda db: db.insert(trace.dict()))
 
-    def add_evaluation(self, id: str, evaluation: Any) -> None:
+    def add_feedback(self, id: str, evaluation: Any) -> None:
         self._safe_execute(
             lambda db: db.update(
                 fields={"evaluation": evaluation},

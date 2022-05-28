@@ -278,18 +278,13 @@ class LargeFile:
 
         self._versions = sorted(versions, key=self._get_version_from_key)
 
-        if self._versions:
-            logger.info(f"Found versions: {self.version_ids}")
-        else:
-            logger.info("No versions found")
-
     def _fetch_versions_from_cache(self) -> List[Path]:
-        logger.info(f"Fetching offline versions of {self._name}")
+        logger.debug(f"Fetching offline versions of {self._name}")
 
         return list(self.cache_path.glob(f"{self._local_name}-*"))
 
     def _fetch_versions_from_s3(self) -> List[str]:
-        logger.info(f"Fetching online versions of {self._name}")
+        logger.debug(f"Fetching online versions of {self._name}")
 
         found_objects = self._client.list_objects_v2(
             Bucket=self.bucket_name, Prefix=self._name
@@ -318,11 +313,15 @@ class LargeFile:
 
             if self._version is None:
                 self._version = self.version_ids[-1]
-                logger.info(f"Latest version of {self._name} is {self._version}")
+                logger.info(
+                    f"Latest version of {self._name} is {self._version} "
+                    + f"(from versions: {', '.join((str(v) for v in self.version_ids))})"
+                )
 
             elif self._version not in self.version_ids:
                 raise FileNotFoundError(
-                    f"File {self._name} not found with version {self._version}. Available versions: {self.version_ids}"
+                    f"File {self._name} not found with version {self._version}. "
+                    + f"(from versions: {', '.join((str(v) for v in self.version_ids))})"
                 )
         else:
             raise ValueError("Unsupported file mode.")

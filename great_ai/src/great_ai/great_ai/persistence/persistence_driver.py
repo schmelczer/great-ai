@@ -12,7 +12,7 @@ class PersistenceDriver(ABC):
         pass
 
     @abstractmethod
-    def add_evaluation(self, id: str, evaluation: Any) -> None:
+    def add_feedback(self, id: str, evaluation: Any) -> None:
         pass
 
     @abstractmethod
