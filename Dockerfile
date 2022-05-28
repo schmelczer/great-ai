@@ -1,4 +1,4 @@
-FROM python:3.10.4-alpine3.16
+FROM python:3.10.4-slim-bullseye
 
 ENV ENVIRONMENT production
 
@@ -14,8 +14,8 @@ RUN pip install --no-cache-dir en-core-web-sm@https://github.com/explosion/spacy
 COPY great_ai great_ai
 RUN pip install --no-cache-dir ./great_ai
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir --requirement requirements.txt
+# COPY requirements.txt ./
+# RUN pip install --no-cache-dir --requirement requirements.txt
 
 COPY . .
 RUN rm -rf great_ai
