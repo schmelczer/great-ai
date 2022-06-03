@@ -4,4 +4,4 @@ from pydantic import BaseModel
 
 
 class EvaluationFeedbackRequest(BaseModel):
-    evaluation: Any
+    feedback: Any

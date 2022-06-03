@@ -4,7 +4,7 @@ from datetime import datetime
 from types import TracebackType
 from typing import Any, DefaultDict, Dict, List, Literal, Optional, Type
 
-from ..context import get_context
+from ..context.get_context import get_context
 from ..views import Model, Trace
 
 
@@ -69,6 +69,6 @@ class TracingContext:
                 )
 
         assert self._trace is not None
-        get_context().persistence.save_trace(self._trace)
+        get_context().tracing_database.save(self._trace)
 
         return False

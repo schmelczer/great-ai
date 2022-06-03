@@ -22,4 +22,5 @@ def freeze_arguments(func: Callable[..., Any]) -> Callable[..., Any]:
         }
         return func(*args, **kwargs)
 
+    wrapper.cache_info = func.cache_info  # type: ignore
     return wrapper

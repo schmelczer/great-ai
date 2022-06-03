@@ -33,7 +33,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         ],
     )
 
-    documents = get_context().persistence.get_documents()
+    documents = get_context().tracing_database.query()
     df = pd.DataFrame(documents)
 
     execution_time_histogram = dcc.Graph(config={"displaylogo": False})
@@ -95,11 +95,11 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         ]
         non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
 
-        return get_context().persistence.query(
-            conjunctive_filters=non_null_conjunctive_filters,
-            sort_by=sort_by,
+        return get_context().tracing_database.query(
             skip=page_current * page_size,
             take=page_size,
+            conjunctive_filters=non_null_conjunctive_filters,
+            sort_by=sort_by,
         )
 
     @app.callback(
@@ -114,7 +114,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         ]
         non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
 
-        rows = get_context().persistence.query(
+        rows = get_context().tracing_database.query(
             conjunctive_filters=non_null_conjunctive_filters
         )
 

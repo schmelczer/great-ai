@@ -1,4 +1,5 @@
 from .api_metadata import ApiMetadata
+from .cache_statistics import CacheStatistics
 from .evaluation_feedback_request import EvaluationFeedbackRequest
 from .filter import Filter
 from .function_metadata import FunctionMetadata

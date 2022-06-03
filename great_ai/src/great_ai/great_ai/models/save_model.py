@@ -3,17 +3,15 @@ from typing import Optional, Union
 
 from joblib import dump
 
-from great_ai.open_s3 import LargeFile
-
 from ..context import get_context
 
 
 def save_model(
     model: Union[Path, str, object], key: str, keep_last_n: Optional[int] = None
 ) -> str:
-    get_context()  # will setup LargeFile if there was no config set
-
-    file = LargeFile(name=key, mode="wb", keep_last_n=keep_last_n)
+    file = get_context().large_file_implementation(
+        name=key, mode="wb", keep_last_n=keep_last_n
+    )
 
     if isinstance(model, Path) or isinstance(model, str):
         file.push(model)
