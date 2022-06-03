@@ -33,6 +33,7 @@ class LargeFileLocal(LargeFile):
             keep_last_n=keep_last_n,
             cache_only_mode=True,
         )
+        super().configure_credentials()
 
     def _find_remote_instances(self) -> List[DataInstance]:
         return []
