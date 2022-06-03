@@ -2,7 +2,7 @@ import configparser
 import os
 import shutil
 import tempfile
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
 from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Optional, Type, Union, cast
@@ -48,6 +48,7 @@ class LargeFile(ABC):
     ```
     """
 
+    initialized = False
     cache_path = Path(".cache")
     max_cache_size: Optional[str] = "30GB"
 
@@ -96,11 +97,11 @@ class LargeFile(ABC):
         credentials.default_section
         cls.configure_credentials(**credentials[credentials.default_section])
 
-    @abstractclassmethod
+    @classmethod
     def configure_credentials(
         cls,
     ) -> None:
-        pass
+        cls.initialized = True
 
     def __enter__(self) -> IO:
         self._file: IO[Any] = (
@@ -236,7 +237,6 @@ class LargeFile(ABC):
                 ),
                 version=int(f.name.split(CACHE_NAME_VERSION_SEPARATOR)[-1]),
                 remote_path=f,
-                origin="filesystem",
             )
             for f in self.cache_path.glob(
                 f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}*"

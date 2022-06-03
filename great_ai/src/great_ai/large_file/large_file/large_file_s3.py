@@ -66,6 +66,7 @@ class LargeFileS3(LargeFile):
         cls.secret_access_key = aws_secret_access_key
         cls.bucket_name = large_files_bucket_name
         cls.endpoint_url = aws_endpoint_url
+        super().configure_credentials()
 
     @cached_property
     def _client(self) -> boto3.client:
@@ -99,7 +100,6 @@ class LargeFileS3(LargeFile):
                     name=o["Key"].split(S3_NAME_VERSION_SEPARATOR)[0],
                     version=int(o["Key"].split(S3_NAME_VERSION_SEPARATOR)[-1]),
                     remote_path=o["Key"],
-                    origin="s3",
                 )
                 for o in found_objects["Contents"]
                 if o["Key"].split(S3_NAME_VERSION_SEPARATOR)[0] == self._name

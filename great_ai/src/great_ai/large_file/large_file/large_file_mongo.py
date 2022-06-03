@@ -32,6 +32,7 @@ class LargeFileMongo(LargeFile):
     ) -> None:
         cls.connection_string = connection_string
         cls.database = database
+        super().configure_credentials()
 
     @cached_property
     def _client(self) -> GridFSBucket:
