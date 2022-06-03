@@ -15,9 +15,9 @@ pip install open-large
 ### Simple example
 
 ```python
-from open_s3 import LargeFile
+from large_file import LargeFileS3
 
-LargeFile.configure_credentials({
+LargeFileS3.configure_credentials({
     "aws_region_name": "your_region_like_eu-west-2",
     "aws_access_key_id": "YOUR_ACCESS_KEY_ID",
     "aws_secret_access_key": "YOUR_VERY_SECRET_ACCESS_KEY",
@@ -25,13 +25,13 @@ LargeFile.configure_credentials({
 })
 
 # Creates a new version and deletes the older version leaving the 3 most recently used intact
-with LargeFile("test.txt", "w", keep_last_n=3) as f:
+with LargeFileS3("test.txt", "w", keep_last_n=3) as f:
     for i in range(100000):
         f.write('test\n')
 
 # By default the latest version is returned
 # but an optional `version` keyword argument can be provided as well
-with LargeFile("test.txt", "r") as f:
+with LargeFileS3("test.txt", "r") as f:
     print(f.readlines()[0])
 ```
 
@@ -91,13 +91,13 @@ endpoint_url = this is optional, for backblaze, use this: https://s3.us-west-002
 #### Print the expected options
 
 ```sh
-python3 -m open_s3 --help
+python3 -m large_file --help
 ```
 
 #### Upload some files
 
 ```sh
-python3 -m open_s3 --secrets secrets.ini --push my_first_file.json folder/my_second_file my_folder
+python3 -m large_file --backend s3 --secrets secrets.ini --push my_first_file.json folder/my_second_file my_folder
 ```
 
 > Only the filename is used as the S3 name, the rest of the path is ignored.
@@ -107,7 +107,7 @@ python3 -m open_s3 --secrets secrets.ini --push my_first_file.json folder/my_sec
 This can be useful when building a Docker image for example. This way, the files can already reside inside the container and need not be downloaded later.
 
 ```sh
-python3 -m open_s3 --secrets ~/.aws/credentials --cache my_first_file.json:3 my_second_file my_folder:0
+python3 -m large_file --backend s3 -secrets ~/.aws/credentials --cache my_first_file.json:3 my_second_file my_folder:0
 ```
 
 > Versions may be specified by using `:`-s.
@@ -115,5 +115,5 @@ python3 -m open_s3 --secrets ~/.aws/credentials --cache my_first_file.json:3 my_
 #### Delete remote files
 
 ```sh
-python3 -m open_s3 --secrets ~/.aws/credentials --delete my_first_file.json
+python3 -m large_file --backend s3 --secrets ~/.aws/credentials --delete my_first_file.json
 ```
