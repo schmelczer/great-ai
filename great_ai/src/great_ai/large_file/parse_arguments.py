@@ -8,11 +8,18 @@ def parse_arguments() -> Tuple[ArgumentParser, Namespace]:
     )
 
     parser.add_argument(
+        "--driver",
+        type=str,
+        help="choose which backend to use, available options: `local`, `s3`, `mongodb`",
+        required=True,
+    )
+
+    parser.add_argument(
         "-s",
         "--secrets",
         type=str,
-        help="path to an .ini configration file with your S3 credentials",
-        required=True,
+        help="path to an .ini configuration file with your S3 credentials",
+        required=False,
     )
 
     parser.add_argument(

@@ -8,7 +8,7 @@ import boto3
 PATH = Path(__file__).parent.resolve()
 
 
-from src.great_ai import LargeFile
+from src.great_ai import LargeFileS3
 
 credentials = {
     "aws_region_name": "your_region_like_eu-west-2",
@@ -19,15 +19,15 @@ credentials = {
 }
 
 
-class TestLargeFile(unittest.TestCase):
+class TestLargeFileS3(unittest.TestCase):
     def test_uninitialized(self) -> None:
-        self.assertRaises(ValueError, LargeFile, "test-file")
+        self.assertRaises(ValueError, LargeFileS3, "test-file")
 
     def test_bad_file_modes(self) -> None:
-        self.assertRaises(ValueError, LargeFile, "test-file", "w", version=3)
-        self.assertRaises(ValueError, LargeFile, "test-file", "wb", version=3)
-        self.assertRaises(ValueError, LargeFile, "test-file", "w+r")
-        self.assertRaises(ValueError, LargeFile, "test-file", "test")
+        self.assertRaises(ValueError, LargeFileS3, "test-file", "w", version=3)
+        self.assertRaises(ValueError, LargeFileS3, "test-file", "wb", version=3)
+        self.assertRaises(ValueError, LargeFileS3, "test-file", "w+r")
+        self.assertRaises(ValueError, LargeFileS3, "test-file", "test")
 
     @patch.object(boto3, "client")
     def test_initialized_with_dict(self, client: Any) -> None:
@@ -52,14 +52,14 @@ class TestLargeFile(unittest.TestCase):
         )
         boto3.client = Mock(return_value=s3)
 
-        LargeFile.configure_credentials(
+        LargeFileS3.configure_credentials(
             aws_region_name=credentials["aws_region_name"],
             aws_access_key_id=credentials["aws_access_key_id"],
             aws_secret_access_key=credentials["aws_secret_access_key"],
             large_files_bucket_name=credentials["large_files_bucket_name"],
             aws_endpoint_url=credentials["aws_endpoint_url"],
         )
-        lf = LargeFile("test-file")
+        lf = LargeFileS3("test-file")
 
         boto3.client.assert_called_once_with(
             "s3",
@@ -75,7 +75,6 @@ class TestLargeFile(unittest.TestCase):
 
         self.assertEqual(lf._version, 2)
         self.assertEqual(lf._local_name, "test-file-2")
-        self.assertEqual(lf._s3_name, "test-file/2")
 
     @patch.object(boto3, "client")
     def test_initialized_with_file(self, client: Any) -> None:
@@ -101,8 +100,8 @@ class TestLargeFile(unittest.TestCase):
 
         boto3.client = Mock(return_value=s3)
 
-        LargeFile.configure_credentials_from_file(PATH / "../../example_secrets.ini")
-        lf = LargeFile("test-file")
+        LargeFileS3.configure_credentials_from_file(PATH / "../../example_secrets.ini")
+        lf = LargeFileS3("test-file")
 
         boto3.client.assert_called_once_with(
             "s3",
@@ -119,4 +118,3 @@ class TestLargeFile(unittest.TestCase):
 
         self.assertEqual(lf._version, 2)
         self.assertEqual(lf._local_name, "test-file-2")
-        self.assertEqual(lf._s3_name, "test-file/2")
