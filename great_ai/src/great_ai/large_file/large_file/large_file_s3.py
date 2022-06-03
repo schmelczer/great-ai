@@ -1,7 +1,6 @@
-import configparser
 from functools import cached_property
 from pathlib import Path
-from typing import Any, List, Mapping, Optional, Union
+from typing import Any, List, Mapping, Optional
 
 import boto3
 
@@ -52,23 +51,7 @@ class LargeFileS3(LargeFile):
     endpoint_url = None
 
     @classmethod
-    def configure_credentials_from_file(
-        cls,
-        secrets_path: Union[Path, str],
-    ) -> None:
-        if isinstance(secrets_path, str):
-            secrets_path = Path(secrets_path)
-
-        if not secrets_path.exists():
-            raise FileNotFoundError(secrets_path.resolve())
-
-        credentials = configparser.ConfigParser()
-        credentials.read(secrets_path)
-        credentials.default_section
-        cls.configure_credentials(**credentials[credentials.default_section])
-
-    @classmethod
-    def configure_credentials(
+    def configure_credentials(  # type: ignore
         cls,
         *,
         aws_region_name: str,
@@ -93,7 +76,7 @@ class LargeFileS3(LargeFile):
             or self.bucket_name is None
         ):
             raise ValueError(
-                "Please configure the S3 access options by calling LargeFile.configure_credentials or set offline_mode=True in the constructor."
+                "Please configure the S3 access options by calling LargeFileS3.configure_credentials or set offline_mode=True in the constructor."
             )
 
         return boto3.client(
@@ -136,7 +119,7 @@ class LargeFileS3(LargeFile):
 
         self._client.download_file(
             Bucket=self.bucket_name,
-            Key=hide_progress,
+            Key=remote_path,
             Filename=str(local_path),
             Callback=None
             if hide_progress

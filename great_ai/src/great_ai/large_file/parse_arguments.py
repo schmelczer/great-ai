@@ -8,7 +8,8 @@ def parse_arguments() -> Tuple[ArgumentParser, Namespace]:
     )
 
     parser.add_argument(
-        "--driver",
+        "-b",
+        "--backend",
         type=str,
         help="choose which backend to use, available options: `local`, `s3`, `mongodb`",
         required=True,
@@ -27,7 +28,7 @@ def parse_arguments() -> Tuple[ArgumentParser, Namespace]:
         "--cache",
         nargs="+",
         type=str,
-        help="download file into local cache, example: file_name:version",
+        help="download file into local cache, example: file_name.txt:version",
         required=False,
     )
 

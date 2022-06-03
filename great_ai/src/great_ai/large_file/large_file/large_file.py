@@ -1,7 +1,8 @@
+import configparser
 import os
 import shutil
 import tempfile
-from abc import ABC, abstractmethod
+from abc import ABC, abstractclassmethod, abstractmethod
 from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Optional, Type, Union, cast
@@ -78,6 +79,28 @@ class LargeFile(ABC):
 
         self._find_instances()
         self._check_mode_and_set_version()
+
+    @classmethod
+    def configure_credentials_from_file(
+        cls,
+        secrets_path: Union[Path, str],
+    ) -> None:
+        if isinstance(secrets_path, str):
+            secrets_path = Path(secrets_path)
+
+        if not secrets_path.exists():
+            raise FileNotFoundError(secrets_path.resolve())
+
+        credentials = configparser.ConfigParser()
+        credentials.read(secrets_path)
+        credentials.default_section
+        cls.configure_credentials(**credentials[credentials.default_section])
+
+    @abstractclassmethod
+    def configure_credentials(
+        cls,
+    ) -> None:
+        pass
 
     def __enter__(self) -> IO:
         self._file: IO[Any] = (
@@ -168,6 +191,7 @@ class LargeFile(ABC):
 
             try:
                 # Make local copy in the cache
+                shutil.rmtree(self.cache_path / self._local_name, ignore_errors=True)
                 copy(str(path), str(self.cache_path / self._local_name))
             except shutil.SameFileError:
                 pass  # No worries

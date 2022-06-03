@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+from argparse import Namespace
 from pathlib import Path
+from typing import Mapping, Type
 
 from great_ai.utilities.logger import get_logger
 
-from .large_file import LargeFileLocal, LargeFileS3
+from .large_file import LargeFile, LargeFileLocal, LargeFileMongo, LargeFileS3
 from .parse_arguments import parse_arguments
 
 logger = get_logger("large_file")
@@ -13,21 +15,7 @@ logger = get_logger("large_file")
 def main() -> None:
     parser, args = parse_arguments()
 
-    factory = {"s3": LargeFileS3, "local": LargeFileLocal}
-
-    if args.driver not in factory:
-        raise ValueError(
-            f"Driver {args.driver} does not exits, available options: {' ,'.join(factory.keys())}"
-        )
-
-    large_file = factory[args.driver]
-
-    if args.driver != "local":
-        if args.secrets is None:
-            raise ValueError(
-                "Providing a credentials file is required when the driver mode is not `local`."
-            )
-        large_file.configure_credentials_from_file(args.secrets)  # type: ignore
+    large_file = get_class(args)
 
     if not args.cache and not args.push and not args.delete:
         logger.warning("No action required.")
@@ -50,6 +38,30 @@ def main() -> None:
             large_file(f).delete()
 
 
+def get_class(args: Namespace) -> Type[LargeFile]:
+    factory: Mapping[str, Type[LargeFile]] = {
+        "s3": LargeFileS3,
+        "local": LargeFileLocal,
+        "mongodb": LargeFileMongo,
+    }
+
+    if args.backend not in factory:
+        raise ValueError(
+            f"Backend {args.backend} does not exits, available options: {' ,'.join(factory.keys())}"
+        )
+
+    large_file = factory[args.backend]
+
+    if args.backend != "local":
+        if args.secrets is None:
+            raise ValueError(
+                "Providing a credentials file is required when the backend mode is not `local`."
+            )
+        large_file.configure_credentials_from_file(args.secrets)
+
+    return large_file
+
+
 if __name__ == "__main__":
     try:
         main()
@@ -57,4 +69,4 @@ if __name__ == "__main__":
         logger.warning("Exiting")
         exit()
     except Exception as e:
-        logger.error(e)
+        logger.exception(e)
