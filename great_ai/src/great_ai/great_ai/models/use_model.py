@@ -2,7 +2,7 @@ from functools import wraps
 from typing import Any, Callable, Dict, List, Literal, Union
 
 from ..helper import assert_function_is_not_finalised, get_function_metadata_store
-from ..tracing import TracingContext
+from ..tracing.tracing_context import TracingContext
 from ..views import Model
 from .load_model import load_model
 

@@ -1,27 +1,11 @@
 import inspect
 from functools import lru_cache, partial, wraps
-from pathlib import Path
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Type,
-    Union,
-    cast,
-)
+from typing import Any, Callable, Iterable, Optional, Sequence, Type, Union, cast
 
-from fastapi import APIRouter, FastAPI, HTTPException, status
-from fastapi.middleware.wsgi import WSGIMiddleware
-from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi.responses import RedirectResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi import APIRouter, FastAPI, status
 from pydantic import BaseModel, create_model
-from starlette.responses import HTMLResponse
 
+from great_ai.great_ai.views.cache_statistics import CacheStatistics
 from great_ai.utilities.parallel_map import parallel_map
 
 from ..constants import METRICS_PATH
@@ -34,36 +18,32 @@ from ..helper import (
     use_http_exceptions,
 )
 from ..parameters import automatically_decorate_parameters
-from ..tracing import TracingContext
-from ..views import (
-    ApiMetadata,
-    EvaluationFeedbackRequest,
-    HealthCheckResponse,
-    Query,
-    Trace,
+from ..tracing.tracing_context import TracingContext
+from ..views import ApiMetadata, HealthCheckResponse, Trace
+from .routes import (
+    bootstrap_docs_endpoints,
+    bootstrap_feedback_endpoints,
+    bootstrap_trace_endpoints,
 )
-
-PATH = Path(__file__).parent.resolve()
 
 
 class GreatAI:
     def __init__(self, func: Callable[..., Any]):
         self._func = automatically_decorate_parameters(func)
-        self._func = freeze_arguments(
-            lru_cache(get_context().prediction_cache_size)(self._func)
-        )
-
         get_function_metadata_store(self._func).is_finalised = True
         wraps(func)(self)
 
         self.app = FastAPI(
             title=self.name,
             version=self.version,
-            description=self.documentation,
+            description=self.documentation
+            + f"\n\n Find out more on the [metrics page]({METRICS_PATH}).",
             docs_url=None,
             redoc_url=None,
         )
 
+    @freeze_arguments
+    @lru_cache(get_context().prediction_cache_size)
     def __call__(self, *args: Any, **kwargs: Any) -> Trace:
         with TracingContext() as t:
             result = self._func(*args, **kwargs)
@@ -103,7 +83,7 @@ class GreatAI:
         batch: Iterable[Any],
         concurrency: Optional[int] = None,
     ) -> Sequence[Trace]:
-        if not get_context().persistence.is_threadsafe:
+        if not get_context().tracing_database.is_threadsafe:
             concurrency = 1
             get_context().logger.warning("Concurrency is ignored")
 
@@ -132,14 +112,17 @@ class GreatAI:
 
     def _bootstrap_rest_api(self, disable_docs: bool, disable_metrics: bool) -> None:
         self._bootstrap_prediction_endpoints()
-        self._bootstrap_feedback_endpoints()
-        self._bootstrap_meta_endpoints()
 
         if not disable_docs:
-            self._bootstrap_docs_endpoints()
+            bootstrap_docs_endpoints(self.app)
 
         if not disable_metrics:
-            self._bootstrap_metrics_endpoints()
+            dash_app = create_dash_app(self._func.__name__, self.documentation)
+            bootstrap_trace_endpoints(self.app, dash_app)
+
+        bootstrap_feedback_endpoints(self.app)
+
+        self._bootstrap_meta_endpoints()
 
     def _bootstrap_prediction_endpoints(self) -> None:
         router = APIRouter(
@@ -153,19 +136,6 @@ class GreatAI:
         @use_http_exceptions
         def predict(input_value: schema) -> Trace:  # type: ignore
             return self(**cast(BaseModel, input_value).dict())
-
-        @router.get(
-            "/:prediction_id", response_model=Trace, status_code=status.HTTP_200_OK
-        )
-        def get_prediction(prediction_id: str) -> Trace:
-            result = get_context().persistence.get_trace(prediction_id)
-            if result is None:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-            return result
-
-        @router.delete("/:prediction_id", status_code=status.HTTP_204_NO_CONTENT)
-        def delete_prediction(prediction_id: str) -> None:
-            get_context().persistence.delete_trace(prediction_id)
 
         self.app.include_router(router)
 
@@ -183,26 +153,6 @@ class GreatAI:
         schema: Type[BaseModel] = create_model("InputModel", **parameters)  # type: ignore
         return schema
 
-    def _bootstrap_feedback_endpoints(self) -> None:
-        router = APIRouter(
-            prefix="/predictions/:prediction_id/feedback",
-            tags=["feedback"],
-        )
-
-        @router.put("/", status_code=status.HTTP_202_ACCEPTED)
-        def set_feedback(prediction_id: str, input: EvaluationFeedbackRequest) -> None:
-            get_context().persistence.add_feedback(prediction_id, input.evaluation)
-
-        @router.get("/", status_code=status.HTTP_200_OK)
-        def get_feedback(prediction_id: str) -> Any:
-            return get_context().persistence.get_feedback(prediction_id)
-
-        @router.delete("/", status_code=status.HTTP_200_OK)
-        def delete_feedback(prediction_id: str) -> Any:
-            get_context().persistence.delete_feedback(prediction_id)
-
-        self.app.include_router(router)
-
     def _bootstrap_meta_endpoints(self) -> None:
         router = APIRouter(
             tags=["meta"],
@@ -210,53 +160,24 @@ class GreatAI:
 
         @router.get("/health", status_code=status.HTTP_200_OK)
         def check_health() -> HealthCheckResponse:
-            return HealthCheckResponse(is_healthy=True)
+            hits, misses, maxsize, cache_size = self.__call__.cache_info()  # type: ignore
+            cache_statistics = CacheStatistics(
+                hits=hits, misses=misses, size=cache_size, max_size=maxsize
+            )
+
+            return HealthCheckResponse(
+                is_healthy=True, cache_statistics=cache_statistics
+            )
 
         @router.get(
             "/version", response_model=ApiMetadata, status_code=status.HTTP_200_OK
         )
         def get_version() -> ApiMetadata:
             return ApiMetadata(
-                name=self.name, version=self.version, documentation=self.documentation
-            )
-
-        self.app.include_router(router)
-
-    def _bootstrap_docs_endpoints(self) -> None:
-        @self.app.get("/docs", include_in_schema=False)
-        def custom_swagger_ui_html() -> HTMLResponse:
-            return get_swagger_ui_html(openapi_url="openapi.json", title=self.app.title)
-
-        @self.app.get("/docs/index.html", include_in_schema=False)
-        def redirect_to_docs() -> RedirectResponse:
-            return RedirectResponse("/docs")
-
-    def _bootstrap_metrics_endpoints(self) -> None:
-        dash_app = create_dash_app(self._func.__name__, self.documentation)
-        self.app.mount(METRICS_PATH, WSGIMiddleware(dash_app))
-
-        @self.app.get("/", include_in_schema=False)
-        def redirect_to_entrypoint() -> RedirectResponse:
-            return RedirectResponse("/metrics")
-
-        self.app.mount(
-            "/assets",
-            StaticFiles(directory=PATH / "../dashboard/assets"),
-            name="static",
-        )
-
-        router = APIRouter(
-            prefix="/metrics",
-            tags=["metrics"],
-        )
-
-        @router.post("/query", status_code=status.HTTP_200_OK)
-        def query_metrics(query: Query) -> List[Dict[str, Any]]:
-            return get_context().persistence.query(
-                conjunctive_filters=query.filter,
-                sort_by=query.sort,
-                skip=query.skip,
-                take=query.take,
+                name=self.name,
+                version=self.version,
+                documentation=self.documentation,
+                configuration=get_context().to_flat_dict(),
             )
 
         self.app.include_router(router)

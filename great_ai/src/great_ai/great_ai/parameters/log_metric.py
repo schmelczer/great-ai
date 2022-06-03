@@ -3,7 +3,7 @@ from typing import Any
 
 from great_ai.great_ai.context.get_context import get_context
 
-from ..tracing import TracingContext
+from ..tracing.tracing_context import TracingContext
 
 
 def log_metric(argument_name: str, value: Any) -> None:

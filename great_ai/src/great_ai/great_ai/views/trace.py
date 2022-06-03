@@ -8,32 +8,30 @@ from .model import Model
 
 
 class Trace(BaseModel):
-    evaluation_id: Optional[str]
+    trace_id: Optional[str]
     created: str
     execution_time_ms: float
     logged_values: Dict[str, Any]
     models: List[Model]
     exception: Optional[str]
     output: Any
-    evaluation: Any = None
+    feedback: Any = None
 
-    @validator("evaluation_id", always=True)
-    def validate_single_set(
-        cls, v: Optional[str], values: Dict[str, Any]
-    ) -> Optional[str]:
+    @validator("trace_id", always=True)
+    def generate_id(cls, v: Optional[str], values: Dict[str, Any]) -> Optional[str]:
         if not v:
             return str(uuid4())
         return v
 
     def to_flat_dict(self) -> Dict[str, Any]:
         return {
-            "id": self.evaluation_id,
+            "id": self.trace_id,
             "created": self.created,
             "execution_time_ms": self.execution_time_ms,
             "models": ", ".join(f"{m.key}:{m.version}" for m in self.models),
             "output": dumps(self.output),
             "exception": self.exception or "null",
-            "evaluation": self.evaluation,
+            "feedback": self.feedback,
             **self.logged_values,
         }
 

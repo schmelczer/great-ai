@@ -7,7 +7,7 @@ from ..helper import (
     get_arguments,
     get_function_metadata_store,
 )
-from ..tracing import TracingContext
+from ..tracing.tracing_context import TracingContext
 
 
 def parameter(
