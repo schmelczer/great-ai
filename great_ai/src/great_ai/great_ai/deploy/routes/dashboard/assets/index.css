@@ -1,0 +1,227 @@
+:root {
+  --important-color: #a30808;
+  --background-color: #edf5f6;
+  --small-padding: 10px;
+  --medium-padding: 20px;
+  --large-padding: 40px;
+  --border-radius: 10px;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+  --disclaimer-width: 180px;
+  --disclaimer-height: 35px;
+}
+
+@media (max-width: 900px) {
+  body {
+    zoom: 0.8;
+  }
+}
+
+@media (max-width: 550px) {
+  :root {
+    --small-padding: 5px;
+    --medium-padding: 10px;
+    --large-padding: 20px;
+    --border-radius: 8px;
+  }
+
+  .environment {
+    margin-top: calc(-1 * var(--large-padding));
+    margin-bottom: var(--large-padding);
+  }
+}
+
+@media (min-width: 551px) {
+  .environment {
+    position: absolute;
+    width: var(--disclaimer-width);
+    height: var(--disclaimer-height);
+    transform: rotate(-45deg);
+    top: calc(
+      var(--disclaimer-width) / 1.4142 - var(--disclaimer-height) / 1.4142
+    );
+    left: calc(-1 * var(--disclaimer-height) / 1.4142);
+    transform-origin: top left;
+    z-index: 100;
+  }
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+body {
+  background-color: var(--background-color);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: var(--medium-padding) 0 var(--small-padding) 0;
+}
+
+h6 {
+  margin-top: 0;
+  font-size: 3rem;
+}
+
+html,
+body,
+#react-entry-point,
+main {
+  height: 100%;
+}
+
+main {
+  padding-top: var(--large-padding);
+  display: flex;
+  flex-direction: column;
+}
+
+.environment {
+  background-color: var(--important-color);
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main > header,
+.configuration-container,
+.traces-table-container,
+.parallel-coordinates,
+main > footer {
+  padding: var(--large-padding);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+main > header,
+.configuration-container,
+.traces-table-container,
+.parallel-coordinates {
+  margin: 0 var(--large-padding) var(--large-padding) var(--large-padding);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  background-color: white;
+}
+
+main > header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+main > header > div {
+  min-width: 350px;
+  max-width: 450px;
+  margin-bottom: var(--large-padding);
+  flex: 1;
+}
+
+main > header > div > h1 {
+  margin-top: 0;
+}
+
+main > header > *:nth-child(2) {
+  min-width: 250px;
+  max-width: 550px;
+  flex: 1;
+}
+
+main > header .placeholder {
+  opacity: 0.35;
+  font-size: 1.5rem;
+  text-align: center;
+  display: block;
+  min-width: 250px;
+  width: 60%;
+  margin: auto;
+}
+
+.configuration-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.configuration-item {
+  border-left: 2px solid var(--important-color);
+  padding-left: var(--small-padding);
+  margin: var(--medium-padding);
+}
+
+.configuration-item h4 {
+  font-weight: bold;
+  margin: 0 0 var(--small-padding) 0;
+}
+
+.traces-table-container {
+  padding: 0;
+}
+
+.traces-table-container header {
+  padding: var(--large-padding);
+}
+
+.traces-table-container header h2 {
+  margin-top: 0;
+}
+
+.dash-filter--case {
+  display: none;
+}
+
+.traces-table-container td > div {
+  white-space: pre !important;
+  max-height: 150px !important;
+  overflow: auto !important;
+  display: inline-block !important;
+  text-align: left !important;
+}
+
+.traces-table-container th > div {
+  text-align: left !important;
+}
+
+.space-filler {
+  flex-grow: 1;
+}
+
+main > footer {
+  opacity: 0.35;
+  margin: 0;
+}
+
+main > footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--large-padding);
+  background-color: #ddd;
+  position: relative;
+}
+
+.parallel-coordinates {
+  padding: 0;
+}
+
+a img {
+  display: block;
+  margin-left: var(--large-padding);
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  transition: transform 300ms;
+}
+
+a img:hover {
+  transform: scale(1.1);
+}

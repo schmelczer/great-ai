@@ -1,3 +1,4 @@
+from .bootstrap_dashboard import bootstrap_dashboard
 from .bootstrap_docs_endpoints import bootstrap_docs_endpoints
 from .bootstrap_feedback_endpoints import bootstrap_feedback_endpoints
 from .bootstrap_trace_endpoints import bootstrap_trace_endpoints

@@ -14,10 +14,14 @@ class Query(BaseModel):
         schema_extra = {
             "example": {
                 "filter": [
-                    {"property": "execution_time_ms", "operator": ">", "value": 100}
+                    {
+                        "property": "original_execution_time_ms",
+                        "operator": ">",
+                        "value": 100,
+                    }
                 ],
                 "sort": [
-                    {"column_id": "execution_time_ms", "direction": "asc"},
+                    {"column_id": "original_execution_time_ms", "direction": "asc"},
                     {"column_id": "id", "direction": "desc"},
                 ],
             }

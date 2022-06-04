@@ -1,5 +1,7 @@
 from dash import html
 
+from ....constants import GITHUB_LINK
+
 
 def get_footer() -> html.Footer:
     return html.Footer(
@@ -14,9 +16,8 @@ def get_footer() -> html.Footer:
             ),
             html.A(
                 html.Img(src="/assets/github.png"),
-                href="https://github.com/ScoutinScience/great-ai",
+                href=GITHUB_LINK,
                 target="_blank",
             ),
         ],
-        className="watermark",
     )

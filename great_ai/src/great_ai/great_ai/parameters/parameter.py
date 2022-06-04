@@ -20,7 +20,7 @@ def parameter(
         get_function_metadata_store(func).input_parameter_names.append(parameter_name)
         assert_function_is_not_finalised(func)
 
-        actual_name = f"arg:{func.__name__}:{parameter_name}"
+        actual_name = f"arg:{parameter_name}"
 
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Dict[str, Any]) -> Any:
@@ -41,7 +41,7 @@ def parameter(
 
             context = TracingContext.get_current_context()
             if context and not disable_logging:
-                context.log_value(name=actual_name, value=argument)
+                context.log_value(name=f"{actual_name}:value", value=argument)
                 if isinstance(argument, str):
                     context.log_value(name=f"{actual_name}:length", value=len(argument))
 

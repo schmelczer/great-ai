@@ -29,7 +29,7 @@ class TracingContext:
         delta_time = (datetime.utcnow() - self._start_time).microseconds / 1000
         self._trace = Trace(
             created=self._start_time.isoformat(),
-            execution_time_ms=delta_time,
+            original_execution_time_ms=delta_time,
             logged_values=self._values,
             models=self._models,
             output=output,
