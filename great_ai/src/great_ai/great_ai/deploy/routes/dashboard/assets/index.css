@@ -119,7 +119,7 @@ main > header {
   justify-content: space-between;
 }
 
-main > header > div {
+main > header > div:nth-child(1) {
   min-width: 350px;
   max-width: 450px;
   margin-bottom: var(--large-padding);
