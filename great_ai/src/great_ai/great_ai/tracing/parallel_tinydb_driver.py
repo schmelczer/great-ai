@@ -1,6 +1,6 @@
 from multiprocessing import Lock
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional, Sequence, Tuple
 
 import pandas as pd
 from tinydb import TinyDB
@@ -34,39 +34,40 @@ class ParallelTinyDbDriver(TracingDatabase):
         self,
         skip: int = 0,
         take: Optional[int] = None,
-        conjunctive_filters: List[Filter] = [],
-        sort_by: List[SortBy] = [],
-    ) -> List[Dict[str, Any]]:
+        conjunctive_filters: Sequence[Filter] = [],
+        sort_by: Sequence[SortBy] = [],
+    ) -> Tuple[Sequence[Trace], int]:
         documents = [
-            d.to_flat_dict()
-            for d in self._safe_execute(
-                lambda db: [Trace.parse_obj(t) for t in db.all()]
-            )
+            Trace.parse_obj(t) for t in self._safe_execute(lambda db: db.all())
         ]
 
         if not documents:
-            return []
+            return [], 0
 
-        df = pd.DataFrame(documents)
+        df = pd.DataFrame([d.to_flat_dict() for d in documents])
 
         for f in conjunctive_filters:
-            if f.operator in operator_mapping:
+            operator = f.operator.lower()
+            if operator in operator_mapping:
                 df = df.loc[
                     getattr(df[f.property], operator_mapping[f.operator])(f.value)
                 ]
-            elif f.operator == "contains":
-                df = df.loc[df[f.property].str.contains(f.value)]
+            elif operator == "contains":
+                df = df.loc[df[f.property].str.contains(f.value, case=False)]
 
         if sort_by:
-            df = df.sort_values(
+            df.sort_values(
                 [col["column_id"] for col in sort_by],
                 ascending=[col["direction"] == "asc" for col in sort_by],
-                inplace=False,
+                inplace=True,
             )
 
+        count = len(df)
         result = df.iloc[skip:] if take is None else df.iloc[skip : skip + take]
-
-        return result.to_dict("records")
+        return [
+            next(d for d in documents if d.trace_id == trace_id)
+            for trace_id in result["trace_id"]
+        ], count
 
     def update(self, id: str, new_version: Trace) -> None:
         self._safe_execute(

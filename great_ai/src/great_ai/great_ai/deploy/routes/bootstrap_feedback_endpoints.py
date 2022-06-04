@@ -1,5 +1,6 @@
 from typing import Any
 
+import yaml
 from fastapi import APIRouter, FastAPI, HTTPException, Response, status
 
 from ...context import get_context
@@ -17,7 +18,12 @@ def bootstrap_feedback_endpoints(app: FastAPI) -> None:
         trace = get_context().tracing_database.get(trace_id)
         if trace is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
         trace.feedback = input.feedback
+        trace.feedback_flat = yaml.dump(
+            input.feedback, default_flow_style=False, indent=2
+        )
+
         get_context().tracing_database.update(trace_id, trace)
         return Response(status_code=status.HTTP_202_ACCEPTED)
 
@@ -33,7 +39,10 @@ def bootstrap_feedback_endpoints(app: FastAPI) -> None:
         trace = get_context().tracing_database.get(trace_id)
         if trace is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
         trace.feedback = None
+        trace.feedback_flat = None
+
         get_context().tracing_database.update(trace_id, trace)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 

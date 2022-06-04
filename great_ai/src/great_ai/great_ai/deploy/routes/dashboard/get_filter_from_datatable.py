@@ -1,6 +1,6 @@
 from typing import Optional, Union
 
-from ..views import Filter, operators
+from ....views import Filter, operators
 
 
 def get_filter_from_datatable(description: str) -> Optional[Filter]:

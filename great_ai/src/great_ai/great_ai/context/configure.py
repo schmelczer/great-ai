@@ -18,7 +18,6 @@ from ..tracing.parallel_tinydb_driver import ParallelTinyDbDriver, TracingDataba
 
 
 def configure(
-    version: str = "0.0.1",
     log_level: int = DEBUG,
     seed: int = 42,
     tracing_database: TracingDatabase = ParallelTinyDbDriver(
@@ -46,7 +45,6 @@ def configure(
         )
 
     context._context = context.Context(
-        version=version,
         tracing_database=tracing_database,
         large_file_implementation=large_file_implementation,
         is_production=is_production,

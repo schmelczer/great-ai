@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Optional, Sequence, Tuple
 
 from ..views import Filter, SortBy, Trace
 
@@ -20,9 +20,9 @@ class TracingDatabase(ABC):
         self,
         skip: int = 0,
         take: Optional[int] = None,
-        conjunctive_filters: List[Filter] = [],
-        sort_by: List[SortBy] = [],
-    ) -> List[Trace]:
+        conjunctive_filters: Sequence[Filter] = [],
+        sort_by: Sequence[SortBy] = [],
+    ) -> Tuple[Sequence[Trace], int]:
         pass
 
     @abstractmethod

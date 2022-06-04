@@ -1,37 +1,33 @@
-from json import dumps
-from typing import Any, Dict, List, Optional
-from uuid import uuid4
+from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, validator
+import yaml
+from pydantic import validator
 
-from .model import Model
+from .trace_view import TraceView
 
 
-class Trace(BaseModel):
-    trace_id: Optional[str]
-    created: str
-    execution_time_ms: float
-    logged_values: Dict[str, Any]
-    models: List[Model]
-    exception: Optional[str]
-    output: Any
-    feedback: Any = None
+class Trace(TraceView):
+    models_flat: Optional[str]
+    output_flat: Optional[str]
+    feedback_flat: Optional[str]
 
-    @validator("trace_id", always=True)
-    def generate_id(cls, v: Optional[str], values: Dict[str, Any]) -> Optional[str]:
-        if not v:
-            return str(uuid4())
-        return v
+    @validator("models_flat", always=True)
+    def flatten_models(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+        return ", ".join(f"{m.key}:{m.version}" for m in values["models"])
+
+    @validator("output_flat", always=True)
+    def flatten_output(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+        return yaml.dump(values["output"], default_flow_style=False, indent=2)
 
     def to_flat_dict(self) -> Dict[str, Any]:
         return {
-            "id": self.trace_id,
+            "trace_id": self.trace_id,
             "created": self.created,
-            "execution_time_ms": self.execution_time_ms,
-            "models": ", ".join(f"{m.key}:{m.version}" for m in self.models),
-            "output": dumps(self.output),
+            "original_execution_time_ms": self.original_execution_time_ms,
+            "models_flat": self.models_flat,
+            "output_flat": self.output_flat,
             "exception": self.exception or "null",
-            "feedback": self.feedback,
+            "feedback_flat": self.feedback_flat or "null",
             **self.logged_values,
         }
 

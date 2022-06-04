@@ -5,12 +5,12 @@ from typing import Any, Callable, Iterable, Optional, Sequence, Type, Union, cas
 from fastapi import APIRouter, FastAPI, status
 from pydantic import BaseModel, create_model
 
+from great_ai.great_ai.deploy.routes.bootstrap_dashboard import bootstrap_dashboard
 from great_ai.great_ai.views.cache_statistics import CacheStatistics
 from great_ai.utilities.parallel_map import parallel_map
 
-from ..constants import METRICS_PATH
+from ..constants import DASHBOARD_PATH
 from ..context import get_context
-from ..dashboard import create_dash_app
 from ..helper import (
     freeze_arguments,
     get_function_metadata_store,
@@ -28,25 +28,31 @@ from .routes import (
 
 
 class GreatAI:
-    def __init__(self, func: Callable[..., Any]):
+    def __init__(self, func: Callable[..., Any], version: str):
         self._func = automatically_decorate_parameters(func)
         get_function_metadata_store(self._func).is_finalised = True
+
+        self._cached_func = lru_cache(get_context().prediction_cache_size)(
+            self._func
+        )  # cannot put decorator on method, because it require the context to be setup
+
         wraps(func)(self)
+
+        self._version = version
 
         self.app = FastAPI(
             title=self.name,
             version=self.version,
             description=self.documentation
-            + f"\n\n Find out more on the [metrics page]({METRICS_PATH}).",
+            + f"\n\nFind out more in the [dashboard]({DASHBOARD_PATH}).",
             docs_url=None,
             redoc_url=None,
         )
 
     @freeze_arguments
-    @lru_cache(get_context().prediction_cache_size)
     def __call__(self, *args: Any, **kwargs: Any) -> Trace:
         with TracingContext() as t:
-            result = self._func(*args, **kwargs)
+            result = self._cached_func(*args, **kwargs)
             output = t.finalise(output=result)
         return output
 
@@ -54,9 +60,10 @@ class GreatAI:
     def deploy(
         func: Optional[Callable[..., Any]] = None,
         *,
+        version: str = "0.0.1",
         disable_rest_api: bool = False,
         disable_docs: bool = False,
-        disable_metrics: bool = False,
+        disable_dashboard: bool = False,
     ) -> Union[Callable[[Callable[..., Any]], "GreatAI"], "GreatAI"]:
         if func is None:
             return cast(
@@ -65,15 +72,15 @@ class GreatAI:
                     GreatAI.deploy,
                     disable_http=disable_rest_api,
                     disable_docs=disable_docs,
-                    disable_metrics=disable_metrics,
+                    disable_dashboard=disable_dashboard,
                 ),
             )
 
-        instance = GreatAI(func)
+        instance = GreatAI(func, version=version)
 
         if not disable_rest_api:
             instance._bootstrap_rest_api(
-                disable_docs=disable_docs, disable_metrics=disable_metrics
+                disable_docs=disable_docs, disable_dashboard=disable_dashboard
             )
 
         return instance
@@ -95,7 +102,9 @@ class GreatAI:
 
     @property
     def version(self) -> str:
-        return f"{get_context().version}+{get_function_metadata_store(self._func).model_versions}"
+        return (
+            f"{self._version}+{get_function_metadata_store(self._func).model_versions}"
+        )
 
     @property
     def documentation(self) -> str:
@@ -110,23 +119,26 @@ class GreatAI:
             )
         )
 
-    def _bootstrap_rest_api(self, disable_docs: bool, disable_metrics: bool) -> None:
-        self._bootstrap_prediction_endpoints()
+    def _bootstrap_rest_api(self, disable_docs: bool, disable_dashboard: bool) -> None:
+        self._bootstrap_prediction_endpoint()
 
         if not disable_docs:
             bootstrap_docs_endpoints(self.app)
 
-        if not disable_metrics:
-            dash_app = create_dash_app(self._func.__name__, self.documentation)
-            bootstrap_trace_endpoints(self.app, dash_app)
+        if not disable_dashboard:
+            bootstrap_dashboard(
+                self.app,
+                function_name=self._func.__name__,
+                documentation=self.documentation,
+            )
+            bootstrap_trace_endpoints(self.app)
 
         bootstrap_feedback_endpoints(self.app)
-
         self._bootstrap_meta_endpoints()
 
-    def _bootstrap_prediction_endpoints(self) -> None:
+    def _bootstrap_prediction_endpoint(self) -> None:
         router = APIRouter(
-            prefix="/predictions",
+            prefix="/predict",
             tags=["predictions"],
         )
 
@@ -160,7 +172,7 @@ class GreatAI:
 
         @router.get("/health", status_code=status.HTTP_200_OK)
         def check_health() -> HealthCheckResponse:
-            hits, misses, maxsize, cache_size = self.__call__.cache_info()  # type: ignore
+            hits, misses, maxsize, cache_size = self._cached_func.cache_info()
             cache_statistics = CacheStatistics(
                 hits=hits, misses=misses, size=cache_size, max_size=maxsize
             )
