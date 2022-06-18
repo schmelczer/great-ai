@@ -1,0 +1,47 @@
+\chapter{Designing the framework} \label{chapter:design}
+
+\footnote{Of course, given the saturation of MLOps libraries, extra care has to be taken to meaningfully extend the current state-of-the-art. \href{https://xkcd.com/927/}{xkcd.com/927}}
+
+\section{Requirements} \label{section:requirements}
+
+\paragraph{General}
+\paragraph{Robust}
+\paragraph{End-to-end}
+\paragraph{Automated}
+\paragraph{Trustworthy}
+
+\subsection{Out of scope}
+% % just for data there are so many options, let the users choose
+% % https://github.com/SeldonIO/alibi-detect: for "both" tensorflwo and torch drift detection
+
+% % https://docs.seldon.io/projects/alibi-detect/en/stable/od/methods/llr.html
+% % https://github.com/PAIR-code/facets
+% % https://github.com/great-expectations/great_expectations
+% % The data linter: Lightweight, automated sanity checking for ml data sets. 
+
+% % Git Large File System (LFS: bad
+% % DVC - one more tool
+
+% The obstacles coming from the intertwined nature of different models is widely recognised \cite{sculley2015hidden,haakman2021ai,amershi2019software}. This can lead to non-monotonic error propagation, meaning that improvements in one part of the system might decrease the overall system quality \cite{amershi2019software}. The importance of schema versioning in an environment of rapidly changing models and transformations is highlighted and solved for a specific use-case in \cite{van2017versioning}.
+
+% The main requirements I have for it is to be library-agnostic, a PyTorch-based deep-learning module or a call to a web API should be handled the same way. Everything is included in a single python package. It's not a PaaS. It's a framework encapsulating the "AI" part of a service and turning it into a more classical piece of software that can be handled with well-known, proven technologies.
+
+% The algorithm is exposed through a web API, predictions are followed from beginning to end, the traces are persisted (a db driver can be given, it can be local filesystem, s3, sql, nosql, hfs, etc.). A/B testing, shadow deployments, automatic versioning are supported by default. Input data statistics can be generated and exposed through a REST API (maybe a minimal frontend can also be part of the package). Using the feedback, the performance of the components can be observed real-time the same way.
+
+% Basically, you define a pipeline in code with one or more of your algorithms. Visualisation and persistence steps can be also used. Each model must have a version, but defining A/B or shadow deployments works the same way. The models are uploaded to somewhere (S3 for example) from your machine, and when the service is deployed (though a pre-existing CI/CD system even). It can handle the training data as well, using it, regression tests can be run.
+
+% I don't see too much reason to help clients with the training part, there are already a plethora of solutions for that, including some of the aforementioned ones. But it could have some integration with Ray Tune just to cover everything.
+
+% In short, I believe that compliance with many of the best practices isn't too difficult once the developers and managers are aware of them and have the appropriate tooling to conduct the necessary steps. I would like to provide them with this tooling.
+
+
+
+\section{Design principles}
+
+
+For principles of API design:
+A Philosophy of Software Design \cite{ousterhout2018philosophy}
+The Programmers Brain \cite{hermans2021programmer}
+“12. Designing and improving larger systems”
+“ We call this version cognitive dimensions of code bases (CDCB) and use it to examine a codebase to understand how it”
+\cite{kleppmann2017designing}
