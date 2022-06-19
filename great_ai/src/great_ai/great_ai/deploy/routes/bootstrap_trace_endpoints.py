@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, FastAPI, HTTPException, Response, status
 
 from ...context import get_context
-from ...views import Query, Trace, TraceView
+from ...views import Query, Trace
 
 
 def bootstrap_trace_endpoints(app: FastAPI) -> None:
@@ -12,7 +12,7 @@ def bootstrap_trace_endpoints(app: FastAPI) -> None:
         tags=["traces"],
     )
 
-    @router.post("/", status_code=status.HTTP_200_OK, response_model=List[TraceView])
+    @router.post("/", status_code=status.HTTP_200_OK, response_model=List[Trace])
     def query_traces(
         query: Query,
         skip: int = 0,
@@ -25,7 +25,7 @@ def bootstrap_trace_endpoints(app: FastAPI) -> None:
             take=take,
         )[0]
 
-    @router.get("/{trace_id}", status_code=status.HTTP_200_OK, response_model=TraceView)
+    @router.get("/{trace_id}", status_code=status.HTTP_200_OK, response_model=Trace)
     def get_trace(trace_id: str) -> Trace:
         result = get_context().tracing_database.get(trace_id)
         if result is None:

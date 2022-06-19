@@ -15,6 +15,7 @@
     "initialised",
     "inplace",
     "ipynb",
+    "joblib",
     "lemmatize",
     "levelname",
     "levelno",

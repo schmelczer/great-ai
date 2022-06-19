@@ -1,7 +1,20 @@
 import inspect
+from asyncio.log import logger
 from functools import lru_cache, partial, wraps
-from typing import Any, Callable, Iterable, Optional, Sequence, Type, Union, cast
+from typing import (
+    Any,
+    Callable,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
+import yaml
 from fastapi import APIRouter, FastAPI, status
 from pydantic import BaseModel, create_model
 
@@ -26,14 +39,24 @@ from .routes import (
     bootstrap_trace_endpoints,
 )
 
+T = TypeVar("T")
 
-class GreatAI:
+
+class GreatAI(Generic[T]):
     def __init__(self, func: Callable[..., Any], version: str):
-        self._func = automatically_decorate_parameters(func)
-        get_function_metadata_store(self._func).is_finalised = True
+        func = automatically_decorate_parameters(func)
+        get_function_metadata_store(func).is_finalised = True
+
+        self._func = func
+
+        def func_in_tracing_context(*args: Any, **kwargs: Any) -> Trace[T]:
+            with TracingContext[T](func.__name__) as t:
+                result = func(*args, **kwargs)
+                output = t.finalise(output=result)
+            return output
 
         self._cached_func = lru_cache(get_context().prediction_cache_size)(
-            self._func
+            func_in_tracing_context
         )  # cannot put decorator on method, because it require the context to be setup
 
         wraps(func)(self)
@@ -49,25 +72,22 @@ class GreatAI:
             redoc_url=None,
         )
 
-    @freeze_arguments
-    def __call__(self, *args: Any, **kwargs: Any) -> Trace:
-        with TracingContext() as t:
-            result = self._cached_func(*args, **kwargs)
-            output = t.finalise(output=result)
-        return output
+        logger.info(
+            f"Current configuration: {yaml.dump(get_context().to_flat_dict(), stream=None)}"
+        )
 
     @staticmethod
     def deploy(
-        func: Optional[Callable[..., Any]] = None,
+        func: Optional[Callable[..., T]] = None,
         *,
         version: str = "0.0.1",
         disable_rest_api: bool = False,
         disable_docs: bool = False,
         disable_dashboard: bool = False,
-    ) -> Union[Callable[[Callable[..., Any]], "GreatAI"], "GreatAI"]:
+    ) -> Union[Callable[[Callable[..., T]], "GreatAI[T]"], "GreatAI[T]"]:
         if func is None:
             return cast(
-                Callable[..., Any],
+                Callable[[Callable[..., T]], GreatAI[T]],
                 partial(
                     GreatAI.deploy,
                     disable_http=disable_rest_api,
@@ -76,7 +96,7 @@ class GreatAI:
                 ),
             )
 
-        instance = GreatAI(func, version=version)
+        instance = GreatAI[T](func, version=version)
 
         if not disable_rest_api:
             instance._bootstrap_rest_api(
@@ -85,16 +105,18 @@ class GreatAI:
 
         return instance
 
+    @freeze_arguments
+    def __call__(self, *args: Any, **kwargs: Any) -> Trace[T]:
+        return self._cached_func(*args, **kwargs)
+
     def process_batch(
         self,
         batch: Iterable[Any],
         concurrency: Optional[int] = None,
-    ) -> Sequence[Trace]:
-        if not get_context().tracing_database.is_threadsafe:
-            concurrency = 1
-            get_context().logger.warning("Concurrency is ignored")
-
-        return parallel_map(self, batch, concurrency=concurrency)
+    ) -> List[Trace[T]]:
+        return parallel_map(
+            freeze_arguments(self._cached_func), batch, concurrency=concurrency
+        )
 
     @property
     def name(self) -> str:
@@ -144,9 +166,9 @@ class GreatAI:
 
         schema = self._get_schema()
 
-        @router.post("/", status_code=status.HTTP_200_OK, response_model=Trace)
+        @router.post("/", status_code=status.HTTP_200_OK, response_model=Trace[T])
         @use_http_exceptions
-        def predict(input_value: schema) -> Trace:  # type: ignore
+        def predict(input_value: schema) -> Trace[T]:  # type: ignore
             return self(**cast(BaseModel, input_value).dict())
 
         self.app.include_router(router)

@@ -1,14 +1,22 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Sequence, Tuple
+from datetime import datetime
+from typing import List, Optional, Sequence, Tuple
 
 from ..views import Filter, SortBy, Trace
 
 
-class TracingDatabase(ABC):
-    is_threadsafe: bool
+class TracingDatabaseDriver(ABC):
+    is_production_ready: bool
 
     @abstractmethod
     def save(self, document: Trace) -> str:
+        pass
+
+    @abstractmethod
+    def save_batch(
+        self,
+        documents: List[Trace],
+    ) -> List[str]:
         pass
 
     @abstractmethod
@@ -18,11 +26,15 @@ class TracingDatabase(ABC):
     @abstractmethod
     def query(
         self,
+        *,
         skip: int = 0,
         take: Optional[int] = None,
         conjunctive_filters: Sequence[Filter] = [],
+        conjunctive_tags: Sequence[str] = [],
+        since: Optional[datetime] = None,
         sort_by: Sequence[SortBy] = [],
-    ) -> Tuple[Sequence[Trace], int]:
+        has_feedback: Optional[bool] = None
+    ) -> Tuple[List[Trace], int]:
         pass
 
     @abstractmethod

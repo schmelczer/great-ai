@@ -1,5 +1,5 @@
 from math import ceil
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Sequence, Tuple
 
 import pandas as pd
 import plotly.express as px
@@ -10,7 +10,7 @@ from flask import Flask
 
 from great_ai.utilities.unique import unique
 
-from ....constants import DASHBOARD_PATH
+from ....constants import DASHBOARD_PATH, ONLINE_TAG_NAME
 from ....context import get_context
 from ....helper import snake_case_to_text, text_to_hex_color
 from ....views import SortBy
@@ -23,11 +23,10 @@ from .get_traces_table import get_traces_table
 def create_dash_app(function_name: str, function_docs: str) -> Flask:
     accent_color = text_to_hex_color(function_name)
 
-    flask_app = Flask(__name__)
     app = Dash(
         function_name,
         requests_pathname_prefix=DASHBOARD_PATH + "/",
-        server=flask_app,
+        server=Flask(__name__),
         title=snake_case_to_text(function_name),
         update_title=None,
         external_stylesheets=[
@@ -129,6 +128,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         elements, count = get_context().tracing_database.query(
             skip=page_current * page_size,
             take=page_size,
+            conjunctive_tags=[ONLINE_TAG_NAME],
             conjunctive_filters=non_null_conjunctive_filters,
             sort_by=sort_by,
         )
@@ -145,8 +145,10 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
     )
     def update_layout(
         n_intervals: int,
-    ) -> Tuple[List[Dict[str, str]], Dict[str, Any]]:
-        elements, count = get_context().tracing_database.query(take=1)
+    ) -> Tuple[List[Dict[str, Sequence[str]]], Dict[str, Any]]:
+        elements, count = get_context().tracing_database.query(
+            take=1, conjunctive_tags=[ONLINE_TAG_NAME]
+        )
 
         if elements:
             keys = list(elements[0].to_flat_dict().keys())
@@ -185,10 +187,9 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         non_null_conjunctive_filters = [f for f in conjunctive_filters if f is not None]
 
         elements, count = get_context().tracing_database.query(
-            conjunctive_filters=non_null_conjunctive_filters
+            conjunctive_tags=[ONLINE_TAG_NAME],
+            conjunctive_filters=non_null_conjunctive_filters,
         )
-
-        elements = [e.to_flat_dict() for e in elements]
 
         if not elements:
             return (
@@ -200,8 +201,10 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
                 {"display": "none"},
             )
 
+        flat_elements = [e.to_flat_dict() for e in elements]
+
         execution_time_histogram = dcc.Graph(config={"displaylogo": False})
-        df = pd.DataFrame(elements)
+        df = pd.DataFrame(flat_elements)
         fig = px.histogram(
             df,
             x="original_execution_time_ms",
@@ -230,7 +233,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         )
         return execution_time_histogram, parallel_coords_fig, {}
 
-    return flask_app
+    return app.server
 
 
 def get_dimension_descriptor(df: pd.DataFrame, column: str) -> Dict[str, Any]:

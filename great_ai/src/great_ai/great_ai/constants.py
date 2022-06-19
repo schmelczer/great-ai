@@ -14,3 +14,13 @@ DEFAULT_LARGE_FILE_CONFIG_PATHS = {
 }
 
 GITHUB_LINK = "https://github.com/ScoutinScience/great-ai"
+
+TRAIN_SPLIT_TAG_NAME = "train"
+TEST_SPLIT_TAG_NAME = "test"
+VALIDATION_SPLIT_TAG_NAME = "validation"
+GROUND_TRUTH_TAG_NAME = "ground_truth"
+PRODUCTION_TAG_NAME = "production"
+DEVELOPMENT_TAG_NAME = "development"
+ONLINE_TAG_NAME = "online"
+
+SERVER_NAME = "GreatAI-Server"

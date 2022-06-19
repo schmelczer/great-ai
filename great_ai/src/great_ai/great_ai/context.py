@@ -2,34 +2,68 @@ import os
 import random
 from logging import DEBUG, Logger
 from pathlib import Path
-from typing import Optional, Type
+from typing import Any, Dict, Optional, Type, cast
 
-import great_ai.great_ai.context.context as context
+from pydantic import BaseModel
+
 from great_ai.large_file import LargeFile, LargeFileLocal
 from great_ai.utilities.logger import get_logger
 
-from ..constants import (
+from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
     DEFAULT_TRACING_DB_FILENAME,
     ENV_VAR_KEY,
     PRODUCTION_KEY,
 )
-from ..tracing.parallel_tinydb_driver import ParallelTinyDbDriver, TracingDatabase
+from .persistence import ParallelTinyDbDriver, TracingDatabaseDriver
+
+
+class Context(BaseModel):
+    tracing_database: TracingDatabaseDriver
+    large_file_implementation: Type[LargeFile]
+    is_production: bool
+    logger: Logger
+    should_log_exception_stack: bool
+    prediction_cache_size: int
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    def to_flat_dict(self) -> Dict[str, Any]:
+        return {
+            "tracing_database": type(self.tracing_database).__name__,
+            "large_file_implementation": self.large_file_implementation.__name__,
+            "is_production": self.is_production,
+            "should_log_exception_stack": self.should_log_exception_stack,
+            "prediction_cache_size": self.prediction_cache_size,
+        }
+
+
+_context: Optional[Context] = None
+
+
+def get_context() -> Context:
+    if _context is None:
+        configure()
+
+    return cast(Context, _context)
 
 
 def configure(
+    *,
     log_level: int = DEBUG,
     seed: int = 42,
-    tracing_database: TracingDatabase = ParallelTinyDbDriver(
+    tracing_database: TracingDatabaseDriver = ParallelTinyDbDriver(
         Path(DEFAULT_TRACING_DB_FILENAME)
     ),
     large_file_implementation: Type[LargeFile] = LargeFileLocal,
     should_log_exception_stack: Optional[bool] = None,
     prediction_cache_size: int = 512,
 ) -> None:
+    global _context
     logger = get_logger("great_ai", level=log_level)
 
-    if context._context is not None:
+    if _context is not None:
         logger.warn(
             "Configuration has been already initialised, overwriting.\n"
             + "Make sure to call `configure()` before importing your application code."
@@ -39,12 +73,17 @@ def configure(
     _initialize_large_file(large_file_implementation, logger=logger)
     _set_seed(seed)
 
-    if not tracing_database.is_threadsafe:
-        logger.warning(
-            f"The selected persistence driver ({type(tracing_database).__name__}) is not threadsafe"
-        )
+    if not tracing_database.is_production_ready:
+        if is_production:
+            logger.error(
+                f"The selected tracing database ({type(tracing_database).__name__}) is not recommended for production"
+            )
+        else:
+            logger.warning(
+                f"The selected tracing database ({type(tracing_database).__name__}) is not recommended for production"
+            )
 
-    context._context = context.Context(
+    _context = Context(
         tracing_database=tracing_database,
         large_file_implementation=large_file_implementation,
         is_production=is_production,
