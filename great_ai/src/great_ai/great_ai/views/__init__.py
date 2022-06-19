@@ -9,4 +9,3 @@ from .operators import operators
 from .query import Query
 from .sort_by import SortBy
 from .trace import Trace
-from .trace_view import TraceView

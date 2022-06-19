@@ -1,12 +1,13 @@
+from datetime import datetime
 from multiprocessing import Lock
 from pathlib import Path
-from typing import Any, Callable, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, cast
 
 import pandas as pd
 from tinydb import TinyDB
 
 from ..views import Filter, SortBy, Trace
-from .tracing_database import TracingDatabase
+from .tracing_database_driver import TracingDatabaseDriver
 
 lock = Lock()
 
@@ -14,8 +15,8 @@ lock = Lock()
 operator_mapping = {"=": "eq", "!=": "ne", "<": "lt", "<=": "le", ">": "gt", ">=": "ge"}
 
 
-class ParallelTinyDbDriver(TracingDatabase):
-    is_threadsafe = True
+class ParallelTinyDbDriver(TracingDatabaseDriver):
+    is_production_ready = False
 
     def __init__(self, path_to_db: Path) -> None:
         super().__init__()
@@ -23,6 +24,10 @@ class ParallelTinyDbDriver(TracingDatabase):
 
     def save(self, trace: Trace) -> str:
         return self._safe_execute(lambda db: db.insert(trace.dict()))
+
+    def save_batch(self, documents: List[Trace]) -> List[str]:
+        traces = [d.dict() for d in documents]
+        return self._safe_execute(lambda db: db.insert_multiple(traces))
 
     def get(self, id: str) -> Optional[Trace]:
         value = self._safe_execute(lambda db: db.get(lambda d: d["trace_id"] == id))
@@ -32,13 +37,30 @@ class ParallelTinyDbDriver(TracingDatabase):
 
     def query(
         self,
+        *,
         skip: int = 0,
         take: Optional[int] = None,
         conjunctive_filters: Sequence[Filter] = [],
+        conjunctive_tags: Sequence[str] = [],
+        since: Optional[datetime] = None,
         sort_by: Sequence[SortBy] = [],
-    ) -> Tuple[Sequence[Trace], int]:
-        documents = [
-            Trace.parse_obj(t) for t in self._safe_execute(lambda db: db.all())
+        has_feedback: Optional[bool] = None
+    ) -> Tuple[List[Trace], int]:
+        def does_match(d: Dict[str, Any]) -> bool:
+            return (
+                not set(conjunctive_tags) - set(d["tags"])
+                and (
+                    since is None
+                    or cast(datetime, datetime.fromisoformat(d["created"])) >= since
+                )
+                and (
+                    has_feedback is None or has_feedback == (d["feedback"] is not None)
+                )
+            )
+
+        documents: List[Trace] = [
+            Trace.parse_obj(t)
+            for t in self._safe_execute(lambda db: db.search(does_match))
         ]
 
         if not documents:

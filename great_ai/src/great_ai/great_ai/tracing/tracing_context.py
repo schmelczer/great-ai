@@ -2,20 +2,34 @@ import threading
 from collections import defaultdict
 from datetime import datetime
 from types import TracebackType
-from typing import Any, DefaultDict, Dict, List, Literal, Optional, Type
+from typing import (
+    Any,
+    DefaultDict,
+    Dict,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    Type,
+    TypeVar,
+)
 
-from ..context.get_context import get_context
+from ..constants import DEVELOPMENT_TAG_NAME, ONLINE_TAG_NAME, PRODUCTION_TAG_NAME
+from ..context import get_context
 from ..views import Model, Trace
 
+T = TypeVar("T")
 
-class TracingContext:
+
+class TracingContext(Generic[T]):
     _contexts: DefaultDict[int, List["TracingContext"]] = defaultdict(lambda: [])
 
-    def __init__(self) -> None:
+    def __init__(self, function_name: str) -> None:
         self._models: List[Model] = []
         self._values: Dict[str, Any] = {}
-        self._trace: Optional[Trace] = None
+        self._trace: Optional[Trace[T]] = None
         self._start_time = datetime.utcnow()
+        self._name = function_name
 
     def log_value(self, name: str, value: Any) -> None:
         self._values[name] = value
@@ -23,7 +37,7 @@ class TracingContext:
     def log_model(self, model: Model) -> None:
         self._models.append(model)
 
-    def finalise(self, output: Any = None, exception: BaseException = None) -> Trace:
+    def finalise(self, output: T = None, exception: BaseException = None) -> Trace[T]:
         assert self._trace is None, "has been already finalised"
 
         delta_time = (datetime.utcnow() - self._start_time).microseconds / 1000
@@ -36,12 +50,19 @@ class TracingContext:
             exception=None
             if exception is None
             else f"{type(exception).__name__}: {exception}",
+            tags=[
+                self._name,
+                ONLINE_TAG_NAME,
+                PRODUCTION_TAG_NAME
+                if get_context().is_production
+                else DEVELOPMENT_TAG_NAME,
+            ],
         )
 
         return self._trace
 
     @classmethod
-    def get_current_context(cls) -> Optional["TracingContext"]:
+    def get_current_tracing_context(cls) -> Optional["TracingContext"]:
         if cls._contexts[threading.get_ident()]:
             return cls._contexts[threading.get_ident()][-1]
         return None

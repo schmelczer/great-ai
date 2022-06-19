@@ -1,2 +1,3 @@
 from .classification_output import ClassificationOutput
+from .multi_label_classification_output import MultiLabelClassificationOutput
 from .regression_output import RegressionOutput

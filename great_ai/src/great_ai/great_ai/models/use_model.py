@@ -1,10 +1,13 @@
 from functools import wraps
-from typing import Any, Callable, Dict, List, Literal, Union
+from typing import Any, Callable, Dict, List, Literal, TypeVar, Union, cast
 
-from ..helper import assert_function_is_not_finalised, get_function_metadata_store
+from ..helper import get_function_metadata_store
+from ..helper.assert_function_is_not_finalised import assert_function_is_not_finalised
 from ..tracing.tracing_context import TracingContext
 from ..views import Model
 from .load_model import load_model
+
+F = TypeVar("F", bound=Callable[..., Any])
 
 
 def use_model(
@@ -13,7 +16,7 @@ def use_model(
     version: Union[int, Literal["latest"]],
     return_path: bool = False,
     model_kwarg_name: str = "model",
-) -> Callable[..., Any]:
+) -> Callable[[F], F]:
     assert (
         isinstance(version, int) or version == "latest"
     ), "Only integers or the string literal `latest` is allowed as version"
@@ -24,7 +27,7 @@ def use_model(
         return_path=return_path,
     )
 
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def decorator(func: F) -> F:
         assert_function_is_not_finalised(func)
 
         store = get_function_metadata_store(func)
@@ -35,11 +38,11 @@ def use_model(
 
         @wraps(func)
         def wrapper(*args: List[Any], **kwargs: Dict[str, Any]) -> Any:
-            tracing_context = TracingContext.get_current_context()
+            tracing_context = TracingContext.get_current_tracing_context()
             if tracing_context:
                 tracing_context.log_model(Model(key=key, version=actual_version))
             return func(*args, **kwargs, **{model_kwarg_name: model})
 
-        return wrapper
+        return cast(F, wrapper)
 
     return decorator

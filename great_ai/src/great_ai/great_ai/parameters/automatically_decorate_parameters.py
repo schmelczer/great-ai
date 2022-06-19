@@ -1,5 +1,5 @@
 import inspect
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
 
 from great_ai.great_ai.helper.get_function_metadata_store import (
     get_function_metadata_store,
@@ -7,8 +7,10 @@ from great_ai.great_ai.helper.get_function_metadata_store import (
 
 from .parameter import parameter
 
+F = TypeVar("F", bound=Callable[..., Any])
 
-def automatically_decorate_parameters(func: Callable[..., Any]) -> Callable[..., Any]:
+
+def automatically_decorate_parameters(func: F) -> F:
     signature = inspect.signature(func)
     parameter_names = [
         param.name

@@ -1,12 +1,9 @@
 from typing import Any, Optional, Union
 
-from pydantic import BaseModel
+from ..helper import HashableBaseModel
 
 
-class ClassificationOutput(BaseModel):
+class ClassificationOutput(HashableBaseModel):
     label: Union[str, int]
     confidence: float
     explanation: Optional[Any]
-
-    def __hash__(self) -> int:
-        return hash((type(self),) + tuple(self.__dict__.values()))
