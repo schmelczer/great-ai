@@ -1,0 +1,35 @@
+\section{A complex case}
+
+Let us now turn our attention towards a more complex component. The ScoutinScience Dashboard contains a full-page evaluation view for each academic publication. On this, the known metadata, historical data about the paper's topics, social media mentions, a PDF viewer showing the document, and other augmentation tools are displayed. One of these is the \textit{interesting sentences} section, which aims to summarise the paper from a technology-transfer perspective.
+
+The current approach uses a simple heuristic based on a set of phrases selected by business developers and extended with the help of a word2vec model \cite{mikolov2013efficient}. The user feedback deemed this implementation slightly helpful but not adequate for providing an accurate overview. Thus, this is the baseline that I attempt to improve on in this section.
+
+\begin{displayquote}
+Compared with Section \ref{section:simple-case}, this time around, the toolset of GreatAI is at our disposal. Hopefully, this will streamline the development and --- especially --- the deployment. Given its arguably higher complexity, this experiment falls closer to industrial use-cases, and hence, can give a more accurate feedback on how to further improve the API.
+\end{displayquote}
+
+\subsection{Background}
+
+Automatic text summarisation (ATS) is one of earliest established problems of text analysis and boasts numerous promising results \cite{el2021automatic}. However, our problem requires generating a special type of summary: it must only concern a single aspect (tech-transfer) of the document. Aspect-based text summarisation has also seen some progress over the last decades \cite{berkovsky2008aspect,hayashi2021wikiasp}, but these approaches require concretely defined topics. Unfortunately, \textit{tech-transfer potential} is anything but a clear topic definition.
+
+Our numerous discussions and interviews with business developers over the last years made it clear that there is no universally agreed on definition for it. At least, all of them agrees that they know it when they see it. Additionally, most of them agree that they can confidently make a decision at the granularity of sentences. This gives rise to an obvious idea: show the experts something that they can annotate. Because the time of experts is valuable, and relevant sentences are few and far between, extra care needs to be taken to improve the ratio of positive examples in the dataset. The research of Iwatsuki Kenichi on formulaic expressions (FE) \cite{iwatsuki2020evaluation,iwatsuki2021extraction,iwatsuki2021communicative,iwatsuki2022extraction} provides a promising direction to do so. 
+
+A formulaic expression is a phrase with zero or more slots that expresses a certain intent. In the context of scientific texts, an example\footnote{Taken from the ground-truth data at \href{https://github.com/Alab-NII/FECFevalDataset/blob/master/human_evaluation/background.tsv}{github.com/Alab-NII/FECFevalDataset}} could be: \texttt{it was not until * that}. The asterisk can be substituted with multiple terms and the intention of this expression is (likely) to describe the \textit{History of the related topics}. Iwatsuki et al. identified a set of 39 intentions, compiled a manually labelled dataset \cite{iwatsuki2020evaluation}, and developed multiple approaches for automatically extracting and classifying formulaic expressions in large corpora \cite{iwatsuki2021communicative,iwatsuki2022extraction}.
+
+\subsection{Methods}
+
+In the following, we explore a 2-stage retrieval approach \cite{schutze2008introduction} commonly used in the field of information retrieval. The first stage is expected to filter out sentences that are certainly not relevant from a technology-transfer perspective using Iwatsuki's formulaic expression intention labels. Subsequently, the second stage utilises a fine-tuned SciBERT model to rank the remaining sentence based on a model learned from expert annotations.
+
+This approach has multiple shortcoming, for the first stage, we must assume the independence of sentences and that the FE intentions are strongly correlated with the sought after aspect. Additionally, the reranking only considers the individual relevance of the sentences instead of the overall relevance (utility) of the summary. It is expected, that stemming from the length of the documents and the sparseness of the selected sentences, that any combination of them is likely to have low redundancy.
+
+TODO
+
+Finetuning SciBERT \cite{jurafsky2019speech}.
+
+\subsection{Results}
+
+For measuring the interrater agreement, Cohen's kappa \cite{cohen1960coefficient} is calculated as shown in Equation \ref{equation:kappa}.
+
+\begin{equation} \label{equation:kappa}
+\kappa_{agreement} \equiv \frac{p_{observed} - p_{expected}}{1 - p_{expected}} = 1 - \frac{1 - p_{observed}}{1 - p_{expected}}
+\end{equation}

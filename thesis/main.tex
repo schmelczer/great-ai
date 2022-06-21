@@ -8,6 +8,11 @@
 \usepackage{enumitem}
 \usepackage{threeparttable}
 \usepackage{multicol}
+\usepackage[compact]{titlesec}
+\usepackage{framed}
+\usepackage{quoting}
+\usepackage{xcolor}
+
 
 % Header & footer
 \pagestyle{fancy}
@@ -55,6 +60,19 @@
   rightmargin=1.25cm
 }
 
+% Block quote
+\definecolor{bg}{RGB}{186, 233, 255}
+\colorlet{shadecolor}{bg}
+\usepackage{lipsum}
+\newenvironment{displayquote}
+ {\begin{shaded*}
+  \quoting[leftmargin=0pt, vskip=0pt]
+ }
+ {\endquoting
+ \end{shaded*}
+}
+
+
 \begin{document}
 
 \includepdf[pages=-]{frontpage/frontpage.pdf}
@@ -65,8 +83,8 @@
 \input{chapters/2_background}
 \input{chapters/3_methods}
 \input{chapters/4_design}
-\input{chapters/5_case}
-\input{chapters/6_survey}
+\input{chapters/5_case/main}
+\input{chapters/6_interviews}
 \input{chapters/7_conclusion}
 
 \clearpage
