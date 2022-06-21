@@ -1,0 +1,40 @@
+\section{Bridging \textbf{the gap} with GreatAI}
+
+This section briefly explores how the problems raised can be solved using GreatAI, and the API it provides to best fit the needs of its users. We first focus on the aspects of data, then, the automated wrapping of service, lastly we discuss the utility of helper functions.
+
+First, let us revisit the scope. As concluded in Section \ref{section:scope}, GreatAI should ease the \textit{transition} step between prototypes and production-ready deployments. However, this leaves open the question of what constitutes to this step? There are cross-cutting concerns such as the feature extraction code: for example, feature extraction is implemented and used in the training phase but it is also deployed alongside the model. The robustness criterion has to be met by this procedure after deployment even though its implementation is only in focus at the earlier stage of the project. Since having an untested function deployed into production can have severe repercussions, I believe, assuring its correctness lies within the scope of GreatAI.
+
+\subsection{Data}
+
+There are two kinds of data storage need we need to address: training data and trained models. Because our code is probably already tracked under Git (and likely synced with GitHub), using the Git Large File Storage (LFS)\footnote{\href{https://git-lfs.github.com/}{https://git-lfs.github.com/}} might seem intriguing. However, it is a paid (and surprisingly expensive) service of GitHub especially when we factor in the expected sizes of the models and train data with the fact that the only way remove files counting towards our quota is to \href{https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository}{recreate the repository}.
+
+The Data Version Control (DVC)\footnote{\href{https://dvc.org/}{https://dvc.org/}} open-source project provides a nearly perfect solution. It comes with a command-line interface (CLI) inspired by git's, and it can be integrated with several backend storage servers. Its only downside is of course that it is one more tool that increases the complexity of the project and the initial setup time. If this is an acceptable price to pay, then I personally recommend opting for DVC. Nevertheless, if this may prohibit a team from properly handling data according to the best practices, I present a simpler solution in the following. 
+
+The complexity of an API can be decreased by relying on its users preexisting knowledge. Therefore, we can reuse familiar API-s, such as the \texttt{open()} method from Python. A method is proposed which provides the same interface, however, the backing storage for it is a mixture of local disk space, S3-compatible storage, MongoDB, or any other storage backend. It provides a superset of \texttt{open()}'s interface; the same parameters can be used with it.
+
+Easing development isn't just about automating everything but also making the code easy to change (which is the \textit{Viscosity} dimension of CDCB). Going from opening a local file on the disk with the built-in open method, to opening  a file from S3 is as easy as changing \texttt{with open('file.txt', 'w' as f: ...} to \texttt{with LargeFileS3('file.txt', 'w' as f: ...}. In the case of the latter, an additional \texttt{version} keyword argument can also be given to lock ourselves in using as certain version which is very much desired in the case of models.
+
+The obstacles coming from the intertwined nature of different models is widely recognised \cite{sculley2015hidden,haakman2021ai,amershi2019software}. This can lead to non-monotonic error propagation, meaning that improvements in one part of the system might decrease the overall system quality \cite{amershi2019software}. The importance of schema versioning in an environment of rapidly changing models and transformations is highlighted and solved for a specific use-case in \cite{van2017versioning}.
+
+The expected features: progress bar, caching, automatically purging the cache, automatically deleting old remote version if requested are all present and come with recommended --- but easy to see and change --- configuration.
+
+\subsection{Utilities}
+
+
+utilities: clean, language, parallel map \textit{Enable Parallel Training Experiments}
+
+traces
+
+\textit{Deployment approach}
+
+% Should the order of the decorators matter? all except in one case, they're written in a way that the order doesn't matter even with the original semantics of decorators. In that one case, it cannot be written in that way. Instead of correcting a user's error, there's a mechanism looking for this error and the user is notified. Guessing the unspecified is cool, but correcting the wrong is not
+
+to do
+
+% During development, I wanted to check out which types of request fail -> log errors in traces
+% Even production systems are not perfect, saving and letting the users filter on the errors is useful. e.g. they can correlate it with the input
+
+% I use a toy example when quickly experimenting, it's important not to overfit on it ( moving it into the library would result in a online for it, so I have to consciously avoid that), but having a very simple 
+
+% Argumetn/parameter names were confusing 
+% offlinemode -> cacheonly mode 
