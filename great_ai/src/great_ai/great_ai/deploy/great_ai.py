@@ -1,5 +1,4 @@
 import inspect
-from asyncio.log import logger
 from functools import lru_cache, partial, wraps
 from typing import (
     Any,
@@ -41,7 +40,6 @@ from .routes import (
 
 T = TypeVar("T")
 
-
 class GreatAI(Generic[T]):
     def __init__(self, func: Callable[..., Any], version: str):
         func = automatically_decorate_parameters(func)
@@ -72,10 +70,7 @@ class GreatAI(Generic[T]):
             redoc_url=None,
         )
 
-        logger.info(
-            f"Current configuration: {yaml.dump(get_context().to_flat_dict(), stream=None)}"
-        )
-
+       
     @staticmethod
     def deploy(
         func: Optional[Callable[..., T]] = None,

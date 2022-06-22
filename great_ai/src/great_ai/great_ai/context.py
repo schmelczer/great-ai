@@ -8,12 +8,13 @@ from pydantic import BaseModel
 
 from great_ai.large_file import LargeFile, LargeFileLocal
 from great_ai.utilities.logger import get_logger
-
+import yaml
 from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
     DEFAULT_TRACING_DB_FILENAME,
     ENV_VAR_KEY,
     PRODUCTION_KEY,
+    SE4ML_WEBSITE,
 )
 from .persistence import ParallelTinyDbDriver, TracingDatabaseDriver
 
@@ -59,6 +60,7 @@ def configure(
     large_file_implementation: Type[LargeFile] = LargeFileLocal,
     should_log_exception_stack: Optional[bool] = None,
     prediction_cache_size: int = 512,
+    disable_se4ml_banner: bool=False
 ) -> None:
     global _context
     logger = get_logger("great_ai", level=log_level)
@@ -94,7 +96,14 @@ def configure(
         prediction_cache_size=prediction_cache_size,
     )
 
-    logger.info("Options: configured ✅")
+    logger.info("Setting: configured ✅")
+    for k, v in get_context().to_flat_dict().items():
+        logger.info(f'🔩 {k}: {v}')
+
+    if not is_production and not disable_se4ml_banner:
+        logger.warning(f'You still need to check whether you follow all best practices so that you and others can trust your deployment.')
+        logger.warning(f'> Find out more at {SE4ML_WEBSITE}')
+
 
 
 def _is_in_production_mode(logger: Optional[Logger]) -> bool:

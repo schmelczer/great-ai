@@ -24,3 +24,5 @@ DEVELOPMENT_TAG_NAME = "development"
 ONLINE_TAG_NAME = "online"
 
 SERVER_NAME = "GreatAI-Server"
+
+SE4ML_WEBSITE = 'https://se-ml.github.io/practices/'
