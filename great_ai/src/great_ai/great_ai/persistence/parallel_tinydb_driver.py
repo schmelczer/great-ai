@@ -9,6 +9,7 @@ from tinydb import TinyDB
 from ..views import Filter, SortBy, Trace
 from .tracing_database_driver import TracingDatabaseDriver
 
+DEFAULT_TRACING_DB_FILENAME = "tracing_database.json"
 lock = Lock()
 
 
@@ -17,10 +18,7 @@ operator_mapping = {"=": "eq", "!=": "ne", "<": "lt", "<=": "le", ">": "gt", ">=
 
 class ParallelTinyDbDriver(TracingDatabaseDriver):
     is_production_ready = False
-
-    def __init__(self, path_to_db: Path) -> None:
-        super().__init__()
-        self._path_to_db = path_to_db
+    path_to_db = Path(DEFAULT_TRACING_DB_FILENAME)
 
     def save(self, trace: Trace) -> str:
         return self._safe_execute(lambda db: db.insert(trace.dict()))
@@ -43,8 +41,9 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         conjunctive_filters: Sequence[Filter] = [],
         conjunctive_tags: Sequence[str] = [],
         since: Optional[datetime] = None,
-        sort_by: Sequence[SortBy] = [],
-        has_feedback: Optional[bool] = None
+        until: Optional[datetime] = None,
+        has_feedback: Optional[bool] = None,
+        sort_by: Sequence[SortBy] = []
     ) -> Tuple[List[Trace], int]:
         def does_match(d: Dict[str, Any]) -> bool:
             return (
@@ -52,6 +51,10 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
                 and (
                     since is None
                     or cast(datetime, datetime.fromisoformat(d["created"])) >= since
+                )
+                and (
+                    until is None
+                    or cast(datetime, datetime.fromisoformat(d["created"])) <= until
                 )
                 and (
                     has_feedback is None or has_feedback == (d["feedback"] is not None)
@@ -99,7 +102,11 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
     def delete(self, id: str) -> None:
         self._safe_execute(lambda db: db.remove(lambda d: d["trace_id"] == id))
 
+    def delete_batch(self, ids: List[str]) -> List[str]:
+        for i in ids:
+            self.delete(i)
+
     def _safe_execute(self, func: Callable[[TinyDB], Any]) -> Any:
         with lock:
-            with TinyDB(self._path_to_db) as db:
+            with TinyDB(self.path_to_db) as db:
                 return func(db)

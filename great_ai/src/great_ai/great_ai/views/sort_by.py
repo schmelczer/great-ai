@@ -1,8 +1,8 @@
 from typing import Literal
 
-from typing_extensions import TypedDict
+from pydantic import BaseModel
 
 
-class SortBy(TypedDict):
+class SortBy(BaseModel):
     column_id: str
     direction: Literal["asc", "desc"]

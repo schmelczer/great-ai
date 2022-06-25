@@ -1,16 +1,18 @@
-from pathlib import Path
-
-from great_ai.large_file import LargeFileLocal, LargeFileMongo, LargeFileS3
+from ..large_file import LargeFileMongo, LargeFileS3
+from .persistence.mongodb_driver import MongodbDriver
 
 ENV_VAR_KEY = "ENVIRONMENT"
 PRODUCTION_KEY = "production"
-DEFAULT_TRACING_DB_FILENAME = "tracing_database.json"
 DASHBOARD_PATH = "/dashboard"
 
+MONGO_CONFIG_PATHS = ["mongodb.ini", "mongo.ini", "mongo_db.ini", "mongo-db.ini"]
+DEFAULT_TRACING_DATABASE_CONFIG_PATHS = {
+    MongodbDriver: MONGO_CONFIG_PATHS,
+}
+
 DEFAULT_LARGE_FILE_CONFIG_PATHS = {
-    LargeFileLocal: None,
-    LargeFileMongo: Path("mongodb.ini"),
-    LargeFileS3: Path("s3.ini"),
+    LargeFileS3: ["s3.ini", "b2.ini"],
+    LargeFileMongo: MONGO_CONFIG_PATHS,
 }
 
 GITHUB_LINK = "https://github.com/ScoutinScience/great-ai"
@@ -25,4 +27,4 @@ ONLINE_TAG_NAME = "online"
 
 SERVER_NAME = "GreatAI-Server"
 
-SE4ML_WEBSITE = 'https://se-ml.github.io/practices/'
+SE4ML_WEBSITE = "https://se-ml.github.io/practices/"

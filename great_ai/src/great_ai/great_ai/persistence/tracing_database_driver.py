@@ -1,12 +1,29 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractclassmethod, abstractmethod
 from datetime import datetime
-from typing import List, Optional, Sequence, Tuple
+from pathlib import Path
+from typing import List, Optional, Sequence, Tuple, Union
+
+from great_ai.utilities import ConfigFile
 
 from ..views import Filter, SortBy, Trace
 
 
 class TracingDatabaseDriver(ABC):
     is_production_ready: bool
+    initialized: bool = False
+
+    @classmethod
+    def configure_credentials_from_file(
+        cls,
+        secrets_path: Union[Path, str],
+    ) -> None:
+        cls.configure_credentials(**ConfigFile(secrets_path))
+
+    @abstractclassmethod
+    def configure_credentials(
+        cls,
+    ) -> None:
+        cls.initialized = True
 
     @abstractmethod
     def save(self, document: Trace) -> str:
@@ -31,9 +48,10 @@ class TracingDatabaseDriver(ABC):
         take: Optional[int] = None,
         conjunctive_filters: Sequence[Filter] = [],
         conjunctive_tags: Sequence[str] = [],
+        until: Optional[datetime] = None,
         since: Optional[datetime] = None,
-        sort_by: Sequence[SortBy] = [],
-        has_feedback: Optional[bool] = None
+        has_feedback: Optional[bool] = None,
+        sort_by: Sequence[SortBy] = []
     ) -> Tuple[List[Trace], int]:
         pass
 
@@ -43,4 +61,11 @@ class TracingDatabaseDriver(ABC):
 
     @abstractmethod
     def delete(self, id: str) -> None:
+        pass
+
+    @abstractmethod
+    def delete_batch(
+        self,
+        ids: List[str],
+    ) -> None:
         pass

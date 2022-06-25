@@ -78,7 +78,6 @@ The package can be used as a module from the command-line to give you more flexi
 Create an .ini file (or use _~/.aws/credentials_). It may look like this:
 
 ```ini
-[DEFAULT]
 aws_region_name = your_region_like_eu-west-2
 aws_access_key_id = YOUR_ACCESS_KEY_ID
 aws_secret_access_key = YOUR_VERY_SECRET_ACCESS_KEY

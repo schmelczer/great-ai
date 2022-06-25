@@ -51,7 +51,7 @@ def add_ground_truth(
 
     created = datetime.utcnow().isoformat()
     traces = [
-        Trace[T](
+        Trace(
             created=created,
             original_execution_time_ms=0,
             logged_values=X if isinstance(X, dict) else {"input": X},

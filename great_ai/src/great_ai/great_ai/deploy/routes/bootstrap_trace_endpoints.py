@@ -20,6 +20,10 @@ def bootstrap_trace_endpoints(app: FastAPI) -> None:
     ) -> List[Trace]:
         return get_context().tracing_database.query(
             conjunctive_filters=query.filter,
+            conjunctive_tags=query.conjunctive_tags,
+            since=query.since,
+            until=query.until,
+            has_feedback=query.has_feedback,
             sort_by=query.sort,
             skip=skip,
             take=take,

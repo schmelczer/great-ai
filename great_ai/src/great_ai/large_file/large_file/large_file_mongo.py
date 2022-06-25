@@ -19,29 +19,29 @@ MONGO_NAME_VERSION_SEPARATOR = "_"
 
 
 class LargeFileMongo(LargeFile):
-    connection_string = None
-    database = None
+    mongo_connection_string = None
+    mongo_database = None
 
     @classmethod
     def configure_credentials(  # type: ignore
         cls,
         *,
-        connection_string: str,
-        database: str,
+        mongo_connection_string: str,
+        mongo_database: str,
         **_: Mapping[str, Any],
     ) -> None:
-        cls.connection_string = connection_string
-        cls.database = database
+        cls.mongo_connection_string = mongo_connection_string
+        cls.mongo_database = mongo_database
         super().configure_credentials()
 
     @cached_property
     def _client(self) -> GridFSBucket:
-        if self.connection_string is None or self.database is None:
+        if self.mongo_connection_string is None or self.mongo_database is None:
             raise ValueError(
                 "Please configure the MongoDB access options by calling LargeFileMongo.configure_credentials or set offline_mode=True in the constructor."
             )
 
-        db: Database = MongoClient(self.connection_string)[self.database]
+        db: Database = MongoClient(self.mongo_connection_string)[self.mongo_database]
         return GridFSBucket(db)
 
     def _find_remote_instances(self) -> List[DataInstance]:
