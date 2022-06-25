@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, List, Optional
 
-from great_ai.utilities.logger import get_logger
+from great_ai.utilities import get_logger
 
 from ..models import DataInstance
 from .large_file import LargeFile

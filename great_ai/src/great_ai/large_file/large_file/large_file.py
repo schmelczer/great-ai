@@ -1,4 +1,3 @@
-import configparser
 import os
 import shutil
 import tempfile
@@ -7,7 +6,7 @@ from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Optional, Type, Union, cast
 
-from great_ai.utilities.logger import get_logger
+from great_ai.utilities import ConfigFile, get_logger
 
 from ..helper import human_readable_to_byte
 from ..models import DataInstance
@@ -86,16 +85,7 @@ class LargeFile(ABC):
         cls,
         secrets_path: Union[Path, str],
     ) -> None:
-        if isinstance(secrets_path, str):
-            secrets_path = Path(secrets_path)
-
-        if not secrets_path.exists():
-            raise FileNotFoundError(secrets_path.resolve())
-
-        credentials = configparser.ConfigParser()
-        credentials.read(secrets_path)
-        credentials.default_section
-        cls.configure_credentials(**credentials[credentials.default_section])
+        cls.configure_credentials(**ConfigFile(secrets_path))
 
     @classmethod
     def configure_credentials(

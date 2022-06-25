@@ -1,6 +1,6 @@
 import unittest
 
-from src.great_ai.utilities.unique import unique
+from src.great_ai.utilities import unique
 
 original = [
     ("a", 1),

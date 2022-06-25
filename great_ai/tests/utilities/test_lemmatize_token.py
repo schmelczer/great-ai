@@ -1,7 +1,6 @@
 import unittest
 
-from src.great_ai.utilities.lemmatize_text import lemmatize_token
-from src.great_ai.utilities.nlp import nlp
+from src.great_ai.utilities import lemmatize_token, nlp
 
 
 class TestLemmatizeToken(unittest.TestCase):

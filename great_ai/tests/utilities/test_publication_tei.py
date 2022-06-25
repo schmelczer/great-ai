@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from src.great_ai.utilities.publication_tei import PublicationTEI
+from src.great_ai.utilities import PublicationTEI
 
 from .data.parsed import (
     abstract,

@@ -1,4 +1,4 @@
-from great_ai.utilities.publication_tei.models import (
+from great_ai.utilities.publication_tei import (
     Affiliation,
     Author,
     Bookmark,

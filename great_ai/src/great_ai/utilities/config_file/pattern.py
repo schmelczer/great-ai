@@ -1,7 +1,7 @@
 import re
 
-
-pattern = re.compile(r'''
+pattern = re.compile(
+    r"""
     \s*             # leading whitespace is allowed
     (\w+?)          # then comes the key
     \s*=\s*         # the key and value are separated by an equal sign
@@ -13,4 +13,6 @@ pattern = re.compile(r'''
     )
     \s*(?:\#.*)?        # comments can be added with the `#` symbol
     (?:\n|$)            # a key-value pairs are separated by new lines
-''', flags=re.UNICODE | re.VERBOSE)
+""",
+    flags=re.UNICODE | re.VERBOSE,
+)

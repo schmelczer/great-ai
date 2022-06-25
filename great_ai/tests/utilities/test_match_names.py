@@ -1,6 +1,6 @@
 import unittest
 
-from src.great_ai.utilities.match_names.match_names import match_names
+from src.great_ai.utilities import match_names
 
 
 class TestMatchNames(unittest.TestCase):
