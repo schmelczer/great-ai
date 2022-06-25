@@ -28,22 +28,22 @@ class TestPublicationTEI(unittest.TestCase):
             cls.test_xml = f.read()
 
     def test_metadata_extraction(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).publication_metadata, metadata)
+        assert PublicationTEI(self.test_xml).publication_metadata == metadata
 
     def test_authors(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).authors, authors)
+        assert PublicationTEI(self.test_xml).authors == authors
 
     def test_content(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).content, content)
+        assert PublicationTEI(self.test_xml).content == content
 
     def test_sentences(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).sentences, sentences)
+        assert PublicationTEI(self.test_xml).sentences == sentences
 
     def test_bookmarks(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).bookmarks, bookmarks)
+        assert PublicationTEI(self.test_xml).bookmarks == bookmarks
 
     def test_abstract(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).abstract_sentences, abstract)
+        assert PublicationTEI(self.test_xml).abstract_sentences == abstract
 
     def test_introduction(self) -> None:
         self.assertEqual(
@@ -51,7 +51,7 @@ class TestPublicationTEI(unittest.TestCase):
         )
 
     def test_conclusion(self) -> None:
-        self.assertEqual(PublicationTEI(self.test_xml).conclusion_sentences, conclusion)
+        assert PublicationTEI(self.test_xml).conclusion_sentences == conclusion
 
     def test_empty1(self) -> None:
         tei = PublicationTEI("<TEI/>")

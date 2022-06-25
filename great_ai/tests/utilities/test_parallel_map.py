@@ -10,7 +10,7 @@ class TestParallelMap(unittest.TestCase):
         inputs = range(COUNT)
         expected = [v**2 for v in range(COUNT)]
 
-        self.assertEqual(parallel_map(lambda v: v**2, inputs), expected)
+        assert parallel_map(lambda v: v**2, inputs) == expected
 
     def test_simple_case_without_progress_bar(self) -> None:
         inputs = range(COUNT)
@@ -31,7 +31,7 @@ class TestParallelMap(unittest.TestCase):
         )
 
     def test_no_op(self) -> None:
-        self.assertEqual(parallel_map(lambda v: v**2, [], disable_progress=True), [])
+        assert parallel_map(lambda v: v**2, [], disable_progress=True) == []
         self.assertEqual(
             parallel_map(lambda v: v**2, [], disable_progress=True, chunk_size=100),
             [],

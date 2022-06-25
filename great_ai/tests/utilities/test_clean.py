@@ -9,18 +9,18 @@ class TestClean(unittest.TestCase):
         clean_xml = "Hi, my name is András! <3 <> <|"
         clean_xml_ascii = "Hi, my name is Andras! <3 <> <|"
 
-        self.assertEqual(clean(xml), clean_xml)
-        self.assertEqual(clean(xml, ignore_xml=True, ignore_latex=True), xml)
-        self.assertEqual(clean(xml, convert_to_ascii=True), clean_xml_ascii)
+        assert clean(xml) == clean_xml
+        assert clean(xml, ignore_xml=True, ignore_latex=True) == xml
+        assert clean(xml, convert_to_ascii=True) == clean_xml_ascii
 
     def test_simple_latex_handling(self) -> None:
         latex = 'Bj\\"{o}rn is \\textit{happy} 🙂'
         clean_latex = "Björn is happy 🙂"
         clean_latex_ascii = "Bjorn is happy"
 
-        self.assertEqual(clean(latex), clean_latex)
-        self.assertEqual(clean(latex, ignore_latex=True), latex)
-        self.assertEqual(clean(latex, convert_to_ascii=True), clean_latex_ascii)
+        assert clean(latex) == clean_latex
+        assert clean(latex, ignore_latex=True) == latex
+        assert clean(latex, convert_to_ascii=True) == clean_latex_ascii
 
     def test_cursed(self) -> None:
         cursed = """
@@ -28,8 +28,8 @@ class TestClean(unittest.TestCase):
         """
         cleaned = "to the moon"
 
-        self.assertEqual(clean(cursed), cursed.strip())
-        self.assertEqual(clean(cursed, convert_to_ascii=True), cleaned)
+        assert clean(cursed) == cursed.strip()
+        assert clean(cursed, convert_to_ascii=True) == cleaned
 
     def test_whitespace(self) -> None:
         text = """
@@ -43,9 +43,9 @@ class TestClean(unittest.TestCase):
         """  # noqa: W293
         cleaned = "word1 word2 wo rd3"
 
-        self.assertEqual(clean(text, convert_to_ascii=True), cleaned)
-        self.assertEqual(clean(text, ignore_xml=True, ignore_latex=True), cleaned)
-        self.assertEqual(clean(text), cleaned)
+        assert clean(text, convert_to_ascii=True) == cleaned
+        assert clean(text, ignore_xml=True, ignore_latex=True) == cleaned
+        assert clean(text) == cleaned
 
     def test_hyphens(self) -> None:
         text = """
@@ -57,20 +57,20 @@ class TestClean(unittest.TestCase):
         """
         cleaned = "break - word break-word break-word break-word break-word"
 
-        self.assertEqual(clean(text), cleaned)
+        assert clean(text) == cleaned
 
     def test_T_I_T_L_E_case(self) -> None:
         text = "an a r t i  c l e is to F I N   D the purpose of a tree"
 
         cleaned = "an article is to FIND the purpose of a tree"
 
-        self.assertEqual(clean(text), cleaned)
+        assert clean(text) == cleaned
 
     def test_bracket_removal(self) -> None:
         text = "something [0], and [frefe, ferf]"
         cleaned = "something, and"
 
-        self.assertEqual(clean(text, remove_brackets=True), cleaned)
+        assert clean(text, remove_brackets=True) == cleaned
         self.assertEqual(
             clean(text, ignore_xml=True, ignore_latex=True, remove_brackets=True),
             cleaned,
@@ -78,7 +78,7 @@ class TestClean(unittest.TestCase):
         self.assertEqual(
             clean(text, convert_to_ascii=True, remove_brackets=True), cleaned
         )
-        self.assertEqual(clean(text), text)
+        assert clean(text) == text
 
     def test_latex_math_handling(self) -> None:
         latex = "An increase of 3% was achieved with $q_1 = \\frac{3}{5}$."
@@ -86,10 +86,10 @@ class TestClean(unittest.TestCase):
         clean_latex = "An increase of 3% was achieved with q_1 = 3/5."
         clean_bad_latex = "An increase of 3% was achieved with q_1 = 3//5."
 
-        self.assertEqual(clean(latex), clean_latex)
-        self.assertEqual(clean(bad_latex), clean_bad_latex)
-        self.assertEqual(clean(latex, ignore_latex=True), latex)
-        self.assertEqual(clean(bad_latex, ignore_latex=True), bad_latex)
+        assert clean(latex) == clean_latex
+        assert clean(bad_latex) == clean_bad_latex
+        assert clean(latex, ignore_latex=True) == latex
+        assert clean(bad_latex, ignore_latex=True) == bad_latex
 
     def test_everything(self) -> None:
         text = """
@@ -102,9 +102,9 @@ class TestClean(unittest.TestCase):
         )
 
     def test_empty(self) -> None:
-        self.assertEqual(clean("", convert_to_ascii=True), "")
+        assert clean("", convert_to_ascii=True) == ""
 
     def test_punctuation_fixing(self) -> None:
         text = " Dear reader ( or  listener ) , welcome ! "
         fixed = "Dear reader (or listener), welcome!"
-        self.assertEqual(clean(text), fixed)
+        assert clean(text) == fixed

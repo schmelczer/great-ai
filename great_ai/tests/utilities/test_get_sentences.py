@@ -8,9 +8,9 @@ class TestGetSentences(unittest.TestCase):
         text = "This is a complete sentence. So is this. However this is n"  # ot.
         expected = ["This is a complete sentence.", "So is this.", "However this is n"]
 
-        self.assertEqual(get_sentences(text), expected)
-        self.assertEqual(get_sentences(text, ignore_partial=True), expected[0:2])
+        assert get_sentences(text) == expected
+        assert get_sentences(text, ignore_partial=True) == expected[0:2]
 
     def test_empty(self) -> None:
-        self.assertEqual(get_sentences(""), [])
-        self.assertEqual(get_sentences("", ignore_partial=True), [])
+        assert get_sentences("") == []
+        assert get_sentences("", ignore_partial=True) == []

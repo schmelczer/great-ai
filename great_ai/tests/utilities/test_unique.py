@@ -26,8 +26,8 @@ class TestUnique(unittest.TestCase):
 
         expected = original
 
-        self.assertEqual(unique(values), expected)
-        self.assertEqual(unique(values, key=lambda v: v), expected)
+        assert unique(values) == expected
+        assert unique(values, key=lambda v: v) == expected
 
     def test_with_key_0(self) -> None:
         values = original
@@ -39,7 +39,7 @@ class TestUnique(unittest.TestCase):
             ("d", 2),
         ]
 
-        self.assertEqual(unique(values, key=lambda v: v[0]), expected)
+        assert unique(values, key=lambda v: v[0]) == expected
 
     def test_with_key_1(self) -> None:
         values = original
@@ -51,4 +51,4 @@ class TestUnique(unittest.TestCase):
             ("d", 2),
         ]
 
-        self.assertEqual(unique(values, key=lambda v: v[1]), expected)
+        assert unique(values, key=lambda v: v[1]) == expected
