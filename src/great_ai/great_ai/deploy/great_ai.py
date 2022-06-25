@@ -9,8 +9,8 @@ from typing import (
     Optional,
     Type,
     TypeVar,
-    Union,
     cast,
+    overload,
 )
 
 from fastapi import APIRouter, FastAPI, status
@@ -45,8 +45,12 @@ class GreatAI(Generic[T]):
 
         self._func = func
 
-        def func_in_tracing_context(*args: Any, **kwargs: Any) -> Trace[T]:
-            with TracingContext[T](func.__name__) as t:
+        def func_in_tracing_context(
+            *args: Any, do_not_persist_traces: bool = False, **kwargs: Any
+        ) -> Trace[T]:
+            with TracingContext[T](
+                func.__name__, do_not_persist_traces=do_not_persist_traces
+            ) as t:
                 result = func(*args, **kwargs)
                 output = t.finalise(output=result)
             return output
@@ -68,15 +72,32 @@ class GreatAI(Generic[T]):
             redoc_url=None,
         )
 
+    @overload
     @staticmethod
-    def deploy(
+    def create(
+        func: Optional[Callable[..., T]] = None,
+    ) -> "GreatAI[T]":
+        ...
+
+    @overload
+    @staticmethod
+    def create(
+        version: str = "0.0.1",
+        disable_rest_api: bool = False,
+        disable_docs: bool = False,
+        disable_dashboard: bool = False,
+    ) -> Callable[[Callable[..., T]], "GreatAI[T]"]:
+        ...
+
+    @staticmethod
+    def create(
         func: Optional[Callable[..., T]] = None,
         *,
         version: str = "0.0.1",
         disable_rest_api: bool = False,
         disable_docs: bool = False,
         disable_dashboard: bool = False,
-    ) -> Union[Callable[[Callable[..., T]], "GreatAI[T]"], "GreatAI[T]"]:
+    ):
         if func is None:
             return cast(
                 Callable[[Callable[..., T]], GreatAI[T]],
@@ -105,9 +126,14 @@ class GreatAI(Generic[T]):
         self,
         batch: Iterable[Any],
         concurrency: Optional[int] = None,
+        do_not_persist_traces: bool = False,
     ) -> List[Trace[T]]:
         return parallel_map(
-            freeze_arguments(self._cached_func), batch, concurrency=concurrency
+            freeze_arguments(
+                partial(self._cached_func, do_not_persist_traces=do_not_persist_traces)
+            ),
+            batch,
+            concurrency=concurrency,
         )
 
     @property

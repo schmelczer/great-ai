@@ -24,7 +24,8 @@ T = TypeVar("T")
 class TracingContext(Generic[T]):
     _contexts: DefaultDict[int, List["TracingContext"]] = defaultdict(lambda: [])
 
-    def __init__(self, function_name: str) -> None:
+    def __init__(self, function_name: str, do_not_persist_traces: bool) -> None:
+        self._do_not_persist_traces = do_not_persist_traces
         self._models: List[Model] = []
         self._values: Dict[str, Any] = {}
         self._trace: Optional[Trace[T]] = None
@@ -90,6 +91,7 @@ class TracingContext(Generic[T]):
                 )
 
         assert self._trace is not None
-        get_context().tracing_database.save(self._trace)
+        if not self._do_not_persist_traces:
+            get_context().tracing_database.save(self._trace)
 
         return False
