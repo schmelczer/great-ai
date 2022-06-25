@@ -65,52 +65,52 @@ def main() -> None:
 
         logger.info(f"Starting uvicorn server with app={app}")
 
-        uvicorn.run(app, **common_config)  # this will never return
+        uvicorn.run(app, **common_config)
+    else:
+        class EventHandler(PatternMatchingEventHandler):
+            def __init__(self) -> None:
+                super().__init__(patterns=["*.py", "*.ipynb"], ignore_patterns=["__*.py"])
+                self.server: Optional[GreatAIReload] = None
+                self.restart()
 
-    class EventHandler(PatternMatchingEventHandler):
-        def __init__(self) -> None:
-            super().__init__(patterns=["*.py", "*.ipynb"], ignore_patterns=["__*.py"])
-            self.server: Optional[GreatAIReload] = None
-            self.restart()
+            def on_closed(self, event: FileSystemEvent) -> None:
+                logger.warning(f"File {event.src_path} has triggered a restart")
+                self.restart()
 
-        def on_closed(self, event: FileSystemEvent) -> None:
-            logger.warning(f"File {event.src_path} has triggered a restart")
-            self.restart()
+            def restart(self) -> None:
+                file_name = get_script_name(args.file_name)
+                app = find_app(file_name)
+                if app is None:
+                    logger.warning("Auto-reloading skipped")
+                    return
 
-        def restart(self) -> None:
-            file_name = get_script_name(args.file_name)
-            app = find_app(file_name)
-            if app is None:
-                logger.warning("Auto-reloading skipped")
-                return
+                self.stop_server()
 
-            self.stop_server()
+                config = Config(app, **common_config)
+                socket = config.bind_socket()
+                self.server = GreatAIReload(
+                    config, target=uvicorn.Server(config=config).run, sockets=[socket]
+                )
+                self.server.startup()
 
-            config = Config(app, **common_config)
-            socket = config.bind_socket()
-            self.server = GreatAIReload(
-                config, target=uvicorn.Server(config=config).run, sockets=[socket]
-            )
-            self.server.startup()
+            def stop_server(self) -> None:
+                if self.server:
+                    self.server.shutdown()
 
-        def stop_server(self) -> None:
-            if self.server:
-                self.server.shutdown()
+        restart_handler = EventHandler()
+        observer = Observer()
+        observer.schedule(restart_handler, path=".", recursive=True)
+        observer.start()
 
-    restart_handler = EventHandler()
-    observer = Observer()
-    observer.schedule(restart_handler, path=".", recursive=True)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(50)
-    finally:
-        observer.stop()
-        restart_handler.stop_server()
-        if args.file_name.endswith(".ipynb"):
-            Path(get_script_name_of_notebook(args.file_name)).unlink(missing_ok=True)
-        observer.join()
+        try:
+            while True:
+                time.sleep(50)
+        finally:
+            observer.stop()
+            restart_handler.stop_server()
+            if args.file_name.endswith(".ipynb"):
+                Path(get_script_name_of_notebook(args.file_name)).unlink(missing_ok=True)
+            observer.join()
 
 
 def get_script_name(file_name_argument: str) -> str:
