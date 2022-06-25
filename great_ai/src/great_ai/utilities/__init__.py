@@ -10,3 +10,4 @@ from .nlp import nlp
 from .parallel_map import parallel_map
 from .publication_tei import PublicationTEI
 from .unique import unique
+from .config_file import ConfigFile
