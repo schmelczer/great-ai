@@ -13,13 +13,12 @@ from typing import (
     cast,
 )
 
-import yaml
 from fastapi import APIRouter, FastAPI, status
 from pydantic import BaseModel, create_model
 
 from great_ai.great_ai.deploy.routes.bootstrap_dashboard import bootstrap_dashboard
 from great_ai.great_ai.views.cache_statistics import CacheStatistics
-from great_ai.utilities.parallel_map import parallel_map
+from great_ai.utilities import parallel_map
 
 from ..constants import DASHBOARD_PATH
 from ..context import get_context
@@ -39,6 +38,7 @@ from .routes import (
 )
 
 T = TypeVar("T")
+
 
 class GreatAI(Generic[T]):
     def __init__(self, func: Callable[..., Any], version: str):
@@ -70,7 +70,6 @@ class GreatAI(Generic[T]):
             redoc_url=None,
         )
 
-       
     @staticmethod
     def deploy(
         func: Optional[Callable[..., T]] = None,

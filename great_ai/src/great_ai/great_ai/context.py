@@ -7,11 +7,11 @@ from typing import Any, Dict, Optional, Type, cast
 from pydantic import BaseModel
 
 from great_ai.large_file import LargeFile, LargeFileLocal
-from great_ai.utilities.logger import get_logger
-import yaml
+from great_ai.utilities import get_logger
+
 from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
-    DEFAULT_TRACING_DB_FILENAME,
+    DEFAULT_TRACING_DATABASE_CONFIG_PATHS,
     ENV_VAR_KEY,
     PRODUCTION_KEY,
     SE4ML_WEBSITE,
@@ -26,6 +26,7 @@ class Context(BaseModel):
     logger: Logger
     should_log_exception_stack: bool
     prediction_cache_size: int
+    dashboard_table_size: int
 
     class Config:
         arbitrary_types_allowed = True
@@ -37,6 +38,7 @@ class Context(BaseModel):
             "is_production": self.is_production,
             "should_log_exception_stack": self.should_log_exception_stack,
             "prediction_cache_size": self.prediction_cache_size,
+            "dashboard_table_size": self.dashboard_table_size,
         }
 
 
@@ -54,13 +56,12 @@ def configure(
     *,
     log_level: int = DEBUG,
     seed: int = 42,
-    tracing_database: TracingDatabaseDriver = ParallelTinyDbDriver(
-        Path(DEFAULT_TRACING_DB_FILENAME)
-    ),
-    large_file_implementation: Type[LargeFile] = LargeFileLocal,
+    tracing_database: Optional[Type[TracingDatabaseDriver]] = None,
+    large_file_implementation: Optional[Type[LargeFile]] = None,
     should_log_exception_stack: Optional[bool] = None,
     prediction_cache_size: int = 512,
-    disable_se4ml_banner: bool=False
+    disable_se4ml_banner: bool = False,
+    dashboard_table_size: int = 50,
 ) -> None:
     global _context
     logger = get_logger("great_ai", level=log_level)
@@ -72,8 +73,10 @@ def configure(
         )
 
     is_production = _is_in_production_mode(logger=logger)
-    _initialize_large_file(large_file_implementation, logger=logger)
+
     _set_seed(seed)
+
+    tracing_database = _initialize_tracing_database(tracing_database, logger=logger)()
 
     if not tracing_database.is_production_ready:
         if is_production:
@@ -87,23 +90,27 @@ def configure(
 
     _context = Context(
         tracing_database=tracing_database,
-        large_file_implementation=large_file_implementation,
+        large_file_implementation=_initialize_large_file(
+            large_file_implementation, logger=logger
+        ),
         is_production=is_production,
         logger=logger,
         should_log_exception_stack=not is_production
         if should_log_exception_stack is None
         else should_log_exception_stack,
         prediction_cache_size=prediction_cache_size,
+        dashboard_table_size=dashboard_table_size,
     )
 
-    logger.info("Setting: configured ✅")
+    logger.info("Settings: configured ✅")
     for k, v in get_context().to_flat_dict().items():
-        logger.info(f'🔩 {k}: {v}')
+        logger.info(f"🔩 {k}: {v}")
 
     if not is_production and not disable_se4ml_banner:
-        logger.warning(f'You still need to check whether you follow all best practices so that you and others can trust your deployment.')
-        logger.warning(f'> Find out more at {SE4ML_WEBSITE}')
-
+        logger.warning(
+            "You still need to check whether you follow all best practices before trusting your deployment."
+        )
+        logger.warning(f"> Find out more at {SE4ML_WEBSITE}")
 
 
 def _is_in_production_mode(logger: Optional[Logger]) -> bool:
@@ -129,24 +136,48 @@ def _is_in_production_mode(logger: Optional[Logger]) -> bool:
     return is_production
 
 
-def _initialize_large_file(large_file: Type[LargeFile], logger: Logger) -> None:
-    path = DEFAULT_LARGE_FILE_CONFIG_PATHS[large_file]
-    if path is None:
-        return
+def _initialize_tracing_database(
+    selected: Optional[Type[TracingDatabaseDriver]], logger: Logger
+) -> Type[TracingDatabaseDriver]:
+    for tracing_driver, paths in DEFAULT_TRACING_DATABASE_CONFIG_PATHS.items():
+        if selected is None or selected == tracing_driver:
+            if tracing_driver.initialized:
+                logger.warning(
+                    f"{tracing_driver.__name__} has been already configured: skipping initialisation"
+                )
+                return tracing_driver
+            for p in paths:
+                if Path(p).exists():
+                    logger.info(
+                        f"Found credentials file ({Path(p).absolute()}), initialising {tracing_driver.__name__}"
+                    )
+                    tracing_driver.configure_credentials_from_file(p)
+                    return tracing_driver
+    logger.warning(
+        "Cannot find credentials files, defaulting to using ParallelTinyDbDriver"
+    )
+    return ParallelTinyDbDriver
 
-    if large_file.initialized:
-        logger.warning(
-            f"{large_file.__name__} has been already configured: skipping initialisation"
-        )
-        return
 
-    if path.exists():
-        large_file.configure_credentials_from_file(path)
-        logger.info(f"{large_file.__name__} initialised with config ({path.resolve()})")
-    else:
-        logger.warning(
-            f"Default {large_file.__name__} config ({path.resolve()}) not found, skipping {large_file.__name__} initialisation"
-        )
+def _initialize_large_file(
+    selected: Optional[Type[LargeFile]], logger: Logger
+) -> Type[LargeFile]:
+    for large_file, paths in DEFAULT_LARGE_FILE_CONFIG_PATHS.items():
+        if selected is None or selected == large_file:
+            if large_file.initialized:
+                logger.warning(
+                    f"{large_file.__name__} has been already configured: skipping initialisation"
+                )
+                return large_file
+            for p in paths:
+                if Path(p).exists():
+                    logger.info(
+                        f"Found credentials file ({Path(p).absolute()}), initialising {large_file.__name__}"
+                    )
+                    large_file.configure_credentials_from_file(p)
+                    return large_file
+    logger.warning("Cannot find credentials files, defaulting to using LargeFileLocal")
+    return LargeFileLocal
 
 
 def _set_seed(seed: int) -> None:

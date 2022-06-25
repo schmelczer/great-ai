@@ -19,7 +19,7 @@ from .great_ai.context import _is_in_production_mode
 from .great_ai.deploy import GreatAI
 from .great_ai.exceptions import ArgumentValidationError, MissingArgumentError
 from .parse_arguments import parse_arguments
-from .utilities.logger import get_logger
+from .utilities import get_logger
 
 logger = get_logger(SERVER_NAME)
 

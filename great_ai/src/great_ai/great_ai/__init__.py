@@ -7,5 +7,5 @@ from .output_models import (
     RegressionOutput,
 )
 from .parameters import log_metric, parameter
-from .persistence import MongoDbDriver, ParallelTinyDbDriver, TracingDatabaseDriver
-from .tracing import add_ground_truth, query_ground_truth
+from .persistence import MongodbDriver, ParallelTinyDbDriver, TracingDatabaseDriver
+from .tracing import add_ground_truth, delete_ground_truth, query_ground_truth

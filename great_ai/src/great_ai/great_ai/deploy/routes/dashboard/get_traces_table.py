@@ -1,10 +1,12 @@
 from dash import dash_table
 
+from great_ai.great_ai.context import get_context
+
 
 def get_traces_table() -> dash_table.DataTable:
     return dash_table.DataTable(
         page_current=0,
-        page_size=20,
+        page_size=get_context().dashboard_table_size,
         page_action="custom",
         filter_action="custom",
         sort_action="custom",
@@ -24,7 +26,6 @@ def get_traces_table() -> dash_table.DataTable:
             "background-color": "white",
             "font-weight": "bold",
         },
-        style_table={"max-height": "70vh", "overflow": "auto"},
         merge_duplicate_headers=True,
         style_cell_conditional=[
             {"if": {"column_id": "output"}, "width": 1500},

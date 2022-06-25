@@ -1,4 +1,5 @@
-from typing import List
+from datetime import datetime
+from typing import List, Optional, Sequence
 
 from pydantic import BaseModel
 
@@ -9,6 +10,10 @@ from .sort_by import SortBy
 class Query(BaseModel):
     filter: List[Filter] = []
     sort: List[SortBy] = []
+    conjunctive_tags: Sequence[str] = []
+    since: Optional[datetime] = None
+    until: Optional[datetime] = None
+    has_feedback: Optional[bool] = None
 
     class Config:
         schema_extra = {
@@ -24,5 +29,7 @@ class Query(BaseModel):
                     {"column_id": "original_execution_time_ms", "direction": "asc"},
                     {"column_id": "id", "direction": "desc"},
                 ],
+                "conjunctive_tags": ["online"],
+                "has_feedback": False,
             }
         }
