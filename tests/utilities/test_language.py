@@ -11,7 +11,6 @@ class TestLanguage(unittest.TestCase):
     def test_predict_language(self) -> None:
         assert predict_language("This is an English text.") == "en"
         assert predict_language("Ez egy magyar szöveg.") == "hu"
-        assert predict_language("此處按原典，應為「黃武元年」，而電子稿此處為「黃初元年」。") == "zh-TW"
         assert predict_language("32") == "und"
         assert predict_language("") == "und"
 
