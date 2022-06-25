@@ -116,18 +116,14 @@ def main() -> None:
 def get_script_name(file_name_argument: str) -> str:
     if file_name_argument.endswith(".ipynb"):
         logger.info("Converting notebook to Python script")
-        try:
-            from nbconvert import PythonExporter
+        from nbconvert import PythonExporter
 
-            exporter = PythonExporter()
-            content, _ = exporter.from_filename(file_name_argument)
-            file_name_argument = get_script_name_of_notebook(file_name_argument)
-            with open(file_name_argument, "w", encoding="utf-8") as f:
-                f.write(content)
-        except ImportError:
-            raise ImportError(
-                "Install `nbconvert` to be able to use Jupyter notebook files or use a regular Python file instead"
-            )
+        exporter = PythonExporter()
+        content, _ = exporter.from_filename(file_name_argument)
+        file_name_argument = get_script_name_of_notebook(file_name_argument)
+
+        with open(file_name_argument, "w", encoding="utf-8") as f:
+            f.write(content)
 
     return re.sub(r"\.(py|ipynb)$", "", file_name_argument)
 
