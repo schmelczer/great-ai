@@ -1,0 +1,43 @@
+name: Deploy to DockerHub
+
+on:
+  workflow_run:
+    workflows: Check library
+    branches: main
+    types: completed
+
+jobs:
+  deploy:
+    if: |
+      github.event.workflow_run.conclusion == 'success' 
+      && github.event_name == 'push' 
+      && startsWith(github.ref, 'refs/tags')
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+  
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action
+        with:
+          images: schmelczera/great_ai
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: schmelczera/great_ai:latest,schmelczera/great_ai:${GITHUB_REF##*/}
