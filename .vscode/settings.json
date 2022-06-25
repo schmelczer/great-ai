@@ -31,7 +31,6 @@
     "Parcoords",
     "plotly",
     "proba",
-    "psutil",
     "pydantic",
     "pymongo",
     "pyplot",
