@@ -67,9 +67,12 @@ def main() -> None:
 
         uvicorn.run(app, **common_config)
     else:
+
         class EventHandler(PatternMatchingEventHandler):
             def __init__(self) -> None:
-                super().__init__(patterns=["*.py", "*.ipynb"], ignore_patterns=["__*.py"])
+                super().__init__(
+                    patterns=["*.py", "*.ipynb"], ignore_patterns=["__*.py"]
+                )
                 self.server: Optional[GreatAIReload] = None
                 self.restart()
 
@@ -109,7 +112,9 @@ def main() -> None:
             observer.stop()
             restart_handler.stop_server()
             if args.file_name.endswith(".ipynb"):
-                Path(get_script_name_of_notebook(args.file_name)).unlink(missing_ok=True)
+                Path(get_script_name_of_notebook(args.file_name)).unlink(
+                    missing_ok=True
+                )
             observer.join()
 
 
