@@ -5,6 +5,5 @@ __pycache__
 .cache
 .mypy_cache
 .pytest_cache
-**/.ipynb_checkpoints
-**/tracing_database.json
+.ipynb_checkpoints
 *.egg-info
