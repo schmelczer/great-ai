@@ -53,11 +53,11 @@
   ],
   "files.exclude": {
     ".env": true,
-    ".venv": true,
     "**/__pycache__": true,
     "**/.ipynb_checkpoints": true,
     "**/.mypy_cache": true,
     "**/.pytest_cache": true
   },
-  "notebook.output.textLineLimit": 400
+  "notebook.output.textLineLimit": 400,
+  "python.defaultInterpreterPath": ".env/bin/python"
 }
