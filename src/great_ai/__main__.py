@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Optional
 
 import uvicorn
+from uvicorn._subprocess import get_subprocess
 from uvicorn.config import LOGGING_CONFIG, Config
-from uvicorn.subprocess import get_subprocess
 from uvicorn.supervisors.basereload import BaseReload
 from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
 from watchdog.observers import Observer
