@@ -1,6 +1,6 @@
 import unittest
 
-from src.great_ai.utilities.language import (
+from src.great_ai.utilities import (
     english_name_of_language,
     is_english,
     predict_language,

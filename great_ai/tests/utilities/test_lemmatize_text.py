@@ -1,6 +1,6 @@
 import unittest
 
-from src.great_ai.utilities.lemmatize_text import lemmatize_text
+from src.great_ai.utilities import lemmatize_text
 
 
 class TestLemmatizeText(unittest.TestCase):

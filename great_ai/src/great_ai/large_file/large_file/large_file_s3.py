@@ -4,7 +4,7 @@ from typing import Any, List, Mapping, Optional
 
 import boto3
 
-from great_ai.utilities.logger import get_logger
+from great_ai.utilities import get_logger
 
 from ..helper import DownloadProgressBar, UploadProgressBar
 from ..models import DataInstance

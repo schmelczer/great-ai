@@ -4,7 +4,7 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Mapping, Type
 
-from great_ai.utilities.logger import get_logger
+from great_ai.utilities import get_logger
 
 from .large_file import LargeFile, LargeFileLocal, LargeFileMongo, LargeFileS3
 from .parse_arguments import parse_arguments

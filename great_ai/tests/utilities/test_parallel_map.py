@@ -1,6 +1,6 @@
 import unittest
 
-from src.great_ai.utilities.parallel_map import parallel_map
+from src.great_ai.utilities import parallel_map
 
 COUNT = int(1e5) + 3
 
