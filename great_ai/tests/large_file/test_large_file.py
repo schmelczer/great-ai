@@ -73,8 +73,8 @@ class TestLargeFileS3(unittest.TestCase):
             Bucket=credentials["large_files_bucket_name"], Prefix="test-file"
         )
 
-        self.assertEqual(lf._version, 2)
-        self.assertEqual(lf._local_name, "test-file-2")
+        assert lf._version == 2
+        assert lf._local_name == "test-file-2"
 
     @patch.object(boto3, "client")
     def test_initialized_with_file(self, client: Any) -> None:
@@ -116,5 +116,5 @@ class TestLargeFileS3(unittest.TestCase):
             Bucket=credentials["large_files_bucket_name"], Prefix="test-file"
         )
 
-        self.assertEqual(lf._version, 2)
-        self.assertEqual(lf._local_name, "test-file-2")
+        assert lf._version == 2
+        assert lf._local_name == "test-file-2"

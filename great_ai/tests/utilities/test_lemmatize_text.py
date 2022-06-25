@@ -127,13 +127,13 @@ class TestLemmatizeText(unittest.TestCase):
             "._PUNCT",
         ]
 
-        self.assertEqual(lemmatize_text(text), lemmatized)
-        self.assertEqual(lemmatize_text(text, add_part_of_speech=True), lemmatized_pos)
-        self.assertEqual(lemmatize_text(text, add_negation=True), lemmatized_neg)
+        assert lemmatize_text(text) == lemmatized
+        assert lemmatize_text(text, add_part_of_speech=True) == lemmatized_pos
+        assert lemmatize_text(text, add_negation=True) == lemmatized_neg
         self.assertEqual(
             lemmatize_text(text, add_negation=True, add_part_of_speech=True),
             lemmatized_pos_neg,
         )
 
     def test_empty(self) -> None:
-        self.assertEqual(lemmatize_text(""), [])
+        assert lemmatize_text("") == []
