@@ -43,7 +43,7 @@ jobs:
           uses: actions/upload-artifact@v2
           with:
             name: Unit test coverage (Python ${{ matrix.python-version }})
-            path: *.xml
+            path: "*.xml"
 
   sonar:
     name: Analyse Python project with SonarQube
