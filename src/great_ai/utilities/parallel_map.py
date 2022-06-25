@@ -2,7 +2,6 @@ from math import ceil
 from typing import Any, Callable, Iterable, List, Optional
 
 import multiprocess as mp
-import psutil
 from tqdm.cli import tqdm
 
 from .logger import get_logger
@@ -18,7 +17,7 @@ def parallel_map(
     disable_progress: bool = False,
 ) -> List[Any]:
     if concurrency is None:
-        concurrency = psutil.cpu_count()
+        concurrency = mp.cpu_count()
 
     assert concurrency > 0
     assert chunk_size is None or chunk_size > 0
