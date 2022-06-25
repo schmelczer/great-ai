@@ -3,7 +3,7 @@ from typing import Any, Callable, Iterable, List, Optional
 
 import multiprocess as mp
 import psutil
-from tqdm.auto import tqdm
+from tqdm.cli import tqdm
 
 from .logger import get_logger
 
