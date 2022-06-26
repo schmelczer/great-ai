@@ -82,8 +82,8 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
 
         if sort_by:
             df.sort_values(
-                [col["column_id"] for col in sort_by],
-                ascending=[col["direction"] == "asc" for col in sort_by],
+                [col.column_id for col in sort_by],
+                ascending=[col.direction == "asc" for col in sort_by],
                 inplace=True,
             )
 
