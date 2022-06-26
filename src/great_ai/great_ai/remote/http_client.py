@@ -48,13 +48,13 @@ class HttpClient:
                             "JSON parsing failed",
                         )
             except Exception as e:
-                logger.warning(
-                    f"Request failed ({e}), {retry_count - i - 1} retries left",
-                )
                 if retry_count - i > 1:
+                    logger.warning(
+                        f"Request failed ({e}), {retry_count - i - 1} retries left",
+                    )
                     await sleep(self.wait_between_retries_seconds)
 
-        raise RemoteCallError("Request has failed too many times")
+        raise RemoteCallError(f"Request has failed too many ({retry_count + 1}) times")
 
     async def close(self) -> None:
         await self._session.close()
