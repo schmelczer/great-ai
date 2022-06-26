@@ -21,9 +21,9 @@ RUN python3 -m pip --no-cache-dir install --upgrade pip &&\
     rm -rf great_ai
 
 HEALTHCHECK \
-    --interval=60s \
+    --interval=10s \
     --timeout=60s  \
-    --start-period=90s \
+    --start-period=30s \
     --retries=5 \
     CMD [ "curl", "--fail", "http://localhost:6060/health" ]
 
