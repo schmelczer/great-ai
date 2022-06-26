@@ -3,9 +3,9 @@
 ## Exports
 
 - [clean](src/sus/clean.py)
+- [language](src/sus/clean.py)
 - [unique](src/sus/unique.py)
 - [parallel_map](src/sus/parallel_map.py)
-- [lemmatize](src/sus/lemmatize.py)
 - [evaluate_ranking](src/sus/evaluate_ranking/evaluate_ranking.py)
 - [get_sentences](src/sus/get_sentences.py)
 

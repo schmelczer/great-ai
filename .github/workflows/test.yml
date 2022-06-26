@@ -1,4 +1,4 @@
-name: Check library
+name: Test
 
 on:
   workflow_dispatch:
