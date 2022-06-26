@@ -8,4 +8,10 @@ from .output_models import (
 )
 from .parameters import log_metric, parameter
 from .persistence import MongodbDriver, ParallelTinyDbDriver, TracingDatabaseDriver
+from .remote import (
+    HttpClient,
+    RemoteCallError,
+    call_remote_great_ai,
+    call_remote_great_ai_async,
+)
 from .tracing import add_ground_truth, delete_ground_truth, query_ground_truth
