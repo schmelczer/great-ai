@@ -2,9 +2,9 @@ name: Publish on DockerHub
 
 on:
   push:
-    branches:
-      - main
-      - dev
+    tags:
+      - '*'
+
 jobs:
   publish:
     runs-on: ubuntu-latest
