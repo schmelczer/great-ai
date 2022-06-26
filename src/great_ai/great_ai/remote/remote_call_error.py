@@ -1,0 +1,2 @@
+class RemoteCallError(Exception):
+    pass
