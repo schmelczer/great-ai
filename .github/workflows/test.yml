@@ -38,7 +38,7 @@ jobs:
 
         - name: Upload results
           if: always()
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
             name: Unit test coverage (Python ${{ matrix.python-version }})
             path: "*.xml"
