@@ -19,9 +19,6 @@ RUN python3 -m pip --no-cache-dir install --upgrade pip &&\
     pip install --no-cache-dir ./great_ai &&\
     rm -rf great_ai
 
-# great_ai.utilities.nlp depends on this
-RUN pip3 install --no-cache-dir en-core-web-sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.3.0/en_core_web_sm-3.3.0-py3-none-any.whl
-
 HEALTHCHECK \
     --interval=60s \
     --timeout=60s  \
