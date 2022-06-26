@@ -2,9 +2,9 @@
 
 import logging
 import re
-import time
 from importlib import import_module, reload
 from pathlib import Path
+from threading import Event
 from typing import Optional
 
 import uvicorn
@@ -65,7 +65,21 @@ def main() -> None:
 
         logger.info(f"Starting uvicorn server with app={app}")
 
-        uvicorn.run(app, **common_config)
+        config = Config(app, **common_config)
+        socket = config.bind_socket()
+        server = GreatAIReload(
+            config, target=uvicorn.Server(config=config).run, sockets=[socket]
+        )
+
+        server.startup()
+        try:
+            Event().wait()
+        finally:
+            server.shutdown()
+            if args.file_name.endswith(".ipynb"):
+                Path(get_script_name_of_notebook(args.file_name)).unlink(
+                    missing_ok=True
+                )
     else:
 
         class EventHandler(PatternMatchingEventHandler):
@@ -106,8 +120,7 @@ def main() -> None:
         observer.start()
 
         try:
-            while True:
-                time.sleep(50)
+            Event().wait()
         finally:
             observer.stop()
             restart_handler.stop_server()

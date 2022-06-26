@@ -14,6 +14,9 @@ async def call_remote_great_ai_async(
     if http is None:
         http = HttpClient()
 
+    if base_uri.endswith("/"):
+        base_uri = base_uri[:-1]
+
     url = f"{base_uri}/predict/"
     response = await http.post(
         url=url, data=data, retry_count=retry_count, expected_status=200
