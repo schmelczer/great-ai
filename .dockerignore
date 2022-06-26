@@ -11,5 +11,6 @@ Dockerfile
 .github
 .vscode
 docs
+!docs/hello_world.py
 scripts
 tests

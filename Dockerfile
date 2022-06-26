@@ -9,8 +9,9 @@ ENV ENVIRONMENT=production
 EXPOSE 6060
 
 # curl is needed for the healthcheck
+# build-essentials are needed for building packages
 RUN DEBIAN_FRONTEND=noninteractive apt update &&\
-    apt install curl -y &&\
+    apt install curl build-essential -y &&\
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /dependencies
@@ -29,4 +30,7 @@ HEALTHCHECK \
 WORKDIR /app
 VOLUME /app
 
+COPY docs/hello_world.py .
+
 ENTRYPOINT ["/usr/local/bin/python3", "-m", "great_ai"]
+CMD ["hello_world.py"]
