@@ -1,4 +1,4 @@
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Sequence, Tuple, Union
@@ -18,7 +18,7 @@ class TracingDatabaseDriver(ABC):
     ) -> None:
         cls.configure_credentials(**ConfigFile(secrets_path))
 
-    @abstractclassmethod
+    @classmethod
     def configure_credentials(
         cls,
     ) -> None:
