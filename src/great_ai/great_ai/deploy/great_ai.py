@@ -102,7 +102,7 @@ class GreatAI(Generic[T]):
             return cast(
                 Callable[[Callable[..., T]], GreatAI[T]],
                 partial(
-                    GreatAI.deploy,
+                    GreatAI.create,
                     disable_http=disable_rest_api,
                     disable_docs=disable_docs,
                     disable_dashboard=disable_dashboard,
