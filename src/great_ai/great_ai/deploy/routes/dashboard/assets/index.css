@@ -122,7 +122,6 @@ main > header {
 main > header > div:nth-child(1) {
   min-width: 350px;
   max-width: 450px;
-  margin-bottom: var(--large-padding);
   flex: 1;
 }
 
