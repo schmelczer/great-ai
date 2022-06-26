@@ -15,3 +15,4 @@ from .remote import (
     call_remote_great_ai_async,
 )
 from .tracing import add_ground_truth, delete_ground_truth, query_ground_truth
+from .views import Trace
