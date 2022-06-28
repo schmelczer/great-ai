@@ -82,10 +82,10 @@ class GreatAI(Generic[T]):
     @overload
     @staticmethod
     def create(
-        version: str = "0.0.1",
-        disable_rest_api: bool = False,
-        disable_docs: bool = False,
-        disable_dashboard: bool = False,
+        version: str,
+        disable_rest_api: bool,
+        disable_docs: bool,
+        disable_dashboard: bool,
     ) -> Callable[[Callable[..., T]], "GreatAI[T]"]:
         ...
 
