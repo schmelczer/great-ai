@@ -10,14 +10,28 @@ class TestParallelMap(unittest.TestCase):
         inputs = range(COUNT)
         expected = [v**2 for v in range(COUNT)]
 
-        assert parallel_map(lambda v: v**2, inputs) == expected
+        assert parallel_map(lambda v: v**2, inputs, concurrency=10) == expected
+
+    def test_with_iterable(self) -> None:
+        from time import sleep
+
+        def my_generator():
+            for i in range(10):
+                yield i
+                sleep(0.1)
+
+        expected = [v**3 for v in range(10)]
+
+        assert (
+            parallel_map(lambda x: x**3, my_generator(), chunk_length=1) == expected
+        )
 
     def test_simple_case_without_progress_bar(self) -> None:
         inputs = range(COUNT)
         expected = [v**2 for v in range(COUNT)]
 
         self.assertEqual(
-            parallel_map(lambda v: v**2, inputs, disable_progress=True), expected
+            parallel_map(lambda v: v**2, inputs, disable_progress_bar=True), expected
         )
 
     def test_simple_case_invalid_values(self) -> None:
@@ -27,16 +41,20 @@ class TestParallelMap(unittest.TestCase):
             AssertionError, parallel_map, lambda v: v**2, inputs, concurrency=0
         )
         self.assertRaises(
-            AssertionError, parallel_map, lambda v: v**2, inputs, chunk_size=0
+            AssertionError, parallel_map, lambda v: v**2, inputs, chunk_length=0
         )
 
     def test_no_op(self) -> None:
-        assert parallel_map(lambda v: v**2, [], disable_progress=True) == []
+        assert parallel_map(lambda v: v**2, [], disable_progress_bar=True) == []
         self.assertEqual(
-            parallel_map(lambda v: v**2, [], disable_progress=True, chunk_size=100),
+            parallel_map(
+                lambda v: v**2, [], disable_progress_bar=True, chunk_length=100
+            ),
             [],
         )
         self.assertEqual(
-            parallel_map(lambda v: v**2, [], disable_progress=True, concurrency=100),
+            parallel_map(
+                lambda v: v**2, [], disable_progress_bar=True, concurrency=100
+            ),
             [],
         )
