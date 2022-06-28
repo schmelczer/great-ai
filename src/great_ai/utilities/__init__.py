@@ -1,3 +1,4 @@
+from .chunk import chunk
 from .clean import clean
 from .config_file import ConfigFile, ParseError
 from .evaluate_ranking import evaluate_ranking
