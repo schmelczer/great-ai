@@ -23,6 +23,7 @@
     "levelname",
     "levelno",
     "matplotlib",
+    "miniters",
     "Multinomial",
     "multiprocess",
     "nbconvert",
