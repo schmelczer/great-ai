@@ -68,12 +68,13 @@ def parallel_map(
                 desc="Parallel map",
                 disable=disable_progress_bar,
                 total=config.input_length,
-                miniters=1,
             )
         ]
 
-    ctx = mp.get_context("spawn")
+    start_methods = mp.get_all_start_methods()
+    ctx = mp.get_context("fork") if "fork" in start_methods else mp.get_context("spawn")
     ctx.freeze_support()
+
     input_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
     output_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
     should_stop = ctx.Event()
@@ -99,7 +100,6 @@ def parallel_map(
         desc="Parallel map",
         disable=disable_progress_bar,
         total=config.input_length,
-        miniters=1,
     )
 
     chunks = iter(chunk(enumerate(input_values), chunk_length=config.chunk_length))

@@ -14,7 +14,7 @@ class ParallelMapConfiguration(BaseModel):
     input_length: Optional[int]
     serialized_map_function: bytes
 
-    def pretty_print(self, prefix="  ⚙️"):
+    def pretty_print(self, prefix="  ⚙️ "):
         logger.info(f"{prefix} concurrency: {self.concurrency}")
         logger.info(f"{prefix} chunk length: {self.chunk_length}")
         logger.info(
