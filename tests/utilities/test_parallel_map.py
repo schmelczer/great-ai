@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 from src.great_ai.utilities import parallel_map
 
 COUNT = int(1e5) + 3
@@ -10,7 +12,7 @@ class TestParallelMap(unittest.TestCase):
         inputs = range(COUNT)
         expected = [v**2 for v in range(COUNT)]
 
-        assert parallel_map(lambda v: v**2, inputs, concurrency=10) == expected
+        assert list(parallel_map(lambda v: v**2, inputs, concurrency=10)) == expected
 
     def test_with_iterable(self) -> None:
         from time import sleep
@@ -23,38 +25,42 @@ class TestParallelMap(unittest.TestCase):
         expected = [v**3 for v in range(10)]
 
         assert (
-            parallel_map(lambda x: x**3, my_generator(), chunk_length=1) == expected
+            list(parallel_map(lambda x: x**3, my_generator(), chunk_size=1))
+            == expected
         )
 
     def test_simple_case_without_progress_bar(self) -> None:
         inputs = range(COUNT)
         expected = [v**2 for v in range(COUNT)]
 
-        self.assertEqual(
-            parallel_map(lambda v: v**2, inputs, disable_progress_bar=True), expected
+        assert (
+            list(parallel_map(lambda v: v**2, inputs, disable_logging=True))
+            == expected
         )
 
     def test_simple_case_invalid_values(self) -> None:
         inputs = range(COUNT)
 
-        self.assertRaises(
-            AssertionError, parallel_map, lambda v: v**2, inputs, concurrency=0
-        )
-        self.assertRaises(
-            AssertionError, parallel_map, lambda v: v**2, inputs, chunk_length=0
-        )
+        with pytest.raises(AssertionError):
+            list(parallel_map(lambda v: v**2, inputs, concurrency=0))
+
+        with pytest.raises(AssertionError):
+            list(parallel_map(lambda v: v**2, inputs, chunk_size=0))
 
     def test_no_op(self) -> None:
-        assert parallel_map(lambda v: v**2, [], disable_progress_bar=True) == []
-        self.assertEqual(
-            parallel_map(
-                lambda v: v**2, [], disable_progress_bar=True, chunk_length=100
-            ),
-            [],
+        assert list(parallel_map(lambda v: v**2, [], disable_logging=True)) == []
+
+        assert (
+            list(
+                parallel_map(lambda v: v**2, [], disable_logging=True, chunk_size=100)
+            )
+            == []
         )
-        self.assertEqual(
-            parallel_map(
-                lambda v: v**2, [], disable_progress_bar=True, concurrency=100
-            ),
-            [],
+        assert (
+            list(
+                parallel_map(
+                    lambda v: v**2, [], disable_logging=True, concurrency=100
+                )
+            )
+            == []
         )

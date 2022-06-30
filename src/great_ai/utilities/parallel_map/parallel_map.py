@@ -1,17 +1,8 @@
 import multiprocessing as mp
 import queue
-from typing import (
-    Callable,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Tuple,
-    TypeVar,
-    overload,
-)
+from typing import Callable, Dict, Iterable, Optional, Sequence, TypeVar, overload
 
-from tqdm.auto import tqdm
+from tqdm.cli import tqdm
 
 from ..chunk import chunk
 from .get_config import get_config
@@ -26,10 +17,11 @@ def parallel_map(
     function: Callable[[T], V],
     input_values: Sequence[T],
     *,
-    chunk_length: Optional[int],
+    chunk_size: Optional[int],
     concurrency: Optional[int],
-    disable_progress_bar: bool,
-) -> List[V]:
+    disable_logging: bool,
+    unordered: Optional[bool],
+) -> Iterable[V]:
     ...
 
 
@@ -38,10 +30,11 @@ def parallel_map(
     function: Callable[[T], V],
     input_values: Iterable[T],
     *,
-    chunk_length: int,
+    chunk_size: int,
     concurrency: Optional[int],
-    disable_progress_bar: bool,
-) -> List[V]:
+    disable_logging: bool,
+    unordered: Optional[bool],
+) -> Iterable[V]:
     ...
 
 
@@ -49,30 +42,32 @@ def parallel_map(
     function,
     input_values,
     *,
-    chunk_length=None,
+    chunk_size=None,
     concurrency=None,
-    disable_progress_bar=False,
+    disable_logging=False,
+    unordered=False,
 ):
     config = get_config(
         function=function,
         input_values=input_values,
-        chunk_length=chunk_length,
+        chunk_size=chunk_size,
         concurrency=concurrency,
+        disable_logging=disable_logging,
+    )
+
+    tqdm_options = dict(
+        desc=f"Parallel map {config.function_name}",
+        disable=disable_logging,
+        total=config.input_length,
+        miniters=1,
+        dynamic_ncols=True,
     )
 
     if config.concurrency == 1:
-        return [
-            function(v)
-            for v in tqdm(
-                input_values,
-                desc="Parallel map",
-                disable=disable_progress_bar,
-                total=config.input_length,
-            )
-        ]
+        yield from (function(v) for v in tqdm(input_values, **tqdm_options))
+        return
 
-    start_methods = mp.get_all_start_methods()
-    ctx = mp.get_context("fork") if "fork" in start_methods else mp.get_context("spawn")
+    ctx = mp.get_context("spawn")
     ctx.freeze_support()
 
     input_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
@@ -81,7 +76,7 @@ def parallel_map(
 
     processes = [
         ctx.Process(
-            name=f"parallel_map_{i}",
+            name=f"parallel_map_{config.function_name}_{i}",
             target=mapper_function,
             kwargs=dict(
                 input_queue=input_queue,
@@ -96,18 +91,15 @@ def parallel_map(
     for p in processes:
         p.start()
 
-    progress = tqdm(
-        desc="Parallel map",
-        disable=disable_progress_bar,
-        total=config.input_length,
-    )
+    progress = tqdm(**tqdm_options)
 
-    chunks = iter(chunk(enumerate(input_values), chunk_length=config.chunk_length))
-    indexed_results: List[Tuple[int, V]] = []
+    chunks = iter(chunk(enumerate(input_values), chunk_size=config.chunk_size))
+    indexed_results: Dict[int, V] = {}
+    next_output_index = 0
     read_input_length = 0
     is_iteration_over = False
     try:
-        while not is_iteration_over or len(indexed_results) < read_input_length:
+        while not is_iteration_over or next_output_index < read_input_length:
             if not is_iteration_over:
                 try:
                     next_chunk = next(chunks)
@@ -118,10 +110,23 @@ def parallel_map(
 
             try:
                 result_chunk = output_queue.get_nowait()
-                indexed_results.extend(result_chunk)
                 progress.update(len(result_chunk))
+
+                for index, value in result_chunk:
+                    if unordered:
+                        yield value
+                        next_output_index += 1
+                    else:
+                        indexed_results[index] = value
+
+                if not unordered:
+                    while next_output_index in indexed_results:
+                        yield indexed_results[next_output_index]
+                        del indexed_results[next_output_index]
+                        next_output_index += 1
             except queue.Empty:
                 pass
+
         should_stop.set()
     except KeyboardInterrupt:
         for p in processes:
@@ -134,7 +139,3 @@ def parallel_map(
         output_queue.close()
 
         progress.close()
-
-    results = [v for _, v in sorted(indexed_results)]
-
-    return results
