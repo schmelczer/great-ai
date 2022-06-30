@@ -10,13 +10,14 @@ logger = get_logger("parallel_map")
 class ParallelMapConfiguration(BaseModel):
     concurrency: int
     chunk_count: Optional[int]
-    chunk_length: int
+    chunk_size: int
     input_length: Optional[int]
     serialized_map_function: bytes
+    function_name: str
 
     def pretty_print(self, prefix="  ⚙️ "):
         logger.info(f"{prefix} concurrency: {self.concurrency}")
-        logger.info(f"{prefix} chunk length: {self.chunk_length}")
+        logger.info(f"{prefix} chunk size: {self.chunk_size}")
         logger.info(
             f"{prefix} chunk count: {self.chunk_count if self.chunk_count else 'unknown'}"
         )
