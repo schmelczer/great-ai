@@ -1,5 +1,5 @@
-import multiprocessing as mp
 import queue
+import threading
 from typing import Callable, Dict, Iterable, Optional, Sequence, TypeVar, overload
 
 from tqdm.cli import tqdm
@@ -13,7 +13,7 @@ V = TypeVar("V")
 
 
 @overload
-def parallel_map(
+def threaded_parallel_map(
     function: Callable[[T], V],
     input_values: Sequence[T],
     *,
@@ -26,7 +26,7 @@ def parallel_map(
 
 
 @overload
-def parallel_map(
+def threaded_parallel_map(
     function: Callable[[T], V],
     input_values: Iterable[T],
     *,
@@ -38,7 +38,7 @@ def parallel_map(
     ...
 
 
-def parallel_map(
+def threaded_parallel_map(
     function,
     input_values,
     *,
@@ -56,7 +56,7 @@ def parallel_map(
     )
 
     tqdm_options = dict(
-        desc=f"Parallel map {config.function_name}",
+        desc=f"Threaded parallel map {config.function_name}",
         disable=disable_logging,
         total=config.input_length,
         miniters=1,
@@ -67,16 +67,13 @@ def parallel_map(
         yield from (function(v) for v in tqdm(input_values, **tqdm_options))
         return
 
-    ctx = mp.get_context("spawn")
-    ctx.freeze_support()
+    input_queue = queue.Queue(0 if config.chunk_count is None else config.chunk_count)
+    output_queue = queue.Queue(0 if config.chunk_count is None else config.chunk_count)
+    should_stop = threading.Event()
 
-    input_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
-    output_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
-    should_stop = ctx.Event()
-
-    processes = [
-        ctx.Process(
-            name=f"parallel_map_{config.function_name}_{i}",
+    threads = [
+        threading.Thread(
+            name=f"threaded_parallel_map_{config.function_name}_{i}",
             target=mapper_function,
             kwargs=dict(
                 input_queue=input_queue,
@@ -88,8 +85,8 @@ def parallel_map(
         for i in range(config.concurrency)
     ]
 
-    for p in processes:
-        p.start()
+    for t in threads:
+        t.start()
 
     progress = tqdm(**tqdm_options)
 
@@ -127,15 +124,9 @@ def parallel_map(
             except queue.Empty:
                 pass
 
-        should_stop.set()
-    except Exception:
-        for p in processes:
-            p.terminate()
     finally:
-        for p in processes:
-            p.join()
-            p.close()
-        input_queue.close()
-        output_queue.close()
+        should_stop.set()
+        for t in threads:
+            t.join()
 
         progress.close()
