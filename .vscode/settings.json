@@ -48,6 +48,7 @@
     "tickvals",
     "tinydb",
     "tqdm",
+    "unchunk",
     "uvicorn",
     "Vectorizer",
     "xmargin",

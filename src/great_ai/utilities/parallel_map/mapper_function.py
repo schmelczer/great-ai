@@ -1,13 +1,15 @@
 import multiprocessing as mp
 import queue
+import threading
+from typing import Union
 
 import dill
 
 
 def mapper_function(
-    input_queue: mp.Queue,
-    output_queue: mp.Queue,
-    should_stop: mp.Event,
+    input_queue: Union[mp.Queue, queue.Queue],
+    output_queue: Union[mp.Queue, queue.Queue],
+    should_stop: Union[mp.Event, threading.Event],
     serialized_map_function: bytes,
 ):
     map_function = dill.loads(serialized_map_function)
