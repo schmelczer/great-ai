@@ -95,7 +95,7 @@ class GreatAI(Generic[T]):
         func: Optional[Callable[..., T]] = None,
         *,
         version: str = "0.0.1",
-        return_raw_result: bool =False,
+        return_raw_result: bool = False,
         disable_rest_api: bool = False,
         disable_docs: bool = False,
         disable_dashboard: bool = False,
@@ -112,7 +112,9 @@ class GreatAI(Generic[T]):
                 ),
             )
 
-        instance = GreatAI[T](func, version=version, return_raw_result=return_raw_result)
+        instance = GreatAI[T](
+            func, version=version, return_raw_result=return_raw_result
+        )
 
         if not disable_rest_api:
             instance._bootstrap_rest_api(
