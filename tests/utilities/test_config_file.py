@@ -1,3 +1,4 @@
+import os
 import unittest
 from pathlib import Path
 
@@ -62,8 +63,6 @@ multiline
         assert c.whitespace == "hardly  matters"
 
     def test_env(self) -> None:
-        import os
-
         os.environ["alma"] = "12"
         c = ConfigFile(DATA_PATH / "env.conf")
         del os.environ["alma"]
@@ -72,13 +71,20 @@ multiline
 
     def test_env_not_exists(self) -> None:
         with pytest.raises(KeyError):
-            ConfigFile(DATA_PATH / "env.conf")
+            ConfigFile(DATA_PATH / "env-bad.conf")
 
-    def test_env_not_exists_but_ignored(self) -> None:
-        with pytest.raises(KeyError):
-            ConfigFile(
-                DATA_PATH / "env.conf", ignore_missing_environment_variables=True
-            )
+    def test_env_not_exists_fallback(self) -> None:
+        os.environ["alma"] = "12"
+        c = ConfigFile(DATA_PATH / "env.conf")
+        assert c.fourth_key == "this is a default value"
+
+    def test_env_exists_ignore_fallback(self) -> None:
+        os.environ["alma"] = "12"
+        os.environ["SOMETHING"] = "hi"
+        c = ConfigFile(DATA_PATH / "env.conf")
+        del os.environ["SOMETHING"]
+
+        assert c.fourth_key == "hi"
 
     def test_duplicate_key(self) -> None:
         with pytest.raises(KeyError):
