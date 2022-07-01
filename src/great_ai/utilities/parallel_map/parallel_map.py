@@ -106,10 +106,14 @@ def parallel_map(
             unordered=unordered,
             ignore_exceptions=ignore_exceptions,
         )
-    finally:
         should_stop.set()
         for p in processes:
             p.join()
             p.close()
+    except:
+        for p in processes:
+            p.terminate()
+        raise
+    finally:
         input_queue.close()
         output_queue.close()

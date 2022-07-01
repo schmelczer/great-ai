@@ -94,17 +94,15 @@ def threaded_parallel_map(
     for t in threads:
         t.start()
 
-    try:
-        yield from manage_communication(
-            tqdm_options=tqdm_options,
-            input_values=input_values,
-            chunk_size=config.chunk_size,
-            input_queue=input_queue,
-            output_queue=output_queue,
-            unordered=unordered,
-            ignore_exceptions=ignore_exceptions,
-        )
-    finally:
-        should_stop.set()
-        for t in threads:
-            t.join()
+    yield from manage_communication(
+        tqdm_options=tqdm_options,
+        input_values=input_values,
+        chunk_size=config.chunk_size,
+        input_queue=input_queue,
+        output_queue=output_queue,
+        unordered=unordered,
+        ignore_exceptions=ignore_exceptions,
+    )
+    should_stop.set()
+    for t in threads:
+        t.join()
