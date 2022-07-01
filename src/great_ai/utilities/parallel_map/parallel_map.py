@@ -1,11 +1,8 @@
 import multiprocessing as mp
 from typing import Callable, Iterable, Optional, Sequence, TypeVar, overload
 
-from src.great_ai.utilities.parallel_map.manage_communication import (
-    manage_communication,
-)
-
 from .get_config import get_config
+from .manage_communication import manage_communication
 from .manage_serial import manage_serial
 from .mapper_function import mapper_function
 
