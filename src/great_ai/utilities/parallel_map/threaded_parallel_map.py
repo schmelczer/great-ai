@@ -81,6 +81,7 @@ def threaded_parallel_map(
         threading.Thread(
             name=f"threaded_parallel_map_{config.function_name}_{i}",
             target=mapper_function,
+            daemon=True,
             kwargs=dict(
                 input_queue=input_queue,
                 output_queue=output_queue,
