@@ -12,9 +12,7 @@ logger = get_logger("ConfigFile")
 
 
 class ConfigFile:
-    def __init__(
-        self, path: Union[Path, str], ignore_missing_environment_variables: bool = False
-    ) -> None:
+    def __init__(self, path: Union[Path, str]) -> None:
         if not isinstance(path, Path):
             path = Path(path)
 
@@ -22,9 +20,6 @@ class ConfigFile:
             raise FileNotFoundError(path.absolute())
 
         self._path = path
-        self._ignore_missing_environment_variables = (
-            ignore_missing_environment_variables
-        )
         self._key_values: Dict[str, str] = {}
 
         self._parse()
@@ -35,11 +30,6 @@ class ConfigFile:
 
         matches = pattern.findall(lines)
         for key, *values in matches:
-            if key in self._key_values:
-                raise KeyError(
-                    f"Key `{key}` has been already defined and its value is `{self._key_values[key]}`"
-                )
-
             try:
                 value = next(v for v in values if v)
             except StopIteration:
@@ -47,15 +37,29 @@ class ConfigFile:
                     f"Cannot parse config file ({self._path.absolute()}), error at key `{key}`"
                 )
 
+            already_exists = key in self._key_values
+            if already_exists and not value.startswith(
+                f"{ENVIRONMENT_VARIABLE_KEY_PREFIX}:"
+            ):
+                raise KeyError(
+                    f"Key `{key}` has been already defined and its value is `{self._key_values[key]}`"
+                )
+
             if value.startswith(f"{ENVIRONMENT_VARIABLE_KEY_PREFIX}:"):
                 _, value = value.split(":")
                 if value not in os.environ:
                     issue = f'The value of `{key}` contains the "{ENVIRONMENT_VARIABLE_KEY_PREFIX}` prefix but `{value}` is not defined as an environment variable'
-                    if self._ignore_missing_environment_variables:
-                        logger.warning(f"{issue}, defaulting to `None`")
+                    if already_exists:
+                        logger.warning(
+                            f"{issue}, using the default value defined above (`{self._key_values[key]}`)"
+                        )
+                        continue
                     else:
-                        raise KeyError(issue)
-                value = os.environ[value]
+                        raise KeyError(
+                            f"{issue} and no default value has been provided"
+                        )
+                else:
+                    value = os.environ[value]
 
             self._key_values[key] = value
 
@@ -84,4 +88,4 @@ class ConfigFile:
         return self._key_values.items()
 
     def __repr__(self):
-        return f"{type(self).__name__}(\n  path={self._path},\n  ignore_missing_environment_variables={self._ignore_missing_environment_variables}\n) {{{self._key_values}}}"
+        return f"{type(self).__name__}(path={self._path}) {self._key_values}"
