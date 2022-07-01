@@ -16,10 +16,10 @@ def mapper_function(
     try:
         while not should_stop.is_set():
             try:
-                input_chunk = input_queue.get_nowait()
+                input_chunk = input_queue.get(1)
                 output_chunk = [(i, map_function(v)) for i, v in input_chunk]
                 output_queue.put(output_chunk)
             except queue.Empty:
                 pass
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, BrokenPipeError):
         return
