@@ -14,7 +14,6 @@ def use_model(
     key: str,
     *,
     version: Union[int, Literal["latest"]],
-    return_path: bool = False,
     model_kwarg_name: str = "model",
 ) -> Callable[[F], F]:
     assert (
@@ -24,7 +23,6 @@ def use_model(
     model, actual_version = load_model(
         key=key,
         version=None if version == "latest" else version,
-        return_path=return_path,
     )
 
     def decorator(func: F) -> F:
