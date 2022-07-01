@@ -1,11 +1,10 @@
 import queue
 import threading
-from typing import Callable, Dict, Iterable, Optional, Sequence, TypeVar, overload
+from typing import Callable, Iterable, Optional, Sequence, TypeVar, overload
 
-from tqdm.cli import tqdm
-
-from ..chunk import chunk
 from .get_config import get_config
+from .manage_communication import manage_communication
+from .manage_serial import manage_serial
 from .mapper_function import mapper_function
 
 T = TypeVar("T")
@@ -19,8 +18,9 @@ def threaded_parallel_map(
     *,
     chunk_size: Optional[int],
     concurrency: Optional[int],
-    disable_logging: bool,
+    disable_logging: Optional[bool],
     unordered: Optional[bool],
+    ignore_exceptions: Optional[bool],
 ) -> Iterable[V]:
     ...
 
@@ -32,8 +32,9 @@ def threaded_parallel_map(
     *,
     chunk_size: int,
     concurrency: Optional[int],
-    disable_logging: bool,
+    disable_logging: Optional[bool],
     unordered: Optional[bool],
+    ignore_exceptions: Optional[bool],
 ) -> Iterable[V]:
     ...
 
@@ -46,6 +47,7 @@ def threaded_parallel_map(
     concurrency=None,
     disable_logging=False,
     unordered=False,
+    ignore_exceptions=False,
 ):
     config = get_config(
         function=function,
@@ -64,8 +66,12 @@ def threaded_parallel_map(
     )
 
     if config.concurrency == 1:
-        yield from (function(v) for v in tqdm(input_values, **tqdm_options))
-        return
+        yield from manage_serial(
+            function=function,
+            tqdm_options=tqdm_options,
+            input_values=input_values,
+            ignore_exceptions=ignore_exceptions,
+        )
 
     input_queue = queue.Queue(0 if config.chunk_count is None else config.chunk_count)
     output_queue = queue.Queue(0 if config.chunk_count is None else config.chunk_count)
@@ -88,45 +94,17 @@ def threaded_parallel_map(
     for t in threads:
         t.start()
 
-    progress = tqdm(**tqdm_options)
-
-    chunks = iter(chunk(enumerate(input_values), chunk_size=config.chunk_size))
-    indexed_results: Dict[int, V] = {}
-    next_output_index = 0
-    read_input_length = 0
-    is_iteration_over = False
     try:
-        while not is_iteration_over or next_output_index < read_input_length:
-            if not is_iteration_over:
-                try:
-                    next_chunk = next(chunks)
-                    input_queue.put(next_chunk)
-                    read_input_length += len(next_chunk)
-                except StopIteration:
-                    is_iteration_over = True
-
-            try:
-                result_chunk = output_queue.get_nowait()
-                progress.update(len(result_chunk))
-
-                for index, value in result_chunk:
-                    if unordered:
-                        yield value
-                        next_output_index += 1
-                    else:
-                        indexed_results[index] = value
-
-                if not unordered:
-                    while next_output_index in indexed_results:
-                        yield indexed_results[next_output_index]
-                        del indexed_results[next_output_index]
-                        next_output_index += 1
-            except queue.Empty:
-                pass
-
+        yield from manage_communication(
+            tqdm_options=tqdm_options,
+            input_values=input_values,
+            chunk_size=config.chunk_size,
+            input_queue=input_queue,
+            output_queue=output_queue,
+            unordered=unordered,
+            ignore_exceptions=ignore_exceptions,
+        )
     finally:
         should_stop.set()
         for t in threads:
             t.join()
-
-        progress.close()
