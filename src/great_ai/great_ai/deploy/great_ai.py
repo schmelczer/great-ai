@@ -39,7 +39,7 @@ T = TypeVar("T")
 
 
 class GreatAI(Generic[T]):
-    def __init__(self, func: Callable[..., Any], version: str):
+    def __init__(self, func: Callable[..., Any], version: str, return_raw_result: bool):
         func = automatically_decorate_parameters(func)
         get_function_metadata_store(func).is_finalised = True
 
@@ -53,7 +53,7 @@ class GreatAI(Generic[T]):
             ) as t:
                 result = func(*args, **kwargs)
                 output = t.finalise(output=result)
-            return output
+            return result if return_raw_result else output
 
         self._cached_func = lru_cache(get_context().prediction_cache_size)(
             func_in_tracing_context
@@ -83,6 +83,7 @@ class GreatAI(Generic[T]):
     @staticmethod
     def create(
         version: str,
+        return_raw_result: bool,
         disable_rest_api: bool,
         disable_docs: bool,
         disable_dashboard: bool,
@@ -94,6 +95,7 @@ class GreatAI(Generic[T]):
         func: Optional[Callable[..., T]] = None,
         *,
         version: str = "0.0.1",
+        return_raw_result: bool =False,
         disable_rest_api: bool = False,
         disable_docs: bool = False,
         disable_dashboard: bool = False,
@@ -103,13 +105,14 @@ class GreatAI(Generic[T]):
                 Callable[[Callable[..., T]], GreatAI[T]],
                 partial(
                     GreatAI.create,
-                    disable_http=disable_rest_api,
+                    return_raw_result=return_raw_result,
+                    disable_rest_api=disable_rest_api,
                     disable_docs=disable_docs,
                     disable_dashboard=disable_dashboard,
                 ),
             )
 
-        instance = GreatAI[T](func, version=version)
+        instance = GreatAI[T](func, version=version, return_raw_result=return_raw_result)
 
         if not disable_rest_api:
             instance._bootstrap_rest_api(
