@@ -20,8 +20,8 @@ def add_ground_truth(
     expected_outputs: Iterable[T],
     *,
     tags: List[str] = [],
-    train_split_ratio: float,
-    test_split_ratio: float,
+    train_split_ratio: float = 1,
+    test_split_ratio: float = 0,
     validation_split_ratio: float = 0
 ) -> None:
     get_context()  # this resets the seed

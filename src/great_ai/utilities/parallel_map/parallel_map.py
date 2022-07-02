@@ -88,8 +88,8 @@ def parallel_map(
     ctx = mp.get_context("spawn")
     ctx.freeze_support()
 
-    input_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
-    output_queue = ctx.Queue(0 if config.chunk_count is None else config.chunk_count)
+    input_queue = ctx.Queue(config.concurrency * 2)
+    output_queue = ctx.Queue(config.concurrency * 2)
     should_stop = ctx.Event()
 
     processes = [
