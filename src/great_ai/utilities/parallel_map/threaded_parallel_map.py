@@ -86,8 +86,8 @@ def threaded_parallel_map(
             ignore_exceptions=ignore_exceptions,
         )
 
-    input_queue = queue.Queue(0 if config.chunk_count is None else config.chunk_count)
-    output_queue = queue.Queue(0 if config.chunk_count is None else config.chunk_count)
+    input_queue = queue.Queue(config.concurrency * 2)
+    output_queue = queue.Queue(config.concurrency * 2)
     should_stop = threading.Event()
 
     threads = [
