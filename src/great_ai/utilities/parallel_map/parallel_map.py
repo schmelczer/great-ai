@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from typing import Callable, Iterable, Optional, Sequence, TypeVar, overload
+from typing import Callable, Iterable, Literal, Optional, Sequence, TypeVar, overload
 
 from .get_config import get_config
 from .manage_communication import manage_communication
@@ -17,9 +17,8 @@ def parallel_map(
     *,
     chunk_size: Optional[int],
     concurrency: Optional[int],
-    disable_logging: Optional[bool],
     unordered: Optional[bool],
-    ignore_exceptions: Optional[bool],
+    ignore_exceptions: Optional[Literal[False]],
 ) -> Iterable[V]:
     ...
 
@@ -31,10 +30,35 @@ def parallel_map(
     *,
     chunk_size: int,
     concurrency: Optional[int],
-    disable_logging: Optional[bool],
     unordered: Optional[bool],
-    ignore_exceptions: Optional[bool],
+    ignore_exceptions: Optional[Literal[False]],
 ) -> Iterable[V]:
+    ...
+
+
+@overload
+def parallel_map(
+    function: Callable[[T], V],
+    input_values: Sequence[T],
+    *,
+    chunk_size: Optional[int],
+    concurrency: Optional[int],
+    unordered: Optional[bool],
+    ignore_exceptions: True,
+) -> Iterable[Optional[V]]:
+    ...
+
+
+@overload
+def parallel_map(
+    function: Callable[[T], V],
+    input_values: Iterable[T],
+    *,
+    chunk_size: int,
+    concurrency: Optional[int],
+    unordered: Optional[bool],
+    ignore_exceptions: True,
+) -> Iterable[Optional[V]]:
     ...
 
 
@@ -44,7 +68,6 @@ def parallel_map(
     *,
     chunk_size=None,
     concurrency=None,
-    disable_logging=False,
     unordered=False,
     ignore_exceptions=False,
 ):
@@ -53,21 +76,11 @@ def parallel_map(
         input_values=input_values,
         chunk_size=chunk_size,
         concurrency=concurrency,
-        disable_logging=disable_logging,
-    )
-
-    tqdm_options = dict(
-        desc=f"Parallel map {config.function_name}",
-        disable=disable_logging,
-        total=config.input_length,
-        miniters=1,
-        dynamic_ncols=True,
     )
 
     if config.concurrency == 1:
         yield from manage_serial(
             function=function,
-            tqdm_options=tqdm_options,
             input_values=input_values,
             ignore_exceptions=ignore_exceptions,
         )
@@ -98,7 +111,6 @@ def parallel_map(
 
     try:
         yield from manage_communication(
-            tqdm_options=tqdm_options,
             input_values=input_values,
             chunk_size=config.chunk_size,
             input_queue=input_queue,
