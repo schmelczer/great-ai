@@ -29,11 +29,9 @@ class TestParallelMap(unittest.TestCase):
         )
 
     def test_simple_case_without_progress_bar(self) -> None:
-        assert list(
-            parallel_map(
-                lambda v: v**2, range(COUNT), disable_logging=True, concurrency=2
-            )
-        ) == [v**2 for v in range(COUNT)]
+        assert list(parallel_map(lambda v: v**2, range(COUNT), concurrency=2)) == [
+            v**2 for v in range(COUNT)
+        ]
 
     def test_simple_case_invalid_values(self) -> None:
         with pytest.raises(AssertionError):
@@ -113,19 +111,6 @@ class TestParallelMap(unittest.TestCase):
         )
 
     def test_no_op(self) -> None:
-        assert list(parallel_map(lambda v: v**2, [], disable_logging=True)) == []
-
-        assert (
-            list(
-                parallel_map(lambda v: v**2, [], disable_logging=True, chunk_size=100)
-            )
-            == []
-        )
-        assert (
-            list(
-                parallel_map(
-                    lambda v: v**2, [], disable_logging=True, concurrency=100
-                )
-            )
-            == []
-        )
+        assert list(parallel_map(lambda v: v**2, [])) == []
+        assert list(parallel_map(lambda v: v**2, [], chunk_size=100)) == []
+        assert list(parallel_map(lambda v: v**2, [], concurrency=100)) == []

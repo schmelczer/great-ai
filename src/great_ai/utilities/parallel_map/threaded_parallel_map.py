@@ -18,7 +18,6 @@ def threaded_parallel_map(
     *,
     chunk_size: Optional[int],
     concurrency: Optional[int],
-    disable_logging: Optional[bool],
     unordered: Optional[bool],
     ignore_exceptions: Optional[bool],
 ) -> Iterable[V]:
@@ -32,7 +31,6 @@ def threaded_parallel_map(
     *,
     chunk_size: int,
     concurrency: Optional[int],
-    disable_logging: Optional[bool],
     unordered: Optional[bool],
     ignore_exceptions: Optional[bool],
 ) -> Iterable[V]:
@@ -45,7 +43,6 @@ def threaded_parallel_map(
     *,
     chunk_size=None,
     concurrency=None,
-    disable_logging=False,
     unordered=False,
     ignore_exceptions=False,
 ):
@@ -54,21 +51,11 @@ def threaded_parallel_map(
         input_values=input_values,
         chunk_size=chunk_size,
         concurrency=concurrency,
-        disable_logging=disable_logging,
-    )
-
-    tqdm_options = dict(
-        desc=f"Threaded parallel map {config.function_name}",
-        disable=disable_logging,
-        total=config.input_length,
-        miniters=1,
-        dynamic_ncols=True,
     )
 
     if config.concurrency == 1:
         yield from manage_serial(
             function=function,
-            tqdm_options=tqdm_options,
             input_values=input_values,
             ignore_exceptions=ignore_exceptions,
         )
@@ -96,7 +83,6 @@ def threaded_parallel_map(
         t.start()
 
     yield from manage_communication(
-        tqdm_options=tqdm_options,
         input_values=input_values,
         chunk_size=config.chunk_size,
         input_queue=input_queue,

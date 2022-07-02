@@ -16,7 +16,6 @@ def get_config(
     input_values: Union[Sequence, Iterable],
     chunk_size: Optional[int],
     concurrency: Optional[int],
-    disable_logging: bool,
 ) -> ParallelMapConfiguration:
 
     is_input_sequence = hasattr(input_values, "__len__")
@@ -56,9 +55,5 @@ def get_config(
         serialized_map_function=dill.dumps(function, byref=True, recurse=True),
         function_name=function.__name__,
     )
-
-    if not disable_logging:
-        logger.info("Parallel map: configured ✅")
-        config.pretty_print()
 
     return config
