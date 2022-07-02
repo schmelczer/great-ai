@@ -1,6 +1,6 @@
 import queue
 import threading
-from typing import Callable, Iterable, Optional, Sequence, TypeVar, overload
+from typing import Callable, Iterable, Literal, Optional, Sequence, TypeVar, overload
 
 from .get_config import get_config
 from .manage_communication import manage_communication
@@ -19,7 +19,7 @@ def threaded_parallel_map(
     chunk_size: Optional[int],
     concurrency: Optional[int],
     unordered: Optional[bool],
-    ignore_exceptions: Optional[bool],
+    ignore_exceptions: Optional[Literal[False]],
 ) -> Iterable[V]:
     ...
 
@@ -32,8 +32,34 @@ def threaded_parallel_map(
     chunk_size: int,
     concurrency: Optional[int],
     unordered: Optional[bool],
-    ignore_exceptions: Optional[bool],
+    ignore_exceptions: Optional[Literal[False]],
 ) -> Iterable[V]:
+    ...
+
+
+@overload
+def threaded_parallel_map(
+    function: Callable[[T], V],
+    input_values: Sequence[T],
+    *,
+    chunk_size: Optional[int],
+    concurrency: Optional[int],
+    unordered: Optional[bool],
+    ignore_exceptions: True,
+) -> Iterable[Optional[V]]:
+    ...
+
+
+@overload
+def threaded_parallel_map(
+    function: Callable[[T], V],
+    input_values: Iterable[T],
+    *,
+    chunk_size: int,
+    concurrency: Optional[int],
+    unordered: Optional[bool],
+    ignore_exceptions: True,
+) -> Iterable[Optional[V]]:
     ...
 
 
