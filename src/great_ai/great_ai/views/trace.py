@@ -2,7 +2,7 @@ from pprint import pformat
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 from uuid import uuid4
 
-from pydantic import Extra, validator
+from pydantic import BaseModel, Extra, validator
 
 from ..helper import HashableBaseModel
 from .model import Model
@@ -77,7 +77,10 @@ class Trace(Generic[T], HashableBaseModel):
                     "original_execution_time_ms": self.original_execution_time_ms,
                 }
             ),
-            **self.logged_values,
+            **{
+                k: v.dict() if isinstance(v, BaseModel) else v
+                for k, v in self.logged_values.items()
+            },
             "models_flat": self.models_flat,
             "exception_flat": self.exception_flat,
             "output_flat": self.output_flat,
