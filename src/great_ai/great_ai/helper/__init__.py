@@ -1,4 +1,4 @@
-from .freeze_arguments import freeze_arguments
+from .freeze_arguments import freeze, freeze_arguments
 from .get_arguments import get_arguments
 from .get_function_metadata_store import get_function_metadata_store
 from .hashable_base_model import HashableBaseModel

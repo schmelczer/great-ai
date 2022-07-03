@@ -121,7 +121,7 @@ class MongodbDriver(TracingDatabaseDriver):
         return documents, len(documents)
 
     def update(self, id: str, new_version: Trace) -> None:
-        serialized = new_version.dict()
+        serialized = new_version.to_flat_dict()
         serialized["_id"] = new_version.trace_id
         with MongoClient(self.mongo_connection_string) as client:
             client[self.mongo_database].traces.update_one(id, new_version)
