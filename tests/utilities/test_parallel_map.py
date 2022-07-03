@@ -61,31 +61,31 @@ class TestParallelMap(unittest.TestCase):
                 )
             )
 
-    # def test_ignore_this_process_exception(self) -> None:
-    #     def my_generator():
-    #         yield 1
-    #         yield 2
-    #         yield 3
-    #         yield 1 / 0
+    def test_ignore_this_process_exception(self) -> None:
+        def my_generator():
+            yield 1
+            yield 2
+            yield 3
+            yield 1 / 0
 
-    #     assert list(
-    #         parallel_map(
-    #             lambda v: v**2,
-    #             my_generator(),
-    #             concurrency=2,
-    #             chunk_size=2,
-    #             ignore_exceptions=True,
-    #         )
-    #     ) == [1, 4]
-    #     assert list(
-    #         parallel_map(
-    #             lambda v: v**2,
-    #             my_generator(),
-    #             concurrency=1,
-    #             chunk_size=2,
-    #             ignore_exceptions=True,
-    #         )
-    #     ) == [1, 4, 9]
+        assert list(
+            parallel_map(
+                lambda v: v**2,
+                my_generator(),
+                concurrency=2,
+                chunk_size=2,
+                ignore_exceptions=True,
+            )
+        ) == [1, 4]
+        assert list(
+            parallel_map(
+                lambda v: v**2,
+                my_generator(),
+                concurrency=1,
+                chunk_size=2,
+                ignore_exceptions=True,
+            )
+        ) == [1, 4, 9]
 
     def test_worker_process_exception(self) -> None:
         def oh_no(_):

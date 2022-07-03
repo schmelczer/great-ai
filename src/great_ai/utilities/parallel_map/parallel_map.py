@@ -123,13 +123,13 @@ def parallel_map(
             ignore_exceptions=ignore_exceptions,
         )
         should_stop.set()
-        for p in processes:
-            p.join()
-            p.close()
     except:
         for p in processes:
             p.terminate()
         raise
     finally:
+        for p in processes:
+            p.join()  # terminated processes have to be joined else they remain zombies
+            p.close()
         input_queue.close()
         output_queue.close()
