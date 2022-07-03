@@ -1,5 +1,4 @@
 :root {
-  --important-color: #a30808;
   --background-color: #edf5f6;
   --small-padding: 10px;
   --medium-padding: 20px;
@@ -84,7 +83,6 @@ main {
 }
 
 .environment {
-  background-color: var(--important-color);
   color: white;
   text-align: center;
   display: flex;
@@ -152,7 +150,6 @@ main > header .placeholder {
 }
 
 .configuration-item {
-  border-left: 2px solid var(--important-color);
   padding-left: var(--small-padding);
   margin: var(--medium-padding);
 }

@@ -38,6 +38,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
             html.Div(
                 html.P("PRODUCTION" if get_context().is_production else "DEVELOPMENT"),
                 className="environment",
+                style={"background": accent_color},
             ),
             html.Header(
                 [
@@ -97,6 +98,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
                     html.P(str(value)),
                 ],
                 className="configuration-item",
+                style={"border-left": f"2px solid {accent_color}"},
             )
             for key, value in config.items()
         ]
