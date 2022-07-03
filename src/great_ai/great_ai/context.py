@@ -103,7 +103,7 @@ def configure(
 
     logger.info("Settings: configured ✅")
     for k, v in get_context().to_flat_dict().items():
-        logger.info(f"  ⚙️ {k}: {v}")
+        logger.info(f"  🔩 {k}: {v}")
 
     if not is_production and not disable_se4ml_banner:
         logger.warning(
