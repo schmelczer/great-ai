@@ -127,7 +127,7 @@ def _is_in_production_mode(logger: Optional[Logger]) -> bool:
             if not is_production:
                 logger.info(
                     f"Value of {ENV_VAR_KEY} is `{environment}` which is not equal to `{PRODUCTION_KEY}`"
-                    + "defaulting to development mode ‼️"
+                    + " defaulting to development mode ‼️"
                 )
             else:
                 logger.info("Running in production mode ✅")
