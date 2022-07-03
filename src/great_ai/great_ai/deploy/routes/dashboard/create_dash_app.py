@@ -11,7 +11,7 @@ from flask import Flask
 from .....utilities import unique
 from ....constants import DASHBOARD_PATH, ONLINE_TAG_NAME
 from ....context import get_context
-from ....helper import snake_case_to_text, text_to_hex_color
+from ....helper import freeze, snake_case_to_text, text_to_hex_color
 from ....views import SortBy, Trace
 from .get_description import get_description
 from .get_filter_from_datatable import get_filter_from_datatable
@@ -153,7 +153,10 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
         )
 
         return (
-            [e.to_flat_dict(include_original=False) for e in elements],
+            [
+                {k: str(v) for k, v in e.to_flat_dict(include_original=False).items()}
+                for e in elements
+            ],
             max(1, ceil(count / page_size)),
             columns,
             style,
@@ -245,11 +248,11 @@ def get_dimension_descriptor(df: pd.DataFrame, column: str) -> Dict[str, Any]:
         dimension["values"] = [float(v) for v in values]
     except (TypeError, ValueError):
         MAX_LENGTH = 40
-        unique_values = unique(values)
-        value_mapping = {str(v)[-MAX_LENGTH:]: i for i, v in enumerate(unique_values)}
+        unique_values = unique(values, key=freeze)
+        value_mapping = {str(v)[:MAX_LENGTH]: i for i, v in enumerate(unique_values)}
 
-        dimension["values"] = [value_mapping[str(v)[-MAX_LENGTH:]] for v in values]
+        dimension["values"] = [value_mapping[str(v)[:MAX_LENGTH]] for v in values]
         dimension["tickvals"] = list(value_mapping.values())
-        dimension["ticktext"] = [k[-MAX_LENGTH:] for k in value_mapping.keys()]
+        dimension["ticktext"] = [k[:MAX_LENGTH] for k in value_mapping.keys()]
 
     return dimension
