@@ -12,35 +12,39 @@ def parse_arguments() -> Namespace:
         help="the name of the file containing your to-be-served function such as `main.py`\n",
     )
 
+    default_host = "0.0.0.0"
     parser.add_argument(
         "--host",
         type=str,
-        help="it is passed to uvicorn which starts a server listening on this address",
-        default="0.0.0.0",
+        help=f"it is passed to uvicorn which starts a server listening on this address (default: {default_host})",
+        default=default_host,
         required=False,
     )
 
+    default_port = 6060
     parser.add_argument(
         "--port",
         type=int,
-        help="it is passed to uvicorn which starts a server listening on this port",
-        default=6060,
+        help=f"it is passed to uvicorn which starts a server listening on this port (default: {default_port})",
+        default=default_port,
         required=False,
     )
 
+    default_timeout_keep_alive = 600
     parser.add_argument(
         "--timeout_keep_alive",
         type=int,
-        help="it is passed to uvicorn which uses it for timing out requests taking longer than this many seconds",
+        help=f"it is passed to uvicorn which uses it for timing out requests taking longer than this many seconds (default: {default_timeout_keep_alive})",
         default=600,
         required=False,
     )
 
+    default_worker_count = 1
     parser.add_argument(
-        "--workers",
+        "--worker_count",
         type=int,
-        help="it is passed to uvicorn which starts this many server processes",
-        default=1,
+        help=f"it is passed to uvicorn which starts this many server processes (default: {default_worker_count})",
+        default=default_worker_count,
         required=False,
     )
 
