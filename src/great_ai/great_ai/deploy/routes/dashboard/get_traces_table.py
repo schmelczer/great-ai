@@ -30,4 +30,5 @@ def get_traces_table() -> dash_table.DataTable:
         style_cell_conditional=[
             {"if": {"column_id": "output"}, "width": 1500},
         ],
+        style_table={"overflow": "auto"},
     )
