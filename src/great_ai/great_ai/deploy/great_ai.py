@@ -40,12 +40,13 @@ T = TypeVar("T")
 
 class GreatAI(Generic[T]):
     def __init__(self, func: Callable[..., Any], version: str, return_raw_result: bool):
+        is_asynchronous = inspect.iscoroutinefunction(func)
         func = automatically_decorate_parameters(func)
         get_function_metadata_store(func).is_finalised = True
 
         self._func = func
 
-        def func_in_tracing_context(
+        def func_in_tracing_context_sync(
             *args: Any, do_not_persist_traces: bool = False, **kwargs: Any
         ) -> Trace[T]:
             with TracingContext[T](
@@ -54,6 +55,22 @@ class GreatAI(Generic[T]):
                 result = func(*args, **kwargs)
                 output = t.finalise(output=result)
             return result if return_raw_result else output
+
+        async def func_in_tracing_context_async(
+            *args: Any, do_not_persist_traces: bool = False, **kwargs: Any
+        ) -> Trace[T]:
+            with TracingContext[T](
+                func.__name__, do_not_persist_traces=do_not_persist_traces
+            ) as t:
+                result = await func(*args, **kwargs)
+                output = t.finalise(output=result)
+            return result if return_raw_result else output
+
+        func_in_tracing_context = (
+            func_in_tracing_context_async
+            if is_asynchronous
+            else func_in_tracing_context_sync
+        )
 
         self._cached_func = lru_cache(get_context().prediction_cache_size)(
             func_in_tracing_context
@@ -133,12 +150,16 @@ class GreatAI(Generic[T]):
         concurrency: Optional[int] = None,
         do_not_persist_traces: bool = False,
     ) -> List[Trace[T]]:
-        return parallel_map(
-            freeze_arguments(
-                partial(self._cached_func, do_not_persist_traces=do_not_persist_traces)
-            ),
-            batch,
-            concurrency=concurrency,
+        return list(
+            parallel_map(
+                freeze_arguments(
+                    partial(
+                        self._cached_func, do_not_persist_traces=do_not_persist_traces
+                    )
+                ),
+                batch,
+                concurrency=concurrency,
+            )
         )
 
     @property
