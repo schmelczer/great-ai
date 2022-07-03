@@ -50,7 +50,7 @@ def get_config(
         chunk_count=chunk_count,
         chunk_size=chunk_size,
         input_length=input_length,
-        function_name=function.__name__,
+        function_name=function.__name__ if hasattr(function, "__name__") else "unknown",
     )
 
     return config
