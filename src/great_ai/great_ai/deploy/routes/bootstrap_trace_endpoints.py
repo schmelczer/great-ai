@@ -12,7 +12,7 @@ def bootstrap_trace_endpoints(app: FastAPI) -> None:
         tags=["traces"],
     )
 
-    @router.post("/", status_code=status.HTTP_200_OK, response_model=List[Trace])
+    @router.post("", status_code=status.HTTP_200_OK, response_model=List[Trace])
     def query_traces(
         query: Query,
         skip: int = 0,
