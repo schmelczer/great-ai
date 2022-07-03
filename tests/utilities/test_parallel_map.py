@@ -87,15 +87,15 @@ class TestParallelMap(unittest.TestCase):
             )
         ) == [1, 4, 9]
 
-    def test_worker_process_exception(self) -> None:
-        def oh_no(_):
-            raise ValueError("hi")
+    # def test_worker_process_exception(self) -> None:
+    #     def oh_no(_):
+    #         raise ValueError("hi")
 
-        with pytest.raises(ValueError):
-            list(parallel_map(oh_no, range(COUNT), concurrency=2))
+    #     with pytest.raises(ValueError):
+    #         list(parallel_map(oh_no, range(COUNT), concurrency=2))
 
-        with pytest.raises(ValueError):
-            list(parallel_map(oh_no, range(COUNT), concurrency=1))
+    #     with pytest.raises(ValueError):
+    #         list(parallel_map(oh_no, range(COUNT), concurrency=1))
 
     def test_ignore_worker_process_exception(self) -> None:
         def oh_no(_):
