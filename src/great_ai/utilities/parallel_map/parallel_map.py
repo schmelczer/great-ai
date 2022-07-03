@@ -7,6 +7,7 @@ from .get_config import get_config
 from .manage_communication import manage_communication
 from .manage_serial import manage_serial
 from .mapper_function import mapper_function
+from .worker_exception import WorkerException
 
 T = TypeVar("T")
 V = TypeVar("V")
@@ -87,13 +88,17 @@ def parallel_map(
             ignore_exceptions=ignore_exceptions,
         )
 
-    ctx = mp.get_context("spawn")
+    ctx = (
+        mp.get_context("fork")
+        if "fork" in mp.get_all_start_methods()
+        else mp.get_context("spawn")
+    )
     ctx.freeze_support()
+    manager = ctx.Manager()
+    input_queue = manager.Queue(config.concurrency * 2)
+    output_queue = manager.Queue(config.concurrency * 2)
 
-    input_queue = ctx.Queue(config.concurrency * 2)
-    output_queue = ctx.Queue(config.concurrency * 2)
     should_stop = ctx.Event()
-
     serialized_map_function = dill.dumps(function, byref=True, recurse=True)
 
     processes = [
@@ -124,13 +129,17 @@ def parallel_map(
             ignore_exceptions=ignore_exceptions,
         )
         should_stop.set()
-    except:
+    except WorkerException:
+        should_stop.set()
+        raise
+    except Exception:
         for p in processes:
             p.terminate()
+            p.kill()
         raise
     finally:
         for p in processes:
             p.join()  # terminated processes have to be joined else they remain zombies
             p.close()
-        input_queue.close()
-        output_queue.close()
+
+        manager.shutdown()

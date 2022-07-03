@@ -1,0 +1,2 @@
+class WorkerException(Exception):
+    pass

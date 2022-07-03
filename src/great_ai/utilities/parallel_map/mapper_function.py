@@ -2,7 +2,6 @@ import multiprocessing as mp
 import queue
 import threading
 import traceback
-from time import sleep
 from typing import Callable, Union
 
 import dill
@@ -19,7 +18,7 @@ def mapper_function(
             map_function = dill.loads(map_function)
 
         last_chunk = None
-        while not should_stop.is_set():
+        while not should_stop.wait(0.1):
             if last_chunk is None:
                 try:
                     input_chunk = input_queue.get_nowait()
@@ -32,16 +31,13 @@ def mapper_function(
                             exception = e, traceback.format_exc()
                         last_chunk.append((i, result, exception))
                 except queue.Empty:
-                    sleep(
-                        0.1
-                    )  # input_queue.get(0.1) would hang in some cases with multiprocessing
-            else:
+                    pass
+
+            if last_chunk is not None:
                 try:
                     output_queue.put_nowait(last_chunk)
                     last_chunk = None
                 except queue.Full:
-                    sleep(
-                        0.1
-                    )  # output_queue.put(0.1) would hang in some cases with multiprocessing
+                    pass
     except (KeyboardInterrupt, BrokenPipeError):
         pass
