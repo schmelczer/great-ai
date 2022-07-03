@@ -43,9 +43,9 @@ def main() -> None:
     args = parse_arguments()
     should_auto_reload = not _is_in_production_mode(logger=None)
 
-    if args.workers > 1 and should_auto_reload:
+    if args.worker_count > 1 and should_auto_reload:
         raise ArgumentValidationError(
-            "Cannot use auto-reload with multiple workers: set the `--workers=1` CLI argument,"
+            "Cannot use auto-reload with multiple worker_count: set the `--worker_count=1` CLI argument,"
             + "or set the ENVIRONMENT environment variable to `production`."
         )
 
@@ -53,7 +53,7 @@ def main() -> None:
         host=args.host,
         port=args.port,
         timeout_keep_alive=args.timeout_keep_alive,
-        workers=args.workers,
+        workers=args.worker_count,
         server_header=False,
         reload=False,
         log_config=GREAT_AI_LOGGING_CONFIG,
