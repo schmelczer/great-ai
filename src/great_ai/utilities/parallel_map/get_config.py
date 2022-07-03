@@ -2,8 +2,6 @@ import os
 from math import ceil
 from typing import Callable, Iterable, Optional, Sequence, Union
 
-import dill
-
 from ..logger import get_logger
 from .parallel_map_configuration import ParallelMapConfiguration
 
@@ -52,7 +50,6 @@ def get_config(
         chunk_count=chunk_count,
         chunk_size=chunk_size,
         input_length=input_length,
-        serialized_map_function=dill.dumps(function, byref=True, recurse=True),
         function_name=function.__name__,
     )
 

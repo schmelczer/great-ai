@@ -99,7 +99,7 @@ def threaded_parallel_map(
                 input_queue=input_queue,
                 output_queue=output_queue,
                 should_stop=should_stop,
-                serialized_map_function=config.serialized_map_function,
+                map_function=function,
             ),
         )
         for i in range(config.concurrency)

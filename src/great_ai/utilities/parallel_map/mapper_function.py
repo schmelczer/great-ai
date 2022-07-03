@@ -3,7 +3,7 @@ import queue
 import threading
 import traceback
 from time import sleep
-from typing import Union
+from typing import Callable, Union
 
 import dill
 
@@ -12,10 +12,11 @@ def mapper_function(
     input_queue: Union[mp.Queue, queue.Queue],
     output_queue: Union[mp.Queue, queue.Queue],
     should_stop: Union[mp.Event, threading.Event],
-    serialized_map_function: bytes,
+    map_function: Union[bytes, Callable],
 ) -> None:
     try:
-        map_function = dill.loads(serialized_map_function)
+        if isinstance(map_function, bytes):
+            map_function = dill.loads(map_function)
 
         last_chunk = None
         while not should_stop.is_set():

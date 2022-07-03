@@ -12,5 +12,4 @@ class ParallelMapConfiguration(BaseModel):
     chunk_count: Optional[int]
     chunk_size: int
     input_length: Optional[int]
-    serialized_map_function: bytes
     function_name: str

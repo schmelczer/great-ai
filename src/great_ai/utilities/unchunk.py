@@ -1,8 +1,9 @@
-from typing import Iterable, TypeVar
+from typing import Iterable, Optional, TypeVar
 
 T = TypeVar("T")
 
 
-def unchunk(chunks: Iterable[Iterable[T]]) -> Iterable[T]:
+def unchunk(chunks: Iterable[Optional[Iterable[T]]]) -> Iterable[T]:
     for chunk in chunks:
-        yield from chunk
+        if chunk is not None:
+            yield from chunk
