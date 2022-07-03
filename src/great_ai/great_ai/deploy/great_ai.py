@@ -183,13 +183,14 @@ class GreatAI(Generic[T]):
 
     def _bootstrap_prediction_endpoint(self) -> None:
         router = APIRouter(
-            prefix="/predict",
             tags=["predictions"],
         )
 
         schema = self._get_schema()
 
-        @router.post("/", status_code=status.HTTP_200_OK, response_model=Trace[T])
+        @router.post(
+            "/predict", status_code=status.HTTP_200_OK, response_model=Trace[T]
+        )
         @use_http_exceptions
         def predict(input_value: schema) -> Trace[T]:  # type: ignore
             return self(**cast(BaseModel, input_value).dict())
