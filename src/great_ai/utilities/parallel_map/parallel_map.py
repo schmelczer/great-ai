@@ -1,6 +1,8 @@
 import multiprocessing as mp
 from typing import Callable, Iterable, Literal, Optional, Sequence, TypeVar, overload
 
+import dill
+
 from .get_config import get_config
 from .manage_communication import manage_communication
 from .manage_serial import manage_serial
@@ -92,6 +94,8 @@ def parallel_map(
     output_queue = ctx.Queue(config.concurrency * 2)
     should_stop = ctx.Event()
 
+    serialized_map_function = dill.dumps(function, byref=True, recurse=True)
+
     processes = [
         ctx.Process(
             name=f"parallel_map_{config.function_name}_{i}",
@@ -100,7 +104,7 @@ def parallel_map(
                 input_queue=input_queue,
                 output_queue=output_queue,
                 should_stop=should_stop,
-                serialized_map_function=config.serialized_map_function,
+                map_function=serialized_map_function,
             ),
         )
         for i in range(config.concurrency)

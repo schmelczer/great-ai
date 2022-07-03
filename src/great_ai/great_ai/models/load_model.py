@@ -1,6 +1,6 @@
 from typing import Any, Optional, Tuple
 
-from joblib import load
+from dill import load
 
 from ..context import get_context
 

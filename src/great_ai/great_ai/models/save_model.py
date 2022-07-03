@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional, Union
 
-from joblib import dump
+from dill import dump
 
 from ..context import get_context
 
