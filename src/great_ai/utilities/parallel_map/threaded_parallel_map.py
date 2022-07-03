@@ -118,4 +118,4 @@ def threaded_parallel_map(
     )
     should_stop.set()
     for t in threads:
-        t.join()
+        t.join(1)

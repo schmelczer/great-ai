@@ -2,6 +2,7 @@ import traceback
 from typing import Callable, Iterable, TypeVar
 
 from ..logger import get_logger
+from .worker_exception import WorkerException
 
 logger = get_logger("parallel_map")
 
@@ -21,15 +22,15 @@ def manage_serial(
                 yield function(v)
             except Exception as e:
                 if not ignore_exceptions:
-                    raise e
+                    raise WorkerException from e
                 else:
                     logger.error(
-                        f"Exception {e} encountered in input, traceback:\n{traceback.format_exc()}"
+                        f"Exception {e} encountered in worker, traceback:\n{traceback.format_exc()}"
                     )
     except Exception as e:
         if not ignore_exceptions:
-            raise e
+            raise
         else:
             logger.error(
-                f"Exception {e} encountered in worker, traceback:\n{traceback.format_exc()}"
+                f"Exception {e} encountered in input, traceback:\n{traceback.format_exc()}"
             )

@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from src.great_ai.utilities import threaded_parallel_map
+from src.great_ai.utilities import WorkerException, threaded_parallel_map
 
 COUNT = int(1e5) + 3
 
@@ -91,10 +91,10 @@ class TestParallelMap(unittest.TestCase):
         def oh_no(_):
             raise ValueError("hi")
 
-        with pytest.raises(ValueError):
+        with pytest.raises(WorkerException):
             list(threaded_parallel_map(oh_no, range(COUNT), concurrency=2))
 
-        with pytest.raises(ValueError):
+        with pytest.raises(WorkerException):
             list(threaded_parallel_map(oh_no, range(COUNT), concurrency=1))
 
     def test_ignore_worker_worker_exception(self) -> None:

@@ -5,6 +5,7 @@ from typing import Dict, Iterable, TypeVar, Union
 
 from ..chunk import chunk
 from ..logger import get_logger
+from .worker_exception import WorkerException
 
 logger = get_logger("parallel_map")
 
@@ -36,7 +37,7 @@ def manage_communication(
                 is_iteration_over = True
             except Exception as e:
                 if not ignore_exceptions:
-                    raise e
+                    raise
                 else:
                     logger.error(
                         f"Exception {e} encountered in input, traceback:\n{traceback.format_exc()}"
@@ -49,7 +50,7 @@ def manage_communication(
                 if exception is not None:
                     e, tb = exception
                     if not ignore_exceptions:
-                        raise e
+                        raise WorkerException from e
                     else:
                         logger.error(
                             f"Exception {e} encountered in worker, traceback:\n{tb}"
