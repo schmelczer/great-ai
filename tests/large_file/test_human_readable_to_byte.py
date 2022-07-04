@@ -12,7 +12,7 @@ class TestHumanReadableToByte(unittest.TestCase):
         assert human_readable_to_byte("0.5KB") == 512
         assert human_readable_to_byte("20.5KB") == 1024 * 20 + 512
 
-    def test_formating(self) -> None:
+    def test_formatting(self) -> None:
         assert human_readable_to_byte(" 1MB") == 1024 * 1024
         assert human_readable_to_byte(" 2  MB") == 1024 * 1024 * 2
         assert human_readable_to_byte("    4   MB ") == 1024 * 1024 * 4
