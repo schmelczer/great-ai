@@ -32,3 +32,10 @@ def hello_world(name: str) -> str:
 Deploy by executing `python3 -m great-ai main.py`
 
 Find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard/).
+
+### Contribute
+
+```sh
+pip install --upgrade --requirement dev-requirements.txt
+
+```

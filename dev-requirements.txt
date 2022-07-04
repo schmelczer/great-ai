@@ -1,0 +1,13 @@
+build
+mkdocs
+mkdocstrings[python]
+mkdocs-material
+autoflake
+isort
+black[jupyter]
+mypy
+flake8
+pytest
+pytest-cov
+pytest-subtests
+pytest-asyncio

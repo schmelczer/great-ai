@@ -2,9 +2,6 @@
 
 set -e
 
-echo "Installing dependencies if necessary"
-python3 -m pip install --upgrade autoflake isort black[jupyter] mypy flake8
-
 echo "Checking $1"
 
 cd $1
