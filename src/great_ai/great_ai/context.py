@@ -12,6 +12,7 @@ from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
     DEFAULT_TRACING_DATABASE_CONFIG_PATHS,
     ENV_VAR_KEY,
+    LIST_ITEM_PREFIX,
     PRODUCTION_KEY,
     SE4ML_WEBSITE,
 )
@@ -103,7 +104,7 @@ def configure(
 
     logger.info("Settings: configured ✅")
     for k, v in get_context().to_flat_dict().items():
-        logger.info(f"  🔩 {k}: {v}")
+        logger.info(f"{LIST_ITEM_PREFIX}{k}: {v}")
 
     if not is_production and not disable_se4ml_banner:
         logger.warning(
