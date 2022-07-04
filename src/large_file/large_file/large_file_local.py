@@ -1,14 +1,15 @@
 from pathlib import Path
 from typing import Any, List, Optional
 
-from ...utilities import get_logger
+from utilities import get_logger
+
 from ..models import DataInstance
-from .large_file import LargeFile
+from .large_file_base import LargeFileBase
 
 logger = get_logger("large_file")
 
 
-class LargeFileLocal(LargeFile):
+class LargeFileLocal(LargeFileBase):
     def __init__(
         self,
         name: str,

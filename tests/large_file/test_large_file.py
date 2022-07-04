@@ -8,7 +8,7 @@ import boto3
 PATH = Path(__file__).parent.resolve()
 
 
-from src.great_ai import LargeFileS3
+from src.large_file import LargeFileS3
 
 credentials = {
     "aws_region_name": "your_region_like_eu-west-2",

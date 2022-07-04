@@ -1,4 +1,5 @@
-from ..large_file import LargeFileMongo, LargeFileS3
+from large_file import LargeFileMongo, LargeFileS3
+
 from .persistence.mongodb_driver import MongodbDriver
 
 ENV_VAR_KEY = "ENVIRONMENT"

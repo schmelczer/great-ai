@@ -4,10 +4,11 @@ from typing import Any, List, Mapping, Optional
 
 import boto3
 
-from ...utilities import get_logger
+from utilities import get_logger
+
 from ..helper import DownloadProgressBar, UploadProgressBar
 from ..models import DataInstance
-from .large_file import LargeFile
+from .large_file_base import LargeFileBase
 
 logger = get_logger("large_file")
 
@@ -15,7 +16,7 @@ logger = get_logger("large_file")
 S3_NAME_VERSION_SEPARATOR = "/"
 
 
-class LargeFileS3(LargeFile):
+class LargeFileS3(LargeFileBase):
     """
     Store large files in S3. Use local cache for speed up.
 
