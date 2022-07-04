@@ -19,6 +19,12 @@ class TestHumanReadableToByte(unittest.TestCase):
 
         assert hello_world("andras").output == "Hello andras!"
 
+        @GreatAI.create
+        def hello_world(name):
+            return f"Hello {name}!"
+
+        assert hello_world("andras").output == "Hello andras!"
+
         @GreatAI.create()
         def hello_world(name: str) -> str:
             return f"Hello {name}!"
