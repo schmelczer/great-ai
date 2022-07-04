@@ -34,7 +34,6 @@ database searches of LaTeX content.)
 
 Simple example usage::
 
-    >>> from pylatexenc.latexwalker import LatexWalker, LatexEnvironmentNode
     >>> w = LatexWalker(r"""
     ... \textbf{Hi there!} Here is \emph{a list}:
     ... \begin{enumerate}[label=(i)]
@@ -45,12 +44,9 @@ Simple example usage::
     ... """)
     >>> (nodelist, pos, len_) = w.get_latex_nodes(pos=0)
     >>> nodelist[0]
-    LatexCharsNode(pos=0, len=1, chars='\n')
+    LatexCharsNode(parsing_state=..., pos=0, len=1, chars='\n')
     >>> nodelist[1]
-    LatexMacroNode(pos=1, len=18, macroname='textbf',
-    nodeargd=ParsedMacroArgs(argnlist=[LatexGroupNode(pos=8, len=11,
-    nodelist=[LatexCharsNode(pos=9, len=9, chars='Hi there!')],
-    delimiters=('{', '}'))], argspec='{'), macro_post_space='')
+    LatexMacroNode(parsing_state=..., pos=1, len=18, macroname='textbf', nodeargd=ParsedMacroArgs(argspec='{', argnlist=[LatexGroupNode(parsing_state=..., pos=8, len=11, nodelist=[LatexCharsNode(parsing_state=..., pos=9, len=9, chars='Hi there!')], delimiters=('{', '}'))]), macro_post_space='')
     >>> nodelist[5].isNodeType(LatexEnvironmentNode)
     True
     >>> nodelist[5].environmentname
@@ -58,8 +54,7 @@ Simple example usage::
     >>> nodelist[5].nodeargd.argspec
     '['
     >>> nodelist[5].nodeargd.argnlist
-    [LatexGroupNode(pos=60, len=11, nodelist=[LatexCharsNode(pos=61, len=9,
-    chars='label=(i)')], delimiters=('[', ']'))]
+    [LatexGroupNode(parsing_state=..., pos=60, len=11, nodelist=[LatexCharsNode(parsing_state=..., pos=61, len=9, chars='label=(i)')], delimiters=('[', ']'))]
     >>> nodelist[7].latex_verbatim()
     '$x$'
 
