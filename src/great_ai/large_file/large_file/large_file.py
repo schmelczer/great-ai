@@ -2,6 +2,7 @@ import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
+from functools import lru_cache
 from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Optional, Type, Union, cast
@@ -141,6 +142,7 @@ class LargeFile(ABC):
     def version(self) -> int:
         return cast(int, self._version)
 
+    @lru_cache(1)
     def get(self, hide_progress: bool = False) -> Path:
         remote_path = next(
             i.remote_path for i in self._instances if i.version == self._version
