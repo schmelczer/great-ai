@@ -123,6 +123,7 @@ class GreatAI(Generic[T]):
                 Callable[[Callable[..., T]], GreatAI[T]],
                 partial(
                     GreatAI.create,
+                    version=version,
                     return_raw_result=return_raw_result,
                     disable_rest_api=disable_rest_api,
                     disable_docs=disable_docs,
