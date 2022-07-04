@@ -8,7 +8,7 @@ from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 from flask import Flask
 
-from utilities import unique
+from great_ai.utilities import unique
 
 from ....constants import DASHBOARD_PATH, ONLINE_TAG_NAME
 from ....context import get_context

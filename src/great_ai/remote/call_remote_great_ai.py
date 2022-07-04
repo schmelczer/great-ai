@@ -3,7 +3,7 @@ from typing import Any, Mapping, Optional, Type, TypeVar
 
 from pydantic import BaseModel
 
-from utilities import get_logger
+from great_ai.utilities import get_logger
 
 from ..views import Trace
 from .call_remote_great_ai_async import call_remote_great_ai_async

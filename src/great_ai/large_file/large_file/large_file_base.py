@@ -7,7 +7,7 @@ from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Optional, Type, Union, cast
 
-from utilities import ConfigFile, get_logger
+from great_ai.utilities import ConfigFile, get_logger
 
 from ..helper import human_readable_to_byte
 from ..models import DataInstance

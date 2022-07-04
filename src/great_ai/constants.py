@@ -1,4 +1,4 @@
-from large_file import LargeFileMongo, LargeFileS3
+from great_ai.large_file import LargeFileMongo, LargeFileS3
 
 from .persistence.mongodb_driver import MongodbDriver
 

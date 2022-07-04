@@ -5,7 +5,7 @@ import matplotlib
 
 matplotlib.use("Agg")  # don't show a window for each test
 
-from src.utilities import evaluate_ranking
+from src.great_ai.utilities import evaluate_ranking
 
 
 class TestEvaluateRanking(unittest.TestCase):

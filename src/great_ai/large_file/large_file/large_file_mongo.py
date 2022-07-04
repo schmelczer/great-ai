@@ -6,7 +6,7 @@ from typing import Any, List, Mapping
 from gridfs import DEFAULT_CHUNK_SIZE, Database, GridFSBucket
 from pymongo import MongoClient
 
-from utilities import get_logger
+from great_ai.utilities import get_logger
 
 from ..helper import DownloadProgressBar, UploadProgressBar
 from ..models import DataInstance

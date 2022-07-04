@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from src.utilities import WorkerException, parallel_map
+from src.great_ai.utilities import WorkerException, parallel_map
 
 COUNT = int(1e5) + 3
 

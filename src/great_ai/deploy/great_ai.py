@@ -16,7 +16,7 @@ from typing import (
 from fastapi import APIRouter, FastAPI, status
 from pydantic import BaseModel, create_model
 
-from utilities import parallel_map
+from great_ai.utilities import parallel_map
 
 from ..constants import DASHBOARD_PATH
 from ..context import get_context

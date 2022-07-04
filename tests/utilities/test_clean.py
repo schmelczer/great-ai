@@ -1,6 +1,6 @@
 import unittest
 
-from src.utilities import clean
+from src.great_ai.utilities import clean
 
 
 class TestClean(unittest.TestCase):

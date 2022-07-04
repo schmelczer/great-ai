@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from src.utilities import ConfigFile
+from src.great_ai.utilities import ConfigFile
 
 DATA_PATH = Path(__file__).parent.resolve() / "data"
 

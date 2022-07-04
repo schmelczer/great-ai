@@ -14,7 +14,7 @@ from uvicorn.supervisors.basereload import BaseReload
 from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
 from watchdog.observers import Observer
 
-from utilities import get_logger
+from great_ai.utilities import get_logger
 
 from .great_ai.constants import SERVER_NAME
 from .great_ai.context import _is_in_production_mode

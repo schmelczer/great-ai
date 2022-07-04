@@ -1,10 +1,10 @@
-from typing import Any, Callable, Iterable, List
+from typing import Any, Callable, Iterable, List, TypeVar
+
+T = TypeVar("T")
 
 
-def unique(
-    values: Iterable[Any], *, key: Callable[[Any], Any] = lambda v: v
-) -> List[Any]:
-    """Only keep first occurrences while maintaining original order.
+def unique(values: Iterable[T], *, key: Callable[[T], Any] = lambda v: v) -> List[T]:
+    """Keep only the first occurrences while maintaining original order.
 
     The equality check used for deduplication can be overridden using the `key` argument.
 
@@ -15,6 +15,13 @@ def unique(
         [{'a': 1, 'b': 2}]
         >>> unique([{'a': 1, 'b': 2}, {'a': 1, 'b': 3}], key=lambda v: v['b'])
         [{'a': 1, 'b': 2}, {'a': 1, 'b': 3}]
+
+    Args:
+        values: An iterable containing your values
+        key: Override the identity function of the equality check.
+
+    Returns:
+        A deduplicated list.
     """
 
     key_values = {}
