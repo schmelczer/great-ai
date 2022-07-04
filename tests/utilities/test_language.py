@@ -1,10 +1,6 @@
 import unittest
 
-from src.great_ai.utilities import (
-    english_name_of_language,
-    is_english,
-    predict_language,
-)
+from great_ai.utilities import english_name_of_language, is_english, predict_language
 
 
 class TestLanguage(unittest.TestCase):

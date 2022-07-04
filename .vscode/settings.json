@@ -6,6 +6,7 @@
     "botocore",
     "Convolutional",
     "datatable",
+    "deduplicated",
     "displaylogo",
     "downsample",
     "fastapi",

@@ -4,14 +4,8 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Mapping, Type
 
-from great_ai.large_file import (
-    LargeFileBase,
-    LargeFileLocal,
-    LargeFileMongo,
-    LargeFileS3,
-)
-from great_ai.utilities import get_logger
-
+from ..utilities import get_logger
+from .large_file import LargeFileBase, LargeFileLocal, LargeFileMongo, LargeFileS3
 from .parse_arguments import parse_arguments
 
 logger = get_logger("large_file")

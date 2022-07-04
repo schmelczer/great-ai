@@ -8,11 +8,10 @@ from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 from flask import Flask
 
-from great_ai.utilities import unique
-
 from ....constants import DASHBOARD_PATH, ONLINE_TAG_NAME
 from ....context import get_context
 from ....helper import freeze, snake_case_to_text, text_to_hex_color
+from ....utilities import unique
 from ....views import SortBy, Trace
 from .get_description import get_description
 from .get_filter_from_datatable import get_filter_from_datatable

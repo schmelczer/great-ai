@@ -2,7 +2,7 @@ import unittest
 
 import pytest
 
-from src.great_ai.utilities import chunk
+from great_ai.utilities import chunk
 
 
 class TestChunk(unittest.TestCase):

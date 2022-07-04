@@ -3,8 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Sequence, Tuple, Union
 
-from great_ai.utilities import ConfigFile
-
+from ..utilities import ConfigFile
 from ..views import Filter, SortBy, Trace
 
 

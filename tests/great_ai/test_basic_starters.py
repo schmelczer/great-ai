@@ -3,7 +3,7 @@ from functools import lru_cache
 
 import pytest
 
-from src.great_ai import (
+from great_ai import (
     ArgumentValidationError,
     GreatAI,
     WrongDecoratorOrderError,

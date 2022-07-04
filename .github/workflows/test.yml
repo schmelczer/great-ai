@@ -43,7 +43,7 @@ jobs:
           if: always()
           uses: actions/upload-artifact@v2
           with:
-            name: Unit test coverage (Python ${{ matrix.python-version }})
+            name: Unit test coverage (Python ${{ matrix.python-version }} - ${{ matrix.operating-system }})
             path: "*.xml"
 
   sonar:

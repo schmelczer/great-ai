@@ -6,9 +6,6 @@ from typing import Any, Dict, Optional, Type, cast
 
 from pydantic import BaseModel
 
-from great_ai.large_file import LargeFileBase, LargeFileLocal
-from great_ai.utilities import get_logger
-
 from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
     DEFAULT_TRACING_DATABASE_CONFIG_PATHS,
@@ -17,7 +14,9 @@ from .constants import (
     PRODUCTION_KEY,
     SE4ML_WEBSITE,
 )
+from .large_file import LargeFileBase, LargeFileLocal
 from .persistence import ParallelTinyDbDriver, TracingDatabaseDriver
+from .utilities import get_logger
 
 
 class Context(BaseModel):

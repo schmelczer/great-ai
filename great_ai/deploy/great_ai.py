@@ -16,8 +16,6 @@ from typing import (
 from fastapi import APIRouter, FastAPI, status
 from pydantic import BaseModel, create_model
 
-from great_ai.utilities import parallel_map
-
 from ..constants import DASHBOARD_PATH
 from ..context import get_context
 from ..helper import (
@@ -29,6 +27,7 @@ from ..helper import (
 from ..models import model_versions
 from ..parameters import automatically_decorate_parameters
 from ..tracing.tracing_context import TracingContext
+from ..utilities import parallel_map
 from ..views import ApiMetadata, CacheStatistics, HealthCheckResponse, Trace
 from .routes import (
     bootstrap_docs_endpoints,
