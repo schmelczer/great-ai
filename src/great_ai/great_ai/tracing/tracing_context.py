@@ -1,18 +1,7 @@
-import threading
-from collections import defaultdict
+from contextvars import ContextVar
 from datetime import datetime
 from types import TracebackType
-from typing import (
-    Any,
-    DefaultDict,
-    Dict,
-    Generic,
-    List,
-    Literal,
-    Optional,
-    Type,
-    TypeVar,
-)
+from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar
 
 from ..constants import DEVELOPMENT_TAG_NAME, ONLINE_TAG_NAME, PRODUCTION_TAG_NAME
 from ..context import get_context
@@ -22,8 +11,6 @@ T = TypeVar("T")
 
 
 class TracingContext(Generic[T]):
-    _contexts: DefaultDict[int, List["TracingContext"]] = defaultdict(lambda: [])
-
     def __init__(self, function_name: str, do_not_persist_traces: bool) -> None:
         self._do_not_persist_traces = do_not_persist_traces
         self._models: List[Model] = []
@@ -62,14 +49,12 @@ class TracingContext(Generic[T]):
 
         return self._trace
 
-    @classmethod
-    def get_current_tracing_context(cls) -> Optional["TracingContext"]:
-        if cls._contexts[threading.get_ident()]:
-            return cls._contexts[threading.get_ident()][-1]
-        return None
+    @staticmethod
+    def get_current_tracing_context() -> Optional["TracingContext"]:
+        return _current_tracing_context.get()
 
     def __enter__(self) -> "TracingContext":
-        self._contexts[threading.get_ident()].append(self)
+        _current_tracing_context.set(self)
         return self
 
     def __exit__(
@@ -78,8 +63,7 @@ class TracingContext(Generic[T]):
         exception: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> Literal[False]:
-        assert self._contexts[threading.get_ident()][-1] == self
-        self._contexts[threading.get_ident()].remove(self)
+        _current_tracing_context.set(None)
 
         if exception is not None and type is not None:
             self.finalise(exception=exception)
@@ -95,3 +79,8 @@ class TracingContext(Generic[T]):
             get_context().tracing_database.save(self._trace)
 
         return False
+
+
+_current_tracing_context: ContextVar[Optional[TracingContext]] = ContextVar(
+    "_current_tracing_context"
+)
