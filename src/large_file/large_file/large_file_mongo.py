@@ -6,10 +6,11 @@ from typing import Any, List, Mapping
 from gridfs import DEFAULT_CHUNK_SIZE, Database, GridFSBucket
 from pymongo import MongoClient
 
-from ...utilities import get_logger
+from utilities import get_logger
+
 from ..helper import DownloadProgressBar, UploadProgressBar
 from ..models import DataInstance
-from .large_file import LargeFile
+from .large_file_base import LargeFileBase
 
 logger = get_logger("large_file")
 
@@ -17,7 +18,7 @@ logger = get_logger("large_file")
 MONGO_NAME_VERSION_SEPARATOR = "_"
 
 
-class LargeFileMongo(LargeFile):
+class LargeFileMongo(LargeFileBase):
     mongo_connection_string = None
     mongo_database = None
 

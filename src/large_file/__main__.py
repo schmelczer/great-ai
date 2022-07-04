@@ -4,8 +4,9 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Mapping, Type
 
-from ..utilities import get_logger
-from .large_file import LargeFile, LargeFileLocal, LargeFileMongo, LargeFileS3
+from large_file import LargeFileBase, LargeFileLocal, LargeFileMongo, LargeFileS3
+from utilities import get_logger
+
 from .parse_arguments import parse_arguments
 
 logger = get_logger("large_file")
@@ -37,8 +38,8 @@ def main() -> None:
             large_file(f).delete()
 
 
-def get_class(args: Namespace) -> Type[LargeFile]:
-    factory: Mapping[str, Type[LargeFile]] = {
+def get_class(args: Namespace) -> Type[LargeFileBase]:
+    factory: Mapping[str, Type[LargeFileBase]] = {
         "s3": LargeFileS3,
         "local": LargeFileLocal,
         "mongodb": LargeFileMongo,

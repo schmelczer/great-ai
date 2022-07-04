@@ -6,8 +6,9 @@ from typing import Any, Dict, Optional, Type, cast
 
 from pydantic import BaseModel
 
-from ..large_file import LargeFile, LargeFileLocal
-from ..utilities import get_logger
+from large_file import LargeFileBase, LargeFileLocal
+from utilities import get_logger
+
 from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
     DEFAULT_TRACING_DATABASE_CONFIG_PATHS,
@@ -21,7 +22,7 @@ from .persistence import ParallelTinyDbDriver, TracingDatabaseDriver
 
 class Context(BaseModel):
     tracing_database: TracingDatabaseDriver
-    large_file_implementation: Type[LargeFile]
+    large_file_implementation: Type[LargeFileBase]
     is_production: bool
     logger: Logger
     should_log_exception_stack: bool
@@ -57,7 +58,7 @@ def configure(
     log_level: int = DEBUG,
     seed: int = 42,
     tracing_database: Optional[Type[TracingDatabaseDriver]] = None,
-    large_file_implementation: Optional[Type[LargeFile]] = None,
+    large_file_implementation: Optional[Type[LargeFileBase]] = None,
     should_log_exception_stack: Optional[bool] = None,
     prediction_cache_size: int = 512,
     disable_se4ml_banner: bool = False,
@@ -160,8 +161,8 @@ def _initialize_tracing_database(
 
 
 def _initialize_large_file(
-    selected: Optional[Type[LargeFile]], logger: Logger
-) -> Type[LargeFile]:
+    selected: Optional[Type[LargeFileBase]], logger: Logger
+) -> Type[LargeFileBase]:
     for large_file, paths in DEFAULT_LARGE_FILE_CONFIG_PATHS.items():
         if selected is None or selected == large_file:
             if large_file.initialized:

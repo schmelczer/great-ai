@@ -1,6 +1,6 @@
 import unittest
 
-from src.great_ai.large_file.helper import human_readable_to_byte
+from src.large_file.helper import human_readable_to_byte
 
 
 class TestHumanReadableToByte(unittest.TestCase):

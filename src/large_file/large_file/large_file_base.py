@@ -7,7 +7,8 @@ from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Optional, Type, Union, cast
 
-from ...utilities import ConfigFile, get_logger
+from utilities import ConfigFile, get_logger
+
 from ..helper import human_readable_to_byte
 from ..models import DataInstance
 
@@ -19,7 +20,7 @@ COMPRESSION_ALGORITHM = "gztar"
 ARCHIVE_EXTENSION = ".tar.gz"
 
 
-class LargeFile(ABC):
+class LargeFileBase(ABC):
     """
     Store large files remotely. Use local cache for speed up.
 
@@ -75,7 +76,7 @@ class LargeFile(ABC):
         self._errors = errors
         self._newline = newline
 
-        LargeFile.cache_path.mkdir(parents=True, exist_ok=True)
+        LargeFileBase.cache_path.mkdir(parents=True, exist_ok=True)
 
         self._find_instances()
         self._check_mode_and_set_version()
