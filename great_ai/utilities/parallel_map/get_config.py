@@ -19,7 +19,7 @@ def get_config(
     is_input_sequence = hasattr(input_values, "__len__")
 
     if concurrency is None:
-        concurrency = len(os.sched_getaffinity(0))
+        concurrency = os.cpu_count() or 1
     assert concurrency >= 1, "At least one mapper process has to be created"
 
     if chunk_size is None:
