@@ -1,0 +1,56 @@
+\chapter{Introduction}
+
+Artificial intelligence (AI) techniques have recently started enjoying widespread industry awareness and adoption; the use of AI is increasingly prevalent in all sectors \cite{wirtz2019artificial,bosch2021engineering}. The reasons behind this are manifold \cite{jordan2015machine}, to name a few: recent breakthroughs in deep-learning, increased public awareness, abundance of available data, access to powerful low-cost commodity hardware, education, but most interestingly, the rise of high-level libraries making ready-to-use state-of-the-art (SOTA) models easily available. The latter practically abolishes the barrier of entry for applying AI --- and with that --- can help use-cases in many areas. 
+
+However, the successful integration of AI components into production-ready applications demands strong engineering methods in order to achieve robust deployments \cite{serban2020adoption}. That is why it is as important as ever to also focus on the quality and robustness of deployed models and software. For instance, the lack of a proper overview of the data transformation steps may lead to suboptimal performance and to introducing unintended biases which may contribute to the ever-increasing negative externality of misused AI \cite{o2016weapons}.
+
+Concerningly, a peculiar tendency seems to be unfolding: even though industry professionals already have access to numerous frameworks for deploying AI correctly and responsibly, case-studies and developer surveys have found that a considerable fraction of deployments do not follow best practices \cite{serban2020adoption,haakman2021ai,amershi2019software,de2019understanding,sculley2015hidden}. Utilising state-of-the-art machine-learning (ML) models has become reasonably simple; applying them properly is as difficult and nuanced as ever. 
+
+This thesis sets out to investigate the reasons behind the apparent asymmetry between the adoption of accessible AI libraries and existing reusable solutions for robust AI deployments. It is hypothesised that the primary reason for the underwhelming adoption rate of best practices is the short supply or professionals equally proficient in the domains of both data science and software engineering. Nevertheless, even without their presence, practitioners could rely on frameworks for automated mature deployment processes. However, the barrier of entry for using such existing libraries is too high, especially when compared with the complexity of AI-libraries.
+
+Therefore, a software framework --- called \textit{GreatAI} --- is designed and its design is presented in this thesis. The principal motivation behind the construction of \textit{GreatAI} is to facilitate the responsible and robust deployment of algorithms and models by designing an accessible API in an attempt to overcome the practical drawbacks of other, similar frameworks. Its name stands for its main aim: to assist easily creating \underline{G}eneral \underline{R}obust \underline{E}nd-to-end \underline{A}utomated, and \underline{T}rustworthy AI deployments.
+
+The utility of \textit{GreatAI} is validated using the principles of design science methodology \cite{wieringa2014design} through iteratively designing its API and implementation along with the text mining pipeline for a commercial product in collaboration with ScoutinScience B.V. The goal of the aforementioned software suite is to evaluate technical transfer opportunities in scientific publications. Subsequently, interviews are conducted with practitioners for validating the generalisability of the design.
+
+\section{Research questions}
+
+I hypothesise that facilitating the adoption of AI deployment best practices is viable by finding less complex framework designs which are easier to adopt in order to decrease the negative externality of misused AI. This paper is set out to investigate this hypothesis by answering the following research questions. 
+
+\begin{rqlist}
+  \item Does the complexity of AI deployment frameworks hinder industrial projects?
+  \item What is an effective way of decreasing the complexity of existing frameworks?
+  \item Does \textit{GreatAI}'s design improve the efficiency of working with AI while also introducing best practices?
+  \item Can the design of \textit{GreatAI} decrease the barrier of entry for applying best practices in other contexts?
+\end{rqlist}
+
+In this case, complexity is used to refer to the difficulty faced by professionals (data scientists and software engineers alike) when integrating libraries with their solutions. This could also be described as the barrier of entry or steepness of the learning curve. If the aforementioned hypothesis is correct, the adoption of best practices can be efficiently increased by decreasing this complexity.
+
+AI deployment best practices entail the technical steps that ought to be taken in order to achieve robust, end-to-end, automated, and trustworthy deployments. These are detailed in Section \ref{section:requirements}.
+
+The existence question regarding the problem itself (\textbf{RQ1}) is answered by reviewing the literature of the more than 30 published case-studies. \textbf{RQ2} and \textbf{RQ3} are closely connected, the design and evaluation phases utilised to answer them follow an iterative process. They are examined in Chapter \ref{chapter:design} and Chapter \ref{chapter:case} respectively. The final evaluation step is to ascertain the capability of the framework design to generalise beyond a single subdomain and problem context. This question, \textbf{RQ4}, is investigated through interviews with industry professionals in Chapter \ref{chapter:interviews}.
+
+\section{Requirements} \label{section:requirements}
+
+The best practices (which will be referenced throughout the thesis) with which the \textit{GreatAI} design is concerned are a subset of those compiled by Serban et al. \cite{serban2020adoption}. The core requirements --- sets of covered best practices --- for a software solution that has the potential of improving our problem context are presented in the following along with some explanation and clarification of each of them.
+
+\paragraph{General} Albeit not explicitly in the list of best practices, compatibility is vital in encouraging adoption. Large projects oftentimes end up depending on numerous packages, each of which may impose some restrictions on the code: since these all have to be satisfied simultaneously, this can result in severe constraints on the application. 
+
+The open-source scene of data-related libraries is vibrant. To take the example of data validation, there are at least 4 popular choices which offer varying but similar features: \href{https://github.com/SeldonIO/alibi-detect}{Alibi detect}, \href{https://github.com/PAIR-code/facets}{Facets}, \href{https://github.com/great-expectations/great_expectations}{Great Expectations}, and Data Linter \cite{hynes2017data}. The responsibility of choosing the most fitting solution falls on the user, thus, they should not be limited in this by \textit{GreatAI}.
+
+The programming language (PL) of the library should be its only non-general property. Fortunately, the de facto PL for data science is Python, hence, implementing the library in it should not significantly limit its applicability.
+
+\paragraph{Robustness} in software development can be achieved by preparing the application to gracefully handle errors, even unexpected ones \cite{bishop1998robust}. Errors can and will happen in practice: storing and investigating what has led to them is required to prevent future ones. In the case of ML, errors might not be as obvious to detect as in more traditional applications (see the above mentioned data validators). Even if a single feature's value falls outside the expected distribution, unexpected results can happen. In cases where this might lead to real-world repercussions, extra care has to be taken to construct as many safe-guards as feasible. \textit{GreatAI} should support its clients in doing so.
+
+\paragraph{End-to-end} In this case, it refers to end-to-end feedback. That is, feedback should be gathered on the real-world performance of the system, and this should be taken into account when designing/training the next iteration of the model. Static datasets may fail to capture the changing nature of real-life and can become outdated if they are not revised continuously. A well packaged deployment should make it trivial to integrate new training data.
+
+\paragraph{Automated} The available time of data scientists and software engineers is limited and expensive. For this reason, humans should only be involved when their involvement is necessary. Steps in the development process that can be automated without negative consequences must be automated in order to achieve efficient development processes and let the experts focus on the issues that require their attention the most.
+
+\paragraph{Trustworthy} As detailed by the \textit{Ethics guidelines for trustworthy AI}\footnote{\href{https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai}{digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai}}, human oversight, transparency, and accountability are some of the key requirements for trustworthy AI applications. For increasing public acceptance and trust while minimising negative societal impact, trustworthiness is essential.
+
+These requirements were chosen stemming from their general importance and potential to be mostly handled (implemented) by a software framework\footnote{The terms \textit{framework} and \textit{library} are used interchangeably in this work stemming from their vague and often holistic differentiation.}. That is why, these provide an ideal initial direction for tackling the issue. Of course, these do not cover all best practices, for instance, the ones relating to organisational processes fall outside the realm of software engineering.
+
+\newpage
+
+\section{Structure}
+
+The rest of the thesis is organised as follows: Chapter \ref{chapter:background} approaches the problem and the state-of-the-art from three perspectives: the trends of AI library API design, the experiences gained from practical applications, and a comparison of existing deployment options. Next, the methodology utilised for the subsequent chapters is described in Chapter \ref{chapter:methods}. The design cycle is broken into two chapters, Chapter  \ref{chapter:design} and \ref{chapter:case}. The former clarifies the scope and describes the design principles, while the latter details the specifics of the practical use-case and the framework's interaction with it, and technological contributions of the novel design. The results are further validated by conducting interviews with industry professionals in Chapter \ref{chapter:interviews}. The thesis is concluded in Chapter \ref{chapter:conclusion}.

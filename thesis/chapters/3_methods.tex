@@ -1,0 +1,27 @@
+\chapter{Methods} \label{chapter:methods}
+
+The chosen methodology for this study is Design Science which emphasises the need to design and investigate artifacts in their context \cite{wieringa2014design}. It consists of a design and an empirical cycle. The purpose of the former is to improve a problem context with a new or redesigned artifact. While in the latter, the problem is investigated and its potential treatment is validated concurrently. The design cycle shares similarities with Action Research \cite{davison2004principles}, where the researchers attempt to solve a real-world problem while simultaneously studying the experience of solving said problem. 
+
+As for the empirical cycle, the pragmatist approach is taken since the value of this research lies in its utility. Moreover, pragmatism adopts an engineering approach to research \cite{shull2007guide} which is inline with the philosophy of design science. Additionally, as no research method is without flaws, it is imperative to try to compensate their weaknesses by applying multiple methods. Hence, the study also relies on interviews with professionals for validating the design decisions of \textit{GreatAI}.
+
+\section{Problem context}
+
+The problem context is the difficulty in responsibly transitioning (while following best practices) from prototype industrial AI applications to production-ready deployments. With the possible treatment being libraries with high-level API-s and a set of default settings. It is important to note that \textit{GreatAI} is merely a proof-of-concept, and its aim is to serve as the proxy for the design decisions behind it. Through this, the design can be indirectly evaluated. Hopefully, a by-product will be a library that can be successfully applied to this problem context.
+
+The practical cases used for the evaluation are further elaborated in Chapter \ref{chapter:case}. In short, they focus on individual components of a growing commercial platform with the aim of finding tech-transfer opportunities in academic publications. The main input of the system as a whole are individual PDF-files while the output is a list of metrics describing various aspects of the paper, such as interesting sentences, scientific domains, and the scientific contribution. The output also includes a predicted score used for ranking. This ranking is subsequently processed by the business developers of Technology Transfer Offices (TTO-s) of multiple Dutch and German universities who later give feedback on the results.
+
+Overall, this problem context carries the properties of typical industry use-cases: it utilises a wide-range of text mining methods, contains complex interactions between the services, benefits from the integration of end-to-end feedback, and has to provide the clients with a platform that they can rely on in their organisation's core processes. Since the final ranking affects real people, explainability and robustness are also central questions.
+
+\section{Design \& empirical cycles}
+
+The aim of the project can be summarised using the terminology of design science in the following way: 
+\textit{Facilitate the easy adoption of AI deployment best practices
+by finding a less complex framework design 
+which is easier to adopt
+to decrease the negative externality of misused AI.}
+
+However, before generalising, the design of the framework is iteratively refined using the feedback acquired from applying it in practical contexts which in this case is the research and development of a smaller and a more complex AI component followed by refactoring larger AI-based applications using the finished framework. The treatment is finding a simpler design which still leads to high-quality deployments as defined in Section \ref{section:requirements}. \textbf{RQ2} and \textbf{RQ3} captures this process; for investigating the feedback acquired from iteratively working --- which is the definition of action research --- on the case will be valuable. 
+
+To answer how well the design of \textit{GreatAI} can generalise (\textbf{RQ4}), interviews will be conducted from a population of software engineers and data scientists with varying levels of professional background. Since me and my colleagues are likely to have a bias for (or against) the proposed designs, the first step of checking its applicability in other practical contexts is to ask the opinion of non-affiliated fellow practitioners.
+
+\textit{GreatAI} might have the potential to bridge the gap between data science and software engineering. Stemming from the bidirectional nature of bridges, we can look at the framework from two perspectives: for professionals closer to the field of data science, it provides an automatic scaffolding of software facilities that are required for deploying, monitoring, and iterating on their models. For software engineers, it highlights the necessary steps required for robust and improvable deployments, while at the same time saves them from the grunt work of implementing these constructs. While most importantly, it serves as a proxy for the design decisions through which they can be tested and evaluated in their practical context.

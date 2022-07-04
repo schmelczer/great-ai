@@ -1,0 +1,474 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.8">
+    
+    
+      
+        <title>[open(S3)](https://pypi.org/project/open-large/) - GreatAI documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#opens3" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="GreatAI documentation" class="md-header__button md-logo" aria-label="GreatAI documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GreatAI documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              [open(S3)](https://pypi.org/project/open-large/)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="GreatAI documentation" class="md-nav__button md-logo" aria-label="GreatAI documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    GreatAI documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/" class="md-nav__link">
+        Tutorials
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/" class="md-nav__link">
+        How-To Guides
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/" class="md-nav__link">
+        Explanation
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    Motivation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution" class="md-nav__link">
+    Solution
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-example" class="md-nav__link">
+    Simple example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-details" class="md-nav__link">
+    More details
+  </a>
+  
+    <nav class="md-nav" aria-label="More details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#i-only-need-a-path" class="md-nav__link">
+    I only need a path
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-example" class="md-nav__link">
+    Command-line example
+  </a>
+  
+    <nav class="md-nav" aria-label="Command-line example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    Setup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#print-the-expected-options" class="md-nav__link">
+    Print the expected options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upload-some-files" class="md-nav__link">
+    Upload some files
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#download-some-files-to-the-local-cache" class="md-nav__link">
+    Download some files to the local cache
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-remote-files" class="md-nav__link">
+    Delete remote files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="opens3"><a href="https://pypi.org/project/open-large/">open(S3)</a></h1>
+<p>Storing, versioning, and downloading files from S3 made as easy as using <code>open()</code> in Python. Caching included.</p>
+<h2 id="motivation">Motivation</h2>
+<p>Oftentimes, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step, however, GitHub's git LFS implementation <a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository">doesn't support the deletion</a> of large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.</p>
+<h2 id="solution">Solution</h2>
+<pre><code>pip install open-large
+</code></pre>
+<h3 id="simple-example">Simple example</h3>
+<pre><code class="language-python">from large_file import LargeFileS3
+
+LargeFileS3.configure_credentials({
+    &quot;aws_region_name&quot;: &quot;your_region_like_eu-west-2&quot;,
+    &quot;aws_access_key_id&quot;: &quot;YOUR_ACCESS_KEY_ID&quot;,
+    &quot;aws_secret_access_key&quot;: &quot;YOUR_VERY_SECRET_ACCESS_KEY&quot;,
+    &quot;large_files_bucket_name&quot;: &quot;create_a_bucket_and_put_its_name_here&quot;,
+})
+
+# Creates a new version and deletes the older version leaving the 3 most recently used intact
+with LargeFileS3(&quot;test.txt&quot;, &quot;w&quot;, keep_last_n=3) as f:
+    for i in range(100000):
+        f.write('test\n')
+
+# By default the latest version is returned
+# but an optional `version` keyword argument can be provided as well
+with LargeFileS3(&quot;test.txt&quot;, &quot;r&quot;) as f:
+    print(f.readlines()[0])
+</code></pre>
+<blockquote>
+<p>Automatically creates a file, writes to it, uploads it to S3, and then queries the most recent version of it.
+In this case, the latest version is already in the local cache, no download is required.</p>
+</blockquote>
+<h3 id="more-details">More details</h3>
+<p><code>LargeFile</code> behaves like an opened file (in the background it is a temp file after all). Binary reading and writing is supported along with the <a href="https://docs.python.org/3/library/functions.html#open">different keywords</a> <code>open()</code> accepts.</p>
+<p>The local cache can be configured with these properties:</p>
+<pre><code class="language-python">LargeFile.cache_path = Path('.cache')
+LargeFile.max_cache_size = &quot;30 GB&quot;
+</code></pre>
+<h4 id="i-only-need-a-path">I only need a path</h4>
+<p>In case you only need a path to the "remote" file, this pattern can be applied:</p>
+<pre><code class="language-python">path_to_model = LargeFile(&quot;folder-of-my-bert-model&quot;, version=31).get()
+</code></pre>
+<blockquote>
+<p>This will first download the file/folder into your local cache folder. Then, it returns a <code>Path</code> object to the local version. Which can be turned into a string with <code>str(path_to_model)</code>.</p>
+</blockquote>
+<p>The same approach works for uploads:</p>
+<pre><code class="language-python">LargeFile(&quot;folder-of-my-bert-model&quot;).push('path_to_local/folder_or_file')
+</code></pre>
+<blockquote>
+<p>This way, both regular files and folders can be handled. The uploaded file is called <strong>folder-of-my-bert-model</strong>, the local name is ignored.</p>
+</blockquote>
+<p>Lastly, all version of the remote object can be deleted by calling <code>LargeFile("my-file").delete()</code>. It will still reside in your local cache afterwards, its deletion will happen next time your local cache has to be pruned.</p>
+<h3 id="command-line-example">Command-line example</h3>
+<p>The package can be used as a module from the command-line to give you more flexibility.</p>
+<h4 id="setup">Setup</h4>
+<p>Create an .ini file (or use <em>~/.aws/credentials</em>). It may look like this:</p>
+<pre><code class="language-ini">aws_region_name = your_region_like_eu-west-2
+aws_access_key_id = YOUR_ACCESS_KEY_ID
+aws_secret_access_key = YOUR_VERY_SECRET_ACCESS_KEY
+large_files_bucket_name = my_large_files
+endpoint_url = this is optional, for backblaze, use this: https://s3.us-west-002.backblazeb2.com
+</code></pre>
+<blockquote>
+<p>Just like in <a href="../example_secrets.ini">example secrets</a>.</p>
+</blockquote>
+<h4 id="print-the-expected-options">Print the expected options</h4>
+<pre><code class="language-sh">python3 -m large_file --help
+</code></pre>
+<h4 id="upload-some-files">Upload some files</h4>
+<pre><code class="language-sh">python3 -m large_file --backend s3 --secrets secrets.ini --push my_first_file.json folder/my_second_file my_folder
+</code></pre>
+<blockquote>
+<p>Only the filename is used as the S3 name, the rest of the path is ignored.</p>
+</blockquote>
+<h4 id="download-some-files-to-the-local-cache">Download some files to the local cache</h4>
+<p>This can be useful when building a Docker image for example. This way, the files can already reside inside the container and need not be downloaded later.</p>
+<pre><code class="language-sh">python3 -m large_file --backend s3 -secrets ~/.aws/credentials --cache my_first_file.json:3 my_second_file my_folder:0
+</code></pre>
+<blockquote>
+<p>Versions may be specified by using <code>:</code>-s.</p>
+</blockquote>
+<h4 id="delete-remote-files">Delete remote files</h4>
+<pre><code class="language-sh">python3 -m large_file --backend s3 --secrets ~/.aws/credentials --delete my_first_file.json
+</code></pre>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.0238f547.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage[ddmmyyyy]{datetime}
+
+\setlength{\textheight}{24.7cm}
+\setlength{\textwidth}{16cm}
+\setlength{\unitlength}{1mm}
+\setlength{\topskip}{1truecm}
+\topmargin 280mm \advance \topmargin -\textheight
+\divide \topmargin by 2 \advance \topmargin -1in
+\headheight 0pt \headsep 0pt
+\leftmargin 210mm \advance \leftmargin -\textwidth
+\divide \leftmargin by 2 \advance \leftmargin -1in
+\oddsidemargin \leftmargin \evensidemargin \leftmargin
+\parindent=0pt
+\frenchspacing
+
+\newcommand{\bree}[1]{\makebox[4.1cm][l]{#1:}}
+
+\begin{document}
+
+%No page number
+\thispagestyle{empty}
+\sf
+
+\begin{tabular}[t]{p{3.5cm}@{\hspace{4mm}\vrule width 1.5pt\hspace{4mm}}l}
+%Logo Leiden University
+\makebox(20,0)[t]{\includegraphics{../figures/UL_PMS-kleur.eps}}
+&
+\begin{minipage}[t]{12.25cm}
+\begin{Huge}
+\vspace*{0.4cm}
+\textbf{}
+\\[2ex]
+\textbf{Master Computer Science}
+\end{Huge}
+
+\vspace*{4cm}
+
+\begin{Large}
+\hfill GreatAI: An easy-to-use framework for robust end-to-end AI deployments
+
+\vspace*{3mm}
+
+\hfill
+
+\vspace*{4.5cm}
+
+\bree{Name}%
+András Schmelczer
+\\
+\bree{Student ID}%
+s3052249
+\\[1ex]
+\bree{Date}%
+\today
+\\[1ex]
+\bree{Specialisation}%
+Advanced Computing and Systems
+\\[1ex]
+\bree{1st supervisor}%
+Prof. dr. ir. Joost Visser
+\\ 
+\bree{2nd supervisor}%
+Dr. Suzan Verberne
+\end{Large}
+
+\begin{large}
+\vspace*{2.5cm}
+Master's Thesis in Computer Science
+
+\vspace*{5mm}
+Leiden Institute of Advanced Computer Science (LIACS)\\
+Leiden University\\
+Niels Bohrweg 1\\
+2333 CA Leiden\\
+The Netherlands
+\end{large}
+
+
+\end{minipage}
+\end{tabular}
+
+\end{document}
