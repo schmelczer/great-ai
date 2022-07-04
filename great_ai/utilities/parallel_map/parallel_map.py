@@ -99,7 +99,7 @@ def parallel_map(
     output_queue = manager.Queue(config.concurrency * 2)
 
     should_stop = ctx.Event()
-    serialized_map_function = dill.dumps(function, byref=True, recurse=True)
+    serialized_map_function = dill.dumps(function, byref=True, recurse=False)
 
     processes = [
         ctx.Process(
