@@ -6,7 +6,7 @@ from .exceptions import (
     WrongDecoratorOrderError,
 )
 from .models import save_model, use_model
-from .output_models import (
+from .output_views import (
     ClassificationOutput,
     MultiLabelClassificationOutput,
     RegressionOutput,
