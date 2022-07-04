@@ -1,0 +1,2 @@
+class WrongDecoratorOrderError(Exception):
+    pass

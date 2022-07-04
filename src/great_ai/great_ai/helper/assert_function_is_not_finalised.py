@@ -1,6 +1,6 @@
 from typing import Any, Callable
 
-from ..context import get_context
+from ..exceptions import WrongDecoratorOrderError
 from .get_function_metadata_store import get_function_metadata_store
 
 
@@ -11,5 +11,4 @@ def assert_function_is_not_finalised(func: Callable[..., Any]) -> None:
     )
 
     if get_function_metadata_store(func).is_finalised:
-        get_context().logger.error(error_message)
-        exit(-1)
+        raise WrongDecoratorOrderError(error_message)
