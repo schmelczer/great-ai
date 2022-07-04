@@ -25,6 +25,7 @@ from ..helper import (
     snake_case_to_text,
     use_http_exceptions,
 )
+from ..models import model_versions
 from ..parameters import automatically_decorate_parameters
 from ..tracing.tracing_context import TracingContext
 from ..views import ApiMetadata, CacheStatistics, HealthCheckResponse, Trace
@@ -168,9 +169,11 @@ class GreatAI(Generic[T]):
 
     @property
     def version(self) -> str:
-        return (
-            f"{self._version}+{get_function_metadata_store(self._func).model_versions}"
-        )
+        flat_model_versions = ".".join(f"{k}-v{v}" for k, v in model_versions)
+        if flat_model_versions:
+            flat_model_versions = f"+{flat_model_versions}"
+
+        return f"{self._version}{flat_model_versions}"
 
     @property
     def documentation(self) -> str:
