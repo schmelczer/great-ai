@@ -19,7 +19,7 @@ from .get_footer import get_footer
 from .get_traces_table import get_traces_table
 
 
-def create_dash_app(function_name: str, function_docs: str) -> Flask:
+def create_dash_app(function_name: str, version: str, function_docs: str) -> Flask:
     accent_color = text_to_hex_color(function_name)
 
     app = Dash(
@@ -44,6 +44,7 @@ def create_dash_app(function_name: str, function_docs: str) -> Flask:
                 [
                     get_description(
                         function_name=function_name,
+                        version=version,
                         function_docs=function_docs,
                         accent_color=accent_color,
                     ),

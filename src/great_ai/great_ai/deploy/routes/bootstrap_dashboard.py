@@ -12,7 +12,7 @@ PATH = Path(__file__).parent.resolve()
 
 
 def bootstrap_dashboard(app: FastAPI, function_name: str, documentation: str) -> None:
-    dash_app = create_dash_app(function_name, documentation)
+    dash_app = create_dash_app(function_name, app.version, documentation)
 
     app.mount(DASHBOARD_PATH, WSGIMiddleware(dash_app))
 
