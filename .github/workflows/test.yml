@@ -9,12 +9,14 @@ on:
 
 jobs:
   test:
-      name: Build and test on Python ${{ matrix.python-version }}
-      runs-on: ubuntu-latest
+      name: Build and test on ${{ matrix.operating-system }} with Python ${{ matrix.python-version }}
 
       strategy:
         matrix:
           python-version: ["3.8", "3.9", "3.10"]
+          operating-system: [macos-latest, windows-latest, ubuntu-latest]
+
+      runs-on: ${{ matrix.operating-system }}
 
       steps:
         - name: Checkout
