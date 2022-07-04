@@ -1,5 +1,10 @@
 from .context import configure
 from .deploy import GreatAI
+from .exceptions import (
+    ArgumentValidationError,
+    MissingArgumentError,
+    WrongDecoratorOrderError,
+)
 from .models import save_model, use_model
 from .output_models import (
     ClassificationOutput,

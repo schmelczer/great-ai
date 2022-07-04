@@ -8,13 +8,14 @@ from ..helper import get_arguments, get_function_metadata_store
 from ..helper.assert_function_is_not_finalised import assert_function_is_not_finalised
 from ..tracing.tracing_context import TracingContext
 
+T = TypeVar("T")
 F = TypeVar("F", bound=Callable[..., Any])
 
 
 def parameter(
     parameter_name: str,
     *,
-    validator: Callable[[Any], bool] = lambda _: True,
+    validator: Callable[[T], bool] = lambda _: True,
     disable_logging: bool = False,
 ) -> Callable[[F], F]:
     def decorator(func: F) -> F:
