@@ -27,14 +27,15 @@ jobs:
 
         - name: Install dependencies
           run: |
-            python3 -m pip install --upgrade pip setuptools pytest pytest-cov pytest-subtests pytest-asyncio
+            python3 -m pip install --upgrade pip
+            pip install --upgrade --requirement dev-requirements.txt
             pip install --upgrade .
 
         - name: Check code and formatting
           run: scripts/check-python.sh .
 
         - name: Run tests
-          run: python3 -m pytest --cov=. --cov-report=xml --junit-xml pytest.xml --asyncio-mode=strict || true
+          run: python3 -m pytest --doctest-modules --cov=. --cov-report=xml --junit-xml pytest.xml --asyncio-mode=strict || true
 
         - name: Upload results
           if: always()

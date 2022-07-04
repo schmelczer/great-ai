@@ -30,7 +30,6 @@ convert a unicode string to LaTeX escape sequences.
 For basic usage you can use the :py:func:`unicode_to_latex()` function
 directly::
 
-  >>> from pylatexenc.latexencode import unicode_to_latex
   >>> print(unicode_to_latex('À votre santé'))
   \`A votre sant\'e
   >>> print(unicode_to_latex('The length of samples #3 & #4 is 3μm'))
@@ -41,21 +40,16 @@ you are converting multiple strings, you may create an instance with the flags
 you like and invoke its method
 :py:meth:`~UnicodeToLatexEncoder.unicode_to_latex()` as many times as necessary::
 
-  >>> from pylatexenc.latexencode import UnicodeToLatexEncoder
   >>> u = UnicodeToLatexEncoder(unknown_char_policy='replace')
   >>> print(u.unicode_to_latex('À votre santé'))
   \`A votre sant\'e
   >>> print(u.unicode_to_latex('The length of samples #3 & #4 is 3μm'))
   The length of samples \#3 \& \#4 is 3\ensuremath{\mu}m
   >>> print(u.unicode_to_latex('À votre santé: 乾杯'))
-  No known latex representation for character: U+4E7E - ‘乾’
-  No known latex representation for character: U+676F - ‘杯’
   \`A votre sant\'e: {\bfseries ?}{\bfseries ?}
 
 Example using custom conversion rules::
-
-  >>> from pylatexenc.latexencode import UnicodeToLatexEncoder, \
-  ...     UnicodeToLatexConversionRule, RULE_REGEX
+  >>> import re
   >>> u = UnicodeToLatexEncoder(
   ...     conversion_rules=[
   ...         UnicodeToLatexConversionRule(rule_type=RULE_REGEX, rule=[

@@ -20,9 +20,9 @@
     {
       "label": "Test",
       "type": "shell",
-      "command": "source .env/bin/activate && python3 -m pytest .",
+      "command": "source .env/bin/activate && python3 -m pytest . --doctest-modules",
       "windows": {
-        "command": ".env\\bin\\activate.bat; python3 -m pytest ."
+        "command": ".env\\bin\\activate.bat; python3 -m pytest . --doctest-modules"
       },
       "group": "test",
       "presentation": {

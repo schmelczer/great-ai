@@ -14,7 +14,7 @@ def unique(
         >>> unique([{'a': 1, 'b': 2}, {'a': 1, 'b': 3}], key=lambda v: v['a'])
         [{'a': 1, 'b': 2}]
         >>> unique([{'a': 1, 'b': 2}, {'a': 1, 'b': 3}], key=lambda v: v['b'])
-        [{'a': 1, 'b': 3}, {'a': 1, 'b': 3}]
+        [{'a': 1, 'b': 2}, {'a': 1, 'b': 3}]
     """
 
     key_values = {}
