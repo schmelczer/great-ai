@@ -4,9 +4,9 @@
     {
       "label": "Format and lint",
       "type": "shell",
-      "command": "source .env/bin/activate && scripts/format-python.sh .",
+      "command": "source .env/bin/activate && scripts/format-python.sh . tests",
       "windows": {
-        "command": ".env\\bin\\activate.bat; scripts\\format-python.sh ."
+        "command": ".env\\bin\\activate.bat; scripts\\format-python.sh . tests"
       },
       "group": "test",
       "presentation": {

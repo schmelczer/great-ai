@@ -16,14 +16,11 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install pypa/build
-        run: python -m pip install build --user
+      - name: Install Flit
+        run: pip install --upgrade flit --user
 
-      - name: Build a binary wheel and a source tarball
-        run: python -m build --sdist --wheel --outdir dist/
-
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Build and publish
+        run: flit publish --setup-py 
+        env:
+          FLIT_USERNAME: __token__
+          FLIT_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}

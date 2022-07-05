@@ -2,27 +2,29 @@
 
 set -e
 
-echo "Formatting and checking $1"
+for dir in "$@"; do
+    echo "Formatting and checking $dir"
 
-cd $1
+    cd "$dir"
 
-echo Running autoflake
-python3 -m autoflake --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables --in-place -r .
+    echo Running autoflake
+    python3 -m autoflake --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables --in-place -r .
 
-echo Running isort
-python3 -m isort --profile black --skip .env .
+    echo Running isort
+    python3 -m isort --profile black --skip .env .
 
-echo Running black
-python3 -m black . --exclude .env
+    echo Running black
+    python3 -m black . --exclude .env
 
-if ls *.py 1> /dev/null 2>&1; then
-    echo Running mypy
-    python3 -m mypy --namespace-packages --ignore-missing-imports --install-types --non-interactive --disallow-untyped-defs --disallow-incomplete-defs --pretty --follow-imports=silent --exclude=external/ --exclude=/build/ .
-fi
+    if find . -name "*.py" 2>/dev/null | grep -q .; then
+        echo Running mypy
 
-echo Running Flake8
-python3 -m flake8 . --count --show-source --statistics --exclude=__init__.py,.env,external --ignore=E501,E722,E402,W503,E203
+        if [ ! -d .mypy_cache ]; then
+            python3 -m mypy --namespace-packages --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs --follow-imports=silent --exclude=external/ --exclude=/build/ --pretty . || true
+        fi
 
-cd -
+        python3 -m mypy --namespace-packages --ignore-missing-imports --install-types --non-interactive --disallow-untyped-defs --disallow-incomplete-defs --follow-imports=silent --exclude=external/ --exclude=/build/ --pretty . || true
+    fi
 
-echo "Finished formatting"
+    cd -
+done

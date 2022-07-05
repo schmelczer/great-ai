@@ -1,3 +1,7 @@
+"""GreatAI"""
+__version__ = "0.0.12"
+
+
 from .context import configure
 from .deploy import GreatAI
 from .exceptions import (
