@@ -1,5 +1,6 @@
 {
   "cSpell.words": [
+    "alru",
     "Analyse",
     "basereload",
     "boto",
@@ -64,5 +65,10 @@
     "**/*.cache": true
   },
   "notebook.output.textLineLimit": 400,
-  "python.defaultInterpreterPath": ".env/bin/python"
+  "python.defaultInterpreterPath": ".env/bin/python",
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }
