@@ -3,7 +3,7 @@ __version__ = "0.0.12"
 
 
 from .context import configure
-from .deploy import GreatAI, RouteConfig
+from .deploy import GreatAI
 from .exceptions import (
     ArgumentValidationError,
     MissingArgumentError,
@@ -24,4 +24,4 @@ from .remote import (
     call_remote_great_ai_async,
 )
 from .tracing import add_ground_truth, delete_ground_truth, query_ground_truth
-from .views import Trace
+from .views import RouteConfig, Trace

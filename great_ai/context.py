@@ -2,7 +2,7 @@ import os
 import random
 from logging import DEBUG, Logger
 from pathlib import Path
-from typing import Any, Dict, Optional, Type, cast
+from typing import Any, Dict, Optional, Type, Union, cast
 
 from pydantic import BaseModel
 
@@ -17,9 +17,11 @@ from .constants import (
 from .large_file import LargeFileBase, LargeFileLocal
 from .persistence import ParallelTinyDbDriver, TracingDatabaseDriver
 from .utilities import get_logger
+from .views import RouteConfig
 
 
 class Context(BaseModel):
+    version: Union[int, str]
     tracing_database: TracingDatabaseDriver
     large_file_implementation: Type[LargeFileBase]
     is_production: bool
@@ -27,6 +29,7 @@ class Context(BaseModel):
     should_log_exception_stack: bool
     prediction_cache_size: int
     dashboard_table_size: int
+    route_config: RouteConfig
 
     class Config:
         arbitrary_types_allowed = True
@@ -54,6 +57,7 @@ def get_context() -> Context:
 
 def configure(
     *,
+    version: Union[int, str] = "0.0.1",
     log_level: int = DEBUG,
     seed: int = 42,
     tracing_database_factory: Optional[Type[TracingDatabaseDriver]] = None,
@@ -62,6 +66,7 @@ def configure(
     prediction_cache_size: int = 512,
     disable_se4ml_banner: bool = False,
     dashboard_table_size: int = 20,
+    route_config: RouteConfig = RouteConfig(),
 ) -> None:
     global _context
     logger = get_logger("great_ai", level=log_level)
@@ -89,6 +94,7 @@ def configure(
             logger.warning(message)
 
     _context = Context(
+        version=version,
         tracing_database=tracing_database,
         large_file_implementation=_initialize_large_file(
             large_file_implementation, logger=logger
@@ -100,6 +106,7 @@ def configure(
         else should_log_exception_stack,
         prediction_cache_size=prediction_cache_size,
         dashboard_table_size=dashboard_table_size,
+        route_config=route_config,
     )
 
     logger.info("Settings: configured ✅")

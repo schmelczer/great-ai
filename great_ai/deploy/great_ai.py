@@ -7,7 +7,6 @@ from typing import (
     Generic,
     List,
     Optional,
-    Protocol,
     Sequence,
     TypeVar,
     Union,
@@ -32,7 +31,6 @@ from .routes.bootstrap_feedback_endpoints import bootstrap_feedback_endpoints
 from .routes.bootstrap_meta_endpoints import bootstrap_meta_endpoints
 from .routes.bootstrap_prediction_endpoint import bootstrap_prediction_endpoint
 from .routes.bootstrap_trace_endpoints import bootstrap_trace_endpoints
-from .routes.route_config import RouteConfig
 
 T = TypeVar("T", bound=Union[Trace, Awaitable[Trace]])
 V = TypeVar("V")
@@ -42,27 +40,9 @@ class GreatAI(Generic[T, V]):
     __name__: str
     __doc__: str
 
-    class FactoryProtocol(Protocol):
-        @overload
-        def __call__(  # type: ignore
-            self,
-            func: Callable[..., Awaitable[V]],
-        ) -> "GreatAI[Awaitable[Trace[V]], V]":
-
-            ...
-
-        @overload
-        def __call__(
-            self,
-            func: Callable[..., V],
-        ) -> "GreatAI[Trace[V], V]":
-            ...
-
     def __init__(
         self,
         func: Callable[..., Union[V, Awaitable[V]]],
-        version: Union[str, int],
-        route_config: RouteConfig,
     ):
         func = automatically_decorate_parameters(func)
         get_function_metadata_store(func).is_finalised = True
@@ -73,7 +53,7 @@ class GreatAI(Generic[T, V]):
         wraps(func)(self)
         self.__doc__ = f"GreatAI wrapper for interacting with the `{self.__name__}` function.\n\n{dedent(self.__doc__ or '')}"
 
-        self.version = str(version)
+        self.version = str(get_context().version)
         flat_model_versions = ".".join(f"{k}-v{v}" for k, v in model_versions)
         if flat_model_versions:
             self.version += f"+{flat_model_versions}"
@@ -87,7 +67,7 @@ class GreatAI(Generic[T, V]):
             redoc_url=None,
         )
 
-        self._bootstrap_rest_api(route_config)
+        self._bootstrap_rest_api()
 
     @overload
     @staticmethod
@@ -105,36 +85,13 @@ class GreatAI(Generic[T, V]):
     ) -> "GreatAI[Trace[V], V]":
         ...
 
-    @overload
     @staticmethod
     def create(
-        func: None = ...,
-        *,
-        version: Union[str, int] = ...,
-        route_config: RouteConfig = ...,
-    ) -> FactoryProtocol:
-        ...
-
-    @staticmethod
-    def create(
-        func: Optional[Callable] = None,
-        *,
-        version: Union[str, int] = "0.0.1",
-        route_config: RouteConfig = RouteConfig(),
-    ) -> Union[
-        FactoryProtocol, "GreatAI[Awaitable[Trace[V]], V]", "GreatAI[Trace[V], V]"
-    ]:
-        def factory(_func):  # type: ignore
-            return GreatAI[Trace[V], V](
-                _func,
-                version=version,
-                route_config=route_config,
-            )
-
-        if func is None:
-            return cast(GreatAI.FactoryProtocol, factory)
-        else:
-            return factory(func)
+        func: Union[Callable[..., Awaitable[V]], Callable[..., V]],
+    ) -> Union["GreatAI[Awaitable[Trace[V]], V]", "GreatAI[Trace[V], V]"]:
+        return GreatAI[Trace[V], V](
+            func,
+        )
 
     def __call__(self, *args: Any, **kwargs: Any) -> T:
         return self._wrapped_func(*args, **kwargs)
@@ -192,7 +149,11 @@ class GreatAI(Generic[T, V]):
             ),
         )
 
-    def _bootstrap_rest_api(self, route_config: RouteConfig) -> None:
+    def _bootstrap_rest_api(
+        self,
+    ) -> None:
+        route_config = get_context().route_config
+
         if route_config.prediction_endpoint_enabled:
             bootstrap_prediction_endpoint(self.app, self._wrapped_func)
 

@@ -20,20 +20,6 @@ async def test_create_trivial_cases() -> None:
 
     assert (await hello_world_2("andras")).output == "Hello andras!"
 
-    @GreatAI.create()
-    async def hello_world_3(name: str) -> str:
-        await sleep(0.5)
-        return f"Hello {name}!"
-
-    assert (await hello_world_3("andras")).output == "Hello andras!"
-
-    @GreatAI.create()
-    async def hello_world_4(name):  # type: ignore
-        await sleep(0.5)
-        return f"Hello {name}!"
-
-    assert (await hello_world_4("andras")).output == "Hello andras!"
-
 
 @pytest.mark.asyncio
 async def test_with_parameter() -> None:
