@@ -33,7 +33,7 @@ jobs:
             pip install --upgrade './[dev]'
 
         - name: Check code and formatting
-          run: scripts/check-python.sh . tests
+          run: scripts/check-python.sh great_ai tests
 
         - name: Run tests
           run: python3 -m pytest --doctest-modules --cov=. --cov-report=xml --junit-xml pytest.xml --asyncio-mode=strict || true
