@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional, Union, cast
+from typing import List, Optional, Union
 
 from ..context import get_context
 
@@ -19,4 +19,4 @@ def delete_ground_truth(
         conjunctive_tags=tags, until=until, since=since, has_feedback=True
     )
 
-    db.delete_batch([cast(str, i.trace_id) for i in items])
+    db.delete_batch([i.trace_id for i in items])

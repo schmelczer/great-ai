@@ -2,6 +2,7 @@ from contextvars import ContextVar
 from datetime import datetime
 from types import TracebackType
 from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar
+from uuid import uuid4
 
 from ..constants import DEVELOPMENT_TAG_NAME, ONLINE_TAG_NAME, PRODUCTION_TAG_NAME
 from ..context import get_context
@@ -25,11 +26,14 @@ class TracingContext(Generic[T]):
     def log_model(self, model: Model) -> None:
         self._models.append(model)
 
-    def finalise(self, output: T = None, exception: BaseException = None) -> Trace[T]:
+    def finalise(
+        self, output: Optional[T] = None, exception: Optional[BaseException] = None
+    ) -> Trace[T]:
         assert self._trace is None, "has been already finalised"
 
         delta_time = (datetime.utcnow() - self._start_time).microseconds / 1000
-        self._trace = Trace(
+        self._trace = Trace[T](
+            trace_id=str(uuid4()),
             created=self._start_time.isoformat(),
             original_execution_time_ms=delta_time,
             logged_values=self._values,

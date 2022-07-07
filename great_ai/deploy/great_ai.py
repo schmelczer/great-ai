@@ -7,6 +7,7 @@ from typing import (
     Generic,
     List,
     Optional,
+    Protocol,
     Sequence,
     TypeVar,
     Union,
@@ -41,10 +42,26 @@ class GreatAI(Generic[T, V]):
     __name__: str
     __doc__: str
 
+    class FactoryProtocol(Protocol):
+        @overload
+        def __call__(  # type: ignore
+            self,
+            func: Callable[..., Awaitable[V]],
+        ) -> "GreatAI[Awaitable[Trace[V]], V]":
+
+            ...
+
+        @overload
+        def __call__(
+            self,
+            func: Callable[..., V],
+        ) -> "GreatAI[Trace[V], V]":
+            ...
+
     def __init__(
         self,
         func: Callable[..., Union[V, Awaitable[V]]],
-        version: str,
+        version: Union[str, int],
         route_config: RouteConfig,
     ):
         func = automatically_decorate_parameters(func)
@@ -56,7 +73,7 @@ class GreatAI(Generic[T, V]):
         wraps(func)(self)
         self.__doc__ = f"GreatAI wrapper for interacting with the `{self.__name__}` function.\n\n{dedent(self.__doc__ or '')}"
 
-        self.version = version
+        self.version = str(version)
         flat_model_versions = ".".join(f"{k}-v{v}" for k, v in model_versions)
         if flat_model_versions:
             self.version += f"+{flat_model_versions}"
@@ -91,44 +108,33 @@ class GreatAI(Generic[T, V]):
     @overload
     @staticmethod
     def create(
-        func: Optional[Union[Callable[..., V], Callable[..., Awaitable[V]]]] = ...,
+        func: None = ...,
         *,
-        version: str = ...,
+        version: Union[str, int] = ...,
         route_config: RouteConfig = ...,
-    ) -> Callable:
+    ) -> FactoryProtocol:
         ...
 
     @staticmethod
     def create(
         func: Optional[Callable] = None,
         *,
-        version: str = "0.0.1",
+        version: Union[str, int] = "0.0.1",
         route_config: RouteConfig = RouteConfig(),
-    ) -> Union[Callable, "GreatAI"]:
+    ) -> Union[
+        FactoryProtocol, "GreatAI[Awaitable[Trace[V]], V]", "GreatAI[Trace[V], V]"
+    ]:
+        def factory(_func):  # type: ignore
+            return GreatAI[Trace[V], V](
+                _func,
+                version=version,
+                route_config=route_config,
+            )
+
         if func is None:
-
-            @overload
-            def inner(func: Awaitable[V]) -> GreatAI[Awaitable[Trace[V]], V]:
-                ...
-
-            @overload
-            def inner(func: Callable[..., V]) -> GreatAI[Trace[V], V]:
-                ...
-
-            def inner(func):  # type: ignore
-                return GreatAI.create(
-                    func,
-                    version=version,
-                    route_config=route_config,
-                )
-
-            return inner
-
-        return GreatAI[T, V](
-            func,
-            version=version,
-            route_config=route_config,
-        )
+            return cast(GreatAI.FactoryProtocol, factory)
+        else:
+            return factory(func)
 
     def __call__(self, *args: Any, **kwargs: Any) -> T:
         return self._wrapped_func(*args, **kwargs)
@@ -158,29 +164,32 @@ class GreatAI(Generic[T, V]):
             *args: Any,
             do_not_persist_traces: bool = False,
             **kwargs: Any,
-        ) -> Trace[V]:
+        ) -> T:
             with TracingContext[V](
                 func.__name__, do_not_persist_traces=do_not_persist_traces
             ) as t:
                 result = func(*args, **kwargs)
-                return t.finalise(output=result)
+                return cast(T, t.finalise(output=result))
 
         @alru_cache(maxsize=get_context().prediction_cache_size)
         async def func_in_tracing_context_async(
             *args: Any,
             do_not_persist_traces: bool = False,
             **kwargs: Any,
-        ) -> Trace[V]:
+        ) -> T:
             with TracingContext[V](
                 func.__name__, do_not_persist_traces=do_not_persist_traces
             ) as t:
                 result = await cast(Callable[..., Awaitable], func)(*args, **kwargs)
-                return t.finalise(output=result)
+                return cast(T, t.finalise(output=result))
 
-        return (
-            func_in_tracing_context_async
-            if get_function_metadata_store(func).is_asynchronous
-            else func_in_tracing_context_sync
+        return cast(
+            Callable[..., T],
+            (
+                func_in_tracing_context_async
+                if get_function_metadata_store(func).is_asynchronous
+                else func_in_tracing_context_sync
+            ),
         )
 
     def _bootstrap_rest_api(self, route_config: RouteConfig) -> None:

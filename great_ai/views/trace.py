@@ -1,8 +1,7 @@
 from pprint import pformat
 from typing import Any, Dict, Generic, List, Optional, TypeVar
-from uuid import uuid4
 
-from pydantic import BaseModel, Extra, validator
+from pydantic import BaseModel, Extra
 
 from ..helper import HashableBaseModel
 from .model import Model
@@ -11,24 +10,18 @@ T = TypeVar("T")
 
 
 class Trace(Generic[T], HashableBaseModel):
-    trace_id: Optional[str]
+    trace_id: str
     created: str
     original_execution_time_ms: float
     logged_values: Dict[str, Any]
     models: List[Model]
     exception: Optional[str]
-    output: T
+    output: Optional[T]
     feedback: Any = None
     tags: List[str]
 
     class Config:
         extra = Extra.ignore
-
-    @validator("trace_id", always=True)
-    def generate_id(cls, v: Optional[str], values: Dict[str, Any]) -> str:
-        if v:
-            return v
-        return str(uuid4())
 
     @property
     def input(self) -> Any:
