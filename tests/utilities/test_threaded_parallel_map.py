@@ -1,11 +1,13 @@
-import pytest
+from typing import Any, Iterable
 
+import pytest
 from great_ai.utilities import WorkerException, threaded_parallel_map
+from typing_extensions import Never
 
 COUNT = int(1e5) + 3
 
 
-def test_simple_case_with_progress_bar() -> None:
+def test_simple_case() -> None:
     assert list(
         threaded_parallel_map(lambda v: v**2, range(COUNT), concurrency=4)
     ) == [v**2 for v in range(COUNT)]
@@ -14,7 +16,7 @@ def test_simple_case_with_progress_bar() -> None:
 def test_with_iterable() -> None:
     from time import sleep
 
-    def my_generator():
+    def my_generator() -> Iterable[int]:
         for i in range(10):
             yield i
             sleep(0.1)
@@ -27,12 +29,6 @@ def test_with_iterable() -> None:
     )
 
 
-def test_simple_case_without_progress_bar() -> None:
-    assert list(
-        threaded_parallel_map(lambda v: v**2, range(COUNT), concurrency=2)
-    ) == [v**2 for v in range(COUNT)]
-
-
 def test_simple_case_invalid_values() -> None:
     with pytest.raises(AssertionError):
         list(threaded_parallel_map(lambda v: v**2, range(COUNT), concurrency=0))
@@ -42,7 +38,7 @@ def test_simple_case_invalid_values() -> None:
 
 
 def test_this_worker_exception() -> None:
-    def my_generator():
+    def my_generator() -> Iterable[int]:
         yield 1
         yield 2
         yield 3
@@ -64,7 +60,7 @@ def test_this_worker_exception() -> None:
 
 
 def test_ignore_this_worker_exception() -> None:
-    def my_generator():
+    def my_generator() -> Iterable[float]:
         yield 1
         yield 2
         yield 3
@@ -78,20 +74,14 @@ def test_ignore_this_worker_exception() -> None:
             chunk_size=2,
             ignore_exceptions=True,
         )
-    ) == [1, 4]
-    assert list(
-        threaded_parallel_map(
-            lambda v: v**2,
-            my_generator(),
-            concurrency=1,
-            chunk_size=2,
-            ignore_exceptions=True,
-        )
-    ) == [1, 4, 9]
+    ) == [
+        1,
+        4,
+    ]  # the second chunk is ruined because of the error
 
 
 def test_worker_worker_exception() -> None:
-    def oh_no(_):
+    def oh_no(_: Any) -> Never:
         raise ValueError("hi")
 
     with pytest.raises(WorkerException):
@@ -102,7 +92,7 @@ def test_worker_worker_exception() -> None:
 
 
 def test_ignore_worker_worker_exception() -> None:
-    def oh_no(_):
+    def oh_no(_: Any) -> Never:
         raise ValueError("hi")
 
     assert (

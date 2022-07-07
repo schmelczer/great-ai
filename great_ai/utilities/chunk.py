@@ -3,7 +3,7 @@ from typing import Iterable, List, TypeVar
 T = TypeVar("T")
 
 
-def chunk(values: Iterable[T], chunk_size: int) -> Iterable[T]:
+def chunk(values: Iterable[T], chunk_size: int) -> Iterable[List[T]]:
     assert chunk_size >= 1
 
     result: List[T] = []

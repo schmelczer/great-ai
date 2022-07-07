@@ -25,10 +25,10 @@ class Trace(Generic[T], HashableBaseModel):
         extra = Extra.ignore
 
     @validator("trace_id", always=True)
-    def generate_id(cls, v: Optional[str], values: Dict[str, Any]) -> Optional[str]:
-        if not v:
-            return str(uuid4())
-        return v
+    def generate_id(cls, v: Optional[str], values: Dict[str, Any]) -> str:
+        if v:
+            return v
+        return str(uuid4())
 
     @property
     def input(self) -> Any:

@@ -56,12 +56,12 @@ def configure(
     *,
     log_level: int = DEBUG,
     seed: int = 42,
-    tracing_database: Optional[Type[TracingDatabaseDriver]] = None,
+    tracing_database_factory: Optional[Type[TracingDatabaseDriver]] = None,
     large_file_implementation: Optional[Type[LargeFileBase]] = None,
     should_log_exception_stack: Optional[bool] = None,
     prediction_cache_size: int = 512,
     disable_se4ml_banner: bool = False,
-    dashboard_table_size: int = 50,
+    dashboard_table_size: int = 20,
 ) -> None:
     global _context
     logger = get_logger("great_ai", level=log_level)
@@ -76,17 +76,17 @@ def configure(
 
     _set_seed(seed)
 
-    tracing_database = _initialize_tracing_database(tracing_database, logger=logger)()
+    tracing_database_factory = _initialize_tracing_database(
+        tracing_database_factory, logger=logger
+    )
+    tracing_database = tracing_database_factory()
 
     if not tracing_database.is_production_ready:
+        message = f"The selected tracing database ({tracing_database_factory.__name__}) is not recommended for production"
         if is_production:
-            logger.error(
-                f"The selected tracing database ({type(tracing_database).__name__}) is not recommended for production"
-            )
+            logger.error(message)
         else:
-            logger.warning(
-                f"The selected tracing database ({type(tracing_database).__name__}) is not recommended for production"
-            )
+            logger.warning(message)
 
     _context = Context(
         tracing_database=tracing_database,

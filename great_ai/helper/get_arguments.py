@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, Mapping, Sequence
 
 
 def get_arguments(
-    func: Callable[..., Any], args: Sequence[Any], kwargs: Mapping[str, Any]
+    func: Callable, args: Sequence[Any], kwargs: Mapping[str, Any]
 ) -> Dict[str, Any]:
     """Return mapping from parameter names to actual argument values"""
 

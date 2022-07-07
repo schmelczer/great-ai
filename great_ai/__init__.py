@@ -3,7 +3,7 @@ __version__ = "0.0.12"
 
 
 from .context import configure
-from .deploy import GreatAI
+from .deploy import GreatAI, RouteConfig
 from .exceptions import (
     ArgumentValidationError,
     MissingArgumentError,

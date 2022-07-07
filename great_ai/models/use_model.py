@@ -21,7 +21,7 @@ from ..helper.assert_function_is_not_finalised import assert_function_is_not_fin
 from ..tracing.tracing_context import TracingContext
 from ..views import Model
 
-F = TypeVar("F", bound=Callable[..., Any])
+F = TypeVar("F", bound=Callable)
 
 
 def use_model(
@@ -70,4 +70,6 @@ def _load_model(key: str, version: Optional[int] = None) -> Tuple[Any, int]:
         return path, file.version
 
     with file as f:
-        return load(f), file.version
+        loaded = load(f)
+
+    return loaded, file.version

@@ -21,12 +21,13 @@ from .get_traces_table import get_traces_table
 
 def create_dash_app(function_name: str, version: str, function_docs: str) -> Flask:
     accent_color = text_to_hex_color(function_name)
+    function_name = snake_case_to_text(function_name)
 
     app = Dash(
         function_name,
         requests_pathname_prefix=DASHBOARD_PATH + "/",
         server=Flask(__name__),
-        title=snake_case_to_text(function_name),
+        title=function_name,
         update_title=None,
         external_stylesheets=[
             "/assets/index.css",

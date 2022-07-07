@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict, Iterable, Tuple, Union
+from typing import Dict, ItemsView, Iterator, KeysView, Mapping, Union, ValuesView
 
 from ..logger import get_logger
 from .parse_error import ParseError
@@ -11,7 +11,7 @@ ENVIRONMENT_VARIABLE_KEY_PREFIX = "ENV"
 logger = get_logger("ConfigFile")
 
 
-class ConfigFile:
+class ConfigFile(Mapping[str, str]):
     def __init__(self, path: Union[Path, str]) -> None:
         if not isinstance(path, Path):
             path = Path(path)
@@ -24,7 +24,7 @@ class ConfigFile:
 
         self._parse()
 
-    def _parse(self):
+    def _parse(self) -> None:
         with open(self._path, encoding="utf-8") as f:
             lines: str = f.read()
 
@@ -72,20 +72,20 @@ class ConfigFile:
 
     __getitem__ = __getattr__
 
-    def __iter__(self) -> Iterable[Tuple[str, str]]:
+    def __iter__(self) -> Iterator[str]:
         return iter(self._key_values)
 
     def __len__(self) -> int:
         return len(self._key_values)
 
-    def keys(self):
+    def keys(self) -> KeysView[str]:
         return self._key_values.keys()
 
-    def values(self):
+    def values(self) -> ValuesView[str]:
         return self._key_values.values()
 
-    def items(self):
+    def items(self) -> ItemsView[str, str]:
         return self._key_values.items()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{type(self).__name__}(path={self._path}) {self._key_values}"

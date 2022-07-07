@@ -8,7 +8,6 @@ from threading import Event
 from typing import Optional
 
 import uvicorn
-from parse_arguments import parse_arguments
 from uvicorn._subprocess import get_subprocess
 from uvicorn.config import LOGGING_CONFIG, Config
 from uvicorn.supervisors.basereload import BaseReload
@@ -21,6 +20,8 @@ from great_ai.deploy import GreatAI
 from great_ai.exceptions import ArgumentValidationError, MissingArgumentError
 from great_ai.utilities import get_logger
 
+from .parse_arguments import parse_arguments
+
 logger = get_logger(SERVER_NAME)
 
 
@@ -28,11 +29,11 @@ GREAT_AI_LOGGING_CONFIG = {
     **LOGGING_CONFIG,
     "formatters": {
         "default": {
-            "()": "great_ai.logger.CustomFormatter",
+            "()": "great_ai.utilities.logger.CustomFormatter",
             "fmt": "%(asctime)s | %(levelname)8s | %(message)s",
         },
         "access": {
-            "()": "great_ai.logger.CustomFormatter",
+            "()": "great_ai.utilities.logger.CustomFormatter",
             "fmt": "%(asctime)s | %(levelname)8s | %(message)s",  # noqa: E501
         },
     },

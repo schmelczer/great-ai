@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, TypeVar
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -9,9 +9,11 @@ from sklearn.metrics import average_precision_score, precision_recall_curve
 from ..unique import unique
 from .draw_f1_iso_lines import draw_f1_iso_lines
 
+T = TypeVar("T", str, float)
+
 
 def evaluate_ranking(
-    expected: List[Union[str, float]],
+    expected: List[T],
     actual_scores: List[float],
     target_recall: float,
     title: Optional[str] = "",
@@ -20,7 +22,7 @@ def evaluate_ranking(
     output_svg: Optional[Path] = None,
     reverse_order: bool = False,
     plot: bool = True,
-) -> Dict[Union[str, float], float]:
+) -> Dict[T, float]:
     assert 0 <= target_recall <= 1
 
     if plot and axes is None:
@@ -39,7 +41,7 @@ def evaluate_ranking(
 
             draw_f1_iso_lines(axes=ax)
 
-        results: Dict[Union[str, float], float] = {}
+        results: Dict[T, float] = {}
         for i in range(len(classes) - 1):
             binarized_expected = [
                 (v < classes[i]) if reverse_order else (v > classes[i])

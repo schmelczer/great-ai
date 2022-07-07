@@ -20,11 +20,11 @@ def test_is_english() -> None:
     assert not is_english(None)
 
 
-def english_name_of_language() -> None:
+def test_english_name_of_language() -> None:
     assert english_name_of_language("en") == "English"
     assert english_name_of_language("hu") == "Hungarian"
     assert english_name_of_language("zh") == "Chinese"
-    assert english_name_of_language("zh-TW") == "Chinese"
+    assert english_name_of_language("zh-TW") == "Chinese (Taiwan)"
     assert english_name_of_language("und") == "Unknown language"
     assert english_name_of_language("") == "Unknown language"
     assert english_name_of_language(None) == "Unknown language"

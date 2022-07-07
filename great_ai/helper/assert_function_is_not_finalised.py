@@ -1,10 +1,10 @@
-from typing import Any, Callable
+from typing import Callable
 
 from ..exceptions import WrongDecoratorOrderError
 from .get_function_metadata_store import get_function_metadata_store
 
 
-def assert_function_is_not_finalised(func: Callable[..., Any]) -> None:
+def assert_function_is_not_finalised(func: Callable) -> None:
     error_message = (
         "The outer-most (first) decorator has to be `@GreatAI.deploy`. "
         + f"In the case of `{func.__name__}`, it is not: fix this by moving `@GreatAI.deploy` to the top."

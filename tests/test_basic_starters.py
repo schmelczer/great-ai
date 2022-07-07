@@ -1,7 +1,6 @@
 from functools import lru_cache
 
 import pytest
-
 from great_ai import (
     ArgumentValidationError,
     GreatAI,
@@ -18,7 +17,7 @@ def test_create_trivial_cases() -> None:
     assert hello_world_1("andras").output == "Hello andras!"
 
     @GreatAI.create
-    def hello_world_2(name):
+    def hello_world_2(name):  # type: ignore
         return f"Hello {name}!"
 
     assert hello_world_2("andras").output == "Hello andras!"
@@ -30,7 +29,7 @@ def test_create_trivial_cases() -> None:
     assert hello_world_3("andras").output == "Hello andras!"
 
     @GreatAI.create()
-    def hello_world_4(name):
+    def hello_world_4(name):  # type: ignore
         return f"Hello {name}!"
 
     assert hello_world_4("andras").output == "Hello andras!"
@@ -39,17 +38,17 @@ def test_create_trivial_cases() -> None:
 def test_create_with_other_decorator() -> None:
     @GreatAI.create
     @lru_cache
-    def hello_world(name: str) -> str:
+    def hello_world_1(name: str) -> str:
         return f"Hello {name}!"
 
-    assert hello_world("andras").output == "Hello andras!"
+    assert hello_world_1("andras").output == "Hello andras!"
 
     @lru_cache
     @GreatAI.create()
-    def hello_world(name: str) -> str:
+    def hello_world_2(name: str) -> str:
         return f"Hello {name}!"
 
-    assert hello_world("andras").output == "Hello andras!"
+    assert hello_world_2("andras").output == "Hello andras!"
 
 
 def test_with_parameter() -> None:
@@ -63,6 +62,8 @@ def test_with_parameter() -> None:
     with pytest.raises(ArgumentValidationError):
         hello_world("short")
 
+
+def test_wrong_order() -> None:
     with pytest.raises(WrongDecoratorOrderError):
 
         @parameter("name", validator=lambda v: len(v) > 5)

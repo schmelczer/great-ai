@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, List, Mapping, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from pymongo import MongoClient
 
@@ -20,6 +20,9 @@ operator_mapping = {
 class MongodbDriver(TracingDatabaseDriver):
     is_production_ready = True
 
+    mongo_connection_string: str
+    mongo_database: str
+
     def __init__(self) -> None:
         super().__init__()
         if self.mongo_connection_string is None or self.mongo_database is None:
@@ -33,7 +36,7 @@ class MongodbDriver(TracingDatabaseDriver):
         *,
         mongo_connection_string: str,
         mongo_database: str,
-        **_: Mapping[str, Any],
+        **_: Any,
     ) -> None:
         cls.mongo_connection_string = mongo_connection_string
         cls.mongo_database = mongo_database
@@ -43,21 +46,23 @@ class MongodbDriver(TracingDatabaseDriver):
         serialized = trace.to_flat_dict()
         serialized["_id"] = trace.trace_id
 
-        with MongoClient(self.mongo_connection_string) as client:
-            return client[self.mongo_database].traces.insert_one(serialized)
+        with MongoClient[Any](self.mongo_connection_string) as client:
+            return client[self.mongo_database].traces.insert_one(serialized).inserted_id
 
     def save_batch(self, documents: List[Trace]) -> List[str]:
         serialized = [d.to_flat_dict() for d in documents]
         for s in serialized:
             s["_id"] = s["trace_id"]
 
-        with MongoClient(self.mongo_connection_string) as client:
-            return client[self.mongo_database].traces.insert_many(
-                serialized, ordered=False
+        with MongoClient[Any](self.mongo_connection_string) as client:
+            return (
+                client[self.mongo_database]
+                .traces.insert_many(serialized, ordered=False)
+                .inserted_ids
             )
 
     def get(self, id: str) -> Optional[Trace]:
-        with MongoClient(self.mongo_connection_string) as client:
+        with MongoClient[Any](self.mongo_connection_string) as client:
             value = client[self.mongo_database].traces.find_one(id)
 
         if value:
@@ -83,15 +88,8 @@ class MongodbDriver(TracingDatabaseDriver):
         sort_by: Sequence[SortBy] = [],
     ) -> Tuple[List[Trace], int]:
 
-        query = {
-            "filter": {
-                "$and": [{"tags": tag} for tag in conjunctive_tags]
-                + [
-                    {f.property: {self._get_operator(f): f.value}}
-                    for f in conjunctive_filters
-                ]
-                + [{}]
-            },
+        query: Dict[str, Any] = {
+            "filter": {},
             "sort": [
                 (col.column_id, 1 if col.direction == "asc" else -1) for col in sort_by
             ],
@@ -103,35 +101,43 @@ class MongodbDriver(TracingDatabaseDriver):
         if take:
             query["limit"] = take
 
+        and_query: List[Dict[str, Any]] = [{}]
+        and_query.extend({"tags": tag} for tag in conjunctive_tags)
+        and_query.extend(
+            {f.property: {self._get_operator(f): f.value}} for f in conjunctive_filters
+        )
+
         if since:
-            query["filter"]["$and"].append({"created": {"$gte": since}})
+            and_query.append({"created": {"$gte": since}})
 
         if until:
-            query["filter"]["$and"].append({"created": {"$lte": until}})
+            and_query.append({"created": {"$lte": until}})
 
         if has_feedback is not None:
-            query["filter"]["$and"].append(
+            and_query.append(
                 {"feedback": {"$ne": None}} if has_feedback else {"feedback": None}
             )
+        query["filter"]["$and"] = and_query
 
-        with MongoClient(self.mongo_connection_string) as client:
+        with MongoClient[Any](self.mongo_connection_string) as client:
             values = client[self.mongo_database].traces.find(**query)
-            documents = [Trace.parse_obj(t) for t in values]
+            documents = [Trace[Any].parse_obj(t) for t in values]
 
         return documents, len(documents)
 
     def update(self, id: str, new_version: Trace) -> None:
         serialized = new_version.to_flat_dict()
         serialized["_id"] = new_version.trace_id
-        with MongoClient(self.mongo_connection_string) as client:
-            client[self.mongo_database].traces.update_one(id, new_version)
+
+        with MongoClient[Any](self.mongo_connection_string) as client:
+            client[self.mongo_database].traces.update_one({"_id": id}, serialized)
 
     def delete(self, id: str) -> None:
-        with MongoClient(self.mongo_connection_string) as client:
-            client[self.mongo_database].traces.delete_one(id)
+        with MongoClient[Any](self.mongo_connection_string) as client:
+            client[self.mongo_database].traces.delete_one({"_id": id})
 
-    def delete_batch(self, ids: List[str]) -> List[str]:
+    def delete_batch(self, ids: List[str]) -> None:
         delete_filter = {"_id": {"$in": ids}}
 
-        with MongoClient(self.mongo_connection_string) as client:
-            return client[self.mongo_database].traces.delete_many(delete_filter)
+        with MongoClient[Any](self.mongo_connection_string) as client:
+            client[self.mongo_database].traces.delete_many(delete_filter)

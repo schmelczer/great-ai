@@ -1,42 +1,71 @@
+import asyncio
+import inspect
 import multiprocessing as mp
 import queue
 import threading
 import traceback
-from typing import Callable, Union
+from multiprocessing.synchronize import Event
+from typing import Any, Awaitable, Callable, List, TypeVar, Union, cast
 
 import dill
+
+from .map_result import MapResult
+
+T = TypeVar("T")
+V = TypeVar("V")
 
 
 def mapper_function(
     input_queue: Union[mp.Queue, queue.Queue],
     output_queue: Union[mp.Queue, queue.Queue],
-    should_stop: Union[mp.Event, threading.Event],
-    map_function: Union[bytes, Callable],
+    should_stop: Union[Event, threading.Event],
+    func: Union[bytes, Callable[[T], V], Callable[[T], Awaitable[V]]],
 ) -> None:
     try:
-        if isinstance(map_function, bytes):
-            map_function = dill.loads(map_function)
+        if isinstance(func, bytes):
+            func = cast(Callable[[T], V], dill.loads(func))
 
-        last_chunk = None
+        is_asynchronous = inspect.iscoroutinefunction(func)
+
+        last_chunk: List[MapResult] = []
         while not should_stop.wait(0.1):
-            if last_chunk is None:
+            if not last_chunk:
                 try:
                     input_chunk = input_queue.get_nowait()
-                    last_chunk = []
-                    for i, v in input_chunk:
-                        result, exception = None, None
-                        try:
-                            result = map_function(v)
-                        except Exception as e:
-                            exception = e, traceback.format_exc()
-                        last_chunk.append((i, result, exception))
+                    if is_asynchronous:
+
+                        async def safe(i: int, value: T) -> Any:
+                            try:
+                                return MapResult(
+                                    i,
+                                    await cast(Callable[[T], Awaitable[V]], func)(
+                                        value
+                                    ),
+                                )
+                            except Exception as e:
+                                return MapResult(i, None, e, traceback.format_exc())
+
+                        async def main() -> List[MapResult]:
+                            return await asyncio.gather(
+                                *[safe(i, v) for i, v in input_chunk]
+                            )
+
+                        last_chunk = asyncio.run(main())
+                    else:
+                        for i, value in input_chunk:
+                            try:
+                                last_chunk.append(MapResult(i, func(value)))
+                            except Exception as e:
+                                last_chunk.append(
+                                    MapResult(i, None, e, traceback.format_exc())
+                                )
                 except queue.Empty:
                     pass
 
-            if last_chunk is not None:
+            if last_chunk:
                 try:
                     output_queue.put_nowait(last_chunk)
-                    last_chunk = None
+                    last_chunk = []
                 except queue.Full:
                     pass
     except (KeyboardInterrupt, BrokenPipeError):

@@ -1,13 +1,7 @@
 from asyncio import sleep
 
 import pytest
-
-from great_ai import (
-    ArgumentValidationError,
-    GreatAI,
-    WrongDecoratorOrderError,
-    parameter,
-)
+from great_ai import GreatAI, WrongDecoratorOrderError, parameter
 
 
 @pytest.mark.asyncio
@@ -17,28 +11,28 @@ async def test_create_trivial_cases() -> None:
         await sleep(0.5)
         return f"Hello {name}!"
 
-    assert (await hello_world_1("andras").output) == "Hello andras!"
+    assert (await hello_world_1("andras")).output == "Hello andras!"
 
     @GreatAI.create
     async def hello_world_2(name: str) -> str:
         await sleep(0.5)
         return f"Hello {name}!"
 
-    assert (await hello_world_2("andras").output) == "Hello andras!"
+    assert (await hello_world_2("andras")).output == "Hello andras!"
 
     @GreatAI.create()
     async def hello_world_3(name: str) -> str:
         await sleep(0.5)
         return f"Hello {name}!"
 
-    assert (await hello_world_3("andras").output) == "Hello andras!"
+    assert (await hello_world_3("andras")).output == "Hello andras!"
 
     @GreatAI.create()
-    async def hello_world_4(name):
+    async def hello_world_4(name):  # type: ignore
         await sleep(0.5)
         return f"Hello {name}!"
 
-    assert (await hello_world_4("andras").output) == "Hello andras!"
+    assert (await hello_world_4("andras")).output == "Hello andras!"
 
 
 @pytest.mark.asyncio
@@ -49,14 +43,23 @@ async def test_with_parameter() -> None:
         await sleep(0.5)
         return f"Hello {name}!"
 
-    assert (await hello_world("andras").output) == "Hello andras!"
 
-    with pytest.raises(ArgumentValidationError):
-        await hello_world("short")
+@pytest.mark.asyncio
+async def test_with_parameters() -> None:
+    @GreatAI.create
+    @parameter("name", validator=lambda v: len(v) > 5)
+    @parameter("unused", disable_logging=True)
+    async def hello_world(name: str, unused) -> str:  # type: ignore
+        await sleep(0.5)
+        return f"Hello {name}!"
 
+    assert (await hello_world("andras", "fr")).output == "Hello andras!"
+
+
+def test_wrong_order() -> None:
     with pytest.raises(WrongDecoratorOrderError):
 
         @parameter("name", validator=lambda v: len(v) > 5)
         @GreatAI.create
-        def hello_world(name: str) -> str:
+        async def hello_world(name: str) -> str:
             return f"Hello {name}!"

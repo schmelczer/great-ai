@@ -1,6 +1,6 @@
 from functools import cached_property
 from pathlib import Path
-from typing import Any, List, Mapping, Optional
+from typing import Any, List, Optional
 
 import boto3
 
@@ -58,7 +58,7 @@ class LargeFileS3(LargeFileBase):
         aws_secret_access_key: str,
         large_files_bucket_name: str,
         aws_endpoint_url: Optional[str] = None,
-        **_: Mapping[str, Any],
+        **_: Any,
     ) -> None:
         cls.region_name = aws_region_name
         cls.access_key_id = aws_access_key_id

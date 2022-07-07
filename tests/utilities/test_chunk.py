@@ -1,5 +1,4 @@
 import pytest
-
 from great_ai.utilities import chunk
 
 
@@ -23,7 +22,7 @@ def test_bad_argument() -> None:
 
 
 def test_generator() -> None:
-    def my_generator():
+    def my_generator():  # type: ignore
         for i in range(1, 11):
             yield i
 

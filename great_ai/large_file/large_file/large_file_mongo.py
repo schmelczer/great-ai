@@ -1,7 +1,7 @@
 import re
 from functools import cached_property
 from pathlib import Path
-from typing import Any, List, Mapping
+from typing import Any, List
 
 from gridfs import DEFAULT_CHUNK_SIZE, Database, GridFSBucket
 from pymongo import MongoClient
@@ -27,7 +27,7 @@ class LargeFileMongo(LargeFileBase):
         *,
         mongo_connection_string: str,
         mongo_database: str,
-        **_: Mapping[str, Any],
+        **_: Any,
     ) -> None:
         cls.mongo_connection_string = mongo_connection_string
         cls.mongo_database = mongo_database

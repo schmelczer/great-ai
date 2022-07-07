@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from ...constants import DASHBOARD_PATH
-from .dashboard import create_dash_app
+from .dashboard.create_dash_app import create_dash_app
 
 PATH = Path(__file__).parent.resolve()
 

@@ -89,9 +89,7 @@ class LargeFileBase(ABC):
         cls.configure_credentials(**ConfigFile(secrets_path))
 
     @classmethod
-    def configure_credentials(
-        cls,
-    ) -> None:
+    def configure_credentials(cls, **kwargs: str) -> None:
         cls.initialized = True
 
     def __enter__(self) -> IO:

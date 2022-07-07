@@ -1,10 +1,10 @@
 import inspect
-from typing import Any, Callable, TypeVar
+from typing import Callable, TypeVar
 
 from ..helper.get_function_metadata_store import get_function_metadata_store
 from .parameter import parameter
 
-F = TypeVar("F", bound=Callable[..., Any])
+F = TypeVar("F", bound=Callable)
 
 
 def automatically_decorate_parameters(func: F) -> F:

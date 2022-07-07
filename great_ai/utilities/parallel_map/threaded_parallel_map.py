@@ -1,10 +1,19 @@
 import queue
 import threading
-from typing import Callable, Iterable, Literal, Optional, Sequence, TypeVar, overload
+from typing import (
+    Awaitable,
+    Callable,
+    Iterable,
+    Literal,
+    Optional,
+    Sequence,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from .get_config import get_config
 from .manage_communication import manage_communication
-from .manage_serial import manage_serial
 from .mapper_function import mapper_function
 
 T = TypeVar("T")
@@ -13,81 +22,74 @@ V = TypeVar("V")
 
 @overload
 def threaded_parallel_map(
-    function: Callable[[T], V],
+    func: Callable[[T], Union[V, Awaitable[V]]],
     input_values: Sequence[T],
     *,
-    chunk_size: Optional[int],
-    concurrency: Optional[int],
-    unordered: Optional[bool],
-    ignore_exceptions: Optional[Literal[False]],
-) -> Iterable[V]:
-    ...
-
-
-@overload
-def threaded_parallel_map(
-    function: Callable[[T], V],
-    input_values: Iterable[T],
-    *,
-    chunk_size: int,
-    concurrency: Optional[int],
-    unordered: Optional[bool],
-    ignore_exceptions: Optional[Literal[False]],
-) -> Iterable[V]:
-    ...
-
-
-@overload
-def threaded_parallel_map(
-    function: Callable[[T], V],
-    input_values: Sequence[T],
-    *,
-    chunk_size: Optional[int],
-    concurrency: Optional[int],
-    unordered: Optional[bool],
-    ignore_exceptions: True,
+    ignore_exceptions: Literal[True],
+    chunk_size: Optional[int] = ...,
+    concurrency: Optional[int] = ...,
+    unordered: bool = ...,
 ) -> Iterable[Optional[V]]:
     ...
 
 
 @overload
 def threaded_parallel_map(
-    function: Callable[[T], V],
-    input_values: Iterable[T],
+    func: Callable[[T], Union[V, Awaitable[V]]],
+    input_values: Union[Iterable[T], Sequence[T]],
     *,
     chunk_size: int,
-    concurrency: Optional[int],
-    unordered: Optional[bool],
-    ignore_exceptions: True,
+    ignore_exceptions: Literal[True],
+    concurrency: Optional[int] = ...,
+    unordered: bool = ...,
 ) -> Iterable[Optional[V]]:
     ...
 
 
+@overload
 def threaded_parallel_map(
-    function,
-    input_values,
+    func: Callable[[T], Union[V, Awaitable[V]]],
+    input_values: Sequence[T],
     *,
-    chunk_size=None,
-    concurrency=None,
-    unordered=False,
-    ignore_exceptions=False,
-):
+    chunk_size: Optional[int] = ...,
+    ignore_exceptions: Literal[False] = ...,
+    concurrency: Optional[int] = ...,
+    unordered: bool = ...,
+) -> Iterable[V]:
+    ...
+
+
+@overload
+def threaded_parallel_map(
+    func: Callable[[T], Union[V, Awaitable[V]]],
+    input_values: Union[Iterable[T], Sequence[T]],
+    *,
+    chunk_size: int,
+    ignore_exceptions: Literal[False] = ...,
+    concurrency: Optional[int] = ...,
+    unordered: bool = ...,
+) -> Iterable[V]:
+    ...
+
+
+def threaded_parallel_map(
+    func: Callable[[T], Union[V, Awaitable[V]]],
+    input_values: Union[Iterable[T], Sequence[T]],
+    *,
+    chunk_size: Optional[int] = None,
+    ignore_exceptions: bool = False,
+    concurrency: Optional[int] = None,
+    unordered: bool = False,
+) -> Iterable[Optional[V]]:
     config = get_config(
-        function=function,
+        function=func,
         input_values=input_values,
         chunk_size=chunk_size,
         concurrency=concurrency,
     )
 
-    if config.concurrency == 1:
-        yield from manage_serial(
-            function=function,
-            input_values=input_values,
-            ignore_exceptions=ignore_exceptions,
-        )
-
-    input_queue = queue.Queue(config.concurrency * 2)
-    output_queue = queue.Queue(config.concurrency * 2)
+    input_queue: queue.Queue = queue.Queue(config.concurrency * 2)
+    output_queue: queue.Queue = queue.Queue(config.concurrency * 2)
     should_stop = threading.Event()
 
     threads = [
@@ -99,7 +101,7 @@ def threaded_parallel_map(
                 input_queue=input_queue,
                 output_queue=output_queue,
                 should_stop=should_stop,
-                map_function=function,
+                func=func,
             ),
         )
         for i in range(config.concurrency)

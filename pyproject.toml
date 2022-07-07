@@ -36,6 +36,7 @@ dependencies = [
     "typeguard >= 2.10.0",
     "pymongo >= 3.0.0",
     "dill >= 0.3.5.0",
+    "async_lru >= 1.0.0",
     "aiohttp[speedups] >= 3.8.0",
 ]
 
@@ -45,6 +46,7 @@ dev = [
     "mkdocs",
     "mkdocstrings[python]",
     "mkdocs-material",
+    "mkdocs-jupyter",
     "autoflake",
     "isort",
     "black[jupyter]",
@@ -53,7 +55,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "pytest-subtests",
-    "pytest-asyncio"
+    "pytest-asyncio",
 ]
 
 [project.urls]

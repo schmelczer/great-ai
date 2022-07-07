@@ -1,7 +1,7 @@
 from datetime import datetime
 from multiprocessing import Lock
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, cast
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import pandas as pd
 from tinydb import TinyDB
@@ -48,14 +48,8 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         def does_match(d: Dict[str, Any]) -> bool:
             return (
                 not set(conjunctive_tags) - set(d["tags"])
-                and (
-                    since is None
-                    or cast(datetime, datetime.fromisoformat(d["created"])) >= since
-                )
-                and (
-                    until is None
-                    or cast(datetime, datetime.fromisoformat(d["created"])) <= until
-                )
+                and (since is None or datetime.fromisoformat(d["created"]) >= since)
+                and (until is None or datetime.fromisoformat(d["created"]) <= until)
                 and (
                     has_feedback is None or has_feedback == (d["feedback"] is not None)
                 )
@@ -102,7 +96,7 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
     def delete(self, id: str) -> None:
         self._safe_execute(lambda db: db.remove(lambda d: d["trace_id"] == id))
 
-    def delete_batch(self, ids: List[str]) -> List[str]:
+    def delete_batch(self, ids: List[str]) -> None:
         for i in ids:
             self.delete(i)
 

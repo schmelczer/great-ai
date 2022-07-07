@@ -129,11 +129,15 @@ main > header > div > h1 {
 
 .version-tag {
   border-radius: var(--border-radius);
-  background: #ddd;
   display: inline-block;
   font-size: 1rem;
-  padding: 3px 6px;
+  padding: 3px 8px;
   margin-left: var(--small-padding)
+}
+
+main > header .version-tag {
+  background: var(--background-color);
+  vertical-align: 4px;
 }
 
 main > header > *:nth-child(2) {
