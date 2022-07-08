@@ -25,9 +25,3 @@ jobs:
 
       - name: Build documentation
         run: mkdocs gh-deploy
-
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
