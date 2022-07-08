@@ -72,7 +72,7 @@ def configure(
     logger = get_logger("great_ai", level=log_level)
 
     if _context is not None:
-        logger.warn(
+        logger.error(
             "Configuration has been already initialised, overwriting.\n"
             + "Make sure to call `configure()` before importing your application code."
         )
@@ -149,7 +149,7 @@ def _initialize_tracing_database(
     for tracing_driver, paths in DEFAULT_TRACING_DATABASE_CONFIG_PATHS.items():
         if selected is None or selected == tracing_driver:
             if tracing_driver.initialized:
-                logger.warning(
+                logger.info(
                     f"{tracing_driver.__name__} has been already configured: skipping initialisation"
                 )
                 return tracing_driver
@@ -172,7 +172,7 @@ def _initialize_large_file(
     for large_file, paths in DEFAULT_LARGE_FILE_CONFIG_PATHS.items():
         if selected is None or selected == large_file:
             if large_file.initialized:
-                logger.warning(
+                logger.info(
                     f"{large_file.__name__} has been already configured: skipping initialisation"
                 )
                 return large_file
