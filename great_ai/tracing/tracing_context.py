@@ -1,7 +1,7 @@
 from contextvars import ContextVar
 from datetime import datetime
 from types import TracebackType
-from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar, cast
 from uuid import uuid4
 
 from ..constants import DEVELOPMENT_TAG_NAME, ONLINE_TAG_NAME, PRODUCTION_TAG_NAME
@@ -32,23 +32,26 @@ class TracingContext(Generic[T]):
         assert self._trace is None, "has been already finalised"
 
         delta_time = (datetime.utcnow() - self._start_time).microseconds / 1000
-        self._trace = Trace[T](
-            trace_id=str(uuid4()),
-            created=self._start_time.isoformat(),
-            original_execution_time_ms=delta_time,
-            logged_values=self._values,
-            models=self._models,
-            output=output,
-            exception=None
-            if exception is None
-            else f"{type(exception).__name__}: {exception}",
-            tags=[
-                self._name,
-                ONLINE_TAG_NAME,
-                PRODUCTION_TAG_NAME
-                if get_context().is_production
-                else DEVELOPMENT_TAG_NAME,
-            ],
+        self._trace = cast(
+            Trace[T],
+            Trace(  # avoid ValueError: "Trace" object has no field "__orig_class__"
+                trace_id=str(uuid4()),
+                created=self._start_time.isoformat(),
+                original_execution_time_ms=delta_time,
+                logged_values=self._values,
+                models=self._models,
+                output=output,
+                exception=None
+                if exception is None
+                else f"{type(exception).__name__}: {exception}",
+                tags=[
+                    self._name,
+                    ONLINE_TAG_NAME,
+                    PRODUCTION_TAG_NAME
+                    if get_context().is_production
+                    else DEVELOPMENT_TAG_NAME,
+                ],
+            ),
         )
 
         return self._trace

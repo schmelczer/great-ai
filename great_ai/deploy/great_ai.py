@@ -1,4 +1,4 @@
-from functools import lru_cache, partial, wraps
+from functools import lru_cache, wraps
 from textwrap import dedent
 from typing import (
     Any,
@@ -6,8 +6,10 @@ from typing import (
     Callable,
     Generic,
     List,
+    Literal,
     Optional,
     Sequence,
+    Tuple,
     TypeVar,
     Union,
     cast,
@@ -96,17 +98,66 @@ class GreatAI(Generic[T, V]):
     def __call__(self, *args: Any, **kwargs: Any) -> T:
         return self._wrapped_func(*args, **kwargs)
 
+    @overload
+    def process_batch(
+        self,
+        batch: Sequence[Tuple],
+        *,
+        concurrency: Optional[int] = None,
+        unpack_arguments: Literal[True],
+        do_not_persist_traces: bool = ...,
+    ) -> List[Trace[V]]:
+        ...
+
+    @overload
     def process_batch(
         self,
         batch: Sequence,
+        *,
         concurrency: Optional[int] = None,
-        do_not_persist_traces: Optional[bool] = False,
+        unpack_arguments: Literal[False] = ...,
+        do_not_persist_traces: bool = ...,
     ) -> List[Trace[V]]:
+        ...
+
+    def process_batch(
+        self,
+        batch: Sequence,
+        *,
+        concurrency: Optional[int] = None,
+        unpack_arguments: bool = False,
+        do_not_persist_traces: bool = False,
+    ) -> List[Trace[V]]:
+        wrapped_function = self._wrapped_func
+
+        def inner(value: Any) -> T:
+            return (
+                wrapped_function(*value, do_not_persist_traces=do_not_persist_traces)
+                if unpack_arguments
+                else wrapped_function(
+                    value, do_not_persist_traces=do_not_persist_traces
+                )
+            )
+
+        async def inner_async(value: Any) -> T:
+            return await cast(
+                Awaitable,
+                (
+                    wrapped_function(
+                        *value, do_not_persist_traces=do_not_persist_traces
+                    )
+                    if unpack_arguments
+                    else wrapped_function(
+                        value, do_not_persist_traces=do_not_persist_traces
+                    )
+                ),
+            )
+
         return list(
             parallel_map(
-                partial(
-                    self._wrapped_func, do_not_persist_traces=do_not_persist_traces
-                ),
+                inner_async
+                if get_function_metadata_store(self).is_asynchronous
+                else inner,
                 batch,
                 concurrency=concurrency,
             )
