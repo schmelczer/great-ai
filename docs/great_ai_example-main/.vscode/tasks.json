@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Format and lint",
+      "type": "shell",
+      "command": "source .env/bin/activate; ./format.sh .",
+      "windows": {
+        "command": ".env\\bin\\activate.bat; .\\format.sh ."
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}

@@ -40,7 +40,15 @@ Find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard/).
 
 ### Contribute
 
+
+#### Install
+
 ```sh
 pip install 'great-ai[dev]'
+```
 
+#### Documentation
+
+```sh
+mkdocs serve
 ```

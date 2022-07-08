@@ -15,7 +15,7 @@ pip install open-large
 ### Simple example
 
 ```python
-from large_file import LargeFileS3
+from great_ai.large_file import LargeFileS3
 
 LargeFileS3.configure_credentials({
     "aws_region_name": "your_region_like_eu-west-2",

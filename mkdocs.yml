@@ -1,10 +1,32 @@
 site_name: GreatAI documentation
 
+repo_url: https://github.com/ScoutinScience/great-ai
+edit_uri: edit/main/docs/
+
 theme:
   name: "material"
+  custom_dir: docs/overrides
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 plugins:
+  - git-revision-date-localized:
   - mkdocstrings
+  - search
+  - mkdocs-jupyter:
+      include_source: true
+      # allow_errors: false
+      # execute: false
+      # execute_ignore: "my-secret-files/*.ipynb"
+      # theme: dark
 
 nav:
   - Home: index.md
@@ -12,3 +34,4 @@ nav:
   - How-To Guides: how-to-guides.md
   - reference.md
   - explanation.md
+  - Notebook page: simple-mag/train.ipynb

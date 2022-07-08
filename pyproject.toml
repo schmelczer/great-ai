@@ -50,6 +50,7 @@ dev = [
     "mkdocstrings[python]",
     "mkdocs-material",
     "mkdocs-jupyter",
+    "mkdocs-git-revision-date-localized-plugin",
     "autoflake",
     "isort",
     "black[jupyter]",
@@ -59,6 +60,7 @@ dev = [
     "pytest-cov",
     "pytest-subtests",
     "pytest-asyncio",
+    'tqdm',
 ]
 
 [project.urls]
