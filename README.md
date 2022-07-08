@@ -46,12 +46,12 @@ Find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard/).
 ```sh
 python3 -m venv --copies .env
 source .env/bin/activate
-pip install './[dev]'
-flit install --symlink
+python3 -m pip install flit
+python3 -m flit install --symlink --deps=all
 ```
 
 #### Documentation
 
 ```sh
-mkdocs serve
+mkdocs serve --dirtyreload
 ```
