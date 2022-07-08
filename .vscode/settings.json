@@ -14,6 +14,7 @@
     "finalise",
     "finalised",
     "gridfs",
+    "httpx",
     "iloc",
     "initialisation",
     "initialised",
@@ -62,7 +63,8 @@
     "**/.mypy_cache": true,
     "**/.pytest_cache": true,
     "**/*.egg-info": true,
-    "**/*.cache": true
+    "**/*.cache": true,
+    "**/tracing_database.json": true
   },
   "notebook.output.textLineLimit": 400,
   "python.defaultInterpreterPath": ".env/bin/python",

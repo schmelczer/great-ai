@@ -1,6 +1,6 @@
 from typing import Callable
 
-from ..exceptions import WrongDecoratorOrderError
+from ..errors import WrongDecoratorOrderError
 from .get_function_metadata_store import get_function_metadata_store
 
 

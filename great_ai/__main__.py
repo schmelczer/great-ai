@@ -17,7 +17,7 @@ from watchdog.observers import Observer
 from great_ai.constants import SERVER_NAME
 from great_ai.context import _is_in_production_mode
 from great_ai.deploy import GreatAI
-from great_ai.exceptions import ArgumentValidationError, MissingArgumentError
+from great_ai.errors import ArgumentValidationError, MissingArgumentError
 from great_ai.utilities import get_logger
 
 from .parse_arguments import parse_arguments

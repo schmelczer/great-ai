@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, TypeVar, cast
 
 from typeguard import check_type
 
-from ..exceptions import ArgumentValidationError
+from ..errors import ArgumentValidationError
 from ..helper import get_arguments, get_function_metadata_store
 from ..helper.assert_function_is_not_finalised import assert_function_is_not_finalised
 from ..tracing.tracing_context import TracingContext
