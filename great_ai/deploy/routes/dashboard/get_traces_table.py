@@ -18,8 +18,8 @@ def get_traces_table() -> dash_table.DataTable:
             "white-space": "normal",
             "height": "auto",
             "max-height": "300px",
+            "max-width": "500px",
             "overflow": "hidden",
-            "text-overflow": "ellipsis",
         },
         style_cell={"padding": "5px"},
         style_header={
@@ -27,8 +27,5 @@ def get_traces_table() -> dash_table.DataTable:
             "font-weight": "bold",
         },
         merge_duplicate_headers=True,
-        style_cell_conditional=[
-            {"if": {"column_id": "output"}, "width": 1500},
-        ],
-        style_table={"overflow": "auto"},
+        style_table={"overflow": "auto", "max-height": "80vh"},
     )

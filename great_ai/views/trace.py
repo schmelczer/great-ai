@@ -1,7 +1,7 @@
 from pprint import pformat
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
-from pydantic import BaseModel, Extra
+from pydantic import Extra
 
 from ..helper import HashableBaseModel
 from .model import Model
@@ -71,7 +71,7 @@ class Trace(Generic[T], HashableBaseModel):
                 }
             ),
             **{
-                k: v.dict() if isinstance(v, BaseModel) else v
+                k: pformat(v, indent=2, compact=True)
                 for k, v in self.logged_values.items()
             },
             "models_flat": self.models_flat,
