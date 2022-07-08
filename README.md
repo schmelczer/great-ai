@@ -44,7 +44,10 @@ Find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard/).
 #### Install
 
 ```sh
-pip install 'great-ai[dev]'
+python3 -m venv --copies .env
+source .env/bin/activate
+pip install './[dev]'
+flit install --symlink
 ```
 
 #### Documentation
