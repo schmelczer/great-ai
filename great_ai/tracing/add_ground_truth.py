@@ -1,7 +1,8 @@
 from datetime import datetime
 from math import ceil
 from random import shuffle
-from typing import Any, Iterable, List, TypeVar
+from typing import Any, Iterable, List, TypeVar, cast
+from uuid import uuid4
 
 from ..constants import (
     GROUND_TRUTH_TAG_NAME,
@@ -51,15 +52,19 @@ def add_ground_truth(
 
     created = datetime.utcnow().isoformat()
     traces = [
-        Trace[T](
-            created=created,
-            original_execution_time_ms=0,
-            logged_values=X if isinstance(X, dict) else {"input": X},
-            models=[],
-            output=y,
-            feedback=y,
-            exception=None,
-            tags=[GROUND_TRUTH_TAG_NAME, split_tag, *tags],
+        cast(
+            Trace[T],
+            Trace(  # avoid ValueError: "Trace" object has no field "__orig_class__"
+                trace_id=str(uuid4()),
+                created=created,
+                original_execution_time_ms=0,
+                logged_values=X if isinstance(X, dict) else {"input": X},
+                models=[],
+                output=y,
+                feedback=y,
+                exception=None,
+                tags=[GROUND_TRUTH_TAG_NAME, split_tag, *tags],
+            ),
         )
         for ((X, y), split_tag) in zip(values, split_tags)
     ]
