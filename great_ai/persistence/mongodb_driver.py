@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from pymongo import MongoClient
 
+from ..utilities import chunk
 from ..views import Filter, SortBy, Trace
 from .tracing_database_driver import TracingDatabaseDriver
 
@@ -139,7 +140,9 @@ class MongodbDriver(TracingDatabaseDriver):
             client[self.mongo_database].traces.delete_one({"_id": id})
 
     def delete_batch(self, ids: List[str]) -> None:
-        delete_filter = {"_id": {"$in": ids}}
-
         with MongoClient[Any](self.mongo_connection_string) as client:
-            client[self.mongo_database].traces.delete_many(delete_filter)
+            for c in chunk(
+                ids, chunk_size=10000
+            ):  # avoid: 'delete' command document too large
+                delete_filter = {"_id": {"$in": c}}
+                client[self.mongo_database].traces.delete_many(delete_filter)
