@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from functools import lru_cache
 from pathlib import Path
 from types import TracebackType
-from typing import IO, Any, List, Optional, Type, Union, cast
+from typing import IO, Any, List, Literal, Optional, Type, Union, cast
 
 from great_ai.utilities import ConfigFile, get_logger
 
@@ -123,7 +123,7 @@ class LargeFileBase(ABC):
         type: Optional[Type[BaseException]],
         exc: Optional[BaseException],
         traceback: Optional[TracebackType],
-    ) -> bool:
+    ) -> Literal[False]:
         self._file.close()
 
         if type is None:
@@ -133,7 +133,7 @@ class LargeFileBase(ABC):
         else:
             logger.exception("Could not finish operation.")
 
-        return True
+        return False
 
     @property
     def _local_name(self) -> str:
