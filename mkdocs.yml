@@ -1,6 +1,6 @@
 site_name: GreatAI documentation
 
-repo_url: https://github.com/ScoutinScience/great-ai
+repo_url: https://github.com/schmelczer/great-ai
 edit_uri: edit/main/docs/
 
 theme:

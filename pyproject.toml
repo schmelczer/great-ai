@@ -64,7 +64,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ScoutinScience/great-ai"
+Homepage = "https://github.com/schmelczer/great-ai"
 DockerHub = "https://hub.docker.com/repository/docker/schmelczera/great-ai"
 
 [project.scripts]
