@@ -1,32 +1,47 @@
-# Welcome to GreatAI
+# Overview of GreatAI
+[![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/check.yml)
+[![Quality Gate Status](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=alert_status)](https://sonar.schmelczer.com/dashboard?id=great-ai)
+[![Publish on PyPI](https://github.com/schmelczer/great-ai/actions/workflows/publish.yaml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/publish.yaml)
+[![Publish on DockerHub](https://github.com/schmelczer/great-ai/actions/workflows/docker.yaml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/docker.yaml)
+[![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
 
-Applying AI is becoming increasingly easier but many case studies have shown that these applications are often deployed poorly. GreatAI helps you transform your prototype AI code into production-ready software. 
 
-??? quote
-    There is a need to consider and adapt well established SE practices which have been ignored or had a very narrow focus in ML literature.
-    &mdash; [Meenu et al.](https://ieeexplore.ieee.org/abstract/document/9359253)
+Applying AI is becoming increasingly easier but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. To extend the list of available solutions, ==GreatAI helps you easily transform your prototype AI code into production-ready software.==
+
+??? quote "Case studies"
+    "There is a need to consider and adapt well established SE practices which have been ignored or had a very narrow focus in ML literature."
+    &mdash; [John et al.](https://ieeexplore.ieee.org/abstract/document/9359253)
+
+    "Finally, we have found that existing tools to aid Machine Learning development do not address the specificities of different projects, and thus, are seldom adopted by teams." &mdash; [Haakman et al.](https://link.springer.com/article/10.1007/s10664-021-09993-1)
+
+    "Because a mature system might end up being (at most) 5% machine learning code and (at least) 95% glue code, it may be less costly to create a clean native solution rather than re-use a generic package." &mdash; [Sculley et al.](https://www.researchgate.net/profile/Todd-Phillips/publication/319769912_Hidden_Technical_Debt_in_Machine_Learning_Systems/links/61e716d68d338833e37a7fd6/Hidden-Technical-Debt-in-Machine-Learning-Systems.pdf)
+
+    "For example, practice 25 is very important for “Traceability", yet relatively weakly adopted. We expect that the results from this type of analysis can, in the future, provide useful guidance for practitioners in terms of aiding them to assess their rate of adoption for each practice and to create roadmaps for improving their processes.  &mdash; [Serban et al.](https://dl.acm.org/doi/abs/10.1145/3382494.3410681?casa_token=uCFz0dtDR6gAAAAA:4_8OMJ-5njwopYkB1KSGAu9JfbNq4nfa8LRE0fj84ckjfo-GgtcYQivZTGxal3M4haoA8r_xwpw)
+
 
 
 ## Features
 
-- [x] Save traces of each prediction including arguments and model version
-- [x] Store models and data on shared infrastructure (MongoDB GridFS, S3-compatible storage, local-disk)
-- [x] Scaffold REST API and OpenAPI schema for easy integration
-- [x] Seamless support for `async` inference methods
-- [x] Support calling remote GreatAI instances
-- [x] Save feedback and merge it into the ground-truth database
-- [x] Built-in parallelising for batch processing
-- [x] Well-tested utilities for common NLP tasks (cleaning, language-tagging, etc.)
-- [x] Dashboard for high-level overview and searching traces
+- [x] Save prediction traces of each prediction including arguments and model versions
+- [x] Save feedback and merge it into a ground-truth database
+- [x] Version and store models and data on shared infrastructure *(MongoDB GridFS, S3-compatible storage, shared local-volume)*
+- [x] Automatically scaffolded custom REST API (and OpenAPI schema) for easy integration
+- [x] Input validation
+- [x] Sensible cache-policy
+- [x] Seamless support for both synchronous and `async` inference methods
+- [x] Easy integration with other remote GreatAI instances
+- [x] Built-in parallelisation (with support for multiprocessing, async, and mixed modes) for batch processing
+- [x] Well-tested utilities for common NLP tasks (cleaning, language-tagging, sentence-segmentation, etc.)
+- [x] A simple, unified configuration interface
 - [x] Fully-typed API for IntelliSense support
+- [x] Auto-reload for development
 - [x] Docker support for deployment
-- [x] Auto-reload fro development
-
-> Can be highly customised, including turning of in specific cases, and disabling the logging of sensitive data.
+- [x] Dashboard for high-level overview and searching traces
+- [ ] Shadow deployment
 
 ## Hello world
 
-```
+```sh
 pip install great-ai
 ```
 
@@ -34,7 +49,7 @@ pip install great-ai
 from great_ai import GreatAI
 
 @GreatAI.create  #(1) 
-def hello_world(name: str) -> str:
+def hello_world(name: str) -> str:  #(2) 
     return f"Hello {name}!"
 ```
 
@@ -43,11 +58,12 @@ def hello_world(name: str) -> str:
     2. it gets a `process_batch` method for supporting parallel execution,
     3. and it can be deployed using the `great-ai` command-line tool.
 
+2.  [Typing functions](https://docs.python.org/3/library/typing.html){ target=_blank } is recommended in general, however, not necessary for GreatAI to work.
 
 ??? note
-    In practice, `hello_world` could be an inference function of some AI/ML application.
+    In practice, `hello_world` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is imperative to have continuos oversight of the services you provide and data you process.
 
-```bash title="terminal" 
+```sh title="terminal" 
 great-ai hello-world.py
 ```
 > Navigate to [localhost:6060](http://127.0.0.1:6060/) in your browser.
@@ -59,7 +75,7 @@ great-ai hello-world.py
 </div>
 
 !!! success
-    Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io/) are configured and implemented automatically. To have full control over your service and to understand what else you might need to do in your use case, continue reading this documentation.
+    Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io/){ target=_blank } are configured and implemented automatically. To have full control over your service and to understand what else you might need to do in your use case, continue reading this documentation.
 
 
 ## Why is this GREAT?
@@ -68,17 +84,17 @@ great-ai hello-world.py
 
 GreatAI fits between the prototype and deployment phase of your (or your organisation's) AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented concerning the following 5 aspects:
 
-- **G**eneral: support for all kinds of Python libraries without restriction
-- **R**obust: robust error-handling and well-tested utilities out-of-the-box 
-- **E**nd-to-end: managing end-to-end feedback is a built-in, first-class concept
+- **G**eneral: use any Python library without restriction
+- **R**obust: have error-handling and well-tested utilities out-of-the-box 
+- **E**nd-to-end: utilise end-to-end feedback as a built-in, first-class concept
 - **A**utomated: focus only on what actually requires your attention
 - **T**rustworthy: deploy models that you and society can confidently trust
 
 ## Why GreatAI?
 
-There are other existing solutions aiming to solve facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker/) and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core) provide the most comprehensive suite of features. If you have the opportunity use those, they're great.
+There are other, existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker/){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity use those, do that because they're great.
 
-However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. GreatAI is designed to be as simple to use as possible. Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many [best-practices](https://se-ml.github.io/), and thus, can meaningfully improve your deployment without too much effort.
+However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. GreatAI is designed to be as simple to use as possible. Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many [best-practices](https://se-ml.github.io/){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
 
 
 <div style="display: flex; justify-content: space-evenly;" markdown>

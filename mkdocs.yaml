@@ -56,6 +56,9 @@ markdown_extensions:
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - abbr
   - attr_list
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
 
 nav:
   - Overview: index.md
