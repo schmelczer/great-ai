@@ -6,6 +6,8 @@ from typing import Any, Dict, Optional, Type, Union, cast
 
 from pydantic import BaseModel
 
+from great_ai import __version__
+
 from .constants import (
     DEFAULT_LARGE_FILE_CONFIG_PATHS,
     DEFAULT_TRACING_DATABASE_CONFIG_PATHS,
@@ -109,7 +111,7 @@ def configure(
         route_config=route_config,
     )
 
-    logger.info("Settings: configured ✅")
+    logger.info(f"GreatAI (v{__version__}): configured ✅")
     for k, v in get_context().to_flat_dict().items():
         logger.info(f"{LIST_ITEM_PREFIX}{k}: {v}")
 

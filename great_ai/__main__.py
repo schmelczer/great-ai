@@ -201,6 +201,11 @@ class GreatAIReload(BaseReload):
 
 
 def main() -> None:
+    import os
+    import sys
+
+    sys.path.append(os.getcwd())
+
     try:
         serve()
     except KeyboardInterrupt:
