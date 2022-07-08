@@ -6,6 +6,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="GreatAI helps you easily transform your prototype AI code into production-ready software.">
+      
+      
+        <meta name="author" content="András Schmelczer">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -171,7 +175,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    schmelczer/great-ai
   </div>
 </a>
       </div>
@@ -216,7 +220,7 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
-    GitHub
+    schmelczer/great-ai
   </div>
 </a>
     </div>
@@ -232,7 +236,7 @@
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        Home
+        Overview
       </a>
     </li>
   
@@ -455,89 +459,89 @@
 
 
 
-<h1 id="opens3"><a href="https://pypi.org/project/open-large/">open(S3)</a></h1>
+<h1 id="opens3"><a href="https://pypi.org/project/open-large/">open(S3)</a><a class="headerlink" href="#opens3" title="Permanent link">#</a></h1>
 <p>Storing, versioning, and downloading files from S3 made as easy as using <code>open()</code> in Python. Caching included.</p>
-<h2 id="motivation">Motivation</h2>
+<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">#</a></h2>
 <p>Oftentimes, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step, however, GitHub's git LFS implementation <a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository">doesn't support the deletion</a> of large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.</p>
-<h2 id="solution">Solution</h2>
-<pre><code>pip install open-large
-</code></pre>
-<h3 id="simple-example">Simple example</h3>
-<pre><code class="language-python">from great_ai.large_file import LargeFileS3
-
-LargeFileS3.configure_credentials({
-    &quot;aws_region_name&quot;: &quot;your_region_like_eu-west-2&quot;,
-    &quot;aws_access_key_id&quot;: &quot;YOUR_ACCESS_KEY_ID&quot;,
-    &quot;aws_secret_access_key&quot;: &quot;YOUR_VERY_SECRET_ACCESS_KEY&quot;,
-    &quot;large_files_bucket_name&quot;: &quot;create_a_bucket_and_put_its_name_here&quot;,
-})
-
-# Creates a new version and deletes the older version leaving the 3 most recently used intact
-with LargeFileS3(&quot;test.txt&quot;, &quot;w&quot;, keep_last_n=3) as f:
-    for i in range(100000):
-        f.write('test\n')
-
-# By default the latest version is returned
-# but an optional `version` keyword argument can be provided as well
-with LargeFileS3(&quot;test.txt&quot;, &quot;r&quot;) as f:
-    print(f.readlines()[0])
-</code></pre>
+<h2 id="solution">Solution<a class="headerlink" href="#solution" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip install open-large
+</code></pre></div>
+<h3 id="simple-example">Simple example<a class="headerlink" href="#simple-example" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">great_ai.large_file</span> <span class="kn">import</span> <span class="n">LargeFileS3</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">LargeFileS3</span><span class="o">.</span><span class="n">configure_credentials</span><span class="p">({</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;aws_region_name&quot;</span><span class="p">:</span> <span class="s2">&quot;your_region_like_eu-west-2&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;aws_access_key_id&quot;</span><span class="p">:</span> <span class="s2">&quot;YOUR_ACCESS_KEY_ID&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;aws_secret_access_key&quot;</span><span class="p">:</span> <span class="s2">&quot;YOUR_VERY_SECRET_ACCESS_KEY&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;large_files_bucket_name&quot;</span><span class="p">:</span> <span class="s2">&quot;create_a_bucket_and_put_its_name_here&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">})</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Creates a new version and deletes the older version leaving the 3 most recently used intact</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">with</span> <span class="n">LargeFileS3</span><span class="p">(</span><span class="s2">&quot;test.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">keep_last_n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">):</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># By default the latest version is returned</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># but an optional `version` keyword argument can be provided as well</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">with</span> <span class="n">LargeFileS3</span><span class="p">(</span><span class="s2">&quot;test.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
 <blockquote>
 <p>Automatically creates a file, writes to it, uploads it to S3, and then queries the most recent version of it.
 In this case, the latest version is already in the local cache, no download is required.</p>
 </blockquote>
-<h3 id="more-details">More details</h3>
+<h3 id="more-details">More details<a class="headerlink" href="#more-details" title="Permanent link">#</a></h3>
 <p><code>LargeFile</code> behaves like an opened file (in the background it is a temp file after all). Binary reading and writing is supported along with the <a href="https://docs.python.org/3/library/functions.html#open">different keywords</a> <code>open()</code> accepts.</p>
 <p>The local cache can be configured with these properties:</p>
-<pre><code class="language-python">LargeFile.cache_path = Path('.cache')
-LargeFile.max_cache_size = &quot;30 GB&quot;
-</code></pre>
-<h4 id="i-only-need-a-path">I only need a path</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">LargeFile</span><span class="o">.</span><span class="n">cache_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.cache&#39;</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">LargeFile</span><span class="o">.</span><span class="n">max_cache_size</span> <span class="o">=</span> <span class="s2">&quot;30 GB&quot;</span>
+</code></pre></div>
+<h4 id="i-only-need-a-path">I only need a path<a class="headerlink" href="#i-only-need-a-path" title="Permanent link">#</a></h4>
 <p>In case you only need a path to the "remote" file, this pattern can be applied:</p>
-<pre><code class="language-python">path_to_model = LargeFile(&quot;folder-of-my-bert-model&quot;, version=31).get()
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">path_to_model</span> <span class="o">=</span> <span class="n">LargeFile</span><span class="p">(</span><span class="s2">&quot;folder-of-my-bert-model&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</code></pre></div>
 <blockquote>
 <p>This will first download the file/folder into your local cache folder. Then, it returns a <code>Path</code> object to the local version. Which can be turned into a string with <code>str(path_to_model)</code>.</p>
 </blockquote>
 <p>The same approach works for uploads:</p>
-<pre><code class="language-python">LargeFile(&quot;folder-of-my-bert-model&quot;).push('path_to_local/folder_or_file')
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">LargeFile</span><span class="p">(</span><span class="s2">&quot;folder-of-my-bert-model&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s1">&#39;path_to_local/folder_or_file&#39;</span><span class="p">)</span>
+</code></pre></div>
 <blockquote>
 <p>This way, both regular files and folders can be handled. The uploaded file is called <strong>folder-of-my-bert-model</strong>, the local name is ignored.</p>
 </blockquote>
 <p>Lastly, all version of the remote object can be deleted by calling <code>LargeFile("my-file").delete()</code>. It will still reside in your local cache afterwards, its deletion will happen next time your local cache has to be pruned.</p>
-<h3 id="command-line-example">Command-line example</h3>
+<h3 id="command-line-example">Command-line example<a class="headerlink" href="#command-line-example" title="Permanent link">#</a></h3>
 <p>The package can be used as a module from the command-line to give you more flexibility.</p>
-<h4 id="setup">Setup</h4>
+<h4 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">#</a></h4>
 <p>Create an .ini file (or use <em>~/.aws/credentials</em>). It may look like this:</p>
-<pre><code class="language-ini">aws_region_name = your_region_like_eu-west-2
-aws_access_key_id = YOUR_ACCESS_KEY_ID
-aws_secret_access_key = YOUR_VERY_SECRET_ACCESS_KEY
-large_files_bucket_name = my_large_files
-endpoint_url = this is optional, for backblaze, use this: https://s3.us-west-002.backblazeb2.com
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">aws_region_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">your_region_like_eu-west-2</span><span class="w"></span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">aws_access_key_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">YOUR_ACCESS_KEY_ID</span><span class="w"></span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">aws_secret_access_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">YOUR_VERY_SECRET_ACCESS_KEY</span><span class="w"></span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">large_files_bucket_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">my_large_files</span><span class="w"></span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="na">endpoint_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">this is optional, for backblaze, use this: https://s3.us-west-002.backblazeb2.com</span><span class="w"></span>
+</code></pre></div>
 <blockquote>
 <p>Just like in <a href="../example_secrets.ini">example secrets</a>.</p>
 </blockquote>
-<h4 id="print-the-expected-options">Print the expected options</h4>
-<pre><code class="language-sh">python3 -m large_file --help
-</code></pre>
-<h4 id="upload-some-files">Upload some files</h4>
-<pre><code class="language-sh">python3 -m large_file --backend s3 --secrets secrets.ini --push my_first_file.json folder/my_second_file my_folder
-</code></pre>
+<h4 id="print-the-expected-options">Print the expected options<a class="headerlink" href="#print-the-expected-options" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python3 -m large_file --help
+</code></pre></div>
+<h4 id="upload-some-files">Upload some files<a class="headerlink" href="#upload-some-files" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python3 -m large_file --backend s3 --secrets secrets.ini --push my_first_file.json folder/my_second_file my_folder
+</code></pre></div>
 <blockquote>
 <p>Only the filename is used as the S3 name, the rest of the path is ignored.</p>
 </blockquote>
-<h4 id="download-some-files-to-the-local-cache">Download some files to the local cache</h4>
+<h4 id="download-some-files-to-the-local-cache">Download some files to the local cache<a class="headerlink" href="#download-some-files-to-the-local-cache" title="Permanent link">#</a></h4>
 <p>This can be useful when building a Docker image for example. This way, the files can already reside inside the container and need not be downloaded later.</p>
-<pre><code class="language-sh">python3 -m large_file --backend s3 -secrets ~/.aws/credentials --cache my_first_file.json:3 my_second_file my_folder:0
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python3 -m large_file --backend s3 -secrets ~/.aws/credentials --cache my_first_file.json:3 my_second_file my_folder:0
+</code></pre></div>
 <blockquote>
 <p>Versions may be specified by using <code>:</code>-s.</p>
 </blockquote>
-<h4 id="delete-remote-files">Delete remote files</h4>
-<pre><code class="language-sh">python3 -m large_file --backend s3 --secrets ~/.aws/credentials --delete my_first_file.json
-</code></pre>
+<h4 id="delete-remote-files">Delete remote files<a class="headerlink" href="#delete-remote-files" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>python3 -m large_file --backend s3 --secrets ~/.aws/credentials --delete my_first_file.json
+</code></pre></div>
 
   <hr>
 <div class="md-source-file">
@@ -581,7 +585,7 @@ endpoint_url = this is optional, for backblaze, use this: https://s3.us-west-002
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "content.tooltips"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
