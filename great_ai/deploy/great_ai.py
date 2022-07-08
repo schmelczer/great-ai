@@ -18,12 +18,15 @@ from typing import (
 
 from async_lru import alru_cache
 from fastapi import FastAPI
+from tqdm.cli import tqdm
 
 from ..constants import DASHBOARD_PATH
 from ..context import get_context
 from ..helper import freeze_arguments, get_function_metadata_store, snake_case_to_text
 from ..models import model_versions
-from ..parameters import automatically_decorate_parameters
+from ..parameters.automatically_decorate_parameters import (
+    automatically_decorate_parameters,
+)
 from ..tracing.tracing_context import TracingContext
 from ..utilities import parallel_map
 from ..views import ApiMetadata, Trace
@@ -154,12 +157,15 @@ class GreatAI(Generic[T, V]):
             )
 
         return list(
-            parallel_map(
-                inner_async
-                if get_function_metadata_store(self).is_asynchronous
-                else inner,
-                batch,
-                concurrency=concurrency,
+            tqdm(
+                parallel_map(
+                    inner_async
+                    if get_function_metadata_store(self).is_asynchronous
+                    else inner,
+                    batch,
+                    concurrency=concurrency,
+                ),
+                total=len(batch),
             )
         )
 
