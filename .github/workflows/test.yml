@@ -23,7 +23,7 @@ jobs:
           uses: actions/checkout@v3
 
         - name: Setup Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v2
+          uses: actions/setup-python@v4
           with:
             python-version: ${{ matrix.python-version }}
 
@@ -40,7 +40,7 @@ jobs:
 
         - name: Upload results
           if: always()
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
             name: Unit test coverage (Python ${{ matrix.python-version }} - ${{ matrix.operating-system }})
             path: "*.xml"
@@ -62,7 +62,7 @@ jobs:
           rm -rf build
 
       - name: Download test results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: artifacts
 
@@ -86,7 +86,7 @@ jobs:
     if: always()
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: artifacts
 
