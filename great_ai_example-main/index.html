@@ -13,7 +13,7 @@
     
     
       
-        <title>Explanation - GreatAI documentation</title>
+        <title>Train a domain classifier on the [semantic scholar dataset](https://api.semanticscholar.org/corpus) - GreatAI documentation</title>
       
     
     
@@ -65,6 +65,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#train-a-domain-classifier-on-the-semantic-scholar-dataset" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -94,7 +99,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Explanation
+              Train a domain classifier on the [semantic scholar dataset](https://api.semanticscholar.org/corpus)
             
           </span>
         </div>
@@ -284,19 +289,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../explanation/" class="md-nav__link">
         Explanation
       </a>
-      
     </li>
   
 
@@ -333,6 +330,50 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    Install
+  </a>
+  
+    <nav class="md-nav" aria-label="Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-dependencies" class="md-nav__link">
+    System dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-dependencies" class="md-nav__link">
+    Install dependencies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execute" class="md-nav__link">
+    Execute
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -347,15 +388,32 @@
 
 
                 
-  <a href="https://github.com/schmelczer/great-ai/edit/main/docs/explanation.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/schmelczer/great-ai/edit/main/docs/great_ai_example-main/README.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
 
-  <h1>Explanation</h1>
+<h1 id="train-a-domain-classifier-on-the-semantic-scholar-dataset">Train a domain classifier on the <a href="https://api.semanticscholar.org/corpus">semantic scholar dataset</a></h1>
+<p><img alt="steps" src="diagrams/scope.svg" /></p>
+<h2 id="install">Install</h2>
+<h3 id="system-dependencies">System dependencies</h3>
+<p>Make sure you have <code>python3</code>, <code>pip</code>, and <code>venv</code> installed.</p>
+<blockquote>
+<p>On Ubuntu, execute: <code>sudo apt install -y python3 python3-pip python3-venv</code></p>
+</blockquote>
+<h3 id="install-dependencies">Install dependencies</h3>
+<pre><code class="language-sh">python3 -m venv --copies .env 
+source .env/bin/activate
 
-
+pip install -r requirements.txt
+</code></pre>
+<h2 id="execute">Execute</h2>
+<ul>
+<li><a href="src/data/">Part 1</a></li>
+<li><a href="src/train/">Part 2</a></li>
+<li><a href="src/deploy/">Part 3</a></li>
+</ul>
 
   <hr>
 <div class="md-source-file">
@@ -378,42 +436,6 @@
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../reference/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Reference" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Reference
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../simple-mag/train/" class="md-footer__link md-footer__link--next" aria-label="Next: Train a field of study (domain) classification of sentences on the MAG dataset" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Train a field of study (domain) classification of sentences on the MAG dataset
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
