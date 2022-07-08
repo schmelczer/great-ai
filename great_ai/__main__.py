@@ -40,7 +40,7 @@ GREAT_AI_LOGGING_CONFIG = {
 }
 
 
-def main() -> None:
+def serve() -> None:
     args = parse_arguments()
     should_auto_reload = not _is_in_production_mode(logger=None)
 
@@ -200,10 +200,14 @@ class GreatAIReload(BaseReload):
             sock.close()
 
 
-if __name__ == "__main__":
+def main() -> None:
     try:
-        main()
+        serve()
     except KeyboardInterrupt:
         exit()
     except Exception as e:
         logger.error(e)
+
+
+if __name__ == "__main__":
+    main()

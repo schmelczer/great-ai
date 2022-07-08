@@ -11,7 +11,7 @@ from .parse_arguments import parse_arguments
 logger = get_logger("large_file")
 
 
-def main() -> None:
+def handle_command() -> None:
     parser, args = parse_arguments()
 
     large_file = get_class(args)
@@ -61,11 +61,15 @@ def get_class(args: Namespace) -> Type[LargeFileBase]:
     return large_file
 
 
-if __name__ == "__main__":
+def main() -> None:
     try:
-        main()
+        handle_command()
     except KeyboardInterrupt:
         logger.warning("Exiting")
         exit()
     except Exception as e:
         logger.exception(e)
+
+
+if __name__ == "__main__":
+    main()

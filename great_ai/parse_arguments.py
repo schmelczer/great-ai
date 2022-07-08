@@ -12,7 +12,7 @@ def parse_arguments() -> Namespace:
         help="the name of the file containing your to-be-served function such as `main.py`\n",
     )
 
-    default_host = "0.0.0.0"
+    default_host = "127.0.0.1"
     parser.add_argument(
         "--host",
         type=str,
