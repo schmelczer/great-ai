@@ -14,9 +14,11 @@ class TracingDatabaseDriver(ABC):
     @classmethod
     def configure_credentials_from_file(
         cls,
-        secrets_path: Union[Path, str],
+        secrets: Union[Path, str, ConfigFile],
     ) -> None:
-        cls.configure_credentials(**ConfigFile(secrets_path))
+        if not isinstance(secrets, ConfigFile):
+            secrets = ConfigFile(secrets)
+        cls.configure_credentials(**{k.lower(): v for k, v in secrets.items()})
 
     @classmethod
     def configure_credentials(

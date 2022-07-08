@@ -90,16 +90,7 @@ class MongodbDriver(TracingDatabaseDriver):
 
         query: Dict[str, Any] = {
             "filter": {},
-            "sort": [
-                (col.column_id, 1 if col.direction == "asc" else -1) for col in sort_by
-            ],
         }
-
-        if skip:
-            query["skip"] = skip
-
-        if take:
-            query["limit"] = take
 
         and_query: List[Dict[str, Any]] = [{}]
         and_query.extend({"tags": tag} for tag in conjunctive_tags)
@@ -120,10 +111,21 @@ class MongodbDriver(TracingDatabaseDriver):
         query["filter"]["$and"] = and_query
 
         with MongoClient[Any](self.mongo_connection_string) as client:
-            values = client[self.mongo_database].traces.find(**query)
-            documents = [Trace[Any].parse_obj(t) for t in values]
+            count = client[self.mongo_database].traces.count_documents(**query)
 
-        return documents, len(documents)
+            if skip:
+                query["skip"] = skip
+
+            if take:
+                query["limit"] = take
+
+            query["sort"] = [
+                (col.column_id, 1 if col.direction == "asc" else -1) for col in sort_by
+            ]
+
+            with client[self.mongo_database].traces.find(**query) as cursor:
+                documents = [Trace[Any].parse_obj(t) for t in cursor]
+        return documents, count
 
     def update(self, id: str, new_version: Trace) -> None:
         serialized = new_version.to_flat_dict()

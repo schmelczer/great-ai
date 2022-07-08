@@ -6,23 +6,29 @@ from ..logger import get_logger
 from .parse_error import ParseError
 from .pattern import pattern
 
-ENVIRONMENT_VARIABLE_KEY_PREFIX = "ENV"
-
 logger = get_logger("ConfigFile")
 
 
 class ConfigFile(Mapping[str, str]):
-    def __init__(self, path: Union[Path, str]) -> None:
+    ENVIRONMENT_VARIABLE_KEY_PREFIX = "ENV"
+
+    def __init__(self, path: Union[Path, str], *, ignore_missing: bool = False) -> None:
         if not isinstance(path, Path):
             path = Path(path)
 
         if not path.exists():
             raise FileNotFoundError(path.absolute())
 
+        self._ignore_missing = ignore_missing
+
         self._path = path
         self._key_values: Dict[str, str] = {}
 
         self._parse()
+
+    @property
+    def path(self) -> Path:
+        return self._path
 
     def _parse(self) -> None:
         with open(self._path, encoding="utf-8") as f:
@@ -39,21 +45,23 @@ class ConfigFile(Mapping[str, str]):
 
             already_exists = key in self._key_values
             if already_exists and not value.startswith(
-                f"{ENVIRONMENT_VARIABLE_KEY_PREFIX}:"
+                f"{self.ENVIRONMENT_VARIABLE_KEY_PREFIX}:"
             ):
                 raise KeyError(
                     f"Key `{key}` has been already defined and its value is `{self._key_values[key]}`"
                 )
 
-            if value.startswith(f"{ENVIRONMENT_VARIABLE_KEY_PREFIX}:"):
+            if value.startswith(f"{self.ENVIRONMENT_VARIABLE_KEY_PREFIX}:"):
                 _, value = value.split(":")
                 if value not in os.environ:
-                    issue = f'The value of `{key}` contains the "{ENVIRONMENT_VARIABLE_KEY_PREFIX}` prefix but `{value}` is not defined as an environment variable'
+                    issue = f'The value of `{key}` contains the "{self.ENVIRONMENT_VARIABLE_KEY_PREFIX}` prefix but `{value}` is not defined as an environment variable'
                     if already_exists:
                         logger.warning(
                             f"{issue}, using the default value defined above (`{self._key_values[key]}`)"
                         )
                         continue
+                    elif self._ignore_missing:
+                        logger.warning(issue)
                     else:
                         raise KeyError(
                             f"{issue} and no default value has been provided"
