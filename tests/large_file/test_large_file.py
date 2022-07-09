@@ -110,7 +110,7 @@ def test_initialized_with_file(client: Any) -> None:
 
     boto3.client = Mock(return_value=s3)
 
-    LargeFileS3.configure_credentials_from_file(PATH / "../../docs/example_secrets.ini")
+    LargeFileS3.configure_credentials_from_file(PATH / "data/example_secrets.ini")
     lf = LargeFileS3("test-file")
 
     boto3.client.assert_called_once_with(

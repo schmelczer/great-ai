@@ -1,12 +1,14 @@
-# GreatAI
+# ![logo](docs/media/favicon.ico) GreatAI
+ 
+ > GreatAI helps you easily transform your prototype AI code into production-ready software.
 
-**work in progress, do not use!**
-
-[![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/check.yml)
+[![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/test.yml)
 [![Quality Gate Status](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=alert_status)](https://sonar.schmelczer.com/dashboard?id=great-ai)
 [![Publish on PyPI](https://github.com/schmelczer/great-ai/actions/workflows/publish.yaml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/publish.yaml)
 [![Publish on DockerHub](https://github.com/schmelczer/great-ai/actions/workflows/docker.yaml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/docker.yaml)
 [![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
+
+[Check out the documentation here](https://great-ai.scoutinscience.com/).
 
 
 ## Find `great-ai` on [DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai)
@@ -33,8 +35,10 @@ def hello_world(name: str) -> str:
 ```
 > Create a new file called `main.py`
 
-Deploy by executing `python3 -m great-ai main.py`
-> Or: `python3 -m great-ai main.py`
+Deploy by executing `great-ai main.py`
+> Or: `great_ai main.py`
+
+> Or: `python3 -m great_ai main.py`
 
 Find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard/).
 

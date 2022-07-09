@@ -1,6 +1,0 @@
-.venv
-.env
-**/.cache
-.git
-**/__pycache__
-.dockerignore

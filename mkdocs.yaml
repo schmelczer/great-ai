@@ -9,6 +9,8 @@ edit_uri: edit/main/docs/
 theme:
   name: "material"
   custom_dir: docs/overrides
+  homepage: https://great-ai.scoutinscience.com
+  favicon: media/favicon.ico
   features:
     - content.code.annotate
     - content.tooltips
@@ -33,10 +35,6 @@ plugins:
   - search
   - mkdocs-jupyter:
       include_source: true
-      # allow_errors: false
-      # execute: false
-      # execute_ignore: "my-secret-files/*.ipynb"
-      # theme: dark
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -62,8 +60,15 @@ markdown_extensions:
 
 nav:
   - Overview: index.md
-  - tutorials.md
-  - How-To Guides: how-to-guides.md
+  - Tutorial: 
+    - tutorial/index.md
+    - tutorial/train.ipynb
+    - tutorial/deploy.ipynb
+  - User Guides:
+    - Simple AI lifecycle with classification:
+      - "Step 1: data": simple/data.ipynb
+      - "Step 2: train": simple/train.ipynb
+      - "Step 3: deploy": simple/deploy.ipynb
   - reference.md
   - explanation.md
-  - Notebook page: simple-mag/train.ipynb
+

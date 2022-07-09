@@ -4,9 +4,9 @@
     {
       "label": "Format and lint",
       "type": "shell",
-      "command": "source .env/bin/activate && scripts/format-python.sh great_ai tests",
+      "command": "source .env/bin/activate && scripts/format-python.sh great_ai docs tests",
       "windows": {
-        "command": ".env\\bin\\activate.bat; scripts\\format-python.sh great_ai tests"
+        "command": ".env\\bin\\activate.bat; scripts\\format-python.sh great_ai docs tests"
       },
       "group": "test",
       "presentation": {
