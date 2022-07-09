@@ -13,12 +13,11 @@ def get_logger(
         logger = logging.getLogger(name)
         logger.setLevel(level)
 
-        fmt = "%(asctime)s | %(levelname)8s | %(message)s"
-
+        log_format = "%(asctime)s | %(levelname)8s | %(message)s"
         stdout_handler = logging.StreamHandler()
         stdout_handler.setLevel(level)
         if not disable_colors:
-            stdout_handler.setFormatter(CustomFormatter(fmt))
+            stdout_handler.setFormatter(CustomFormatter(log_format))
 
         logger.addHandler(stdout_handler)
         loggers[name] = logger
