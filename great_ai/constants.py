@@ -27,5 +27,5 @@ ONLINE_TAG_NAME = "online"
 
 SERVER_NAME = "GreatAI-Server"
 
-SE4ML_WEBSITE = "https://se-ml.github.io/practices/"
+SE4ML_WEBSITE = "https://se-ml.github.io/practices"
 LIST_ITEM_PREFIX = "  🔩 "

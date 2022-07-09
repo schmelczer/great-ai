@@ -13,7 +13,7 @@ async def call_remote_great_ai_async(
     base_uri: str,
     data: Mapping[str, Any],
     retry_count: int = 4,
-    timeout_in_seconds: int = 60,
+    timeout_in_seconds: int = 300,
     model_class: Optional[Type[T]] = None,
 ) -> Trace[T]:
 

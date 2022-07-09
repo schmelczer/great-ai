@@ -80,7 +80,11 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
             html.Div(className="space-filler"),
             get_footer(),
             interval := dcc.Interval(
-                interval=4 * 1000,  # in milliseconds
+                interval=2 * 1000,  # in milliseconds
+                n_intervals=0,
+                max_intervals=1
+                if get_context().is_production
+                else -1,  # will be incremented in production upon each successful request
             ),
         ]
     )
@@ -113,6 +117,7 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
         Output(execution_time_histogram_container, "children"),
         Output(parallel_coordinates, "figure"),
         Output(parallel_coordinates, "style"),
+        Output(interval, "max_intervals"),
         Input(table, "page_current"),
         Input(table, "page_size"),
         Input(table, "sort_by"),
@@ -124,7 +129,7 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
         page_size: int,
         sort_by: List[Dict[str, Union[str, int]]],
         filter_query: str,
-        n_intervals: int,
+        n_intervals: Optional[int],
     ) -> Tuple[
         List[Dict[str, Any]],
         int,
@@ -133,6 +138,7 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
         Any,
         go.Figure,
         Dict[str, Any],
+        int,
     ]:
         conjunctive_filters = (
             [get_filter_from_datatable(f) for f in filter_query.split(" && ")]
@@ -165,6 +171,7 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
             execution_time_histogram,
             parallel_coords_fig,
             style,
+            ((n_intervals or 0) + 1) if get_context().is_production else -1,
         )
 
     return app.server

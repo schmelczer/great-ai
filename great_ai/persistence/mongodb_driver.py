@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-from pymongo import MongoClient
+from pymongo import ASCENDING, DESCENDING, MongoClient
 
 from ..utilities import chunk
 from ..views import Filter, SortBy, Trace
@@ -29,6 +29,11 @@ class MongodbDriver(TracingDatabaseDriver):
         if self.mongo_connection_string is None or self.mongo_database is None:
             raise ValueError(
                 "Please configure the MongoDB access options by calling MongodbDriver.configure_credentials"
+            )
+
+        with MongoClient[Any](self.mongo_connection_string) as client:
+            client[self.mongo_database].traces.create_index(
+                [("tags", ASCENDING), ("created", DESCENDING)], background=True
             )
 
     @classmethod
@@ -93,11 +98,13 @@ class MongodbDriver(TracingDatabaseDriver):
             "filter": {},
         }
 
-        and_query: List[Dict[str, Any]] = [{}]
+        and_query: List[Dict[str, Any]] = []
         and_query.extend({"tags": tag} for tag in conjunctive_tags)
         and_query.extend(
             {f.property: {self._get_operator(f): f.value}} for f in conjunctive_filters
         )
+        if not and_query:
+            and_query.append({})
 
         if since:
             and_query.append({"created": {"$gte": since}})
