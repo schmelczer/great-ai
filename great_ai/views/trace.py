@@ -80,3 +80,6 @@ class Trace(Generic[T], HashableBaseModel):
             "feedback_flat": self.feedback_flat,
             "tags_flat": self.tags_flat,
         }
+
+    def __repr__(self) -> str:
+        return f"Trace[{type(self.output).__name__}]({pformat(self.dict(), indent=2, compact=True)})"
