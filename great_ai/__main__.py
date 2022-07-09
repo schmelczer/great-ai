@@ -139,6 +139,8 @@ def get_script_name(file_name_argument: str) -> str:
 
         exporter = PythonExporter()
         content, _ = exporter.from_filename(file_name_argument)
+        content = re.sub(r".*get_ipython\(.*", "", content)
+
         file_name_argument = get_script_name_of_notebook(file_name_argument)
 
         with open(file_name_argument, "w", encoding="utf-8") as f:
