@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="-8 -8 516 516" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <style bx:fonts="Baloo 2">@import url(https://fonts.googleapis.com/css2?family=Baloo+2%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700%3B0%2C800&amp;display=swap);</style>
+    <g id="arrow">
+      <polyline style="stroke-linecap: round; stroke-linejoin: round; stroke-width: 16px; fill: none;" points="0 0 150 0 150 150"/>
+      <polyline style="stroke-linecap: round; stroke-width: 16px;" points="150 0 75 75"/>
+    </g>
+    <defs>
+      <linearGradient id="foreground">
+        <stop offset="0" stop-color="#44BBA4"/>
+        <stop offset="1" stop-color="#0C6291"/>
+      </linearGradient>
+    </defs>
+    <filter id="brightness-filter-0" x="-500%" y="-500%" width="1000%" height="1000%" bx:preset="brightness 1 1.6">
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="1.6"/>
+        <feFuncG type="linear" slope="1.6"/>
+        <feFuncB type="linear" slope="1.6"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <g style="filter: url(#brightness-filter-0);">
+    <g transform="matrix(1, 0, 0, 1, 350, 0)" stroke="#44BBA4">
+      <polyline style="stroke-linecap: round; stroke-linejoin: round; stroke-width: 16px; fill: none;" points="0 0 150 0 150 150"/>
+      <polyline style="stroke-linecap: round; stroke-width: 16px;" points="150 0 75 75"/>
+    </g>
+    <g transform="matrix(-1, 0, 0, -1, 150.136902, 499.826965)" stroke="#0C6291">
+      <polyline style="stroke-linecap: round; stroke-linejoin: round; stroke-width: 16px; fill: none;" points="0 0 150 0 150 150"/>
+      <polyline style="stroke-linecap: round; stroke-width: 16px;" points="150 0 75 75"/>
+    </g>
+  </g>
+  <text style="fill: url(#foreground); font-family: &quot;Baloo 2&quot;; font-size: 450px; letter-spacing: -12.3px; white-space: pre; filter: url(#brightness-filter-0);" x="78" y="388">AI</text>
+</svg>
