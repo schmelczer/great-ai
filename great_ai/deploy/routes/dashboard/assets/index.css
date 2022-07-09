@@ -1,5 +1,7 @@
 :root {
   --background-color: #edf5f6;
+  --dark-background-color: #e7eced;
+  --light-text-color: #9a9fa0;
   --small-padding: 10px;
   --medium-padding: 20px;
   --large-padding: 40px;
@@ -147,7 +149,7 @@ main > header > *:nth-child(2) {
 }
 
 main > header .placeholder {
-  opacity: 0.35;
+  color: var(--light-text-color);
   font-size: 1.5rem;
   text-align: center;
   display: block;
@@ -205,7 +207,6 @@ main > header .placeholder {
 }
 
 main > footer {
-  opacity: 0.35;
   margin: 0;
 }
 
@@ -214,7 +215,8 @@ main > footer {
   justify-content: space-between;
   align-items: center;
   padding: var(--large-padding);
-  background-color: #ddd;
+  background-color: var(--dark-background-color);
+  color: var(--light-text-color);
   position: relative;
 }
 
@@ -225,10 +227,11 @@ main > footer {
 a img {
   display: block;
   margin-left: var(--large-padding);
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   cursor: pointer;
   transition: transform 300ms;
+  opacity: 0.6;
 }
 
 a img:hover {

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.wsgi import WSGIMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from ...constants import DASHBOARD_PATH
@@ -13,6 +13,11 @@ PATH = Path(__file__).parent.resolve()
 
 def bootstrap_dashboard(app: FastAPI, function_name: str, documentation: str) -> None:
     dash_app = create_dash_app(function_name, app.version, documentation)
+
+    @app.get("/favicon.ico")
+    @app.get(f"{DASHBOARD_PATH}/_favicon.ico")
+    def get_favicon() -> FileResponse:
+        return FileResponse(PATH / "dashboard/assets/favicon.ico")
 
     app.mount(DASHBOARD_PATH, WSGIMiddleware(dash_app))
 

@@ -19,7 +19,7 @@ def get_footer() -> html.Footer:
                 ]
             ),
             html.A(
-                html.Img(src="/assets/github.png"),
+                html.Img(src="/assets/logo.png"),
                 href=GITHUB_LINK,
                 target="_blank",
             ),
