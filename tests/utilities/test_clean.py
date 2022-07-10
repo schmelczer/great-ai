@@ -99,7 +99,7 @@ def test_everything() -> None:
     """
     cleaned = "Hi% 3 >2 my paper there! cost-effective cost - effective cost-effective 1/2/hi 1/2 italic accented text Bei Jing fi ae IJ ij ff Andras oo 2132 rgrv fd"
 
-    clean(text, convert_to_ascii=True, remove_brackets=True) == cleaned
+    assert clean(text, convert_to_ascii=True, remove_brackets=True) == cleaned
 
 
 def test_empty() -> None:

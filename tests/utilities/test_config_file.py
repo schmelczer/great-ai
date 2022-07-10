@@ -10,6 +10,7 @@ DATA_PATH = Path(__file__).parent.resolve() / "data"
 def test_simple() -> None:
     c = ConfigFile(DATA_PATH / "good.conf")
     assert c.zeroth_key == "test"
+    assert c.my_hashtag == "#great_ai"
     assert c.first_key == "András"
     assert c.second_key == "test 2"
     assert c.third_key == "test= 2=="
@@ -30,6 +31,7 @@ def test_simple_dict() -> None:
     c = ConfigFile(DATA_PATH / "good.conf")
     assert c["zeroth_key"] == "test"
     assert c["first_key"] == "András"
+    assert c["my_hashtag"] == "#great_ai"
     assert c["second_key"] == "test 2"
     assert c["third_key"] == "test= 2=="
     assert (
@@ -49,6 +51,8 @@ def test_string_path() -> None:
     c = ConfigFile(str(DATA_PATH / "good.conf"))
     assert c.zeroth_key == "test"
     assert c.first_key == "András"
+    assert c.my_hashtag == "#great_ai"
+
     assert c.second_key == "test 2"
     assert c.third_key == "test= 2=="
     assert (
@@ -71,7 +75,7 @@ def test_env() -> None:
 
 
 def test_env_not_exists() -> None:
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         ConfigFile(DATA_PATH / "env-bad.conf")
 
 
