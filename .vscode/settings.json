@@ -21,6 +21,7 @@
     "initialising",
     "inplace",
     "ipynb",
+    "langcodes",
     "lemmatize",
     "levelname",
     "levelno",
@@ -68,12 +69,11 @@
   },
   "notebook.output.textLineLimit": 400,
   "python.defaultInterpreterPath": ".env/bin/python",
-  "python.testing.pytestArgs": [
-    "tests"
-  ],
+  "python.testing.pytestArgs": ["tests"],
+  "editor.rulers": [88],
   "python.linting.flake8Enabled": false,
   "python.linting.pylintEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true,
+  "python.testing.pytestEnabled": true
 }

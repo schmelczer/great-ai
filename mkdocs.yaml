@@ -6,6 +6,24 @@ repo_url: https://github.com/schmelczer/great-ai
 repo_name: schmelczer/great-ai
 edit_uri: edit/main/docs/
 
+copyright: GNU General Public License v3 
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/solid/code
+      link: https://schmelczer.dev
+      name: about the author
+    - icon: fontawesome/brands/github
+      link: https://github.com/schmelczer/great-ai
+      name: great-ai on Github
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/repository/docker/schmelczera/great-ai
+      name: great-ai on DockerHub
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/great-ai
+      name:  great-ai on PyPI
+
 theme:
   name: "material"
   custom_dir: docs/overrides
@@ -16,13 +34,17 @@ theme:
     - content.tooltips
   palette:
     - scheme: default
+      primary: light blue
+      media: "(prefers-color-scheme: light)"
       toggle:
-        icon: material/brightness-7 
+        icon: material/lightbulb
         name: Switch to dark mode
 
     - scheme: slate
+      primary: light blue
+      media: "(prefers-color-scheme: dark)"
       toggle:
-        icon: material/brightness-4
+        icon: material/lightbulb-outline
         name: Switch to light mode
 
 watch:
@@ -31,7 +53,13 @@ watch:
 
 plugins:
   - git-revision-date-localized:
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_toc_entry: false
+            show_root_full_path: false
+            heading_level: 3
   - search
   - mkdocs-jupyter:
       include_source: true
@@ -61,14 +89,15 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - Tutorial: 
-    - tutorial/index.md
+    - Tutorial overview: tutorial/index.md
     - tutorial/train.ipynb
     - tutorial/deploy.ipynb
   - User Guides:
-    - Simple AI lifecycle with classification:
-      - "Step 1: data": simple/data.ipynb
-      - "Step 2: train": simple/train.ipynb
-      - "Step 3: deploy": simple/deploy.ipynb
-  - reference.md
+    - how-to-guides/create-service.md
+  - Reference:
+    - reference/index.md
+    - reference/utilities.md
+    - reference/large-file.md
+    - reference/views.md
   - explanation.md
 
