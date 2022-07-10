@@ -2,7 +2,7 @@ import os
 from math import ceil
 from typing import Callable, Iterable, Optional, Sequence, Union
 
-from ..logger import get_logger
+from ..logger.get_logger import get_logger
 from .parallel_map_configuration import ParallelMapConfiguration
 
 logger = get_logger("parallel_map")

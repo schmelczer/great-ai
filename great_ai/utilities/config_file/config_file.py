@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from typing import Dict, ItemsView, Iterator, KeysView, Mapping, Union, ValuesView
 
-from ..logger import get_logger
+from ..logger.get_logger import get_logger
 from .parse_error import ParseError
 from .pattern import pattern
 
@@ -10,9 +10,63 @@ logger = get_logger("ConfigFile")
 
 
 class ConfigFile(Mapping[str, str]):
+    """A small and safe `INI`-style configuration loader with `dict` and `ENV` support.
+
+    The values can be accessed using both dot- and index-notation. It is compatible
+    with the `dict` interface.
+
+    File format example:
+
+    ```toml
+    # comments are allowed everywhere
+
+    key = value  # you can leave or omit whitespace around the equal-sign
+    my_hashtag = "#great_ai" # the r-value can be quoted with " or ' or `.
+
+    my_var = my_default_value  # Default values can be given to env-vars,
+                               # see next line. The default value must come first.
+
+    my_var = ENV:MY_ENV_VAR    # If the value starts with the `ENV:` prefix,
+                               # it is looked up from the environment variables.
+    ```
+
+    Examples:
+        >>> ConfigFile('tests/utilities/data/simple.conf')
+        ConfigFile(path=tests/utilities/data/simple.conf) {'zeroth_key': 'test', 'first_key': 'András'}
+
+        >>> ConfigFile('tests/utilities/data/simple.conf').zeroth_key
+        'test'
+
+        >>> ConfigFile('tests/utilities/data/simple.conf').second_key
+        Traceback (most recent call last):
+        ...
+        KeyError: 'Key `second_key` is not found in configuration file ...
+
+        >>> a = ConfigFile('tests/utilities/data/simple.conf')
+        >>> {**a}
+        {'zeroth_key': 'test', 'first_key': 'András'}
+
+    """
+
     ENVIRONMENT_VARIABLE_KEY_PREFIX = "ENV"
 
     def __init__(self, path: Union[Path, str], *, ignore_missing: bool = False) -> None:
+        """Load and parse a configuration file.
+
+        Everything is eager-loaded, thus, exceptions may be thrown here.
+
+        Args:
+            path: Local path of the configuration file.
+            ignore_missing: Don't raise an exception on missing environment variables.
+
+        Raises:
+            FileNotFoundError: If there is no file at the specified path.
+            ParseError: If the provided file does not conform to the expected format.
+            KeyError: If there is duplication in the keys.
+            ValueError: If an environment variable is referenced but it is not set in
+                the system and `ignore_missing=False`.
+        """
+
         if not isinstance(path, Path):
             path = Path(path)
 
@@ -28,6 +82,7 @@ class ConfigFile(Mapping[str, str]):
 
     @property
     def path(self) -> Path:
+        """Original path from where the configuration was loaded."""
         return self._path
 
     def _parse(self) -> None:
@@ -54,16 +109,20 @@ class ConfigFile(Mapping[str, str]):
             if value.startswith(f"{self.ENVIRONMENT_VARIABLE_KEY_PREFIX}:"):
                 _, value = value.split(":")
                 if value not in os.environ:
-                    issue = f'The value of `{key}` contains the "{self.ENVIRONMENT_VARIABLE_KEY_PREFIX}` prefix but `{value}` is not defined as an environment variable'
+                    issue = f"""The value of `{key}` contains the "{
+                        self.ENVIRONMENT_VARIABLE_KEY_PREFIX
+                    }` prefix but `{value}` is not defined as an environment variable"""
                     if already_exists:
                         logger.warning(
-                            f"{issue}, using the default value defined above (`{self._key_values[key]}`)"
+                            f"""{issue}, using the default value defined above (`{
+                                self._key_values[key]
+                            }`)"""
                         )
                         continue
                     elif self._ignore_missing:
                         logger.warning(issue)
                     else:
-                        raise KeyError(
+                        raise ValueError(
                             f"{issue} and no default value has been provided"
                         )
                 else:

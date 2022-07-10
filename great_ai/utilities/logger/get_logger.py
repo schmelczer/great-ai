@@ -9,6 +9,8 @@ loggers: Dict[str, logging.Logger] = {}
 def get_logger(
     name: str, level: int = logging.INFO, disable_colors: bool = False
 ) -> logging.Logger:
+    """Return a customised logger used throughout the GreatAI codebase."""
+
     if name not in loggers:
         logger = logging.getLogger(name)
         logger.setLevel(level)

@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from ..logger import get_logger
+from ..logger.get_logger import get_logger
 
 logger = get_logger("parallel_map")
 

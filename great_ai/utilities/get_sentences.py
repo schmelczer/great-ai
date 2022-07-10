@@ -16,6 +16,32 @@ def get_sentences(
     true_case: bool = False,
     remove_punctuation: bool = False,
 ) -> List[str]:
+    """Return the list of sentences found in the input text.
+
+    Use [syntok](https://github.com/fnl/syntok) to segment the sentences. Further
+    processing can be enabled with optional arguments.
+
+    Examples:
+        >>> get_sentences('This is a sentence. This is a half')
+        ['This is a sentence.', 'This is a half']
+
+        >>> get_sentences('This is a sentence. This is a half', ignore_partial=True)
+        ['This is a sentence.']
+
+        >>> get_sentences('I like Apple.', true_case=True, remove_punctuation=True)
+        ['i like Apple']
+
+    Args:
+        text: Text to be segmented into sentences.
+        ignore_partial: Filter out sentences that are not capitalised/don't end with a
+        punctuation.
+        true_case: Crude method: lowercase the first word of each sentence.
+        remove_punctuation: Remove all kinds of punctuation.
+
+    Returns:
+        The found sentences (with partial sentences optionally filtered out).
+    """
+
     tokenizer = Tokenizer(
         emit_hyphen_or_underscore_sep=True, replace_not_contraction=False
     )

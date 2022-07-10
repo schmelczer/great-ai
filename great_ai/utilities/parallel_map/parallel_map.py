@@ -83,6 +83,49 @@ def parallel_map(
     concurrency: Optional[int] = None,
     unordered: bool = False,
 ) -> Iterable[Optional[V]]:
+    """Execute a map operation on an iterable stream.
+
+    A custom parallel map operation supporting both synchronous and `async` map
+    functions. The `func` function is serialised with `dill`. Exceptions encountered in
+    the map function are sent to the host process where they are either raised (default)
+    or ignored.
+
+    The new processes are forked if the OS allows it, otherwise, new Python processes
+    are bootstrapped which can incur some startup cost. Each process processes a single
+    chunk at once.
+
+    Examples:
+        >>> import math
+        >>> list(parallel_map(math.sqrt, [9, 4, 1], concurrency=2))
+        [3.0, 2.0, 1.0]
+
+    Args:
+        func: The function that should be applied to each element of `input_values`.
+            It can `async`, in that case, a new event loop is started for each chunk.
+        input_values: An iterable of items that `func` is applied to.
+        chunk_size: Tune the number of items processed in each step. Larger numbers
+            result in smaller communication overhead but less parallelism at the start
+            and end. If `chunk_size` has a `__len__` property, the `chunk_size` is
+            calculated automatically if not given.
+        ignore_exceptions: Ignore chunks if `next()` raises an exception on
+            `input_values`. And return `None` if `func` raised an exception in a worker
+            process.
+        concurrency: Number of new processes to start. Shouldn't be too much more than
+            the number of physical cores.
+        unordered: Do not preserve the order of the elements, yield them as soon as they
+            have been processed. This decreases the latency caused by
+            difficult-to-process items.
+
+    Yields:
+        The next result obtained from applying `func` to each input value. May
+            contain `None`-s if `ignore_exceptions=True`. May have different order than
+            the input if `unordered=True`.
+
+    Raises:
+        WorkerException: If there was an error in the `func` function in a background
+            process and `ignore_exceptions=False`.
+    """
+
     config = get_config(
         function=func,
         input_values=input_values,

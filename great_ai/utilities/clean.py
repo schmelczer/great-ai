@@ -6,7 +6,7 @@ import unidecode
 
 from .data import left_regular_punctuations, right_regular_punctuations
 from .external.pylatexenc.latex2text import LatexNodes2Text
-from .logger import get_logger
+from .logger.get_logger import get_logger
 
 logger = get_logger("clean")
 latex = LatexNodes2Text()
@@ -23,6 +23,43 @@ def clean(
     remove_brackets: bool = False,
     convert_to_ascii: bool = False,
 ) -> str:
+    """Clean all XML, LaTeX, PDF-extraction, and Unicode artifacts from the text.
+
+    The cleaning is quite heavy-weight and can be destructive. However, when working
+    with text, this is usually required to achieve sufficient cleanliness before further
+    processing.
+
+    Optionally, the text can be turned into ASCII. Carefully consider whether this is
+    absolutely needed for your use-case.
+
+    Examples:
+        >>> clean('<h2 color="red">Bj\\\\"{o}rn is \\t \\\\textit{happy} 🙂 &lt;3</h2>')
+        'Björn is happy 🙂 <3'
+
+        >>> clean(
+        ...    '<h2 color="red">Bj\\\\"{o}rn    is \\t \\\\textit{happy} 🙂 &lt;3</h2>',
+        ...    convert_to_ascii=True
+        ... )
+        'Bjorn is happy <3'
+
+        >>> clean(
+        ... '<h2 color="red">Bj\\\\"{o}rn       is \\t \\\\textit{happy} 🙂 &lt;3</h2>',
+        ... ignore_xml=True
+        ... )
+        '<h2 color="red">Björn is happy 🙂 lt;3</h2>'
+
+    Args:
+        text: Text to be cleaned.
+        ignore_xml: Do not process/remove XML-tags.
+        ignore_latex: Do not process/remove LaTeX-tags.
+        remove_brackets: Do not remove brackets ([])
+        convert_to_ascii: Strip (or convert) non-ascii characters.
+
+    Returns:
+        The cleaned input text with sensibly collapsed whitespace and optionally no
+            markup.
+    """
+
     if not ignore_xml:
         text = re.sub(r"<[^>]*>", " ", text)
         text = html.unescape(text)

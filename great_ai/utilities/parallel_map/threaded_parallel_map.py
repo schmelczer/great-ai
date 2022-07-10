@@ -81,6 +81,47 @@ def threaded_parallel_map(
     concurrency: Optional[int] = None,
     unordered: bool = False,
 ) -> Iterable[Optional[V]]:
+    """Execute a map operation on an iterable stream.
+
+    Similar to [parallel_map][great_ai.utilities.parallel_map.parallel_map.parallel_map]
+    but uses threads instead of processes. Hence, it is not helpful in CPU-bound
+    situations.
+
+    A custom parallel map operation supporting both synchronous and `async` map
+    functions. Exceptions encountered in the map function are sent to the host thread
+    where they are either raised (default) or ignored. Each process processes a single
+    chunk at once.
+
+    Examples:
+        >>> list(threaded_parallel_map(lambda x: x ** 2, [1, 2, 3]))
+        [1, 4, 9]
+
+    Args:
+        func: The function that should be applied to each element of `input_values`.
+            It can `async`, in that case, a new event loop is started for each chunk.
+        input_values: An iterable of items that `func` is applied to.
+        chunk_size: Tune the number of items processed in each step. Larger numbers
+            result in smaller communication overhead but less parallelism at the start
+            and end. If `chunk_size` has a `__len__` property, the `chunk_size` is
+            calculated automatically if not given.
+        ignore_exceptions: Ignore chunks if `next()` raises an exception on
+            `input_values`. And return `None` if `func` raised an exception in a worker
+            process.
+        concurrency: Number of new threads to start.
+        unordered: Do not preserve the order of the elements, yield them as soon as they
+            have been processed. This decreases the latency caused by
+            difficult-to-process items.
+
+    Yields:
+        The next result obtained from applying `func` to each input value. May
+            contain `None`-s if `ignore_exceptions=True`. May have different order than
+            the input if `unordered=True`.
+
+    Raises:
+        WorkerException: If there was an error in the `func` function in a background
+            thread and `ignore_exceptions=False`.
+    """
+
     config = get_config(
         function=func,
         input_values=input_values,

@@ -4,7 +4,7 @@ import traceback
 from typing import Dict, Iterable, List, TypeVar, Union
 
 from ..chunk import chunk
-from ..logger import get_logger
+from ..logger.get_logger import get_logger
 from .map_result import MapResult
 from .worker_exception import WorkerException
 

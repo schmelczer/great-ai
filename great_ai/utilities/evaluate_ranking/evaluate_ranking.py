@@ -23,6 +23,26 @@ def evaluate_ranking(
     reverse_order: bool = False,
     plot: bool = True,
 ) -> Dict[T, float]:
+    """Render the Precision-Recall curve of a ranking.
+
+    And improved version of scikit-learn's [PR-curve](https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html#sphx-glr-auto-examples-model-selection-plot-precision-recall-py)
+
+    Args:
+        expected: Expected ordering of the elements
+            (rank if it's an integer, alphabetical if a string)
+        actual_scores: Actual ranking scores (need not be on the same scale as
+            `expected`)
+        title: Title of the plot.
+        disable_interpolation: Do not interpolate.
+        axes: Matplotlib axes for ploting inside a subplot.
+        output_svg: If specified, save the chart as an svg to the given Path.
+        reverse_order: Reverse the ranking specified by `expected`.
+        plot: Display a plot on the screen.
+
+    Returns:
+        Precision values at given recall.
+    """
+
     assert 0 <= target_recall <= 1
 
     if plot and axes is None:

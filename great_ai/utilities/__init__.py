@@ -1,15 +1,16 @@
 from .chunk import chunk
 from .clean import clean
-from .config_file import ConfigFile, ParseError
-from .evaluate_ranking import evaluate_ranking
+from .config_file.config_file import ConfigFile
+from .config_file.parse_error import ParseError
+from .evaluate_ranking.evaluate_ranking import evaluate_ranking
 from .get_sentences import get_sentences
-from .language import english_name_of_language, is_english, predict_language
-from .logger import get_logger
-from .parallel_map import (
-    WorkerException,
-    parallel_map,
-    simple_parallel_map,
-    threaded_parallel_map,
-)
+from .language.english_name_of_language import english_name_of_language
+from .language.is_english import is_english
+from .language.predict_language import predict_language
+from .logger.get_logger import get_logger
+from .parallel_map.parallel_map import parallel_map
+from .parallel_map.simple_parallel_map import simple_parallel_map
+from .parallel_map.threaded_parallel_map import threaded_parallel_map
+from .parallel_map.worker_exception import WorkerException
 from .unchunk import unchunk
 from .unique import unique
