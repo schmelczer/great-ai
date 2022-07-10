@@ -12,9 +12,13 @@ readme = "README.md"
 authors = [{ name = "András Schmelczer", email = "andras@schmelczer.dev" }]
 license = { file = "LICENSE" }
 classifiers = [
-    "Programming Language :: Python",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Natural Language :: English",
 ]
 keywords = ["SE4ML", "MLOps", "AI engineering", "general", "robust", "end-to-end", "automated", "trustworthy", "ai", "deployment"]
 requires-python = ">= 3.8"
