@@ -49,6 +49,8 @@ class GreatAI(Generic[T, V]):
         self,
         func: Callable[..., Union[V, Awaitable[V]]],
     ):
+        """Do not call this function directly, use GreatAI.create instead."""
+
         func = automatically_decorate_parameters(func)
         get_function_metadata_store(func).is_finalised = True
 
@@ -94,6 +96,43 @@ class GreatAI(Generic[T, V]):
     def create(
         func: Union[Callable[..., Awaitable[V]], Callable[..., V]],
     ) -> Union["GreatAI[Awaitable[Trace[V]], V]", "GreatAI[Trace[V], V]"]:
+        """Decorate a function by wrapping it in a GreatAI instance.
+
+        The function can be typed, synchronous or async. If it has
+        unwrapped parameters (parameters not affected by a @parameter
+        or @use_model decorator), those will be automatically wrapped.
+
+        The return value is replaced by a Trace (or Awaitable[Trace]),
+        while the original return value is available under the `.output`
+        property.
+
+        For configuration options, see great_ai.configure.
+
+        Examples:
+            >>> @GreatAI.create
+            ... def my_function(a):
+            ...     return a + 2
+            >>> my_function(3).output
+            5
+
+            >>> @GreatAI.create
+            ... def my_function(a: int) -> int:
+            ...     return a + 2
+            >>> my_function(3)
+            Trace[int]...
+
+            >>> my_function('3').output
+            Traceback (most recent call last):
+                ...
+            TypeError: type of a must be int; got str instead
+
+        Args:
+            func: The prediction function that needs to be decorated.
+
+        Returns:
+            A GreatAI instance wrapping `func`.
+
+        """
         return GreatAI[Trace[V], V](
             func,
         )

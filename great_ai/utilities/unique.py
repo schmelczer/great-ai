@@ -11,8 +11,10 @@ def unique(values: Iterable[T], *, key: Callable[[T], Any] = lambda v: v) -> Lis
     Examples:
         >>> unique([1, 1, 5, 3, 3])
         [1, 5, 3]
+
         >>> unique([{'a': 1, 'b': 2}, {'a': 1, 'b': 3}], key=lambda v: v['a'])
         [{'a': 1, 'b': 2}]
+
         >>> unique([{'a': 1, 'b': 2}, {'a': 1, 'b': 3}], key=lambda v: v['b'])
         [{'a': 1, 'b': 2}, {'a': 1, 'b': 3}]
 

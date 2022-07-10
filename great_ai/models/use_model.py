@@ -30,6 +30,38 @@ def use_model(
     version: Union[int, Literal["latest"]] = "latest",
     model_kwarg_name: str = "model",
 ) -> Callable[[F], F]:
+    """Inject a model into a function.
+
+    Load a model specified by `key` and `version` using the
+    currently active `LargeFile` implementation. If it's a
+    single object, it is deserialised using `dill`. If it's
+    a directory of files, a `pathlib.Path` instance is given.
+
+    By default, the function's `model` parameter is replaced
+    by the loaded model. This can be customised by changing
+    `model_kwarg_name`.
+
+    Multiple models can be loaded by decorating the same
+    function with `use_model` multiple times.
+
+    Examples:
+            >>> from great_ai import save_model
+            >>> save_model(3, 'my_number')
+            'my_number:...'
+            >>> @use_model('my_number')
+            ... def my_function(a, model):
+            ...     return a + model
+            >>> my_function(4)
+            7
+
+        Args:
+            key: The model's name as stored by the LargeFile implementation.
+            version: The model's version as stored by the LargeFile implementation.
+            model_kwarg_name: the parameter to use for injecting the loaded model
+        Returns:
+            A decorator for model injection.
+    """
+
     assert (
         isinstance(version, int) or version == "latest"
     ), "Only integers or the string literal `latest` is allowed as a version"

@@ -17,6 +17,35 @@ def parameter(
     validator: Callable[[Any], bool] = lambda _: True,
     disable_logging: bool = False,
 ) -> Callable[[F], F]:
+    """Control the validation and logging of function parameters.
+
+    Examples:
+        >>> @parameter('a')
+        ... def my_function(a: int):
+        ...     return a + 2
+        >>> my_function(4)
+        6
+        >>> my_function('3')
+        Traceback (most recent call last):
+            ...
+        TypeError: type of a must be int; got str instead
+
+        >>> @parameter('positive_a', validator=lambda v: v > 0)
+        ... def my_function(positive_a: int):
+        ...     return a + 2
+        >>> my_function(-1)
+        Traceback (most recent call last):
+            ...
+        great_ai.errors.argument_validation_error.ArgumentValidationError: ...
+
+    Args:
+        parameter_name: Name of parameter to consider
+        validator: Optional validator to run against the concrete argument. ArgumentValidationError is thrown when the return value is False.
+        disable_logging: Do not save the value in any active TracingContext.
+    Returns:
+        A decorator for argument validation.
+    """
+
     def decorator(func: F) -> F:
         get_function_metadata_store(func).input_parameter_names.append(parameter_name)
         assert_function_is_not_finalised(func)
