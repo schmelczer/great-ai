@@ -32,17 +32,13 @@ def use_model(
 ) -> Callable[[F], F]:
     """Inject a model into a function.
 
-    Load a model specified by `key` and `version` using the
-    currently active `LargeFile` implementation. If it's a
-    single object, it is deserialised using `dill`. If it's
-    a directory of files, a `pathlib.Path` instance is given.
+    Load a model specified by `key` and `version` using the currently active `LargeFile`
+    implementation. If it's a single object, it is deserialised using `dill`. If it's a
+    directory of files, a `pathlib.Path` instance is given.
 
-    By default, the function's `model` parameter is replaced
-    by the loaded model. This can be customised by changing
-    `model_kwarg_name`.
-
-    Multiple models can be loaded by decorating the same
-    function with `use_model` multiple times.
+    By default, the function's `model` parameter is replaced by the loaded model. This
+    can be customised by changing `model_kwarg_name`. Multiple models can be loaded by
+    decorating the same function with `use_model` multiple times.
 
     Examples:
             >>> from great_ai import save_model

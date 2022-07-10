@@ -23,7 +23,7 @@ from tqdm.cli import tqdm
 from ..constants import DASHBOARD_PATH
 from ..context import get_context
 from ..helper import freeze_arguments, get_function_metadata_store, snake_case_to_text
-from ..models import model_versions
+from ..models.use_model import model_versions
 from ..parameters.automatically_decorate_parameters import (
     automatically_decorate_parameters,
 )
@@ -58,7 +58,10 @@ class GreatAI(Generic[T, V]):
         self._wrapped_func = wraps(func)(freeze_arguments(self._cached_func))
 
         wraps(func)(self)
-        self.__doc__ = f"GreatAI wrapper for interacting with the `{self.__name__}` function.\n\n{dedent(self.__doc__ or '')}"
+        self.__doc__ = (
+            f"GreatAI wrapper for interacting with the `{self.__name__}` "
+            + f"function.\n\n{dedent(self.__doc__ or '')}"
+        )
 
         self.version = str(get_context().version)
         flat_model_versions = ".".join(f"{k}-v{v}" for k, v in model_versions)
@@ -79,7 +82,7 @@ class GreatAI(Generic[T, V]):
     @overload
     @staticmethod
     def create(  # type: ignore
-        # "Overloaded function signatures 1 and 2 overlap with incompatible return types"
+        # Overloaded function signatures 1 and 2 overlap with incompatible return types
         # https://github.com/python/mypy/issues/12759
         func: Callable[..., Awaitable[V]],
     ) -> "GreatAI[Awaitable[Trace[V]], V]":
@@ -131,8 +134,8 @@ class GreatAI(Generic[T, V]):
 
         Returns:
             A GreatAI instance wrapping `func`.
-
         """
+
         return GreatAI[Trace[V], V](
             func,
         )

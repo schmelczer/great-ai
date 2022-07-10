@@ -1,6 +1,6 @@
 from typing import List
 
-from ..helper import HashableBaseModel
+from ..hashable_base_model import HashableBaseModel
 from .classification_output import ClassificationOutput
 
 

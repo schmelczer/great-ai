@@ -207,10 +207,6 @@ main > header .placeholder {
 }
 
 main > footer {
-  margin: 0;
-}
-
-main > footer {
   display: flex;
   justify-content: space-between;
   align-items: center;

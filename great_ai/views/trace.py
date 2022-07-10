@@ -3,7 +3,7 @@ from typing import Any, Dict, Generic, List, Optional, TypeVar
 
 from pydantic import Extra
 
-from ..helper import HashableBaseModel
+from .hashable_base_model import HashableBaseModel
 from .model import Model
 
 T = TypeVar("T")

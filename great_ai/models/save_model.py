@@ -19,7 +19,7 @@ def save_model(
             >>> from great_ai import use_model
             >>> save_model(3, 'my_number')
             'my_number:...'
-            
+
             >>> @use_model('my_number')
             ... def my_function(a, model):
             ...     return a + model

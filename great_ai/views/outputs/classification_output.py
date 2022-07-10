@@ -1,6 +1,6 @@
 from typing import Any, Optional, Union
 
-from ..helper import HashableBaseModel
+from ..hashable_base_model import HashableBaseModel
 
 
 class ClassificationOutput(HashableBaseModel):
