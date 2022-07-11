@@ -1,6 +1,6 @@
-# How to instantiate a GreatAI service
+# How to create a GreatAI service
 
-The core value of the `great-ai` library lies in its [great_ai.deploy.GreatAI][] class. In order to take advantage of it, you need to create an instance wrapping your code.
+The core value of `great-ai` lies in its [GreatAI][great_ai.deploy.GreatAI] class. In order to take advantage of it, you need to create an instance wrapping your code.
 
 Let's say that you have the following greeter function:
 
@@ -9,7 +9,7 @@ def my_greeter_function(your_name):
     return f'Hi {your_name}!'
 ```
 
-You can simply decorate (wrap) this function with the `GreatAI.create` factory.
+You can simply decorate (wrap) this function using the [@GreatAI.create][great_ai.deploy.GreatAI.create] factory.
 
 ```python title="greeter.py"
 from great_ai import GreatAI
@@ -20,7 +20,7 @@ def greeter(your_name):
 ```
 
 ??? info "Why not simply use `@GreatAI?`"
-    The purpose of the `GreatAI.create` is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for `__new__` is lacking in MyPy, thus, a static factory method is used instead.
+    The purpose of the [@GreatAI.create][great_ai.deploy.GreatAI.create] is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for `__new__` is lacking in MyPy, thus, a static factory method is used instead.
 
 ## With types
 
@@ -52,11 +52,11 @@ async def async_greeter(your_name: str) -> str:
 
 ## With decorators
 
-GreatAI can decorate already decorated functions. The only restriction is that `@GreatAI.create` always have to come last. There are two built-in decorators that you can use to customise your function.
+GreatAI can decorate already decorated functions. The only restriction is that [@GreatAI.create][great_ai.deploy.GreatAI.create]  always has to come last. There are two built-in decorators that you can use to customise your function but you can you use any third-party decorator as well.
 
 ### Using `use_model`
 
-If you have previously saved a model with `save_model`, you can inject it into your function by calling `use_model`.
+If you have previously saved a model with [save_model][great_ai.save_model], you can inject it into your function by calling [@use_model][great_ai.use_model].
 
 ```python title="greeter_with_model.py"
 from great_ai import GreatAI, use_model
@@ -72,15 +72,14 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 1.  By default, the parameter named `model` will be replaced by the loaded model. This behaviour can be customised by setting the `model_kwarg_name`. This way, even multiple models can be injected into a single function.
 
 !!! important
-    You must call `@use_model` before `GreatAI.create`. Feel free to use `@use_model` in other places of the code base, it works equally well outside of GreatAI services. 
-
+    You must call [@use_model][great_ai.use_model] before [@GreatAI.create][great_ai.deploy.GreatAI.create]. Feel free to use [@use_model][great_ai.use_model] in other places of the codebase, it works equally well outside of GreatAI services. 
 
 ### Using `parameter`
 
-If you wish to turn of logging or specify custom validation for your parameters, you can use the `@parameter` decorator.
+If you wish to turn of logging or specify custom validation for your parameters, you can use the [@parameter][great_ai.parameter] decorator.
 
 !!! note
-    By default, all parameters that are not affected by an explicit `@parameter` or `@use_model` decorator, are automatically decorated with `@parameter` when `GreatAI.create` is called.
+    By default, all parameters that are not affected by an explicit [@parameter][great_ai.parameter] or [@use_model][great_ai.use_model] are automatically decorated with [@parameter][great_ai.parameter] when [@GreatAI.create][great_ai.deploy.GreatAI.create] is called.
 
 ```python title="greeter_with_validation.py"
 from great_ai import GreatAI, use_model
@@ -94,8 +93,7 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 ```
 
 !!! important
-    You must call `@parameter` before `GreatAI.create`. Feel free to use `@parameter` in other places of the code base, it works equally well outside of GreatAI services. 
-
+    You must call [@parameter][great_ai.parameter] before [@GreatAI.create][great_ai.deploy.GreatAI.create]. Feel free to use [@parameter][great_ai.parameter] in other places of the codebase, it works equally well outside of GreatAI services. 
 
 ## Complex example
 
@@ -107,7 +105,7 @@ from great_ai import save_model, GreatAI, parameter, use_model
 save_model(4, 'secret-number')  #(1)
 
 @GreatAI.create
-@parameter('positive_number', validator=lambda n: n > 0)
+@parameter('positive_number', validator=lambda n: n > 0, disable_logging=True)
 @use_model('secret-number', version='latest', model_kwarg_name='secret')
 def add_number(positive_number: int, secret: int) -> int:
     return positive_number + secret
