@@ -29,12 +29,12 @@ GREAT_AI_LOGGING_CONFIG = {
     **LOGGING_CONFIG,
     "formatters": {
         "default": {
-            "()": "great_ai.utilities.logger.CustomFormatter",
+            "()": "great_ai.utilities.logger.get_logger.CustomFormatter",
             "fmt": "%(asctime)s | %(levelname)8s | %(message)s",
         },
         "access": {
-            "()": "great_ai.utilities.logger.CustomFormatter",
-            "fmt": "%(asctime)s | %(levelname)8s | %(message)s",  # noqa: E501
+            "()": "great_ai.utilities.logger.get_logger.CustomFormatter",
+            "fmt": "%(asctime)s | %(levelname)8s | %(message)s",
         },
     },
 }
