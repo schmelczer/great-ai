@@ -17,6 +17,7 @@ def call_remote_great_ai(
     base_uri: str,
     data: Mapping[str, Any],
     retry_count: int = 4,
+    timeout_in_seconds: Optional[int] = 300,
     model_class: Optional[Type[T]] = None,
 ) -> Trace[T]:
     try:
@@ -28,7 +29,11 @@ def call_remote_great_ai(
         pass
 
     future = call_remote_great_ai_async(
-        base_uri=base_uri, data=data, retry_count=retry_count, model_class=model_class
+        base_uri=base_uri,
+        data=data,
+        retry_count=retry_count,
+        timeout_in_seconds=timeout_in_seconds,
+        model_class=model_class,
     )
 
     return asyncio.run(future)
