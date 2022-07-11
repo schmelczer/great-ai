@@ -437,6 +437,90 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/configure-service/" class="md-nav__link">
+        How to configure GreatAI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/use-service/" class="md-nav__link">
+        How to use a GreatAI service
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/handle-training-data/" class="md-nav__link">
+        How to handle training data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/large_file/" class="md-nav__link">
+        How to use LargeFile
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/call_remote.md" class="md-nav__link">
+        None
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/scraping/" class="md-nav__link">
+        Scraping
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -478,7 +562,7 @@
   
     <li class="md-nav__item">
       <a href="../reference/" class="md-nav__link">
-        Reference
+        GreatAI reference
       </a>
     </li>
   
@@ -522,6 +606,115 @@
       <a href="../reference/views/" class="md-nav__link">
         View models
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Examples
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Examples" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Examples
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Explainable Naive Bayes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Explainable Naive Bayes" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Explainable Naive Bayes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/simple/data/" class="md-nav__link">
+        Train a domain classifier on the semantic scholar dataset
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/simple/train/" class="md-nav__link">
+        Train a domain classifier on the semantic scholar dataset
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/simple/deploy/" class="md-nav__link">
+        Train a domain classifier on the semantic scholar dataset
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -657,7 +850,7 @@
 </div>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>
 <h3 id="the-training-notebook">The <a href="train/">training notebook</a><a class="headerlink" href="#the-training-notebook" title="Permanent link">#</a></h3>
-<p>We load and preprocess the dataset while relying on [great_ai.utilities.clean][] for the heavy-lifting. Additionally, the preprocessing is parallelised using <a class="autorefs autorefs-internal" href="../reference/utilities/#great_ai.utilities.parallel_map.simple_parallel_map.simple_parallel_map">great_ai.utilities.simple_parallel_map</a></p>
+<p>We load and preprocess the dataset while relying on [great_ai.utilities.clean][] for the heavy-lifting. Additionally, the preprocessing is parallelised using <a class="autorefs autorefs-internal" href="../reference/utilities/#great_ai.utilities.simple_parallel_map">great_ai.utilities.simple_parallel_map</a></p>
 <p>After training and evaluating a model, it is exported using <a class="autorefs autorefs-internal" href="../reference/#great_ai.save_model">great_ai.save_model</a>.</p>
 <details class="tip">
 <summary>Remote storage</summary>
@@ -692,14 +885,14 @@
 <li><a class="autorefs autorefs-internal" href="../reference/#great_ai.use_model">@use_model</a> loads and injects your model into the <code>predict_domain</code> function's <code>model</code> argument.
     You can freely reference it knowing that it is always given to the function.</li>
 </ol>
-<p>Finally, we deploy the model, inference function, and the GreatAI wrapping all of these. For that we either use: <code>great-ai deploy.ipynb</code> or build a Docker image.</p>
+<p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened-service.</a></p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 10, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 11, 2022</span>
       
     
   </small>

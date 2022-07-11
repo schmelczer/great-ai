@@ -1,3 +1,5 @@
 # View models
 
-::: great_ai.views.trace.Trace
+::: great_ai.Trace
+    options:
+        show_root_heading: true
