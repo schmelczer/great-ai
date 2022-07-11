@@ -1,5 +1,6 @@
 from contextvars import ContextVar
 from datetime import datetime
+from time import perf_counter
 from types import TracebackType
 from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar, cast
 from uuid import uuid4
@@ -17,7 +18,8 @@ class TracingContext(Generic[T]):
         self._models: List[Model] = []
         self._values: Dict[str, Any] = {}
         self._trace: Optional[Trace[T]] = None
-        self._start_time = datetime.utcnow()
+        self._start_datetime = datetime.utcnow()
+        self._start_time = perf_counter()
         self._name = function_name
 
     def log_value(self, name: str, value: Any) -> None:
@@ -31,12 +33,12 @@ class TracingContext(Generic[T]):
     ) -> Trace[T]:
         assert self._trace is None, "has been already finalised"
 
-        delta_time = (datetime.utcnow() - self._start_time).microseconds / 1000
+        delta_time = round((perf_counter() - self._start_time) * 1000, 4)
         self._trace = cast(
             Trace[T],
             Trace(  # avoid ValueError: "Trace" object has no field "__orig_class__"
                 trace_id=str(uuid4()),
-                created=self._start_time.isoformat(),
+                created=self._start_datetime.isoformat(),
                 original_execution_time_ms=delta_time,
                 logged_values=self._values,
                 models=self._models,
