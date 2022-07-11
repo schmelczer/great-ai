@@ -17,7 +17,7 @@
     
     
       
-        <title>How to instantiate a GreatAI service - GreatAI documentation</title>
+        <title>How to create a GreatAI service - GreatAI documentation</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-to-instantiate-a-greatai-service" class="md-skip">
+        <a href="#how-to-create-a-greatai-service" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              How to instantiate a GreatAI service
+              How to create a GreatAI service
             
           </span>
         </div>
@@ -364,12 +364,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          How to instantiate a GreatAI service
+          How to create a GreatAI service
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        How to instantiate a GreatAI service
+        How to create a GreatAI service
       </a>
       
         
@@ -650,13 +650,13 @@
 
 
 
-<h1 id="how-to-instantiate-a-greatai-service">How to instantiate a GreatAI service<a class="headerlink" href="#how-to-instantiate-a-greatai-service" title="Permanent link">#</a></h1>
-<p>The core value of the <code>great-ai</code> library lies in its <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">great_ai.deploy.GreatAI</a> class. In order to take advantage of it, you need to create an instance wrapping your code.</p>
+<h1 id="how-to-create-a-greatai-service">How to create a GreatAI service<a class="headerlink" href="#how-to-create-a-greatai-service" title="Permanent link">#</a></h1>
+<p>The core value of <code>great-ai</code> lies in its <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> class. In order to take advantage of it, you need to create an instance wrapping your code.</p>
 <p>Let's say that you have the following greeter function:</p>
 <div class="highlight"><span class="filename">greeter.py</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span> <span class="nf">my_greeter_function</span><span class="p">(</span><span class="n">your_name</span><span class="p">):</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
 </code></pre></div>
-<p>You can simply decorate (wrap) this function with the <code>GreatAI.create</code> factory.</p>
+<p>You can simply decorate (wrap) this function using the <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> factory.</p>
 <div class="highlight"><span class="filename">greeter.py</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
@@ -665,7 +665,7 @@
 </code></pre></div>
 <details class="info">
 <summary>Why not simply use <code>@GreatAI?</code></summary>
-<p>The purpose of the <code>GreatAI.create</code> is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for <code>__new__</code> is lacking in MyPy, thus, a static factory method is used instead.</p>
+<p>The purpose of the <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for <code>__new__</code> is lacking in MyPy, thus, a static factory method is used instead.</p>
 </details>
 <h2 id="with-types">With types<a class="headerlink" href="#with-types" title="Permanent link">#</a></h2>
 <p><a href="https://realpython.com/python-type-checking/" target="_blank">Type annotating your codebase</a> can save you from lots of trivial mistakes, that's why it's highly advised. Simply add the expected types to your function's signature.</p>
@@ -687,9 +687,9 @@
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
 </code></pre></div>
 <h2 id="with-decorators">With decorators<a class="headerlink" href="#with-decorators" title="Permanent link">#</a></h2>
-<p>GreatAI can decorate already decorated functions. The only restriction is that <code>@GreatAI.create</code> always have to come last. There are two built-in decorators that you can use to customise your function.</p>
+<p>GreatAI can decorate already decorated functions. The only restriction is that <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>  always has to come last. There are two built-in decorators that you can use to customise your function but you can you use any third-party decorator as well.</p>
 <h3 id="using-use_model">Using <code>use_model</code><a class="headerlink" href="#using-use_model" title="Permanent link">#</a></h3>
-<p>If you have previously saved a model with <code>save_model</code>, you can inject it into your function by calling <code>use_model</code>.</p>
+<p>If you have previously saved a model with <a class="autorefs autorefs-internal" href="../../reference/#great_ai.save_model">save_model</a>, you can inject it into your function by calling <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a>.</p>
 <div class="highlight"><span class="filename">greeter_with_model.py</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">use_model</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
@@ -704,13 +704,13 @@
 </ol>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>You must call <code>@use_model</code> before <code>GreatAI.create</code>. Feel free to use <code>@use_model</code> in other places of the code base, it works equally well outside of GreatAI services. </p>
+<p>You must call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> before <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>. Feel free to use <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> in other places of the codebase, it works equally well outside of GreatAI services. </p>
 </div>
 <h3 id="using-parameter">Using <code>parameter</code><a class="headerlink" href="#using-parameter" title="Permanent link">#</a></h3>
-<p>If you wish to turn of logging or specify custom validation for your parameters, you can use the <code>@parameter</code> decorator.</p>
+<p>If you wish to turn of logging or specify custom validation for your parameters, you can use the <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> decorator.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>By default, all parameters that are not affected by an explicit <code>@parameter</code> or <code>@use_model</code> decorator, are automatically decorated with <code>@parameter</code> when <code>GreatAI.create</code> is called.</p>
+<p>By default, all parameters that are not affected by an explicit <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> are automatically decorated with <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> when <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> is called.</p>
 </div>
 <div class="highlight"><span class="filename">greeter_with_validation.py</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">use_model</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
@@ -723,7 +723,7 @@
 </code></pre></div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>You must call <code>@parameter</code> before <code>GreatAI.create</code>. Feel free to use <code>@parameter</code> in other places of the code base, it works equally well outside of GreatAI services. </p>
+<p>You must call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> before <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>. Feel free to use <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> in other places of the codebase, it works equally well outside of GreatAI services. </p>
 </div>
 <h2 id="complex-example">Complex example<a class="headerlink" href="#complex-example" title="Permanent link">#</a></h2>
 <p>Refer to the following example summarising the options you have when instantiating a GreatAI service.</p>
@@ -732,7 +732,7 @@
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">save_model</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;secret-number&#39;</span><span class="p">)</span>  <span class="c1">#(1)</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nd">@parameter</span><span class="p">(</span><span class="s1">&#39;positive_number&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nd">@parameter</span><span class="p">(</span><span class="s1">&#39;positive_number&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">disable_logging</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nd">@use_model</span><span class="p">(</span><span class="s1">&#39;secret-number&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="n">model_kwarg_name</span><span class="o">=</span><span class="s1">&#39;secret&#39;</span><span class="p">)</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">def</span> <span class="nf">add_number</span><span class="p">(</span><span class="n">positive_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="k">return</span> <span class="n">positive_number</span> <span class="o">+</span> <span class="n">secret</span>
