@@ -70,4 +70,4 @@ def predict_domain(sentence, model):
 1.  [@use_model][great_ai.use_model] loads and injects your model into the `predict_domain` function's `model` argument.
     You can freely reference it knowing that it is always given to the function.
 
-Finally, we deploy the model, inference function, and the GreatAI wrapping all of these. For that we either use: `great-ai deploy.ipynb` or build a Docker image.
+Finally, we test the model's inference function through the GreatAI dashboard. [The only thing left is to deploy the hardened-service.](/how-to-guides/use-service)

@@ -1,4 +1,4 @@
-# Reference
+# GreatAI reference
 
 ```python
 from great_ai import *
@@ -52,5 +52,19 @@ from great_ai import *
         show_root_heading: true
 
 ::: great_ai.delete_ground_truth
+    options:
+        show_root_heading: true
+
+## Tracing databases
+
+::: great_ai.TracingDatabaseDriver
+    options:
+        show_root_heading: true
+
+::: great_ai.MongoDbDriver
+    options:
+        show_root_heading: true
+
+::: great_ai.ParallelTinyDbDriver
     options:
         show_root_heading: true

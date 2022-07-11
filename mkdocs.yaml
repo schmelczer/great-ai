@@ -94,10 +94,24 @@ nav:
     - tutorial/deploy.ipynb
   - User Guides:
     - how-to-guides/create-service.md
+    - how-to-guides/configure-service.md
+    - how-to-guides/use-service.md
+    - how-to-guides/handle-training-data.md
+    - how-to-guides/large_file.md
+    - how-to-guides/call_remote.md
+    - how-to-guides/scraping.ipynb
   - Reference:
     - reference/index.md
     - reference/utilities.md
     - reference/large-file.md
     - reference/views.md
+  - Examples: 
+    - Explainable Naive Bayes: 
+      - examples/simple/data.ipynb
+      - examples/simple/train.ipynb
+      - examples/simple/deploy.ipynb
+    # - Explainable SciBERT: 
+    #   - examples/scibert/data.ipynb
+    #   - examples/scibert/train.ipynb
+    #   - examples/scibert/deploy.ipynb
   - explanation.md
-

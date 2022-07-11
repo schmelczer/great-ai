@@ -111,5 +111,5 @@ However, research indicates that professionals rarely use them. This may be due 
 
 GreatAI has been battle-tested on the core platform services of [ScoutinScience](https://www.scoutinscience.com/){ target=_blank }.
 
-![ScoutinScience logo](media/scoutinscience.svg#only-light)
-![ScoutinScience logo](media/scoutinscience-white.svg#only-dark)
+![ScoutinScience logo](media/scoutinscience.svg#only-light){ loading=lazy }
+![ScoutinScience logo](media/scoutinscience-white.svg#only-dark){ loading=lazy }

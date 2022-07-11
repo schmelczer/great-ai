@@ -1,4 +1,4 @@
-# [open(S3)](https://pypi.org/project/open-large/)
+# How to use LargeFile
 
 Storing, versioning, and downloading files from S3 made as easy as using `open()` in Python. Caching included.
 
