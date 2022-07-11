@@ -62,7 +62,7 @@ If you have previously saved a model with `save_model`, you can inject it into y
 from great_ai import GreatAI, use_model
 
 @GreatAI.create
-@use_model('name_of_my_model', version='latest') #(1)
+@use_model('name_of_my_model', version='latest')  #(1)
 def type_safe_greeter(your_name: str, model) -> str:
     return f'Hi {your_name}!'
 
@@ -82,7 +82,7 @@ If you wish to turn of logging or specify custom validation for your parameters,
 !!! note
     By default, all parameters that are not affected by an explicit `@parameter` or `@use_model` decorator, are automatically decorated with `@parameter` when `GreatAI.create` is called.
 
-```python "greeter_with_validation.py"
+```python title="greeter_with_validation.py"
 from great_ai import GreatAI, use_model
 
 @GreatAI.create
@@ -104,7 +104,7 @@ Refer to the following example summarising the options you have when instantiati
 ```python title="complex.py"
 from great_ai import save_model, GreatAI, parameter, use_model
 
-save_model(4, 'secret-number') #(2)
+save_model(4, 'secret-number')  #(1)
 
 @GreatAI.create
 @parameter('positive_number', validator=lambda n: n > 0)
@@ -115,4 +115,4 @@ def add_number(positive_number: int, secret: int) -> int:
 assert add_number(1).output == 5
 ```
 
-2.  Refer to [storing models](/how-to-guides/store-models) for specifying where to store your models. 
+1.  Refer to [storing models](/how-to-guides/store-models) for specifying where to store your models. 
