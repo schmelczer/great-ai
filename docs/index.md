@@ -4,12 +4,12 @@
 </div>
 
 [![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
-[![Sonar technical debt](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=sqale_index)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 [![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 [![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/test.yml)
-[![Publish on PyPI](https://github.com/schmelczer/great-ai/actions/workflows/publish.yaml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/publish.yaml)
-[![Publish on DockerHub](https://github.com/schmelczer/great-ai/actions/workflows/docker.yaml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/docker.yaml)
+[![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
 [![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
+![Docker Pulls](https://img.shields.io/docker/pulls/schmelczera/great-ai)
+
 
 Applying AI is becoming increasingly easier but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps fixing this by allowing you to ==easily transform your prototype AI code into production-ready software==.
 
@@ -42,6 +42,7 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 - [x] Deployable Jupyter Notebooks
 - [x] Dashboard for high-level overview and analysing traces
 - [ ] Support for direct file input
+- [ ] Support for PostgreSQL
 
 ## Hello world
 
@@ -85,7 +86,7 @@ great-ai hello-world.py
 
 ![scope of GreatAI](media/scope-simple.drawio.svg)
 
-GreatAI fits between the prototype and deployment phase of your (or your organisation's) AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented aiming to achieve the following attributes:
+GreatAI fits between the prototype and deployment phases of your (or your organisation's) AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented aiming to achieve the following attributes:
 
 - **G**eneral: use any Python library without restriction
 - **R**obust: have error-handling and well-tested utilities out-of-the-box 
