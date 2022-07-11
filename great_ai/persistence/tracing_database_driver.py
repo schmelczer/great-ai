@@ -8,6 +8,8 @@ from ..views import Filter, SortBy, Trace
 
 
 class TracingDatabaseDriver(ABC):
+    """Interface expected from a database to be used for storing traces."""
+
     is_production_ready: bool
     initialized: bool = False
 

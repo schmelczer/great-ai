@@ -17,6 +17,14 @@ operator_mapping = {"=": "eq", "!=": "ne", "<": "lt", "<=": "le", ">": "gt", ">=
 
 
 class ParallelTinyDbDriver(TracingDatabaseDriver):
+    """TracingDatabaseDriver with TinyDB as a backend.
+
+    Saves the database as a JSON into a single file. Highly inefficient on inserting,
+    not advised for production use.
+
+    A multiprocessing lock protects the database file to avoid parallelisation issues.
+    """
+
     is_production_ready = False
     path_to_db = Path(DEFAULT_TRACING_DB_FILENAME)
 

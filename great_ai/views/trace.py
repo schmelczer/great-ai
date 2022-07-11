@@ -82,4 +82,6 @@ class Trace(Generic[T], HashableBaseModel):
         }
 
     def __repr__(self) -> str:
-        return f"Trace[{type(self.output).__name__}]({pformat(self.dict(), indent=2, compact=True)})"
+        return f"""Trace[{type(self.output).__name__}]({
+            pformat(self.dict(), indent=2, compact=True).replace('{ ', '{', 1)
+        })"""

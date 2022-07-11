@@ -42,8 +42,22 @@ V = TypeVar("V")
 
 
 class GreatAI(Generic[T, V]):
-    __name__: str
-    __doc__: str
+    """Wrapper for a prediction function providing the implementation of SE4ML best-practices.
+
+    Provides caching (with argument freezing), a TracingContext during execution, the
+    scaffolding of HTTP endpoints using FastAPI and a dashboard using Dash.
+
+    Supports wrapping async and synchronous functions while also maintaining correct
+    typing.
+
+    Attributes:
+        app: FastAPI instance wrapping the scaffolded endpoints and the Dash app.
+        version: SemVer derived from the app's version and the model names and versions
+            registered through use_model.
+    """
+
+    __name__: str  # help for MyPy
+    __doc__: str  # help for MyPy
 
     def __init__(
         self,
@@ -102,14 +116,15 @@ class GreatAI(Generic[T, V]):
         """Decorate a function by wrapping it in a GreatAI instance.
 
         The function can be typed, synchronous or async. If it has
-        unwrapped parameters (parameters not affected by a @parameter
-        or @use_model decorator), those will be automatically wrapped.
+        unwrapped parameters (parameters not affected by a
+        [@parameter][great_ai.parameter] or [@use_model][great_ai.use_model] decorator),
+        those will be automatically wrapped.
 
         The return value is replaced by a Trace (or Awaitable[Trace]),
         while the original return value is available under the `.output`
         property.
 
-        For configuration options, see great_ai.configure.
+        For configuration options, see [great_ai.configure][].
 
         Examples:
             >>> @GreatAI.create
@@ -173,6 +188,23 @@ class GreatAI(Generic[T, V]):
         unpack_arguments: bool = False,
         do_not_persist_traces: bool = False,
     ) -> List[Trace[V]]:
+        """Map the wrapped function over a list of input_values (`batch`).
+
+        A wrapper over [parallel_map][great_ai.utilities.parallel_map]
+        providing type-safety and a progressbar through tqdm.
+
+        Args:
+            batch: A list of arguments for the original (wrapped) function. If the
+                function expects multiple arguments, provide a list of tuples and set
+                `unpack_arguments=True`.
+            concurrency: Number of processes to start. Don't set it too much higher than
+                the number of available CPU cores.
+            unpack_arguments: Expect a list of tuples and unpack the tuples before
+                giving them to the wrapped function.
+            do_not_persist_traces: Don't save the traces in the database. Useful for
+                evaluations run part of the CI.
+        """
+
         wrapped_function = self._wrapped_func
 
         def inner(value: Any) -> T:

@@ -18,7 +18,16 @@ operator_mapping = {
 }
 
 
-class MongodbDriver(TracingDatabaseDriver):
+class MongoDbDriver(TracingDatabaseDriver):
+    """TracingDatabaseDriver implementation using MongoDB as a backend.
+
+    A production-ready database driver suitable for efficiently handling semi-structured
+    data.
+
+    Checkout [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register) for a hosted
+    MongoDB solution.
+    """
+
     is_production_ready = True
 
     mongo_connection_string: str
@@ -28,7 +37,8 @@ class MongodbDriver(TracingDatabaseDriver):
         super().__init__()
         if self.mongo_connection_string is None or self.mongo_database is None:
             raise ValueError(
-                "Please configure the MongoDB access options by calling MongodbDriver.configure_credentials"
+                "Please configure the MongoDB access options by calling "
+                "MongoDbDriver.configure_credentials"
             )
 
         with MongoClient[Any](self.mongo_connection_string) as client:
@@ -44,6 +54,14 @@ class MongodbDriver(TracingDatabaseDriver):
         mongo_database: str,
         **_: Any,
     ) -> None:
+        """Configure the connection details for MongoDB.
+
+        Args:
+            mongo_connection_string: For example:
+                'mongodb://my_user:my_pass@localhost:27017'
+            mongo_database: Name of the database to use. If doesn't exist, it is
+                created and initialised.
+        """
         cls.mongo_connection_string = mongo_connection_string
         cls.mongo_database = mongo_database
         super().configure_credentials()

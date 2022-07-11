@@ -17,7 +17,8 @@ from .constants import (
     SE4ML_WEBSITE,
 )
 from .large_file import LargeFileBase, LargeFileLocal
-from .persistence import ParallelTinyDbDriver, TracingDatabaseDriver
+from .persistence.parallel_tinydb_driver import ParallelTinyDbDriver
+from .persistence.tracing_database_driver import TracingDatabaseDriver
 from .utilities import get_logger
 from .views import RouteConfig
 
@@ -67,9 +68,39 @@ def configure(
     should_log_exception_stack: Optional[bool] = None,
     prediction_cache_size: int = 512,
     disable_se4ml_banner: bool = False,
-    dashboard_table_size: int = 20,
+    dashboard_table_size: int = 50,
     route_config: RouteConfig = RouteConfig(),
 ) -> None:
+    """Set the global configuration used by the great-ai library.
+
+    You must call `configure` before calling (or decorating with) any other great-ai
+    function.
+
+    If `tracing_database_factory` or `large_file_implementation` is not specified, their
+    default value is determined based on which TracingDatabase and LargeFile has been
+    configured (e.g.: LargeFileS3.configure_credentials_from_file('s3.ini')), or whether
+    there is any file named s3.ini or mongo.ini in the working directory.
+
+    Examples:
+        >>> configure(prediction_cache_size=0)
+
+    Arguments:
+        version: The version of your application (using SemVer is recommended).
+        log_level: Set the default logging level of `logging`.
+        seed: Set seed of `random` (and `numpy` if installed) for reproducibility.
+        tracing_database_factory: Specify a different TracingDatabaseDriver than the one
+            already configured.
+        large_file_implementation: Specify a different LargeFile than the one already
+            configured.
+        should_log_exception_stack: Log the traces of unhandled exceptions.
+        prediction_cache_size: Size of the LRU cache applied over the prediction
+            functions.
+        disable_se4ml_banner: Turn off the warning about the importance of SE4ML best-
+            practices.
+        dashboard_table_size: Number of rows to display in the dashboard's table.
+        route_config: Enable or disable specific HTTP API endpoints.
+    """
+
     global _context
     logger = get_logger("great_ai", level=log_level)
 
@@ -89,7 +120,10 @@ def configure(
     tracing_database = tracing_database_factory()
 
     if not tracing_database.is_production_ready:
-        message = f"The selected tracing database ({tracing_database_factory.__name__}) is not recommended for production"
+        message = f"""The selected tracing database ({
+            tracing_database_factory.__name__
+        }) is not recommended for production"""
+
         if is_production:
             logger.error(message)
         else:
@@ -117,7 +151,8 @@ def configure(
 
     if not is_production and not disable_se4ml_banner:
         logger.warning(
-            "You still need to check whether you follow all best practices before trusting your deployment."
+            "You still need to check whether you follow all best practices before "
+            "trusting your deployment."
         )
         logger.warning(f"> Find out more at {SE4ML_WEBSITE}")
 
@@ -128,7 +163,8 @@ def _is_in_production_mode(logger: Optional[Logger]) -> bool:
     if environment is None:
         if logger:
             logger.warning(
-                f"Environment variable {ENV_VAR_KEY} is not set, defaulting to development mode ‼️"
+                f"Environment variable {ENV_VAR_KEY} is not set, "
+                "defaulting to development mode ‼️"
             )
         is_production = False
     else:
@@ -136,8 +172,8 @@ def _is_in_production_mode(logger: Optional[Logger]) -> bool:
         if logger:
             if not is_production:
                 logger.info(
-                    f"Value of {ENV_VAR_KEY} is `{environment}` which is not equal to `{PRODUCTION_KEY}`"
-                    + " defaulting to development mode ‼️"
+                    f"Value of {ENV_VAR_KEY} is `{environment}` which is not equal to"
+                    + f"`{PRODUCTION_KEY}` defaulting to development mode ‼️"
                 )
             else:
                 logger.info("Running in production mode ✅")
@@ -152,13 +188,16 @@ def _initialize_tracing_database(
         if selected is None or selected == tracing_driver:
             if tracing_driver.initialized:
                 logger.info(
-                    f"{tracing_driver.__name__} has been already configured: skipping initialisation"
+                    f"{tracing_driver.__name__} has been already configured: "
+                    "skipping initialisation"
                 )
                 return tracing_driver
             for p in paths:
                 if Path(p).exists():
                     logger.info(
-                        f"Found credentials file ({Path(p).absolute()}), initialising {tracing_driver.__name__}"
+                        f"""Found credentials file ({Path(p).absolute()}), initialising {
+                            tracing_driver.__name__
+                        }"""
                     )
                     tracing_driver.configure_credentials_from_file(p)
                     return tracing_driver
@@ -181,7 +220,9 @@ def _initialize_large_file(
             for p in paths:
                 if Path(p).exists():
                     logger.info(
-                        f"Found credentials file ({Path(p).absolute()}), initialising {large_file.__name__}"
+                        f"""Found credentials file ({Path(p).absolute()}), initialising {
+                            large_file.__name__
+                        }"""
                     )
                     large_file.configure_credentials_from_file(p)
                     return large_file

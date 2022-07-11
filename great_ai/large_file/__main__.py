@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Mapping, Type
 
 from ..utilities import get_logger
-from .large_file import LargeFileBase, LargeFileLocal, LargeFileMongo, LargeFileS3
+from . import LargeFileBase, LargeFileLocal, LargeFileMongo, LargeFileS3
 from .parse_arguments import parse_arguments
 
 logger = get_logger("large_file")
