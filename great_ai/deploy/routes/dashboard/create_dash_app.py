@@ -155,9 +155,16 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
             sort_by=[SortBy.parse_obj(s) for s in sort_by],
         )
 
-        columns, style = update_layout(elements[0] if elements else None)
-        execution_time_histogram, parallel_coords_fig, style = update_charts(
-            elements=elements, function_name=function_name, accent_color=accent_color
+        if non_null_conjunctive_filters:
+            all_elements, _ = get_context().tracing_database.query(
+                take=1, conjunctive_tags=[ONLINE_TAG_NAME]
+            )
+        else:
+            all_elements = elements
+
+        columns, style = update_layout(all_elements[0] if all_elements else None)
+        execution_time_histogram, parallel_coords_fig, parallel_style = update_charts(
+            elements=elements, accent_color=accent_color
         )
 
         return (
@@ -170,7 +177,7 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
             style,
             execution_time_histogram,
             parallel_coords_fig,
-            style,
+            parallel_style,
             ((n_intervals or 0) + 1) if get_context().is_production else -1,
         )
 
@@ -202,12 +209,12 @@ def update_layout(
 
 
 def update_charts(
-    elements: List[Trace], function_name: str, accent_color: str
+    elements: List[Trace], accent_color: str
 ) -> Tuple[Any, go.Figure, Dict[str, Any]]:
     if not elements:
         return (
             html.Span(
-                f"No traces yet: call your function ({function_name}) to create one.",
+                "No matching traces.",
                 className="placeholder",
             ),
             go.Figure(),
