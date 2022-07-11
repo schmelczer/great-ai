@@ -428,6 +428,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#complex-example" class="md-nav__link">
+    Complex example
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -615,6 +622,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#complex-example" class="md-nav__link">
+    Complex example
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -679,7 +693,7 @@
 <div class="highlight"><span class="filename">greeter_with_model.py</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">use_model</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nd">@use_model</span><span class="p">(</span><span class="s1">&#39;name_of_my_model&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span> <span class="c1">#(1)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nd">@use_model</span><span class="p">(</span><span class="s1">&#39;name_of_my_model&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>  <span class="c1">#(1)</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">def</span> <span class="nf">type_safe_greeter</span><span class="p">(</span><span class="n">your_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
@@ -698,34 +712,33 @@
 <p class="admonition-title">Note</p>
 <p>By default, all parameters that are not affected by an explicit <code>@parameter</code> or <code>@use_model</code> decorator, are automatically decorated with <code>@parameter</code> when <code>GreatAI.create</code> is called.</p>
 </div>
-<p>```python "greeter_with_validation.py"
-from great_ai import GreatAI, use_model</p>
-<p>@GreatAI.create
-@use_model('name_of_my_model', version='latest')
-def type_safe_greeter(your_name: str, model) -&gt; str:
-    return f'Hi {your_name}!'</p>
-<p>assert type_safe_greeter('Andras').output == 'Hi Andras'
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>!!! important
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    You must call `@parameter` before `GreatAI.create`. Feel free to use `@parameter` in other places of the code base, it works equally well outside of GreatAI services. 
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>## Complex example
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Refer to the following example summarising the options you have when instantiating a GreatAI service.
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>```python title=&quot;complex.py&quot;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>from great_ai import save_model, GreatAI, parameter, use_model
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>save_model(4, &#39;secret-number&#39;) #(2)
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>@GreatAI.create
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>@parameter(&#39;positive_number&#39;, validator=lambda n: n &gt; 0)
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>@use_model(&#39;secret-number&#39;, version=&#39;latest&#39;, model_kwarg_name=&#39;secret&#39;)
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>def add_number(positive_number: int, secret: int) -&gt; int:
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    return positive_number + secret
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>assert add_number(1).output == 5
-</code></pre></div></p>
+<div class="highlight"><span class="filename">greeter_with_validation.py</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">use_model</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nd">@use_model</span><span class="p">(</span><span class="s1">&#39;name_of_my_model&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">def</span> <span class="nf">type_safe_greeter</span><span class="p">(</span><span class="n">your_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">assert</span> <span class="n">type_safe_greeter</span><span class="p">(</span><span class="s1">&#39;Andras&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s1">&#39;Hi Andras&#39;</span>
+</code></pre></div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You must call <code>@parameter</code> before <code>GreatAI.create</code>. Feel free to use <code>@parameter</code> in other places of the code base, it works equally well outside of GreatAI services. </p>
+</div>
+<h2 id="complex-example">Complex example<a class="headerlink" href="#complex-example" title="Permanent link">#</a></h2>
+<p>Refer to the following example summarising the options you have when instantiating a GreatAI service.</p>
+<div class="highlight"><span class="filename">complex.py</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">save_model</span><span class="p">,</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">use_model</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">save_model</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;secret-number&#39;</span><span class="p">)</span>  <span class="c1">#(1)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nd">@parameter</span><span class="p">(</span><span class="s1">&#39;positive_number&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nd">@use_model</span><span class="p">(</span><span class="s1">&#39;secret-number&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="n">model_kwarg_name</span><span class="o">=</span><span class="s1">&#39;secret&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">def</span> <span class="nf">add_number</span><span class="p">(</span><span class="n">positive_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="k">return</span> <span class="n">positive_number</span> <span class="o">+</span> <span class="n">secret</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">assert</span> <span class="n">add_number</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="mi">5</span>
+</code></pre></div>
 <ol>
 <li>Refer to <a href="/how-to-guides/store-models">storing models</a> for specifying where to store your models. </li>
 </ol>
@@ -735,7 +748,7 @@ def type_safe_greeter(your_name: str, model) -&gt; str:
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 10, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 11, 2022</span>
       
     
   </small>
