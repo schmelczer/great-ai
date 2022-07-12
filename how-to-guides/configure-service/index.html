@@ -48,6 +48,19 @@
 
     
     
+    <meta property="og:title" content="">
+    <meta property="og:site_name" content="">
+    <meta property="og:url" content="">
+    <meta property="og:description" content="Transform your prototype AI code into production-ready software.">
+    <meta property="og:type" content="">
+    <meta property="og:image" content=https://great-ai.scoutinscience.com/media/og-image.png>
+
+    <style>
+        .jupyter-wrapper a {
+            color: var(--md-typeset-a-color) !important;
+        }
+    </style>
+
   </head>
   
   
@@ -347,6 +360,20 @@
           User Guides
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        Installation guide
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -691,7 +718,7 @@
   
     <li class="md-nav__item">
       <a href="../../examples/simple/data/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Simple example: data engineering
       </a>
     </li>
   
@@ -705,7 +732,7 @@
   
     <li class="md-nav__item">
       <a href="../../examples/simple/train/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Optimise and train a model
       </a>
     </li>
   
@@ -719,7 +746,7 @@
   
     <li class="md-nav__item">
       <a href="../../examples/simple/deploy/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Hardening and deployment
       </a>
     </li>
   
@@ -848,6 +875,7 @@
 
 
 
+
                 
   <a href="https://github.com/schmelczer/great-ai/edit/main/docs/how-to-guides/configure-service.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
@@ -886,8 +914,8 @@
 </ol>
 <h2 id="using-remote-storage">Using remote storage<a class="headerlink" href="#using-remote-storage" title="Permanent link">#</a></h2>
 <p>The only aspect that cannot be automated is choosing the backing storage for the database and file storage.</p>
-<p>Right now, you have 3 options for storing the models and large datasets: <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">great_ai.large_file.LargeFileLocal</a>, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileMongo">great_ai.large_file.LargeFileMongo</a>, and <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileS3">great_ai.large_file.LargeFileS3</a>.</p>
-<p>Without explicit configuration, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">great_ai.large_file.LargeFileLocal</a> is selected by default. This one still version-controls your files but it only stores them in a local path.</p>
+<p>Right now, you have 3 options for storing the models and large datasets: <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">LargeFileLocal</a>, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileMongo">LargeFileMongo</a>, and <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileS3">LargeFileS3</a>.</p>
+<p>Without explicit configuration, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">LargeFileLocal</a> is selected by default. This one still version-controls your files but it only stores them in a local path.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>If your working directory contains a <code>mongo.ini</code> or <code>s3.ini</code> file, an attempt is made to auto-configure <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileMongo">LargeFileMongo</a> or <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileS3">LargeFileS3</a> respectively.</p>
@@ -919,7 +947,8 @@
 <div class="highlight"><span class="filename">mongo.ini</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">MONGO_CONNECTION_STRING</span><span class="o">=</span><span class="n">mongodb</span><span class="p">:</span><span class="err">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">27017</span><span class="w">  </span><span class="c1"># this is the default value</span><span class="w"></span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># if `MONGO_CONNECTION_STRING` is specified, this default is overridden</span><span class="w"></span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">MONGO_CONNECTION_STRING</span><span class="o">=</span><span class="n">ENV</span><span class="p">:</span><span class="n">MONGO_CONNECTION_STRING</span><span class="w"></span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">MONGO_DATABASE</span><span class="o">=</span><span class="n">my-database</span><span class="w">  </span><span class="c1"># it is automatically created if doesn&#39;t exist</span><span class="w"></span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">MONGO_DATABASE</span><span class="o">=</span><span class="n">my-database</span><span class="w">  </span><span class="c1"># it is automatically created if doesn&#39;t exist</span><span class="w"></span>
 </code></pre></div>
 <div class="highlight"><span class="filename">use-mongo.py</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">great_ai.large_file</span> <span class="kn">import</span> <span class="n">LargeFileMongo</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">save_model</span>
@@ -936,14 +965,14 @@
 <h2 id="using-a-database">Using a database<a class="headerlink" href="#using-a-database" title="Permanent link">#</a></h2>
 <p>By default, a thread-safe version of <a href="https://tinydb.readthedocs.io/en/latest/" target="_blank">TinyDB</a> is utilised for saving the prediction traces into a local file. Unfortunately, for most production needs, this method is not suitable.</p>
 <h3 id="mongodb">MongoDB<a class="headerlink" href="#mongodb" title="Permanent link">#</a></h3>
-<p>At the moment, only MongoDB is supported as a production-ready <code>TracingDatabase</code>. In order to use it, you have to either place a file named <code>mongo.ini</code> in your working directory, or explicitly call [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver.configure_credentials_from_file] or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.persistence.mongodb_driver.MongoDbDriver.configure_credentials">MongoDbDriver.configure_credentials</a>.</p>
+<p>At the moment, only MongoDB is supported as a production-ready <code>TracingDatabase</code>. In order to use it, you have to either place a file named <code>mongo.ini</code> in your working directory, or explicitly call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.MongoDbDriver">MongoDbDriver.configure_credentials_from_file</a> or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.persistence.mongodb_driver.MongoDbDriver.configure_credentials">MongoDbDriver.configure_credentials</a>.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 11, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
       
     
   </small>

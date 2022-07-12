@@ -48,6 +48,19 @@
 
     
     
+    <meta property="og:title" content="">
+    <meta property="og:site_name" content="">
+    <meta property="og:url" content="">
+    <meta property="og:description" content="Transform your prototype AI code into production-ready software.">
+    <meta property="og:type" content="">
+    <meta property="og:image" content=https://great-ai.scoutinscience.com/media/og-image.png>
+
+    <style>
+        .jupyter-wrapper a {
+            color: var(--md-typeset-a-color) !important;
+        }
+    </style>
+
   </head>
   
   
@@ -345,6 +358,20 @@
           User Guides
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/install/" class="md-nav__link">
+        Installation guide
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -820,7 +847,7 @@
   
     <li class="md-nav__item">
       <a href="../examples/simple/data/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Simple example: data engineering
       </a>
     </li>
   
@@ -834,7 +861,7 @@
   
     <li class="md-nav__item">
       <a href="../examples/simple/train/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Optimise and train a model
       </a>
     </li>
   
@@ -848,7 +875,7 @@
   
     <li class="md-nav__item">
       <a href="../examples/simple/deploy/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Hardening and deployment
       </a>
     </li>
   
@@ -1103,6 +1130,7 @@
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
+
 
 
 
@@ -3269,10 +3297,373 @@ Returns:
 
 
   <div class="doc doc-contents first">
+  
+      <p>Add training data (with optional train-test splitting).</p>
+<p>Add and tag datapoints, wrap them into traces. The <code>inputs</code> are available via the
+<code>.input</code> property, while <code>expected_outputs</code> under both the <code>.output</code> and <code>.feedback</code>
+properties.</p>
+<p>All generated traces are tagged with <code>ground_truth</code> by default. Additional tags can
+be also provided. Using the <code>split_ratio</code> arguments, tags can be given randomly with
+a user-defined distribution. Only the ratio of the splits matter, they don't have to
+add up to 1.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">add_ground_truth</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">... </span>   <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>   <span class="p">[</span><span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="s1">&#39;odd&#39;</span><span class="p">],</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>   <span class="n">tags</span><span class="o">=</span><span class="s1">&#39;my_tag&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>   <span class="n">train_split_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span>   <span class="n">test_split_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">... </span>   <span class="n">validation_split_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">... </span><span class="p">)</span>
+</code></pre></div>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>inputs</code></td>
+          <td>
+                <code><span title="typing.Iterable">Iterable</span>[<span title="typing.Any">Any</span>]</code>
+          </td>
+          <td><p>The inputs. (X in scikit-learn)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>expected_outputs</code></td>
+          <td>
+                <code><span title="typing.Iterable">Iterable</span>[<span title="great_ai.tracing.add_ground_truth.T">T</span>]</code>
+          </td>
+          <td><p>The ground-truth values corresponding to the inputs. (y in
+scikit-learn)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>tags</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td><p>A single tag or a list of tags to append to each generated trace's tags.</p></td>
+          <td>
+                <code>[]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>train_split_ratio</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The probability-weight of giving each trace the <code>train</code> tag.</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>test_split_ratio</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The probability-weight of giving each trace the <code>test</code> tag.</p></td>
+          <td>
+                <code>0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>validation_split_ratio</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>The probability-weight of giving each trace the</p></td>
+          <td>
+                <code>0</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
       <details class="quote">
         <summary>Source code in <code>great_ai/tracing/add_ground_truth.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-19">19</a></span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-19"> 19</a></span>
+<span class="normal"><a href="#__codelineno-0-20"> 20</a></span>
+<span class="normal"><a href="#__codelineno-0-21"> 21</a></span>
+<span class="normal"><a href="#__codelineno-0-22"> 22</a></span>
+<span class="normal"><a href="#__codelineno-0-23"> 23</a></span>
+<span class="normal"><a href="#__codelineno-0-24"> 24</a></span>
+<span class="normal"><a href="#__codelineno-0-25"> 25</a></span>
+<span class="normal"><a href="#__codelineno-0-26"> 26</a></span>
+<span class="normal"><a href="#__codelineno-0-27"> 27</a></span>
+<span class="normal"><a href="#__codelineno-0-28"> 28</a></span>
+<span class="normal"><a href="#__codelineno-0-29"> 29</a></span>
+<span class="normal"><a href="#__codelineno-0-30"> 30</a></span>
+<span class="normal"><a href="#__codelineno-0-31"> 31</a></span>
+<span class="normal"><a href="#__codelineno-0-32"> 32</a></span>
+<span class="normal"><a href="#__codelineno-0-33"> 33</a></span>
+<span class="normal"><a href="#__codelineno-0-34"> 34</a></span>
+<span class="normal"><a href="#__codelineno-0-35"> 35</a></span>
+<span class="normal"><a href="#__codelineno-0-36"> 36</a></span>
+<span class="normal"><a href="#__codelineno-0-37"> 37</a></span>
+<span class="normal"><a href="#__codelineno-0-38"> 38</a></span>
+<span class="normal"><a href="#__codelineno-0-39"> 39</a></span>
+<span class="normal"><a href="#__codelineno-0-40"> 40</a></span>
+<span class="normal"><a href="#__codelineno-0-41"> 41</a></span>
+<span class="normal"><a href="#__codelineno-0-42"> 42</a></span>
+<span class="normal"><a href="#__codelineno-0-43"> 43</a></span>
+<span class="normal"><a href="#__codelineno-0-44"> 44</a></span>
+<span class="normal"><a href="#__codelineno-0-45"> 45</a></span>
+<span class="normal"><a href="#__codelineno-0-46"> 46</a></span>
+<span class="normal"><a href="#__codelineno-0-47"> 47</a></span>
+<span class="normal"><a href="#__codelineno-0-48"> 48</a></span>
+<span class="normal"><a href="#__codelineno-0-49"> 49</a></span>
+<span class="normal"><a href="#__codelineno-0-50"> 50</a></span>
+<span class="normal"><a href="#__codelineno-0-51"> 51</a></span>
+<span class="normal"><a href="#__codelineno-0-52"> 52</a></span>
+<span class="normal"><a href="#__codelineno-0-53"> 53</a></span>
+<span class="normal"><a href="#__codelineno-0-54"> 54</a></span>
+<span class="normal"><a href="#__codelineno-0-55"> 55</a></span>
+<span class="normal"><a href="#__codelineno-0-56"> 56</a></span>
+<span class="normal"><a href="#__codelineno-0-57"> 57</a></span>
+<span class="normal"><a href="#__codelineno-0-58"> 58</a></span>
+<span class="normal"><a href="#__codelineno-0-59"> 59</a></span>
+<span class="normal"><a href="#__codelineno-0-60"> 60</a></span>
+<span class="normal"><a href="#__codelineno-0-61"> 61</a></span>
+<span class="normal"><a href="#__codelineno-0-62"> 62</a></span>
+<span class="normal"><a href="#__codelineno-0-63"> 63</a></span>
+<span class="normal"><a href="#__codelineno-0-64"> 64</a></span>
+<span class="normal"><a href="#__codelineno-0-65"> 65</a></span>
+<span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
+<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
+<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
+<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
+<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
+<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
+<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
+<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
+<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
+<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
+<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
+<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
+<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
+<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
+<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
+<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
+<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
+<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#__codelineno-0-102">102</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">def</span> <span class="nf">add_ground_truth</span><span class="p">(</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">inputs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="n">expected_outputs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">train_split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="n">test_split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">validation_split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="sd">&quot;&quot;&quot;Add training data (with optional train-test splitting).</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    Add and tag datapoints, wrap them into traces. The `inputs` are available via the</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">    `.input` property, while `expected_outputs` under both the `.output` and `.feedback`</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">    properties.</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    All generated traces are tagged with `ground_truth` by default. Additional tags can</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    be also provided. Using the `split_ratio` arguments, tags can be given randomly with</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">    a user-defined distribution. Only the ratio of the splits matter, they don&#39;t have to</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    add up to 1.</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">    Examples:</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        &gt;&gt;&gt; add_ground_truth(</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        ...    [1, 2, 3],</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        ...    [&#39;odd&#39;, &#39;even&#39;, &#39;odd&#39;],</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        ...    tags=&#39;my_tag&#39;,</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        ...    train_split_ratio=1,</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        ...    test_split_ratio=1,</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        ...    validation_split_ratio=0.5,</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        ... )</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        inputs: The inputs. (X in scikit-learn)</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">        expected_outputs: The ground-truth values corresponding to the inputs. (y in</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">            scikit-learn)</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        tags: A single tag or a list of tags to append to each generated trace&#39;s tags.</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        train_split_ratio: The probability-weight of giving each trace the `train` tag.</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        test_split_ratio: The probability-weight of giving each trace the `test` tag.</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        validation_split_ratio: The probability-weight of giving each trace the</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        `validation` tag.</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">expected_outputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">expected_outputs</span><span class="p">)</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="n">expected_outputs</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="p">),</span> <span class="s2">&quot;The length of the inputs and expected_outputs must be equal&quot;</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>    <span class="n">sum_ratio</span> <span class="o">=</span> <span class="n">train_split_ratio</span> <span class="o">+</span> <span class="n">test_split_ratio</span> <span class="o">+</span> <span class="n">validation_split_ratio</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="k">assert</span> <span class="n">sum_ratio</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;The sum of the split ratios must be a positive number&quot;</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="n">train_split_ratio</span> <span class="o">/=</span> <span class="n">sum_ratio</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="n">test_split_ratio</span> <span class="o">/=</span> <span class="n">sum_ratio</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="n">validation_split_ratio</span> <span class="o">/=</span> <span class="n">sum_ratio</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">expected_outputs</span><span class="p">))</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="n">shuffle</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="n">split_tags</span> <span class="o">=</span> <span class="p">(</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="p">[</span><span class="n">TRAIN_SPLIT_TAG_NAME</span><span class="p">]</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="n">train_split_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="o">+</span> <span class="p">[</span><span class="n">TEST_SPLIT_TAG_NAME</span><span class="p">]</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="n">test_split_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="o">+</span> <span class="p">[</span><span class="n">VALIDATION_SPLIT_TAG_NAME</span><span class="p">]</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="n">validation_split_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="p">)</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>    <span class="n">shuffle</span><span class="p">(</span><span class="n">split_tags</span><span class="p">)</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="n">created</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="n">traces</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="n">cast</span><span class="p">(</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="n">Trace</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>            <span class="n">Trace</span><span class="p">(</span>  <span class="c1"># avoid ValueError: &quot;Trace&quot; object has no field &quot;__orig_class__&quot;</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>                <span class="n">trace_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>                <span class="n">created</span><span class="o">=</span><span class="n">created</span><span class="p">,</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>                <span class="n">original_execution_time_ms</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>                <span class="n">logged_values</span><span class="o">=</span><span class="n">X</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">},</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>                <span class="n">models</span><span class="o">=</span><span class="p">[],</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>                <span class="n">output</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>                <span class="n">feedback</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>                <span class="n">exception</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>                <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">GROUND_TRUTH_TAG_NAME</span><span class="p">,</span> <span class="n">split_tag</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">],</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>            <span class="p">),</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="p">)</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="k">for</span> <span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">split_tag</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">split_tags</span><span class="p">)</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="p">]</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">tracing_database</span><span class="o">.</span><span class="n">save_batch</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="great_ai.query_ground_truth" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">query_ground_truth</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="o">=</span><span class="p">[],</span> <span class="o">*</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">until</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_max_count</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+<a href="#great_ai.query_ground_truth" class="headerlink" title="Permanent link">#</a></h3>
+
+
+  <div class="doc doc-contents first">
+  
+      <p>Return training samples.</p>
+<p>Combines, filters, and returns datapoints that have been either added by
+<code>add_ground_truth</code> or were the result of a prediction after which their trace got
+a feedback through the RESP API-s <code>/traces/{trace_id}/feedback</code> endpoint
+(end-to-end feedback).</p>
+<p>Filtering can be used to only return points matching all given tags (or the single
+given tag) and by time of creation.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">query_ground_truth</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="go">[...]</span>
+</code></pre></div>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>conjunctive_tags</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[<span title="typing.List">List</span>[str], str]</code>
+          </td>
+          <td><p>Single tag or a list of tags which the returned traces have to
+match. The relationship between the tags is conjunctive (AND).</p></td>
+          <td>
+                <code>[]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>since</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="datetime.datetime">datetime</span>]</code>
+          </td>
+          <td><p>Only return traces created after the given timestamp. <code>None</code> means no
+filtering.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>until</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="datetime.datetime">datetime</span>]</code>
+          </td>
+          <td><p>Only return traces created before the given timestamp. <code>None</code> means no
+filtering.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>return_max_count</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td><p>Return at-most this many traces. (take, limit)</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>great_ai/tracing/query_ground_truth.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
 <span class="normal"><a href="#__codelineno-0-22">22</a></span>
@@ -3304,130 +3695,50 @@ Returns:
 <span class="normal"><a href="#__codelineno-0-48">48</a></span>
 <span class="normal"><a href="#__codelineno-0-49">49</a></span>
 <span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">def</span> <span class="nf">add_ground_truth</span><span class="p">(</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">inputs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="n">expected_outputs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">train_split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="n">test_split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">validation_split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">get_context</span><span class="p">()</span>  <span class="c1"># this resets the seed</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">expected_outputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">expected_outputs</span><span class="p">)</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>        <span class="n">expected_outputs</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="p">),</span> <span class="s2">&quot;The length of the inputs and expected_outputs must be equal&quot;</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">sum_ratio</span> <span class="o">=</span> <span class="n">train_split_ratio</span> <span class="o">+</span> <span class="n">test_split_ratio</span> <span class="o">+</span> <span class="n">validation_split_ratio</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="k">assert</span> <span class="n">sum_ratio</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;The sum of the split ratios must be a positive number&quot;</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">train_split_ratio</span> <span class="o">/=</span> <span class="n">sum_ratio</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">test_split_ratio</span> <span class="o">/=</span> <span class="n">sum_ratio</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">validation_split_ratio</span> <span class="o">/=</span> <span class="n">sum_ratio</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">expected_outputs</span><span class="p">))</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">shuffle</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="n">split_tags</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="p">[</span><span class="n">TRAIN_SPLIT_TAG_NAME</span><span class="p">]</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="n">train_split_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="o">+</span> <span class="p">[</span><span class="n">TEST_SPLIT_TAG_NAME</span><span class="p">]</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="n">test_split_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="o">+</span> <span class="p">[</span><span class="n">VALIDATION_SPLIT_TAG_NAME</span><span class="p">]</span> <span class="o">*</span> <span class="n">ceil</span><span class="p">(</span><span class="n">validation_split_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="p">)</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="n">shuffle</span><span class="p">(</span><span class="n">split_tags</span><span class="p">)</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">created</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">traces</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="n">cast</span><span class="p">(</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>            <span class="n">Trace</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>            <span class="n">Trace</span><span class="p">(</span>  <span class="c1"># avoid ValueError: &quot;Trace&quot; object has no field &quot;__orig_class__&quot;</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>                <span class="n">trace_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">()),</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>                <span class="n">created</span><span class="o">=</span><span class="n">created</span><span class="p">,</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>                <span class="n">original_execution_time_ms</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>                <span class="n">logged_values</span><span class="o">=</span><span class="n">X</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">},</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>                <span class="n">models</span><span class="o">=</span><span class="p">[],</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>                <span class="n">output</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>                <span class="n">feedback</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>                <span class="n">exception</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>                <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">GROUND_TRUTH_TAG_NAME</span><span class="p">,</span> <span class="n">split_tag</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">],</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="p">),</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="p">)</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="k">for</span> <span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">split_tag</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">split_tags</span><span class="p">)</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="p">]</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">tracing_database</span><span class="o">.</span><span class="n">save_batch</span><span class="p">(</span><span class="n">traces</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="great_ai.query_ground_truth" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">query_ground_truth</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="o">=</span><span class="p">[],</span> <span class="o">*</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_max_count</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-
-<a href="#great_ai.query_ground_truth" class="headerlink" title="Permanent link">#</a></h3>
-
-
-  <div class="doc doc-contents first">
-
-      <details class="quote">
-        <summary>Source code in <code>great_ai/tracing/query_ground_truth.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-0-10">10</a></span>
-<span class="normal"><a href="#__codelineno-0-11">11</a></span>
-<span class="normal"><a href="#__codelineno-0-12">12</a></span>
-<span class="normal"><a href="#__codelineno-0-13">13</a></span>
-<span class="normal"><a href="#__codelineno-0-14">14</a></span>
-<span class="normal"><a href="#__codelineno-0-15">15</a></span>
-<span class="normal"><a href="#__codelineno-0-16">16</a></span>
-<span class="normal"><a href="#__codelineno-0-17">17</a></span>
-<span class="normal"><a href="#__codelineno-0-18">18</a></span>
-<span class="normal"><a href="#__codelineno-0-19">19</a></span>
-<span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="k">def</span> <span class="nf">query_ground_truth</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="k">def</span> <span class="nf">query_ground_truth</span><span class="p">(</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">conjunctive_tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="o">*</span><span class="p">,</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="n">since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12"></a>    <span class="n">return_max_count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Trace</span><span class="p">]:</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>        <span class="n">conjunctive_tags</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">conjunctive_tags</span><span class="p">]</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="p">)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">db</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">tracing_database</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">items</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="n">conjunctive_tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">since</span><span class="p">,</span> <span class="n">take</span><span class="o">=</span><span class="n">return_max_count</span><span class="p">,</span> <span class="n">has_feedback</span><span class="o">=</span><span class="kc">True</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="p">)</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="k">return</span> <span class="n">items</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>    <span class="n">until</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="n">return_max_count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Trace</span><span class="p">]:</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="sd">&quot;&quot;&quot;Return training samples.</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    Combines, filters, and returns datapoints that have been either added by</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">    `add_ground_truth` or were the result of a prediction after which their trace got</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">    a feedback through the RESP API-s `/traces/{trace_id}/feedback` endpoint</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">    (end-to-end feedback).</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    Filtering can be used to only return points matching all given tags (or the single</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">    given tag) and by time of creation.</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">    Examples:</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        &gt;&gt;&gt; query_ground_truth()</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">        [...]</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">        conjunctive_tags: Single tag or a list of tags which the returned traces have to</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">            match. The relationship between the tags is conjunctive (AND).</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">        since: Only return traces created after the given timestamp. `None` means no</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">            filtering.</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">        until: Only return traces created before the given timestamp. `None` means no</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">            filtering.</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        return_max_count: Return at-most this many traces. (take, limit)</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>        <span class="n">conjunctive_tags</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">conjunctive_tags</span><span class="p">]</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="p">)</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">db</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">tracing_database</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">items</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="n">conjunctive_tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>        <span class="n">since</span><span class="o">=</span><span class="n">since</span><span class="p">,</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="n">until</span><span class="o">=</span><span class="n">until</span><span class="p">,</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="n">take</span><span class="o">=</span><span class="n">return_max_count</span><span class="p">,</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="n">has_feedback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="p">)</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="k">return</span> <span class="n">items</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -3439,12 +3750,68 @@ Returns:
 
 
 <h3 id="great_ai.delete_ground_truth" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">delete_ground_truth</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="o">=</span><span class="p">[],</span> <span class="o">*</span><span class="p">,</span> <span class="n">until</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">delete_ground_truth</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="o">=</span><span class="p">[],</span> <span class="o">*</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">until</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 <a href="#great_ai.delete_ground_truth" class="headerlink" title="Permanent link">#</a></h3>
 
 
   <div class="doc doc-contents first">
+  
+      <p>Delete traces matching the given criteria.</p>
+<p>Takes the same arguments as <code>query_ground_truth</code> but instead of returning them,
+it simply deletes them.</p>
+<p>You can rely on the efficiency of the delete's implementation.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">delete_ground_truth</span><span class="p">([</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;validation&#39;</span><span class="p">])</span>
+</code></pre></div>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>conjunctive_tags</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[<span title="typing.List">List</span>[str], str]</code>
+          </td>
+          <td><p>Single tag or a list of tags which the deleted traces have to
+match. The relationship between the tags is conjunctive (AND).</p></td>
+          <td>
+                <code>[]</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>since</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="datetime.datetime">datetime</span>]</code>
+          </td>
+          <td><p>Only delete traces created after the given timestamp. <code>None</code> means no
+filtering.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>until</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="datetime.datetime">datetime</span>]</code>
+          </td>
+          <td><p>Only delete traces created before the given timestamp. <code>None</code> means no
+filtering.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
       <details class="quote">
         <summary>Source code in <code>great_ai/tracing/delete_ground_truth.py</code></summary>
@@ -3463,22 +3830,60 @@ Returns:
 <span class="normal"><a href="#__codelineno-0-19">19</a></span>
 <span class="normal"><a href="#__codelineno-0-20">20</a></span>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="k">def</span> <span class="nf">delete_ground_truth</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="k">def</span> <span class="nf">delete_ground_truth</span><span class="p">(</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">conjunctive_tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">until</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="n">since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">since</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    <span class="n">until</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a>        <span class="n">conjunctive_tags</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">conjunctive_tags</span><span class="p">]</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="p">)</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">db</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">tracing_database</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="sd">&quot;&quot;&quot;Delete traces matching the given criteria.</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="sd">    Takes the same arguments as `query_ground_truth` but instead of returning them,</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">    it simply deletes them.</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">items</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>        <span class="n">conjunctive_tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">until</span><span class="o">=</span><span class="n">until</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">since</span><span class="p">,</span> <span class="n">has_feedback</span><span class="o">=</span><span class="kc">True</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="p">)</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="n">db</span><span class="o">.</span><span class="n">delete_batch</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">trace_id</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">])</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">    You can rely on the efficiency of the delete&#39;s implementation.</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">    Examples:</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">        &gt;&gt;&gt; delete_ground_truth([&#39;train&#39;, &#39;test&#39;, &#39;validation&#39;])</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">        conjunctive_tags: Single tag or a list of tags which the deleted traces have to</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">            match. The relationship between the tags is conjunctive (AND).</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        since: Only delete traces created after the given timestamp. `None` means no</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">            filtering.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">        until: Only delete traces created before the given timestamp. `None` means no</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">            filtering.</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="n">tags</span> <span class="o">=</span> <span class="p">(</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>        <span class="n">conjunctive_tags</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conjunctive_tags</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">conjunctive_tags</span><span class="p">]</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="p">)</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="n">db</span> <span class="o">=</span> <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">tracing_database</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">items</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>        <span class="n">conjunctive_tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">until</span><span class="o">=</span><span class="n">until</span><span class="p">,</span> <span class="n">since</span><span class="o">=</span><span class="n">since</span><span class="p">,</span> <span class="n">has_feedback</span><span class="o">=</span><span class="kc">True</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="p">)</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">db</span><span class="o">.</span><span class="n">delete_batch</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">trace_id</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>

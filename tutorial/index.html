@@ -48,6 +48,19 @@
 
     
     
+    <meta property="og:title" content="">
+    <meta property="og:site_name" content="">
+    <meta property="og:url" content="">
+    <meta property="og:description" content="Transform your prototype AI code into production-ready software.">
+    <meta property="og:type" content="">
+    <meta property="og:image" content=https://great-ai.scoutinscience.com/media/og-image.png>
+
+    <style>
+        .jupyter-wrapper a {
+            color: var(--md-typeset-a-color) !important;
+        }
+    </style>
+
   </head>
   
   
@@ -334,15 +347,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-training-notebook" class="md-nav__link">
-    The training notebook
+  <a href="#training-notebook" class="md-nav__link">
+    Training notebook
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-deployment-notebook" class="md-nav__link">
-    The deployment notebook
+  <a href="#deployment-notebook" class="md-nav__link">
+    Deployment notebook
   </a>
   
 </li>
@@ -422,6 +435,20 @@
           User Guides
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to-guides/install/" class="md-nav__link">
+        Installation guide
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -678,7 +705,7 @@
   
     <li class="md-nav__item">
       <a href="../examples/simple/data/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Simple example: data engineering
       </a>
     </li>
   
@@ -692,7 +719,7 @@
   
     <li class="md-nav__item">
       <a href="../examples/simple/train/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Optimise and train a model
       </a>
     </li>
   
@@ -706,7 +733,7 @@
   
     <li class="md-nav__item">
       <a href="../examples/simple/deploy/" class="md-nav__link">
-        Train a domain classifier on the semantic scholar dataset
+        Hardening and deployment
       </a>
     </li>
   
@@ -790,15 +817,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-training-notebook" class="md-nav__link">
-    The training notebook
+  <a href="#training-notebook" class="md-nav__link">
+    Training notebook
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-deployment-notebook" class="md-nav__link">
-    The deployment notebook
+  <a href="#deployment-notebook" class="md-nav__link">
+    Deployment notebook
   </a>
   
 </li>
@@ -822,6 +849,7 @@
 
 
 
+
                 
   <a href="https://github.com/schmelczer/great-ai/edit/main/docs/tutorial/index.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
@@ -830,11 +858,11 @@
 
 
 <h1 id="train-and-deploy-a-sota-model">Train and deploy a SOTA model<a class="headerlink" href="#train-and-deploy-a-sota-model" title="Permanent link">#</a></h1>
-<p>Let's see GreatAI in action by going over the life-cycle of a simple service.</p>
+<p>Let's see <code>great-ai</code> in action by going over the life-cycle of a simple service.</p>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">#</a></h2>
 <ol>
-<li>You will see how the [great_ai.utilities][] can integrate into your Data Science workflow.</li>
-<li>You will use [great_ai.large_file][] to version and store your trained model.</li>
+<li>You will see how the <a href="/reference/utilities">great_ai.utilities</a> can integrate into your Data Science workflow.</li>
+<li>You will use <a href="/reference/large_file">great_ai.large_file</a> to version and store your trained model.</li>
 <li>You will use <a class="autorefs autorefs-internal" href="../reference/#great_ai.GreatAI">GreatAI</a> to prepare your model for a robust and responsible deployment.</li>
 </ol>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
@@ -849,13 +877,13 @@
 <p><a class="md-button md-button--primary" href="deploy/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 20a6 6 0 0 1-6-6c0-3.09 2.34-5.64 5.35-5.96A7.496 7.496 0 0 1 12 4a7.5 7.5 0 0 1 7.35 6A5.02 5.02 0 0 1 24 15a5 5 0 0 1-5 5H6M9.09 8.4 4.5 13l4.59 4.6 1.41-1.42L7.32 13l3.18-3.18L9.09 8.4m5.82 0L13.5 9.82 16.68 13l-3.18 3.18 1.41 1.42L19.5 13l-4.59-4.6Z"/></svg></span> Deploy it</a></p>
 </div>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>
-<h3 id="the-training-notebook">The <a href="train/">training notebook</a><a class="headerlink" href="#the-training-notebook" title="Permanent link">#</a></h3>
-<p>We load and preprocess the dataset while relying on [great_ai.utilities.clean][] for the heavy-lifting. Additionally, the preprocessing is parallelised using <a class="autorefs autorefs-internal" href="../reference/utilities/#great_ai.utilities.simple_parallel_map">great_ai.utilities.simple_parallel_map</a></p>
+<h3 id="training-notebook"><a href="train/">Training notebook</a><a class="headerlink" href="#training-notebook" title="Permanent link">#</a></h3>
+<p>We load and preprocess the dataset while relying on <a class="autorefs autorefs-internal" href="../reference/utilities/#great_ai.utilities.clean.clean">great_ai.utilities.clean</a> for doing the heavy-lifting. Additionally, the preprocessing is parallelised using <a class="autorefs autorefs-internal" href="../reference/utilities/#great_ai.utilities.simple_parallel_map">great_ai.utilities.simple_parallel_map</a></p>
 <p>After training and evaluating a model, it is exported using <a class="autorefs autorefs-internal" href="../reference/#great_ai.save_model">great_ai.save_model</a>.</p>
 <details class="tip">
 <summary>Remote storage</summary>
 <p>To store your model remotely, you need to set your credentials before calling <code>save_model</code>.</p>
-<p>For example, to use <a href="https://aws.amazon.com/s3/">AWS S3</a>:
+<p>For example, to use <a href="https://aws.amazon.com/s3" target="_blank">AWS S3</a>:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">great_ai.large_file</span> <span class="kn">import</span> <span class="n">LargeFileS3</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">LargeFileS3</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
@@ -869,8 +897,9 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;my-domain-predictor&#39;</span><span class="p">)</span>
 </code></pre></div></p>
+<p>For more info, checkout <a href="/how-to-guides/configure-service">the configuration how-to page</a>.</p>
 </details>
-<h3 id="the-deployment-notebook">The <a href="deploy/">deployment notebook</a><a class="headerlink" href="#the-deployment-notebook" title="Permanent link">#</a></h3>
+<h3 id="deployment-notebook"><a href="deploy/">Deployment notebook</a><a class="headerlink" href="#deployment-notebook" title="Permanent link">#</a></h3>
 <p>We create an inference function that can be hardened by wrapping it in a <a class="autorefs autorefs-internal" href="../reference/#great_ai.GreatAI">GreatAI</a> instance.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">use_model</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span> <span class="nn">great_ai.utilities</span> <span class="kn">import</span> <span class="n">clean</span>
@@ -883,16 +912,20 @@
 </code></pre></div>
 <ol>
 <li><a class="autorefs autorefs-internal" href="../reference/#great_ai.use_model">@use_model</a> loads and injects your model into the <code>predict_domain</code> function's <code>model</code> argument.
-    You can freely reference it knowing that it is always given to the function.</li>
+    You can freely reference it knowing that the function is always provided with it.</li>
 </ol>
-<p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened-service.</a></p>
+<p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened-service properly.</a></p>
+<div style="display: flex; justify-content: center;">
+<p><a class="md-button md-button--primary" href="/how-to-guides/create-service"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12Z"/></svg></span> Learn about all the features</a></p>
+<p><a class="md-button md-button--secondary" href="/examples/simple/data"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2v2h1v14a4 4 0 0 0 4 4 4 4 0 0 0 4-4V4h1V2H7m4 14c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1m2-4c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1m1-5h-4V4h4v3Z"/></svg></span> Look at more examples</a></p>
+</div>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 11, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
       
     
   </small>

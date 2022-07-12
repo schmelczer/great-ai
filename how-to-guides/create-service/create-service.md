@@ -24,7 +24,7 @@ def greeter(your_name):
 
 ## With types
 
-[Type annotating your codebase](https://realpython.com/python-type-checking/){ target=_blank } can save you from lots of trivial mistakes, that's why it's highly advised. Simply add the expected types to your function's signature.
+Even though it's not required by GreatAI, [type annotating your codebase](https://realpython.com/python-type-checking/){ target=_blank } can save you from lots of trivial mistakes, that's why it's highly advised. Simply add the expected types to your function's signature.
 
 ```python title="type_safe_greeter.py"
 from great_ai import GreatAI
@@ -100,7 +100,7 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 Refer to the following example summarising the options you have when instantiating a GreatAI service.
 
 ```python title="complex.py"
-from great_ai import save_model, GreatAI, parameter, use_model
+from great_ai import save_model, GreatAI, parameter, use_model, log_metric
 
 save_model(4, 'secret-number')  #(1)
 
@@ -108,6 +108,10 @@ save_model(4, 'secret-number')  #(1)
 @parameter('positive_number', validator=lambda n: n > 0, disable_logging=True)
 @use_model('secret-number', version='latest', model_kwarg_name='secret')
 def add_number(positive_number: int, secret: int) -> int:
+    log_metric(
+        'log directly into the returned Trace', 
+        positive_number * 2
+    )
     return positive_number + secret
 
 assert add_number(1).output == 5

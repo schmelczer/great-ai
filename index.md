@@ -3,13 +3,12 @@
     <img  src="media/logo.png" width=80>
 </div>
 
-[![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
-[![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
-[![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/test.yml)
 [![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
 [![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
 ![Docker Pulls](https://img.shields.io/docker/pulls/schmelczera/great-ai)
-
+[![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/test.yml)
+[![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
+[![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 
 Applying AI is becoming increasingly easier but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps fixing this by allowing you to ==easily transform your prototype AI code into production-ready software==.
 
@@ -32,7 +31,7 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 - [x] Input validation
 - [x] Sensible cache-policy
 - [x] Seamless support for both synchronous and `async` inference methods
-- [x] Easy integration with other remote GreatAI instances
+- [x] Easy integration with remote GreatAI instances
 - [x] Built-in parallelisation (with support for multiprocessing, async, and mixed modes) for batch processing
 - [x] Well-tested utilities for common NLP tasks (cleaning, language-tagging, sentence-segmentation, etc.)
 - [x] A simple, unified configuration interface
@@ -41,6 +40,11 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 - [x] Docker support for deployment
 - [x] Deployable Jupyter Notebooks
 - [x] Dashboard for high-level overview and analysing traces
+
+## Roadmap
+
+- [ ] Prometheus & Grafana integration
+- [ ] Well-tested feature extraction code for non-NLP data
 - [ ] Support for direct file input
 - [ ] Support for PostgreSQL
 
@@ -66,7 +70,7 @@ def hello_world(name: str) -> str:  #(2)
 2.  [Typing functions](https://docs.python.org/3/library/typing.html){ target=_blank } is recommended in general, however, not required for GreatAI to work.
 
 ??? note
-    In practice, `hello_world` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is imperative to have continuos oversight of the services you provide and data you process.
+    In practice, `hello_world` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is [imperative to have continuos oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and data you process especially in the context of AI/ML applications.
 
 ```sh title="terminal" 
 great-ai hello-world.py
@@ -98,18 +102,20 @@ GreatAI fits between the prototype and deployment phases of your (or your organi
 
 There are other, existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity use those, do that because they're great.
 
-However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. GreatAI is designed to be as simple to use as possible. Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best-practices](https://se-ml.github.io){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
+However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. ==GreatAI is designed to be as simple to use as possible.== Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best-practices](https://se-ml.github.io){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
 
 
-<div style="display: flex; justify-content: space-evenly;" markdown>
+<div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;" markdown>
 [:fontawesome-brands-python: Find it on PyPI](https://pypi.org/project/great-ai){ .md-button .md-button--primary }
 
 [:fontawesome-brands-docker: Find it on DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai){ .md-button .md-button--primary }
+
+[:fontawesome-solid-laptop-code: Check out the tutorial](/tutorial){ .md-button .md-button--primary }
 </div>
 
 ## Production use
 
 GreatAI has been battle-tested on the core platform services of [ScoutinScience](https://www.scoutinscience.com/){ target=_blank }.
 
-![ScoutinScience logo](media/scoutinscience.svg#only-light){ loading=lazy }
-![ScoutinScience logo](media/scoutinscience-white.svg#only-dark){ loading=lazy }
+[![ScoutinScience logo](media/scoutinscience.svg#only-light){ loading=lazy }
+![ScoutinScience logo](media/scoutinscience-white.svg#only-dark){ loading=lazy }](https://www.scoutinscience.com/){ target=_blank }
