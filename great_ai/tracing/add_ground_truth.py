@@ -1,7 +1,7 @@
 from datetime import datetime
 from math import ceil
 from random import shuffle
-from typing import Any, Iterable, List, TypeVar, cast
+from typing import Any, Iterable, List, TypeVar, Union, cast
 from uuid import uuid4
 
 from ..constants import (
@@ -20,14 +20,14 @@ def add_ground_truth(
     inputs: Iterable[Any],
     expected_outputs: Iterable[T],
     *,
-    tags: List[str] = [],
+    tags: Union[List[str], str] = [],
     train_split_ratio: float = 1,
     test_split_ratio: float = 0,
     validation_split_ratio: float = 0
 ) -> None:
     """Add training data (with optional train-test splitting).
 
-    Add and tag datapoints, wrap them into traces. The `inputs` are available via the
+    Add and tag data-points, wrap them into traces. The `inputs` are available via the
     `.input` property, while `expected_outputs` under both the `.output` and `.feedback`
     properties.
 
@@ -46,6 +46,18 @@ def add_ground_truth(
         ...    validation_split_ratio=0.5,
         ... )
 
+        >>> add_ground_truth(
+        ...    [1, 2],
+        ...    ['odd', 'even', 'odd'],
+        ...    tags='my_tag',
+        ...    train_split_ratio=1,
+        ...    test_split_ratio=1,
+        ...    validation_split_ratio=0.5,
+        ... )
+        Traceback (most recent call last):
+            ...
+        AssertionError: The length of the inputs and expected_outputs must be equal
+
     Args:
         inputs: The inputs. (X in scikit-learn)
         expected_outputs: The ground-truth values corresponding to the inputs. (y in
@@ -62,6 +74,8 @@ def add_ground_truth(
     assert len(inputs) == len(
         expected_outputs
     ), "The length of the inputs and expected_outputs must be equal"
+
+    tags = tags if isinstance(tags, list) else [tags]
 
     sum_ratio = train_split_ratio + test_split_ratio + validation_split_ratio
     assert sum_ratio > 0, "The sum of the split ratios must be a positive number"

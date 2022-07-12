@@ -16,6 +16,23 @@ async def call_remote_great_ai_async(
     timeout_in_seconds: Optional[int] = 300,
     model_class: Optional[Type[T]] = None,
 ) -> Trace[T]:
+    """Communicate with a GreatAI object through an HTTP request.
+
+    Send a POST request using [httpx](https://www.python-httpx.org/) to implement a
+    remote call. Error-handling and retries are provided by httpx.
+
+    The return value is inflated into a Trace. If `model_class` is specified, the
+    original output is deserialised.
+
+    Args:
+        base_uri: Address of the remote instance, example: 'http://localhost:6060'
+        data: The input sent as a json to the remote instance.
+        retry_count: Retry on any HTTP communication failure.
+        timeout_in_seconds: Overall permissable max length of the request. `None` means
+            no timeout.
+        model_class: A subtype of BaseModel to be used for deserialising the `.output`
+            of the trace.
+    """
 
     if base_uri.endswith("/"):
         base_uri = base_uri[:-1]

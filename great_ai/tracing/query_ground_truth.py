@@ -14,7 +14,7 @@ def query_ground_truth(
 ) -> List[Trace]:
     """Return training samples.
 
-    Combines, filters, and returns datapoints that have been either added by
+    Combines, filters, and returns data-points that have been either added by
     `add_ground_truth` or were the result of a prediction after which their trace got
     a feedback through the RESP API-s `/traces/{trace_id}/feedback` endpoint
     (end-to-end feedback).

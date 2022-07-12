@@ -20,6 +20,11 @@ def call_remote_great_ai(
     timeout_in_seconds: Optional[int] = 300,
     model_class: Optional[Type[T]] = None,
 ) -> Trace[T]:
+    """Communicate with a GreatAI object through an HTTP request.
+
+    Wrapper over `call_remote_great_ai_async` making it synchronous. For more info, see
+    `call_remote_great_ai_async`.
+    """
     try:
         asyncio.get_running_loop()
         raise Exception(
