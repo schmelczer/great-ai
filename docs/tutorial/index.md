@@ -72,7 +72,7 @@ def predict_domain(sentence, model):
 
 Finally, we test the model's inference function through the GreatAI dashboard. [The only thing left is to deploy the hardened-service properly.](/how-to-guides/use-service)
 
-<div style="display: flex; justify-content: center;" markdown>  
+<div style="display: flex; justify-content: space-evenly;" markdown>  
 [:material-book: Learn about all the features](/how-to-guides/create-service){ .md-button .md-button--primary }
 
 [:material-test-tube: Look at more examples](/examples/simple/data){ .md-button .md-button--secondary }
