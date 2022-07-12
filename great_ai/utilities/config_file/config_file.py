@@ -95,7 +95,9 @@ class ConfigFile(Mapping[str, str]):
                 value = next(v for v in values if v)
             except StopIteration:
                 raise ParseError(
-                    f"Cannot parse config file ({self._path.absolute()}), error at key `{key}`"
+                    f"""Cannot parse config file ({
+                        self._path.absolute()
+                        }), error at key `{key}`"""
                 )
 
             already_exists = key in self._key_values
@@ -155,4 +157,4 @@ class ConfigFile(Mapping[str, str]):
         return self._key_values.items()
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(path={self._path}) {self._key_values}"
+        return f"{type(self).__name__}(path={self._path.as_posix()}) {self._key_values}"
