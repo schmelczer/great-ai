@@ -51,7 +51,8 @@ Some configuration options are also supported.
 ```sh
 great-ai greeter.py --port 8000 --host 127.0.0.1 --timeout_keep_alive 10
 ```
-> For more options (but no Notebook support, use [uvicorn](https://www.uvicorn.org/){ target=_blank })
+??? note "More options"
+    For more options (but no Notebook support), simply use [uvicorn](https://www.uvicorn.org/){ target=_blank } for starting your app (available at `greeter.app`).
 
 ### In production
 
@@ -80,7 +81,7 @@ docker run -p 6060:6060 --volume `pwd`:/app --rm \
 
 #### Use a Platform-as-a-Service
 
-Similarly to the previous approach, your code will run in a container. However, instead of manually managing it, you can just choose from a plethora of PaaS providers (such as [DO App platform](https://www.digitalocean.com/products/app-platform){ target=_blank } or [MLEM](https://mlem.ai/){ target=_blank }) that take a Docker image as a source and handle the rest of the deployment.
+Similarly to the previous approach, your code will run in a container. However, instead of manually managing it, you can just choose from a plethora of PaaS providers (such as [AWS ECS](https://aws.amazon.com/ecs/){ target=_blank }, [DO App platform](https://www.digitalocean.com/products/app-platform){ target=_blank }, [MLEM](https://mlem.ai/){ target=_blank }) that take a Docker image as a source and handle the rest of the deployment.
 
 To this end, you can also create a custom Docker image. It is especially useful if you have third-party dependencies, such as [PyTorch](https://pytorch.org/){ target=_blank } or [TensorFlow](https://www.tensorflow.org/){ target=_blank }.
 

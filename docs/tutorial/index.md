@@ -25,7 +25,7 @@ We use the same synthetic dataset derived from the [Microsoft Academic Graph](ht
 
 ## Summary
 
-### The [training notebook](train.ipynb)
+### [Training notebook](train.ipynb)
 
 We load and preprocess the dataset while relying on [great_ai.utilities.clean][great_ai.utilities.clean.clean] for doing the heavy-lifting. Additionally, the preprocessing is parallelised using [great_ai.utilities.simple_parallel_map][]
 
@@ -52,7 +52,7 @@ After training and evaluating a model, it is exported using [great_ai.save_model
 
     For more info, checkout [the configuration how-to page](/how-to-guides/configure-service).
 
-### The [deployment notebook](deploy.ipynb)
+### [Deployment notebook](deploy.ipynb)
 
 We create an inference function that can be hardened by wrapping it in a [GreatAI][great_ai.GreatAI] instance.
 
@@ -73,5 +73,7 @@ def predict_domain(sentence, model):
 Finally, we test the model's inference function through the GreatAI dashboard. [The only thing left is to deploy the hardened-service properly.](/how-to-guides/use-service)
 
 <div style="display: flex; justify-content: center;" markdown>  
-[:material-book: Learn about more features](/how-to-guides/create-service){ .md-button .md-button--primary }
+[:material-book: Learn about all the features](/how-to-guides/create-service){ .md-button .md-button--primary }
+
+[:material-test-tube: Look at more examples](/examples/simple/data){ .md-button .md-button--secondary }
 </div>

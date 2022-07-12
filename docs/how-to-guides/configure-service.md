@@ -35,9 +35,9 @@ configure(
 
 The only aspect that cannot be automated is choosing the backing storage for the database and file storage.
 
-Right now, you have 3 options for storing the models and large datasets: [great_ai.large_file.LargeFileLocal][], [great_ai.large_file.LargeFileMongo][], and [great_ai.large_file.LargeFileS3][].
+Right now, you have 3 options for storing the models and large datasets: [LargeFileLocal][great_ai.large_file.LargeFileLocal], [LargeFileMongo][great_ai.large_file.LargeFileMongo], and [LargeFileS3][great_ai.large_file.LargeFileS3].
 
-Without explicit configuration, [great_ai.large_file.LargeFileLocal][] is selected by default. This one still version-controls your files but it only stores them in a local path.
+Without explicit configuration, [LargeFileLocal][great_ai.large_file.LargeFileLocal] is selected by default. This one still version-controls your files but it only stores them in a local path.
 
 !!! important
     If your working directory contains a `mongo.ini` or `s3.ini` file, an attempt is made to auto-configure [LargeFileMongo][great_ai.large_file.LargeFileMongo] or [LargeFileS3][great_ai.large_file.LargeFileS3] respectively.
@@ -76,6 +76,7 @@ save_model(model, 'my-model')
 MONGO_CONNECTION_STRING=mongodb://localhost:27017  # this is the default value
 # if `MONGO_CONNECTION_STRING` is specified, this default is overridden
 MONGO_CONNECTION_STRING=ENV:MONGO_CONNECTION_STRING
+
 MONGO_DATABASE=my-database  # it is automatically created if doesn't exist
 ```
 
@@ -98,4 +99,4 @@ By default, a thread-safe version of [TinyDB](https://tinydb.readthedocs.io/en/l
 
 ### MongoDB
 
-At the moment, only MongoDB is supported as a production-ready `TracingDatabase`. In order to use it, you have to either place a file named `mongo.ini` in your working directory, or explicitly call [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver.configure_credentials_from_file] or [MongoDbDriver.configure_credentials][great_ai.MongoDbDriver.configure_credentials].
+At the moment, only MongoDB is supported as a production-ready `TracingDatabase`. In order to use it, you have to either place a file named `mongo.ini` in your working directory, or explicitly call [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver] or [MongoDbDriver.configure_credentials][great_ai.MongoDbDriver.configure_credentials].
