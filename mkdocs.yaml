@@ -93,6 +93,7 @@ nav:
     - tutorial/train.ipynb
     - tutorial/deploy.ipynb
   - User Guides:
+    - how-to-guides/install.md
     - how-to-guides/create-service.md
     - how-to-guides/configure-service.md
     - how-to-guides/use-service.md
