@@ -408,7 +408,7 @@
   
     <li class="md-nav__item">
       <a href="../../../how-to-guides/use-service/" class="md-nav__link">
-        How to use a GreatAI service
+        How to deploy a GreatAI service
       </a>
     </li>
   
@@ -422,7 +422,7 @@
   
     <li class="md-nav__item">
       <a href="../../../how-to-guides/handle-training-data/" class="md-nav__link">
-        How to handle training data
+        How to manage training data
       </a>
     </li>
   
@@ -436,7 +436,7 @@
   
     <li class="md-nav__item">
       <a href="../../../how-to-guides/large_file/" class="md-nav__link">
-        How to use LargeFile
+        How to use LargeFile-s
       </a>
     </li>
   
@@ -449,8 +449,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../how-to-guides/call_remote.md" class="md-nav__link">
-        None
+      <a href="../../../how-to-guides/call-remote/" class="md-nav__link">
+        Call remote GreatAI instances
       </a>
     </li>
   
@@ -1968,7 +1968,8 @@ Licensed under the Apache License, Version 2.0.
 
 <span class="n">manifest</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span>
-        <span class="s2">&quot;https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2022-02-01/manifest.txt&quot;</span>
+        <span class="s2">&quot;https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/&quot;</span>
+        <span class="s2">&quot;open-corpus/2022-02-01/manifest.txt&quot;</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="o">.</span><span class="n">decode</span><span class="p">()</span>
@@ -1978,14 +1979,17 @@ Licensed under the Apache License, Version 2.0.
 <span class="n">shuffle</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 <span class="n">chunks</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[:</span><span class="n">MAX_CHUNK_COUNT</span><span class="p">]</span>
 
-<span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2"> out of the </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="si">}</span><span class="s2"> available chunks&quot;</span>
+<span class="sa">f</span><span class="s2">&quot;&quot;&quot;Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="si">}</span><span class="s2"> out of the </span><span class="si">{</span>
+    <span class="nb">len</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+<span class="si">}</span><span class="s2"> available chunks&quot;&quot;&quot;</span>
 </pre></div>
 <div id="cell-2" class="clipboard-copy-txt">import urllib.request
 from random import shuffle
 
 manifest = (
     urllib.request.urlopen(
-        "https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2022-02-01/manifest.txt"
+        "https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/"
+        "open-corpus/2022-02-01/manifest.txt"
     )
     .read()
     .decode()
@@ -1995,7 +1999,9 @@ lines = manifest.split()
 shuffle(lines)
 chunks = lines[:MAX_CHUNK_COUNT]
 
-f"Processing {len(chunks)} out of the {len(manifest.split())} available chunks"</div>
+f"""Processing {len(chunks)} out of the {
+    len(manifest.split())
+} available chunks"""</div>
     
         </div>
     </div>
@@ -2081,7 +2087,8 @@ f"Processing {len(chunks)} out of the {len(manifest.split())} available chunks"<
 <span class="k">def</span> <span class="nf">preprocess_chunk</span><span class="p">(</span><span class="n">chunk_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
     <span class="c1"># Extract</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2022-02-01/</span><span class="si">{</span><span class="n">chunk_key</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/&quot;</span>
+        <span class="s2">&quot;open-corpus/2022-02-01/</span><span class="si">{chunk_key}</span><span class="s2">&quot;</span>
     <span class="p">)</span>  <span class="c1"># a gzipped JSON Lines file</span>
 
     <span class="n">decompressed</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
@@ -2092,13 +2099,14 @@ f"Processing {len(chunks)} out of the {len(manifest.split())} available chunks"<
     <span class="k">return</span> <span class="p">[</span>
         <span class="p">(</span>
             <span class="n">clean</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;paperAbstract&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;journalName&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;venue&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;paperAbstract&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;journalName&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;venue&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="n">convert_to_ascii</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">),</span>  <span class="c1"># The text is cleaned to remove PDF extraction, web scraping, and other common artifacts</span>
+            <span class="p">),</span>  <span class="c1"># The text is cleaned to remove common artifacts</span>
             <span class="n">c</span><span class="p">[</span><span class="s2">&quot;fieldsOfStudy&quot;</span><span class="p">],</span>
         <span class="p">)</span>  <span class="c1"># Create pairs of `(text, [...domains])`</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chunk</span>
-        <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;fieldsOfStudy&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">is_english</span><span class="p">(</span><span class="n">predict_language</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;paperAbstract&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;fieldsOfStudy&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">is_english</span><span class="p">(</span><span class="n">predict_language</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;paperAbstract&quot;</span><span class="p">])))</span>
     <span class="p">]</span>
 
 
@@ -2121,7 +2129,8 @@ from great_ai.utilities import (
 def preprocess_chunk(chunk_key: str) -> List[Tuple[str, List[str]]]:
     # Extract
     response = urllib.request.urlopen(
-        f"https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2022-02-01/{chunk_key}"
+        f"https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/"
+        "open-corpus/2022-02-01/{chunk_key}"
     )  # a gzipped JSON Lines file
 
     decompressed = gzip.decompress(response.read())
@@ -2132,13 +2141,14 @@ def preprocess_chunk(chunk_key: str) -> List[Tuple[str, List[str]]]:
     return [
         (
             clean(
-                f'{c["title"]} {c["paperAbstract"]} {c["journalName"]} {c["venue"]}',
+                f'{c["title"]} {c["paperAbstract"]} '
+                f'{c["journalName"]} {c["venue"]}',
                 convert_to_ascii=True,
-            ),  # The text is cleaned to remove PDF extraction, web scraping, and other common artifacts
+            ),  # The text is cleaned to remove common artifacts
             c["fieldsOfStudy"],
         )  # Create pairs of `(text, [...domains])`
         for c in chunk
-        if c["fieldsOfStudy"] and is_english(predict_language(c["paperAbstract"]))
+        if (c["fieldsOfStudy"] and is_english(predict_language(c["paperAbstract"])))
     ]
 
 
@@ -2215,7 +2225,7 @@ preprocessed_data = unchunk(
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="load">Load<a class="anchor-link" href="#load">&#182;</a></h3><p>Upload the dataset (or a part of it) to a central repository using <code>great_ai.add_ground_truth</code>. This step automatically tags each datapoint with a split label according to the ratios we set. Additional tags can be also given.</p>
+<h3 id="load">Load<a class="anchor-link" href="#load">&#182;</a></h3><p>Upload the dataset (or a part of it) to a central repository using <code>great_ai.add_ground_truth</code>. This step automatically tags each data-point with a split label according to the ratios we set. Additional tags can be also given.</p>
 <h4 id="production-ready-backend">Production-ready backend<a class="anchor-link" href="#production-ready-backend">&#182;</a></h4><p>The MongoDB driver is automatically configured if  <code>mongo.ini</code> exists with the following scheme:</p>
 <div class="highlight"><pre><span></span><span class="na">mongo_connection_string</span><span class="o">=</span><span class="s">mongodb://localhost:27017/</span><span class="w"></span>
 <span class="na">mongo_database</span><span class="o">=</span><span class="s">my_great_ai_db</span><span class="w"></span>

@@ -17,7 +17,7 @@
     
     
       
-        <title>How to handle training data - GreatAI documentation</title>
+        <title>How to manage training data - GreatAI documentation</title>
       
     
     
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-to-handle-training-data" class="md-skip">
+        <a href="#how-to-manage-training-data" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              How to handle training data
+              How to manage training data
             
           </span>
         </div>
@@ -410,7 +410,7 @@
   
     <li class="md-nav__item">
       <a href="../use-service/" class="md-nav__link">
-        How to use a GreatAI service
+        How to deploy a GreatAI service
       </a>
     </li>
   
@@ -433,12 +433,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          How to handle training data
+          How to manage training data
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        How to handle training data
+        How to manage training data
       </a>
       
         
@@ -464,8 +464,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-feedback" class="md-nav__link">
-    Use feedback
+  <a href="#get-feedback" class="md-nav__link">
+    Get feedback
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-clutter" class="md-nav__link">
+    Remove clutter
   </a>
   
 </li>
@@ -486,7 +493,7 @@
   
     <li class="md-nav__item">
       <a href="../large_file/" class="md-nav__link">
-        How to use LargeFile
+        How to use LargeFile-s
       </a>
     </li>
   
@@ -499,8 +506,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../call_remote.md" class="md-nav__link">
-        None
+      <a href="../call-remote/" class="md-nav__link">
+        Call remote GreatAI instances
       </a>
     </li>
   
@@ -775,8 +782,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-feedback" class="md-nav__link">
-    Use feedback
+  <a href="#get-feedback" class="md-nav__link">
+    Get feedback
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-clutter" class="md-nav__link">
+    Remove clutter
   </a>
   
 </li>
@@ -803,16 +817,69 @@
 
 
 
-<h1 id="how-to-handle-training-data">How to handle training data<a class="headerlink" href="#how-to-handle-training-data" title="Permanent link">#</a></h1>
+<h1 id="how-to-manage-training-data">How to manage training data<a class="headerlink" href="#how-to-manage-training-data" title="Permanent link">#</a></h1>
+<p>In order to simplify your training data management, <code>great-ai</code> provide two complementing approaches for inputting new data-points.</p>
 <h2 id="upload-data">Upload data<a class="headerlink" href="#upload-data" title="Permanent link">#</a></h2>
-<h2 id="use-feedback">Use feedback<a class="headerlink" href="#use-feedback" title="Permanent link">#</a></h2>
+<p>At the start of your experiments' first iteration, after you've gathered suitable samples for training, you can call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>. This automatically stores a timestamp and also allows you to assign tags to the data. Using these attributes, <a class="autorefs autorefs-internal" href="../../reference/#great_ai.query_ground_truth">great_ai.query_ground_truth</a> can be called to get a filtered view of the training data.</p>
+<div class="admonition important">
+<p class="admonition-title">Train-test-validation splits</p>
+<p>It is a best-practice to lock-away a test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it, or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results, hence, care must be taken to avoid it.</p>
+<p>With <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>, there is an option to tag the samples with <code>train</code>, <code>test</code>, and <code>validation</code> randomly, following a predefined distribution. This happens as soon as they're written in the database. Later on, these can be queried by providing the name of the appropriate tags.</p>
+</div>
+<p>The nice thing about this is that the 'input-expected output' pairs are stored as traces. Thus, they behave exactly like regular prediction traces.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">add_ground_truth</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">add_ground_truth</span><span class="p">(</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="p">[</span><span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="s1">&#39;even&#39;</span><span class="p">],</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">tags</span><span class="o">=</span><span class="s1">&#39;my_tag&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">train_split_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1">#(1)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">test_split_ratio</span><span class="o">=</span><span class="mi">1</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li>Note that the ratios don't have to add up to 1. They are just weights. There is also a <code>validation_split_ratio</code> which is 0 by default.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">query_ground_truth</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">query_ground_truth</span><span class="p">(</span><span class="s1">&#39;my_tag&#39;</span><span class="p">)</span>    
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">[</span><span class="n">Trace</span><span class="p">[</span><span class="nb">str</span><span class="p">]({</span><span class="s1">&#39;created&#39;</span><span class="p">:</span> <span class="s1">&#39;2022-07-12T18:36:12.825706&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>   <span class="s1">&#39;exception&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   <span class="s1">&#39;feedback&#39;</span><span class="p">:</span> <span class="s1">&#39;odd&#39;</span><span class="p">,</span>  <span class="c1">#(1)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   <span class="s1">&#39;logged_values&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>  <span class="c1">#(2)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   <span class="s1">&#39;models&#39;</span><span class="p">:</span> <span class="p">[],</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   <span class="s1">&#39;original_execution_time_ms&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="s1">&#39;odd&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ground_truth&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;my_tag&#39;</span><span class="p">],</span> <span class="c1">#(3) </span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   <span class="s1">&#39;trace_id&#39;</span><span class="p">:</span> <span class="s1">&#39;4fcf2ce6-a172-469d-94b2-874577655814&#39;</span><span class="p">}),</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> <span class="n">Trace</span><span class="p">[</span><span class="nb">str</span><span class="p">]({</span><span class="s1">&#39;created&#39;</span><span class="p">:</span> <span class="s1">&#39;2022-07-12T18:36:12.825706&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>   <span class="s1">&#39;exception&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   <span class="s1">&#39;feedback&#39;</span><span class="p">:</span> <span class="s1">&#39;even&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   <span class="s1">&#39;logged_values&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   <span class="s1">&#39;models&#39;</span><span class="p">:</span> <span class="p">[],</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>   <span class="s1">&#39;original_execution_time_ms&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="s1">&#39;even&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ground_truth&#39;</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;my_tag&#39;</span><span class="p">],</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   <span class="s1">&#39;trace_id&#39;</span><span class="p">:</span> <span class="s1">&#39;abee0671-beb9-4284-8c3b-c65e5836ce38&#39;</span><span class="p">})]</span>
+</code></pre></div>
+<ol>
+<li>Expected output. This can be also accessed through the <code>.output</code> property.</li>
+<li>The input value is stored here.</li>
+<li>Notice how <code>ground_truth</code> always included as a tag when using <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>. </li>
+</ol>
+<h2 id="get-feedback">Get feedback<a class="headerlink" href="#get-feedback" title="Permanent link">#</a></h2>
+<p>After the initial data gathering, end-to-end feedback can be also integrated into the dataset. </p>
+<p>The scaffolded REST API contains endpoints for managing traces and their feedbacks.</p>
+<p><img alt="screenshot of swagger" loading="lazy" src="/media/feedback.png" /></p>
+<p>When <a class="autorefs autorefs-internal" href="../../reference/#great_ai.query_ground_truth">great_ai.query_ground_truth</a> is executed, it implicitly filters for traces that have feedback. Therefore, both the <code>ground_truth</code> and the <code>online</code> traces that have received feedback are returned. No matter the origin of the data, it can be accessed using the same API.</p>
+<h2 id="remove-clutter">Remove clutter<a class="headerlink" href="#remove-clutter" title="Permanent link">#</a></h2>
+<p>Traces can be deleted either through the REST API or by calling <a class="autorefs autorefs-internal" href="../../reference/#great_ai.delete_ground_truth">great_ai.delete_ground_truth</a>. The latter provides the same interface as <a class="autorefs autorefs-internal" href="../../reference/#great_ai.query_ground_truth">great_ai.query_ground_truth</a> except it deletes the matched points.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 11, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
       
     
   </small>
@@ -833,7 +900,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../use-service/" class="md-footer__link md-footer__link--prev" aria-label="Previous: How to use a GreatAI service" rel="prev">
+        <a href="../use-service/" class="md-footer__link md-footer__link--prev" aria-label="Previous: How to deploy a GreatAI service" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -842,20 +909,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              How to use a GreatAI service
+              How to deploy a GreatAI service
             </div>
           </div>
         </a>
       
       
         
-        <a href="../large_file/" class="md-footer__link md-footer__link--next" aria-label="Next: How to use LargeFile" rel="next">
+        <a href="../large_file/" class="md-footer__link md-footer__link--next" aria-label="Next: How to use LargeFile-s" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              How to use LargeFile
+              How to use LargeFile-s
             </div>
           </div>
           <div class="md-footer__button md-icon">
