@@ -13,6 +13,11 @@ T = TypeVar("T")
 
 
 class TracingContext(Generic[T]):
+    """Provide a global context variable throughout the life-cycle of a prediction.
+
+    Should only be used by internal great-ai functions.
+    """
+
     def __init__(self, function_name: str, do_not_persist_traces: bool) -> None:
         self._do_not_persist_traces = do_not_persist_traces
         self._models: List[Model] = []
@@ -34,26 +39,28 @@ class TracingContext(Generic[T]):
         assert self._trace is None, "has been already finalised"
 
         delta_time = round((perf_counter() - self._start_time) * 1000, 4)
-        self._trace = cast(
-            Trace[T],
-            Trace(  # avoid ValueError: "Trace" object has no field "__orig_class__"
-                trace_id=str(uuid4()),
-                created=self._start_datetime.isoformat(),
-                original_execution_time_ms=delta_time,
-                logged_values=self._values,
-                models=self._models,
-                output=output,
-                exception=None
-                if exception is None
-                else f"{type(exception).__name__}: {exception}",
-                tags=[
-                    self._name,
-                    ONLINE_TAG_NAME,
-                    PRODUCTION_TAG_NAME
-                    if get_context().is_production
-                    else DEVELOPMENT_TAG_NAME,
-                ],
-            ),
+        self._trace = (
+            cast(  # avoid ValueError: "Trace" object has no field "__orig_class__"
+                Trace[T],
+                Trace(
+                    trace_id=str(uuid4()),
+                    created=self._start_datetime.isoformat(),
+                    original_execution_time_ms=delta_time,
+                    logged_values=self._values,
+                    models=self._models,
+                    output=output,
+                    exception=None
+                    if exception is None
+                    else f"{type(exception).__name__}: {exception}",
+                    tags=[
+                        self._name,
+                        ONLINE_TAG_NAME,
+                        PRODUCTION_TAG_NAME
+                        if get_context().is_production
+                        else DEVELOPMENT_TAG_NAME,
+                    ],
+                ),
+            )
         )
 
         return self._trace

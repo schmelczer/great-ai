@@ -9,6 +9,8 @@ def unchunk(chunks: Iterable[Optional[Iterable[T]]]) -> Iterable[T]:
     The inverse operation of [chunk][great_ai.utilities.chunk.chunk].
     Useful for parallel processing.
 
+    Similar to itertools.chain but ignores `None` chunks.
+
     Examples:
         >>> list(unchunk([[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]))
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

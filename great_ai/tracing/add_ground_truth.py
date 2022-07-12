@@ -25,7 +25,37 @@ def add_ground_truth(
     test_split_ratio: float = 0,
     validation_split_ratio: float = 0
 ) -> None:
-    get_context()  # this resets the seed
+    """Add training data (with optional train-test splitting).
+
+    Add and tag datapoints, wrap them into traces. The `inputs` are available via the
+    `.input` property, while `expected_outputs` under both the `.output` and `.feedback`
+    properties.
+
+    All generated traces are tagged with `ground_truth` by default. Additional tags can
+    be also provided. Using the `split_ratio` arguments, tags can be given randomly with
+    a user-defined distribution. Only the ratio of the splits matter, they don't have to
+    add up to 1.
+
+    Examples:
+        >>> add_ground_truth(
+        ...    [1, 2, 3],
+        ...    ['odd', 'even', 'odd'],
+        ...    tags='my_tag',
+        ...    train_split_ratio=1,
+        ...    test_split_ratio=1,
+        ...    validation_split_ratio=0.5,
+        ... )
+
+    Args:
+        inputs: The inputs. (X in scikit-learn)
+        expected_outputs: The ground-truth values corresponding to the inputs. (y in
+            scikit-learn)
+        tags: A single tag or a list of tags to append to each generated trace's tags.
+        train_split_ratio: The probability-weight of giving each trace the `train` tag.
+        test_split_ratio: The probability-weight of giving each trace the `test` tag.
+        validation_split_ratio: The probability-weight of giving each trace the
+        `validation` tag.
+    """
 
     inputs = list(inputs)
     expected_outputs = list(expected_outputs)
