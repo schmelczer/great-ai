@@ -2,6 +2,7 @@
   "cSpell.words": [
     "alru",
     "Analyse",
+    "András",
     "basereload",
     "boto",
     "botocore",
@@ -75,5 +76,6 @@
   "python.linting.pylintEnabled": false,
   "python.linting.mypyEnabled": true,
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "editor.wordWrap": "on"
 }
