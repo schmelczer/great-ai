@@ -46,15 +46,16 @@ def simple_parallel_map(
     """
 
     input_values = list(input_values)  # in case the input is mistakenly not a sequence
+    generator = parallel_map(
+        func=func,
+        input_values=input_values,
+        chunk_size=chunk_size,
+        concurrency=concurrency,
+    )
+
     return list(
         tqdm(
-            parallel_map(
-                func=func,
-                input_values=input_values,
-                chunk_size=chunk_size,
-                concurrency=concurrency,
-            ),
+            generator,
             total=len(input_values),
-            dynamic_ncols=True,
         )
     )
