@@ -101,7 +101,6 @@ nav:
     - how-to-guides/handle-training-data.md
     - how-to-guides/large_file.md
     - how-to-guides/call-remote.md
-    - how-to-guides/scraping.ipynb
   - Reference:
     - reference/index.md
     - reference/utilities.md

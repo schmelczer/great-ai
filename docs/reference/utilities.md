@@ -10,10 +10,10 @@ Well-tested tools that can be used in production with confidence. The toolbox of
 
 ::: great_ai.utilities.clean
 ::: great_ai.utilities.get_sentences
-::: great_ai.utilities.predict_language
-::: great_ai.utilities.is_english
-::: great_ai.utilities.english_name_of_language
-::: great_ai.utilities.evaluate_ranking
+::: great_ai.utilities.language.predict_language
+::: great_ai.utilities.language.english_name_of_language
+::: great_ai.utilities.language.is_english
+::: great_ai.utilities.evaluate_ranking.evaluate_ranking
 
 ## Parallel processing
 
@@ -29,7 +29,7 @@ Multiprocessing and multithreading-based parallelism with support for `async` fu
 
 ## Composable parallel processing
 
-Because both [threaded_parallel_map][great_ai.utilities.parallel_map.threaded_parallel_map.threaded_parallel_map] and [parallel_map][great_ai.utilities.parallel_map.parallel_map] have a streaming interface, it is easy to compose them and end up with, for example, a process for each CPU core with its own thread-pool or event-loop. Longer pipelines are also easy to imagine. The chunking methods help in these compositions.
+Because both [threaded_parallel_map][great_ai.utilities.parallel_map.threaded_parallel_map.threaded_parallel_map] and [parallel_map][great_ai.utilities.parallel_map.parallel_map.parallel_map] have a streaming interface, it is easy to compose them and end up with, for example, a process for each CPU core with its own thread-pool or event-loop. Longer pipelines are also easy to imagine. The chunking methods help in these compositions.
 
 For more info, check-out [the scraping guide](/how-to-guides/scraping).
 

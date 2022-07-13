@@ -18,7 +18,7 @@ def english_name_of_language(language_code: Optional[str]) -> str:
 
     Args:
         language_code: Language code, for example, returned by
-            [great_ai.utilities.predict_language][].
+            [great_ai.utilities.language.predict_language.predict_language][].
 
     Returns:
         English name of language.

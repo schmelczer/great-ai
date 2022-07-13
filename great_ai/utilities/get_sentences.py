@@ -34,7 +34,7 @@ def get_sentences(
     Args:
         text: Text to be segmented into sentences.
         ignore_partial: Filter out sentences that are not capitalised/don't end with a
-        punctuation.
+            punctuation.
         true_case: Crude method: lowercase the first word of each sentence.
         remove_punctuation: Remove all kinds of punctuation.
 

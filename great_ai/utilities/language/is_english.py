@@ -21,7 +21,7 @@ def is_english(language_code: Optional[str]) -> bool:
 
     Args:
         language_code: Language code, for example, returned by
-            `[great_ai.utilities.predict_language][].
+            `[great_ai.utilities.language.predict_language.predict_language][].
 
     Returns:
         Boolean indicating whether it's English.

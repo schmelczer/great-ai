@@ -190,7 +190,7 @@ class GreatAI(Generic[T, V]):
     ) -> List[Trace[V]]:
         """Map the wrapped function over a list of input_values (`batch`).
 
-        A wrapper over [parallel_map][great_ai.utilities.parallel_map]
+        A wrapper over [parallel_map][great_ai.utilities.parallel_map.parallel_map.parallel_map]
         providing type-safety and a progressbar through tqdm.
 
         Args:

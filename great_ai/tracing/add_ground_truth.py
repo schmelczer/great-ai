@@ -66,7 +66,7 @@ def add_ground_truth(
         train_split_ratio: The probability-weight of giving each trace the `train` tag.
         test_split_ratio: The probability-weight of giving each trace the `test` tag.
         validation_split_ratio: The probability-weight of giving each trace the
-        `validation` tag.
+            `validation` tag.
     """
 
     inputs = list(inputs)
