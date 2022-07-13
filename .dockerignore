@@ -1,6 +1,5 @@
 .env
 .git
-__pycache__
 .cache
 .mypy_cache
 .pytest_cache
@@ -14,3 +13,6 @@ docs
 scripts
 tests
 mkdocs.yaml
+**/.mypy_cache
+**/__pycache__
+**/tracing_database.json
