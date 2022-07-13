@@ -1,5 +1,5 @@
 """GreatAI."""
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 
 from .context import configure
@@ -22,10 +22,10 @@ from .remote.call_remote_great_ai_async import call_remote_great_ai_async
 from .tracing.add_ground_truth import add_ground_truth
 from .tracing.delete_ground_truth import delete_ground_truth
 from .tracing.query_ground_truth import query_ground_truth
-from .views import (
-    ClassificationOutput,
+from .views import RouteConfig, Trace
+from .views.outputs.classification_output import ClassificationOutput
+from .views.outputs.multi_label_classification_output import (
     MultiLabelClassificationOutput,
-    RegressionOutput,
-    RouteConfig,
-    Trace,
 )
+from .views.outputs.regression_output import RegressionOutput
+from .views.outputs.sequence_labeling_output import SequenceLabelingOutput
