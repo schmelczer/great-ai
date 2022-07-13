@@ -408,7 +408,7 @@
   
     <li class="md-nav__item">
       <a href="../how-to-guides/use-service/" class="md-nav__link">
-        How to deploy a GreatAI service
+        How to perform prediction with GreatAI
       </a>
     </li>
   
@@ -2847,7 +2847,7 @@ Returns:
 
 
 <h3 id="great_ai.parameter" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">parameter</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="n">disable_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">parameter</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="n">disable_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 <a href="#great_ai.parameter" class="headerlink" title="Permanent link">#</a></h3>
 
@@ -2867,7 +2867,7 @@ Returns:
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="o">...</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gr">TypeError</span>: <span class="n">type of a must be int; got str instead</span>
 </code></pre></div>
-    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="nd">@parameter</span><span class="p">(</span><span class="s1">&#39;positive_a&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="nd">@parameter</span><span class="p">(</span><span class="s1">&#39;positive_a&#39;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">... </span><span class="k">def</span> <span class="nf">my_function</span><span class="p">(</span><span class="n">positive_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">my_function</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -2898,11 +2898,12 @@ Returns:
           </td>
         </tr>
         <tr>
-          <td><code>validator</code></td>
+          <td><code>validate</code></td>
           <td>
                 <code><span title="typing.Callable">Callable</span>[[<span title="typing.Any">Any</span>], bool]</code>
           </td>
-          <td><p>Optional validator to run against the concrete argument. ArgumentValidationError is thrown when the return value is False.</p></td>
+          <td><p>Optional validate to run against the concrete argument.
+ArgumentValidationError is thrown when the return value is False.</p></td>
           <td>
                 <code>lambda _: True</code>
           </td>
@@ -3006,10 +3007,13 @@ Returns:
 <span class="normal"><a href="#__codelineno-0-77">77</a></span>
 <span class="normal"><a href="#__codelineno-0-78">78</a></span>
 <span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">def</span> <span class="nf">parameter</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-80">80</a></span>
+<span class="normal"><a href="#__codelineno-0-81">81</a></span>
+<span class="normal"><a href="#__codelineno-0-82">82</a></span>
+<span class="normal"><a href="#__codelineno-0-83">83</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">def</span> <span class="nf">parameter</span><span class="p">(</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">parameter_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">validator</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">validate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">disable_logging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">F</span><span class="p">],</span> <span class="n">F</span><span class="p">]:</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="sd">&quot;&quot;&quot;Control the validation and logging of function parameters.</span>
@@ -3025,7 +3029,7 @@ Returns:
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">            ...</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">        TypeError: type of a must be int; got str instead</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">        &gt;&gt;&gt; @parameter(&#39;positive_a&#39;, validator=lambda v: v &gt; 0)</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">        &gt;&gt;&gt; @parameter(&#39;positive_a&#39;, validate=lambda v: v &gt; 0)</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">        ... def my_function(positive_a: int):</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">        ...     return a + 2</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        &gt;&gt;&gt; my_function(-1)</span>
@@ -3035,44 +3039,47 @@ Returns:
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        parameter_name: Name of parameter to consider</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        validator: Optional validator to run against the concrete argument. ArgumentValidationError is thrown when the return value is False.</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        disable_logging: Do not save the value in any active TracingContext.</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        A decorator for argument validation.</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">F</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="n">get_function_metadata_store</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">input_parameter_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">assert_function_is_not_finalised</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="n">actual_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arg:</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>            <span class="n">arguments</span> <span class="o">=</span> <span class="n">get_arguments</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>            <span class="n">argument</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>            <span class="n">expected_type</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__annotations__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="k">if</span> <span class="n">expected_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>                <span class="n">check_type</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">validator</span><span class="p">(</span><span class="n">argument</span><span class="p">):</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>                <span class="k">raise</span> <span class="n">ArgumentValidationError</span><span class="p">(</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>                    <span class="sa">f</span><span class="s2">&quot;Argument </span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> did not pass validation&quot;</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>                <span class="p">)</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="n">context</span> <span class="o">=</span> <span class="n">TracingContext</span><span class="o">.</span><span class="n">get_current_tracing_context</span><span class="p">()</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="k">if</span> <span class="n">context</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">disable_logging</span><span class="p">:</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>                <span class="n">context</span><span class="o">.</span><span class="n">log_value</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_name</span><span class="si">}</span><span class="s2">:value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">argument</span><span class="p">)</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>                    <span class="n">context</span><span class="o">.</span><span class="n">log_value</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_name</span><span class="si">}</span><span class="s2">:length&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">argument</span><span class="p">))</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">)</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="k">return</span> <span class="n">decorator</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        validate: Optional validate to run against the concrete argument.</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">            ArgumentValidationError is thrown when the return value is False.</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        disable_logging: Do not save the value in any active TracingContext.</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        A decorator for argument validation.</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">F</span><span class="p">:</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">get_function_metadata_store</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">input_parameter_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="n">assert_function_is_not_finalised</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="n">actual_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arg:</span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>            <span class="n">arguments</span> <span class="o">=</span> <span class="n">get_arguments</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>            <span class="n">argument</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="n">expected_type</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__annotations__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">)</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="k">if</span> <span class="n">expected_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>                <span class="n">check_type</span><span class="p">(</span><span class="n">parameter_name</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">)</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">validate</span><span class="p">(</span><span class="n">argument</span><span class="p">):</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>                <span class="k">raise</span> <span class="n">ArgumentValidationError</span><span class="p">(</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>                    <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Argument </span><span class="si">{</span><span class="n">parameter_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>                        <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>                    <span class="si">}</span><span class="s2"> did not pass validation&quot;&quot;&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>                <span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="n">context</span> <span class="o">=</span> <span class="n">TracingContext</span><span class="o">.</span><span class="n">get_current_tracing_context</span><span class="p">()</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>            <span class="k">if</span> <span class="n">context</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">disable_logging</span><span class="p">:</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>                <span class="n">context</span><span class="o">.</span><span class="n">log_value</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_name</span><span class="si">}</span><span class="s2">:value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">argument</span><span class="p">)</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>                    <span class="n">context</span><span class="o">.</span><span class="n">log_value</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_name</span><span class="si">}</span><span class="s2">:length&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">argument</span><span class="p">))</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">)</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="k">return</span> <span class="n">decorator</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>

@@ -408,7 +408,7 @@
   
     <li class="md-nav__item">
       <a href="../../../how-to-guides/use-service/" class="md-nav__link">
-        How to deploy a GreatAI service
+        How to perform prediction with GreatAI
       </a>
     </li>
   
@@ -1892,7 +1892,7 @@ Licensed under the Apache License, Version 2.0.
 
 <span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
 <span class="nd">@use_model</span><span class="p">(</span><span class="s2">&quot;small-domain-prediction&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;latest&quot;</span><span class="p">)</span>
-<span class="nd">@parameter</span><span class="p">(</span><span class="s2">&quot;target_confidence&quot;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">)</span>
+<span class="nd">@parameter</span><span class="p">(</span><span class="s2">&quot;target_confidence&quot;</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">predict_domain</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">target_confidence</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultiLabelClassificationOutput</span><span class="p">:</span>
@@ -1962,7 +1962,7 @@ from great_ai import (
 
 @GreatAI.create
 @use_model("small-domain-prediction", version="latest")
-@parameter("target_confidence", validator=lambda c: 0 <= c <= 100)
+@parameter("target_confidence", validate=lambda c: 0 <= c <= 100)
 def predict_domain(
     text: str, model: Pipeline, target_confidence: int = 50
 ) -> MultiLabelClassificationOutput:
@@ -2255,7 +2255,7 @@ class="
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 13, 2022</span>
       
     
   </small>

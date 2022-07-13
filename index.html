@@ -480,7 +480,7 @@
   
     <li class="md-nav__item">
       <a href="how-to-guides/use-service/" class="md-nav__link">
-        How to deploy a GreatAI service
+        How to perform prediction with GreatAI
       </a>
     </li>
   
@@ -874,12 +874,12 @@
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Save prediction traces of each prediction including arguments and model versions</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Save feedback and merge it into a ground-truth database <em><img alt="➡" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/27a1.svg" title=":arrow_right:" /> quasi-shadow deployment</em></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Save feedback and merge it into a ground-truth database</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Version and store models and data on shared infrastructure <em>(MongoDB GridFS, S3-compatible storage, shared local-volume)</em></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Automatically scaffolded custom REST API (and OpenAPI schema) for easy integration</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Input validation</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Sensible cache-policy</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Seamless support for both synchronous and <code>async</code> inference methods</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Seamless support for both synchronous and asynchronous inference methods</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Easy integration with remote GreatAI instances</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Built-in parallelisation (with support for multiprocessing, async, and mixed modes) for batch processing</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Well-tested utilities for common NLP tasks (cleaning, language-tagging, sentence-segmentation, etc.)</li>
@@ -921,7 +921,7 @@
 </ol>
 <details class="note">
 <summary>Note</summary>
-<p>In practice, <code>greeter</code> could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is <a href="https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai" target="_blank">imperative to have continuos oversight</a> of the services you provide and data you process especially in the context of AI/ML applications.</p>
+<p>In practice, <code>greeter</code> could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either way, it is <a href="https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai" target="_blank">imperative to have continuous oversight</a> of the services you provide and data you process especially in the context of AI/ML applications.</p>
 </details>
 <div class="highlight"><span class="filename">terminal</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>great-ai demo.py
 </code></pre></div>
@@ -944,7 +944,7 @@
 <li><strong>T</strong>rustworthy: deploy models that you and society can confidently trust</li>
 </ul>
 <h2 id="why-greatai">Why GreatAI?<a class="headerlink" href="#why-greatai" title="Permanent link">#</a></h2>
-<p>There are other, existing solutions aiming to facilitate this phase. <a href="https://aws.amazon.com/sagemaker" target="_blank">Amazon SageMaker</a> and <a href="https://www.seldon.io/solutions/open-source-projects/core" target="_blank">Seldon Core</a> provide the most comprehensive suite of features. If you have the opportunity use those, do that because they're great.</p>
+<p>There are other, existing solutions aiming to facilitate this phase. <a href="https://aws.amazon.com/sagemaker" target="_blank">Amazon SageMaker</a> and <a href="https://www.seldon.io/solutions/open-source-projects/core" target="_blank">Seldon Core</a> provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.</p>
 <p>However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. <mark>GreatAI is designed to be as simple to use as possible.</mark> Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the <a href="https://se-ml.github.io" target="_blank">SE4ML best-practices</a>, and thus, can meaningfully improve your deployment without requiring prohibitively large effort.</p>
 <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
 <p><a class="md-button md-button--primary" href="https://pypi.org/project/great-ai"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"/></svg></span> Find it on PyPI</a></p>

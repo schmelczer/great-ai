@@ -1,4 +1,4 @@
-# How to deploy a GreatAI service
+# How to perform prediction with GreatAI
 
 After [creating a GreatAI service](/how-to-guides/create-service) by wrapping your prediction function, and optionally [configuring it](/how-to-guides/configure-service), it's time to do some prediction.
 

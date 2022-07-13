@@ -43,6 +43,7 @@ results = [
 
 print(results)
 ```
+
 1.  Only return the outputs so we don't clutter up the terminal.
 
 > Run this script as a regular Python script by executing `python3 client.py`.

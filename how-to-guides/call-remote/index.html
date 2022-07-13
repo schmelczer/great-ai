@@ -410,7 +410,7 @@
   
     <li class="md-nav__item">
       <a href="../use-service/" class="md-nav__link">
-        How to deploy a GreatAI service
+        How to perform prediction with GreatAI
       </a>
     </li>
   
@@ -891,7 +891,7 @@
 <p>Run this in development mode by executing <code>great-ai server.py</code> or <code>python3 -m great_ai server.py</code> if you're on Windows and <a href="/how-to-guides/install"><code>great-ai</code> is not in your <code>PATH</code></a>.</p>
 </blockquote>
 <h3 id="client">Client<a class="headerlink" href="#client" title="Permanent link">#</a></h3>
-<p><div class="highlight"><span class="filename">client.py</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">call_remote_great_ai</span>
+<div class="highlight"><span class="filename">client.py</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">call_remote_great_ai</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Olivér&#39;</span><span class="p">,</span> <span class="s1">&#39;Balázs&#39;</span><span class="p">,</span> <span class="s1">&#39;András&#39;</span><span class="p">]</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
@@ -907,7 +907,9 @@
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </code></pre></div>
-1.  Only return the outputs so we don't clutter up the terminal.</p>
+<ol>
+<li>Only return the outputs so we don't clutter up the terminal.</li>
+</ol>
 <blockquote>
 <p>Run this script as a regular Python script by executing <code>python3 client.py</code>.</p>
 </blockquote>
