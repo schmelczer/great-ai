@@ -30,7 +30,7 @@ def hello_world(name: str) -> str:
 
 Start it by executing `great-ai main.py`, find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
 
-![dashboard](/docs/media/hello-world-dashboard.png)
+[demo.webm](https://user-images.githubusercontent.com/13354219/178734262-e1eefb6b-0482-4191-9b07-63b4322bab83.webm)
 
 That's it. Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
