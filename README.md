@@ -24,13 +24,13 @@ pip install great-ai
 from great_ai import GreatAI
 
 @GreatAI.create
-def hello_world(name: str) -> str:
+def greeter(name: str) -> str:
     return f"Hello {name}!"
 ```
 
 Start it by executing `great-ai main.py`, find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
 
-[demo.webm](https://user-images.githubusercontent.com/13354219/178734262-e1eefb6b-0482-4191-9b07-63b4322bab83.webm)
+[demo screen capture](https://user-images.githubusercontent.com/13354219/178735057-c54daafb-c140-42b7-b29c-8d29365887fe.mp4)
 
 That's it. Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
