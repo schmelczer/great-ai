@@ -10,29 +10,29 @@
 
 Applying AI is becoming increasingly easier but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing unintended biases. GreatAI helps fixing this by allowing you to easily transform your prototype AI code into production-ready software.
 
-[Check out the full documentation here](https://great-ai.scoutinscience.com).
-
 ## Example
 
 ```sh
 pip install great-ai
 ```
 
-> Create a new file called `main.py`
+> Create a new file called `demo.py`
 
 ```python
 from great_ai import GreatAI
 
 @GreatAI.create
-def hello_world(name: str) -> str:
+def greeter(name: str) -> str:
     return f"Hello {name}!"
 ```
 
-Start it by executing `great-ai main.py`, find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
+Start it by executing `great-ai demo.py`, find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
 
-![dashboard](/docs/media/hello-world-dashboard.png)
+![demo screen capture](docs/media/demo.gif)
 
-That's it. Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
+That's it. Your GreatAI service is *nearly* ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
+
+[Check out the full documentation here](https://great-ai.scoutinscience.com).
 
 ## Why is this GREAT?
 
