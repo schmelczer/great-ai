@@ -41,7 +41,7 @@ def test_create_with_other_decorator() -> None:
 
 def test_with_parameter() -> None:
     @GreatAI.create
-    @parameter("name", validator=lambda v: len(v) > 5)
+    @parameter("name", validate=lambda v: len(v) > 5)
     def hello_world(name: str) -> str:
         return f"Hello {name}!"
 
@@ -54,7 +54,7 @@ def test_with_parameter() -> None:
 def test_wrong_order() -> None:
     with pytest.raises(WrongDecoratorOrderError):
 
-        @parameter("name", validator=lambda v: len(v) > 5)
+        @parameter("name", validate=lambda v: len(v) > 5)
         @GreatAI.create
         def hello_world(name: str) -> str:
             return f"Hello {name}!"

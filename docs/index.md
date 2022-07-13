@@ -25,12 +25,12 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 ## Features
 
 - [x] Save prediction traces of each prediction including arguments and model versions
-- [x] Save feedback and merge it into a ground-truth database *:arrow_right: quasi-shadow deployment*
+- [x] Save feedback and merge it into a ground-truth database
 - [x] Version and store models and data on shared infrastructure *(MongoDB GridFS, S3-compatible storage, shared local-volume)*
 - [x] Automatically scaffolded custom REST API (and OpenAPI schema) for easy integration
 - [x] Input validation
 - [x] Sensible cache-policy
-- [x] Seamless support for both synchronous and `async` inference methods
+- [x] Seamless support for both synchronous and asynchronous inference methods
 - [x] Easy integration with remote GreatAI instances
 - [x] Built-in parallelisation (with support for multiprocessing, async, and mixed modes) for batch processing
 - [x] Well-tested utilities for common NLP tasks (cleaning, language-tagging, sentence-segmentation, etc.)
@@ -70,7 +70,7 @@ def greeter(name: str) -> str:  #(2)
 2.  [Typing functions](https://docs.python.org/3/library/typing.html){ target=_blank } is recommended in general, however, not required for GreatAI to work.
 
 ??? note
-    In practice, `greeter` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is [imperative to have continuos oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and data you process especially in the context of AI/ML applications.
+    In practice, `greeter` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either way, it is [imperative to have continuous oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and data you process especially in the context of AI/ML applications.
 
 ```sh title="terminal" 
 great-ai demo.py
@@ -96,7 +96,7 @@ GreatAI fits between the prototype and deployment phases of your (or your organi
 
 ## Why GreatAI?
 
-There are other, existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity use those, do that because they're great.
+There are other, existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.
 
 However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. ==GreatAI is designed to be as simple to use as possible.== Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best-practices](https://se-ml.github.io){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
 

@@ -14,7 +14,7 @@ F = TypeVar("F", bound=Callable)
 def parameter(
     parameter_name: str,
     *,
-    validator: Callable[[Any], bool] = lambda _: True,
+    validate: Callable[[Any], bool] = lambda _: True,
     disable_logging: bool = False,
 ) -> Callable[[F], F]:
     """Control the validation and logging of function parameters.
@@ -30,7 +30,7 @@ def parameter(
             ...
         TypeError: type of a must be int; got str instead
 
-        >>> @parameter('positive_a', validator=lambda v: v > 0)
+        >>> @parameter('positive_a', validate=lambda v: v > 0)
         ... def my_function(positive_a: int):
         ...     return a + 2
         >>> my_function(-1)
@@ -40,7 +40,8 @@ def parameter(
 
     Args:
         parameter_name: Name of parameter to consider
-        validator: Optional validator to run against the concrete argument. ArgumentValidationError is thrown when the return value is False.
+        validate: Optional validate to run against the concrete argument.
+            ArgumentValidationError is thrown when the return value is False.
         disable_logging: Do not save the value in any active TracingContext.
     Returns:
         A decorator for argument validation.
@@ -62,9 +63,11 @@ def parameter(
             if expected_type is not None:
                 check_type(parameter_name, argument, expected_type)
 
-            if not validator(argument):
+            if not validate(argument):
                 raise ArgumentValidationError(
-                    f"Argument {parameter_name} in {func.__name__} did not pass validation"
+                    f"""Argument {parameter_name} in {
+                        func.__name__
+                    } did not pass validation"""
                 )
 
             context = TracingContext.get_current_tracing_context()

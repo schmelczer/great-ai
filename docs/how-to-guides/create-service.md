@@ -76,7 +76,7 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 
 ### Using `@parameter`
 
-If you wish to turn of logging or specify custom validation for your parameters, you can use the [@parameter][great_ai.parameter] decorator.
+If you wish to turn off logging or specify custom validation for your parameters, you can use the [@parameter][great_ai.parameter] decorator.
 
 !!! note
     By default, all parameters that are not affected by an explicit [@parameter][great_ai.parameter] or [@use_model][great_ai.use_model] are automatically decorated with [@parameter][great_ai.parameter] when [@GreatAI.create][great_ai.GreatAI.create] is called.
@@ -85,7 +85,7 @@ If you wish to turn of logging or specify custom validation for your parameters,
 from great_ai import GreatAI, use_model
 
 @GreatAI.create
-@use_model('name_of_my_model', version='latest')
+@parameter('your_name', disable_logging=True)
 def type_safe_greeter(your_name: str, model) -> str:
     return f'Hi {your_name}!'
 
@@ -105,7 +105,7 @@ from great_ai import save_model, GreatAI, parameter, use_model, log_metric
 save_model(4, 'secret-number')  #(1)
 
 @GreatAI.create
-@parameter('positive_number', validator=lambda n: n > 0, disable_logging=True)
+@parameter('positive_number', validate=lambda n: n > 0, disable_logging=True)
 @use_model('secret-number', version='latest', model_kwarg_name='secret')
 def add_number(positive_number: int, secret: int) -> int:
     log_metric(

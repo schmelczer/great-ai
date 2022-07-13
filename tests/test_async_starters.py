@@ -24,7 +24,7 @@ async def test_create_trivial_cases() -> None:
 @pytest.mark.asyncio
 async def test_with_parameter() -> None:
     @GreatAI.create
-    @parameter("name", validator=lambda v: len(v) > 5)
+    @parameter("name", validate=lambda v: len(v) > 5)
     async def hello_world(name: str) -> str:
         await sleep(0.5)
         return f"Hello {name}!"
@@ -33,7 +33,7 @@ async def test_with_parameter() -> None:
 @pytest.mark.asyncio
 async def test_with_parameters() -> None:
     @GreatAI.create
-    @parameter("name", validator=lambda v: len(v) > 5)
+    @parameter("name", validate=lambda v: len(v) > 5)
     @parameter("unused", disable_logging=True)
     async def hello_world(name: str, unused) -> str:  # type: ignore
         await sleep(0.5)
@@ -45,7 +45,7 @@ async def test_with_parameters() -> None:
 def test_wrong_order() -> None:
     with pytest.raises(WrongDecoratorOrderError):
 
-        @parameter("name", validator=lambda v: len(v) > 5)
+        @parameter("name", validate=lambda v: len(v) > 5)
         @GreatAI.create
         async def hello_world(name: str) -> str:
             return f"Hello {name}!"
