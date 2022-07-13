@@ -450,7 +450,7 @@
   
     <li class="md-nav__item">
       <a href="../../how-to-guides/call-remote/" class="md-nav__link">
-        Call remote GreatAI instances
+        How to call remote GreatAI instances
       </a>
     </li>
   
@@ -591,6 +591,41 @@
         <li class="md-nav__item">
   <a href="#great_ai.Trace" class="md-nav__link">
     Trace
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.RouteConfig" class="md-nav__link">
+    RouteConfig
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.ClassificationOutput" class="md-nav__link">
+    ClassificationOutput
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.MultiLabelClassificationOutput" class="md-nav__link">
+    MultiLabelClassificationOutput
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.RegressionOutput" class="md-nav__link">
+    RegressionOutput
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.SequenceLabelingOutput" class="md-nav__link">
+    SequenceLabelingOutput
   </a>
   
 </li>
@@ -763,6 +798,41 @@
         <li class="md-nav__item">
   <a href="#great_ai.Trace" class="md-nav__link">
     Trace
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.RouteConfig" class="md-nav__link">
+    RouteConfig
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.ClassificationOutput" class="md-nav__link">
+    ClassificationOutput
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.MultiLabelClassificationOutput" class="md-nav__link">
+    MultiLabelClassificationOutput
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.RegressionOutput" class="md-nav__link">
+    RegressionOutput
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#great_ai.SequenceLabelingOutput" class="md-nav__link">
+    SequenceLabelingOutput
   </a>
   
 </li>
@@ -985,12 +1055,255 @@
 
 </div>
 
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="great_ai.RouteConfig" class="doc doc-heading">
+        <code>RouteConfig</code>
+
+
+<a href="#great_ai.RouteConfig" class="headerlink" title="Permanent link">#</a></h3>
+
+
+  <div class="doc doc-contents first">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <details class="quote">
+          <summary>Source code in <code>great_ai/views/route_config.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="k">class</span> <span class="nc">RouteConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">prediction_endpoint_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">docs_endpoints_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">dashboard_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">feedback_endpoints_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">trace_endpoints_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    <span class="n">meta_endpoints_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="great_ai.ClassificationOutput" class="doc doc-heading">
+        <code>ClassificationOutput</code>
+
+
+<a href="#great_ai.ClassificationOutput" class="headerlink" title="Permanent link">#</a></h3>
+
+
+  <div class="doc doc-contents first">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="great_ai.views.hashable_base_model.HashableBaseModel">HashableBaseModel</span></code></p>
+
+
+
+        <details class="quote">
+          <summary>Source code in <code>great_ai/views/outputs/classification_output.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-6">6</a></span>
+<span class="normal"><a href="#__codelineno-0-7">7</a></span>
+<span class="normal"><a href="#__codelineno-0-8">8</a></span>
+<span class="normal"><a href="#__codelineno-0-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="k">class</span> <span class="nc">ClassificationOutput</span><span class="p">(</span><span class="n">HashableBaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">label</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="n">explanation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="great_ai.MultiLabelClassificationOutput" class="doc doc-heading">
+        <code>MultiLabelClassificationOutput</code>
+
+
+<a href="#great_ai.MultiLabelClassificationOutput" class="headerlink" title="Permanent link">#</a></h3>
+
+
+  <div class="doc doc-contents first">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="great_ai.views.hashable_base_model.HashableBaseModel">HashableBaseModel</span></code></p>
+
+
+
+        <details class="quote">
+          <summary>Source code in <code>great_ai/views/outputs/multi_label_classification_output.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-7">7</a></span>
+<span class="normal"><a href="#__codelineno-0-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="k">class</span> <span class="nc">MultiLabelClassificationOutput</span><span class="p">(</span><span class="n">HashableBaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ClassificationOutput</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="great_ai.RegressionOutput" class="doc doc-heading">
+        <code>RegressionOutput</code>
+
+
+<a href="#great_ai.RegressionOutput" class="headerlink" title="Permanent link">#</a></h3>
+
+
+  <div class="doc doc-contents first">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="great_ai.views.hashable_base_model.HashableBaseModel">HashableBaseModel</span></code></p>
+
+
+
+        <details class="quote">
+          <summary>Source code in <code>great_ai/views/outputs/regression_output.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-6">6</a></span>
+<span class="normal"><a href="#__codelineno-0-7">7</a></span>
+<span class="normal"><a href="#__codelineno-0-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="k">class</span> <span class="nc">RegressionOutput</span><span class="p">(</span><span class="n">HashableBaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    <span class="n">explanation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="great_ai.SequenceLabelingOutput" class="doc doc-heading">
+        <code>SequenceLabelingOutput</code>
+
+
+<a href="#great_ai.SequenceLabelingOutput" class="headerlink" title="Permanent link">#</a></h3>
+
+
+  <div class="doc doc-contents first">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="great_ai.views.hashable_base_model.HashableBaseModel">HashableBaseModel</span></code></p>
+
+
+
+        <details class="quote">
+          <summary>Source code in <code>great_ai/views/outputs/sequence_labeling_output.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">class</span> <span class="nc">SequenceLabelingOutput</span><span class="p">(</span><span class="n">HashableBaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">labeled_tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LabeledToken</span><span class="p">]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">explanation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 11, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 13, 2022</span>
       
     
   </small>

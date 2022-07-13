@@ -450,7 +450,7 @@
   
     <li class="md-nav__item">
       <a href="../how-to-guides/call-remote/" class="md-nav__link">
-        Call remote GreatAI instances
+        How to call remote GreatAI instances
       </a>
     </li>
   
@@ -2290,7 +2290,7 @@ practices.</p></td>
         <tr>
           <td><code>route_config</code></td>
           <td>
-                <code><span title="great_ai.views.RouteConfig">RouteConfig</span></code>
+                <code><a class="autorefs autorefs-internal" title="great_ai.views.RouteConfig" href="views/#great_ai.RouteConfig">RouteConfig</a></code>
           </td>
           <td><p>Enable or disable specific HTTP API endpoints.</p></td>
           <td>
@@ -3342,7 +3342,9 @@ of the trace.</p></td>
 <span class="normal"><a href="#__codelineno-0-65">65</a></span>
 <span class="normal"><a href="#__codelineno-0-66">66</a></span>
 <span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">call_remote_great_ai_async</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">call_remote_great_ai_async</span><span class="p">(</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="n">base_uri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">retry_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
@@ -3383,22 +3385,24 @@ of the trace.</p></td>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>                <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>                <span class="k">raise</span> <span class="n">RemoteCallError</span><span class="p">(</span><span class="s2">&quot;Unexpected status code&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="k">raise</span> <span class="n">RemoteCallError</span> <span class="kn">from</span> <span class="nn">e</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">trace</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="k">raise</span> <span class="n">RemoteCallError</span><span class="p">(</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>            <span class="sa">f</span><span class="s2">&quot;JSON parsing failed </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="p">)</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>            <span class="n">trace</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="k">return</span> <span class="n">Trace</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="k">raise</span> <span class="n">RemoteCallError</span><span class="p">(</span><span class="s2">&quot;Could not parse Trace&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>                <span class="k">raise</span> <span class="n">RemoteCallError</span><span class="p">(</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>                    <span class="sa">f</span><span class="s2">&quot;Unexpected status code, reason: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>                <span class="p">)</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="k">raise</span> <span class="n">RemoteCallError</span> <span class="kn">from</span> <span class="nn">e</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="n">trace</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="k">raise</span> <span class="n">RemoteCallError</span><span class="p">(</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="sa">f</span><span class="s2">&quot;JSON parsing failed </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="p">)</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="n">trace</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="k">return</span> <span class="n">Trace</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="k">raise</span> <span class="n">RemoteCallError</span><span class="p">(</span><span class="s2">&quot;Could not parse Trace&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
