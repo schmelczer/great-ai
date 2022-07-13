@@ -1,4 +1,4 @@
-# <img src="https://github.com/schmelczer/great-ai/blob/main/docs/media/logo.png" alt="logo of great-ai" width=60 /> GreatAI
+# <img src="https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/logo.png" alt="logo of great-ai" width=60 /> GreatAI
 > Easily transform your prototype AI code into production-ready software.
 
 [![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
@@ -28,7 +28,7 @@ def greeter(name: str) -> str:
 
 Start it by executing `great-ai demo.py`, find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
 
-![demo screen capture](https://github.com/schmelczer/great-ai/blob/main/docs/media/demo.gif)
+![demo screen capture](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/demo.gif)
 
 That's it. Your GreatAI service is *nearly* ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
@@ -36,7 +36,7 @@ That's it. Your GreatAI service is *nearly* ready for production use. Many of th
 
 ## Why is this GREAT?
 
-![scope of GreatAI](docs/media/scope-simple.drawio.svg)
+![scope of GreatAI](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/scope-simple.drawio.svg)
 
 GreatAI fits between the prototype and deployment phases of your AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented aiming to achieve the following attributes:
 
@@ -52,9 +52,15 @@ There are other, existing solutions aiming to facilitate this phase. [Amazon Sag
 
 However, [research indicates](https://great-ai.scoutinscience.com) that professionals rarely use them. This may be due to their inherent setup and operating complexity. **GreatAI is designed to be as simple to use as possible.** Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best-practices](https://se-ml.github.io), and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
 
-## Find `great-ai` on [PyPI](https://hub.docker.com/repository/docker/schmelczera/great-ai)
-
 ## [Learn more](https://great-ai.scoutinscience.com)
+
+[Check out the full documentation here](https://great-ai.scoutinscience.com).
+
+## Find `great-ai` on [PyPI](https://pypi.org/project/great-ai/)
+
+```sh
+pip install great-ai
+```
 
 ## Find `great-ai` on [DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai)
 
