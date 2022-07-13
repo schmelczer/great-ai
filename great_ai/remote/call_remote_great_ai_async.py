@@ -50,7 +50,9 @@ async def call_remote_great_ai_async(
             try:
                 response.raise_for_status()
             except Exception:
-                raise RemoteCallError("Unexpected status code")
+                raise RemoteCallError(
+                    f"Unexpected status code, reason: {response.text}"
+                )
     except Exception as e:
         raise RemoteCallError from e
 

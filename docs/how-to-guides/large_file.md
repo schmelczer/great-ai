@@ -1,13 +1,16 @@
 # How to use LargeFile-s
 
-The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring LargeFile, users have few reasons to use this.
+The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring LargeFile, users have few reasons to use LargeFile-s directly.
 
 ## Motivation
 
 Oftentimes, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step, however, GitHub's git LFS implementation [doesn't support deleting](https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository) large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.
 
+[DVC](https://dvc.org/) is a viable alternative, however, it requires users to learn to use one more CLI tool.
 
 ??? note "Using LargeFile-s directly (usually not needed)"
+    LargeFile doesn't require users to learn too much new. It is a nearly exact copy of the built-in `open()` function of Python with which users are certainly already familiar.
+
     ## Simple example
 
     ```python
@@ -61,7 +64,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
     LargeFileS3("folder-of-my-bert-model").push('path_to_local/folder_or_file')
     ```
 
-    > This way, both regular files and folders can be handled. The uploaded file is called **folder-of-my-bert-model**, the local name is ignored.
+    > This way both regular files and folders can be handled. The uploaded file is called **folder-of-my-bert-model**, the local name is ignored.
 
     Lastly, all version of the remote object can be deleted by calling `LargeFileS3("my-file").delete()`. It will still reside in your local cache afterwards, its deletion will happen next time your local cache has to be pruned.
 
