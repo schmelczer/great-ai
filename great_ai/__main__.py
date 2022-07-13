@@ -10,7 +10,7 @@ from typing import Optional
 import uvicorn
 from uvicorn._subprocess import get_subprocess
 from uvicorn.config import LOGGING_CONFIG, Config
-from uvicorn.supervisors.basereload import BaseReload
+from uvicorn.supervisors import BaseReload, Multiprocess
 from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
 from watchdog.observers import Observer
 
@@ -68,15 +68,13 @@ def serve() -> None:
 
         config = Config(app, **common_config)
         socket = config.bind_socket()
-        server = GreatAIReload(
-            config, target=uvicorn.Server(config=config).run, sockets=[socket]
-        )
 
-        server.startup()
         try:
-            Event().wait()
+            Multiprocess(
+                config, target=uvicorn.Server(config=config).run, sockets=[socket]
+            ).run()
+
         finally:
-            server.shutdown()
             if args.file_name.endswith(".ipynb"):
                 Path(get_script_name_of_notebook(args.file_name)).unlink(
                     missing_ok=True
