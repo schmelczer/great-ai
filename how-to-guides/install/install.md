@@ -19,3 +19,11 @@ After installation, `great-ai` and `large-file` are available as commands. The f
     > Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 
     This means that `great-ai.exe` and `large-file.exe` are not in your `PATH`. Either add their containing directory ('C:\Users\...\Scripts' in this case) to your `PATH` or use `python3 -m great_ai` and `python3 -m great_ai.large_file` instead of the exe-s.
+
+## Update
+
+If you wish to update to the latest version execute:
+
+```sh
+pip install --upgrade great-ai
+```

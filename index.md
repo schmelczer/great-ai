@@ -54,15 +54,15 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 pip install great-ai
 ```
 
-```python title="hello-world.py" 
+```python title="demo.py" 
 from great_ai import GreatAI
 
 @GreatAI.create  #(1) 
-def hello_world(name: str) -> str:  #(2) 
+def greeter(name: str) -> str:  #(2) 
     return f"Hello {name}!"
 ```
 
-1.  `@GreatAI.create` wraps your `hello_world` function with a `GreatAI` instance. The function will behave very similarly but:
+1.  `@GreatAI.create` wraps your `greeter` function with a `GreatAI` instance. The function will behave very similarly but:
     1. its return value becomes a `Trace[str]`,
     2. it gets a `process_batch` method for supporting parallel execution,
     3. and it can be deployed using the `great-ai` command-line tool.
@@ -70,18 +70,14 @@ def hello_world(name: str) -> str:  #(2)
 2.  [Typing functions](https://docs.python.org/3/library/typing.html){ target=_blank } is recommended in general, however, not required for GreatAI to work.
 
 ??? note
-    In practice, `hello_world` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is [imperative to have continuos oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and data you process especially in the context of AI/ML applications.
+    In practice, `greeter` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either ways, it is [imperative to have continuos oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and data you process especially in the context of AI/ML applications.
 
 ```sh title="terminal" 
-great-ai hello-world.py
+great-ai demo.py
 ```
 > Navigate to [localhost:6060](http://127.0.0.1:6060) in your browser.
 
-<div style="display: flex; justify-content: space-evenly;" markdown>
-![](media/hello-world-dashboard.png){ loading=lazy }
-
-![](media/hello-world-docs.png){ loading=lazy }
-</div>
+![demo screen capture](media/demo.gif){ loading=lazy }
 
 !!! success
     Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io){ target=_blank } are configured and implemented automatically. To have full control over your service and to understand what else you might need to do in your use case, continue reading this documentation.
