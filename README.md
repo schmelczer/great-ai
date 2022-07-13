@@ -30,7 +30,7 @@ def greeter(name: str) -> str:
 
 Start it by executing `great-ai main.py`, find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
 
-[demo screen capture](https://user-images.githubusercontent.com/13354219/178735057-c54daafb-c140-42b7-b29c-8d29365887fe.mp4)
+[demo screen capture](https://user-images.githubusercontent.com/13354219/178735828-2e18fb04-429a-439e-9cbf-483dd192b0a8.mp4)
 
 That's it. Your GreatAI service is ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
