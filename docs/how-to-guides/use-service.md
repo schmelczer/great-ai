@@ -35,7 +35,7 @@ As you can see, the original return value is wrapped in a [Trace][great_ai.Trace
 
 Likely, the main way you would like to expose your model is through an HTTP API. [@GreatAI.create][great_ai.GreatAI.create] scaffolds many REST API endpoints for your model and creates a [FastAPI](https://fastapi.tiangolo.com/){ target=_blank } app available under [GreatAI.app][great_ai.GreatAI]. This can be served using [uvicorn](https://www.uvicorn.org/){ target=_blank } or any other [ASGI server](https://asgi.readthedocs.io/en/latest/){ target=_blank }.
 
-Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To this end, `uvicorn` is wrapped by the `great-ai` command-line utility which, among others, takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
+Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To achieve this, `uvicorn` is wrapped by the `great-ai` command-line utility which, among others, takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
 
 ### In development
 
@@ -81,7 +81,7 @@ docker run -p 6060:6060 --volume `pwd`:/app --rm \
 
 #### Use a Platform-as-a-Service
 
-Similarly to the previous approach, your code will run in a container. However, instead of manually managing it, you can just choose from a plethora of PaaS providers (such as [AWS ECS](https://aws.amazon.com/ecs/){ target=_blank }, [DO App platform](https://www.digitalocean.com/products/app-platform){ target=_blank }, [MLEM](https://mlem.ai/){ target=_blank }) that take a Docker image as a source and handle the rest of the deployment.
+Similarly to the previous approach, your code will run in a container. However, instead of manually managing it, you can just choose from a plethora of PaaS providers (such as [AWS ECS](https://aws.amazon.com/ecs/){ target=_blank }, [DO App platform](https://www.digitalocean.com/products/app-platform){ target=_blank }, [MLEM](https://mlem.ai/){ target=_blank }, [Streamlit](https://streamlit.io/){ target=_blank }) that take a Docker image as a source and handle the rest of the deployment.
 
 To this end, you can also create a custom Docker image. It is especially useful if you have third-party dependencies, such as [PyTorch](https://pytorch.org/){ target=_blank } or [TensorFlow](https://www.tensorflow.org/){ target=_blank }.
 
@@ -100,7 +100,7 @@ RUN large-file --backend s3 --secrets s3.ini --cache my-domain-predictor
 # Add you application code to the image
 COPY . .
 
-# The default ENTRYPOINT is great-ai, specify it's argument using CMD
+# The default ENTRYPOINT is great-ai, specify its argument using CMD
 CMD ["deploy.ipynb"]
 
 ```
