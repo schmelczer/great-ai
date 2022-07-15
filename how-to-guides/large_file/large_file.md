@@ -1,6 +1,6 @@
-# How to use LargeFile-s
+# How to use LargeFiles
 
-The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring LargeFile, users have few reasons to use LargeFile-s directly.
+The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring [LargeFile](/reference/large-file), users have few reasons to use LargeFiles directly.
 
 ## Motivation
 
@@ -29,7 +29,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
         for i in range(100000):
             f.write('test\n')
 
-    # By default the latest version is returned
+    # The latest version is returned by default
     # but an optional `version` keyword argument can be provided as well
     with LargeFileS3("test.txt", "r") as f:  #(1)
         print(f.readlines()[0])
@@ -39,7 +39,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
 
     ### More details
 
-    `LargeFile` behaves like an opened file (in the background it is a temp file after all). Binary reads and writes are supported along with the [different keywords `open()` accepts](https://docs.python.org/3/library/functions.html#open).
+    `LargeFile` behaves like an opened file (in the background it is a temp file after all). Binary reads and writes are supported along with the [different keywords `open()` accepts](https://docs.python.org/3/library/functions.html#open){ target=_blank }.
 
     The local cache can be configured with these properties:
 
@@ -50,7 +50,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
 
     #### I only need a path
 
-    In case you only need a path to the "remote" file, this pattern can be applied:
+    In case you only need a path to the (proxy of the) remote file, this pattern can be applied:
 
     ```python
     path_to_model = LargeFileS3("folder-of-my-bert-model", version=31).get()
@@ -66,7 +66,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
 
     > This way both regular files and folders can be handled. The uploaded file is called **folder-of-my-bert-model**, the local name is ignored.
 
-    Lastly, all version of the remote object can be deleted by calling `LargeFileS3("my-file").delete()`. It will still reside in your local cache afterwards, its deletion will happen next time your local cache has to be pruned.
+    Lastly, all version of the remote object can be deleted by calling `LargeFileS3("my-file").delete()`. It will still reside in your local cache afterwards; its deletion will happen next time your local cache has to be pruned.
 
 ## From the command-line 
 
@@ -93,7 +93,7 @@ large-file --backend s3 --secrets secrets.ini \
 > Only the filename is used as the S3 name, the rest of the path is ignored.
 
 !!! important "Using MongoDB"
-    The possible values for `--backend` are `s3`, `mongo`, and `local`. The latter doesn't need credentials, it only versions and stores your files in a local folder. MongoDB on the other hand requires a `mongo_connection_string` and a `mongo_database` to be specified. For storing large files, it uses the GridFS specification.
+    The possible values for `--backend` are `s3`, `mongo`, and `local`. The latter doesn't need credentials, it only versions and stores your files in a local folder. MongoDB on the other hand requires a `mongo_connection_string` and a `mongo_database` to be specified. For storing large files, it uses the [GridFS](https://www.mongodb.com/docs/manual/core/gridfs){ target=_blank } specification.
 
 ### Download some files to the local cache
 

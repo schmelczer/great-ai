@@ -526,7 +526,7 @@
   
     <li class="md-nav__item">
       <a href="../large_file/" class="md-nav__link">
-        How to use LargeFile-s
+        How to use LargeFiles
       </a>
     </li>
   
@@ -884,7 +884,7 @@
 
 
 <h1 id="how-to-configure-greatai">How to configure GreatAI<a class="headerlink" href="#how-to-configure-greatai" title="Permanent link">#</a></h1>
-<p>GreatAI aims to provide reasonable defaults wherever possible. The current configuration is always prominently displayed (and updated) on the dashboard and in the command-line startup banner.</p>
+<p>GreatAI aims to provide reasonable defaults wherever possible. The current configuration is always prominently displayed (and updated) on the dashboard and in the command-line start-up banner.</p>
 <h2 id="using-great_aiconfigure">Using <a class="autorefs autorefs-internal" href="../../reference/#great_ai.configure">great_ai.configure</a><a class="headerlink" href="#using-great_aiconfigure" title="Permanent link">#</a></h2>
 <p>You can override any of the default settings by calling <a class="autorefs autorefs-internal" href="../../reference/#great_ai.configure">great_ai.configure</a>. If you don't call <code>configure</code>, the default settings are applied on the first call to most <code>great-ai</code> functions.</p>
 <div class="admonition warning">
@@ -915,7 +915,7 @@
 <h2 id="using-remote-storage">Using remote storage<a class="headerlink" href="#using-remote-storage" title="Permanent link">#</a></h2>
 <p>The only aspect that cannot be automated is choosing the backing storage for the database and file storage.</p>
 <p>Right now, you have 3 options for storing the models and large datasets: <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">LargeFileLocal</a>, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileMongo">LargeFileMongo</a>, and <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileS3">LargeFileS3</a>.</p>
-<p>Without explicit configuration, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">LargeFileLocal</a> is selected by default. This one still version-controls your files but it only stores them in a local path.</p>
+<p>Without explicit configuration, <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileLocal">LargeFileLocal</a> is selected by default. This one still version-controls your files but it only stores them in a local path (which of course can be a remote volume attached by <a href="https://en.wikipedia.org/wiki/Network_File_System" target="_blank">NFS</a>, <a href="https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html" target="_blank">HDFS</a>, etc.).</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>If your working directory contains a <code>mongo.ini</code> or <code>s3.ini</code> file, an attempt is made to auto-configure <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileMongo">LargeFileMongo</a> or <a class="autorefs autorefs-internal" href="../../reference/large-file/#great_ai.large_file.LargeFileS3">LargeFileS3</a> respectively.</p>
@@ -936,7 +936,7 @@
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;my-model&#39;</span><span class="p">)</span>
 </code></pre></div>
 <ol>
-<li>This line isn't strictly necceseary because if <code>s3.ini</code> (or <code>mongo.ini</code>) is available in the current working directory, they are automatically used to configure their respective LargeFile implementations/databases.</li>
+<li>This line isn't strictly necessary because if <code>s3.ini</code> (or <code>mongo.ini</code>) is available in the current working directory, they are automatically used to configure their respective LargeFile implementations/databases.</li>
 </ol>
 <details class="note">
 <summary>Departing from AWS</summary>
@@ -965,14 +965,14 @@
 <h2 id="using-a-database">Using a database<a class="headerlink" href="#using-a-database" title="Permanent link">#</a></h2>
 <p>By default, a thread-safe version of <a href="https://tinydb.readthedocs.io/en/latest/" target="_blank">TinyDB</a> is utilised for saving the prediction traces into a local file. Unfortunately, for most production needs, this method is not suitable.</p>
 <h3 id="mongodb">MongoDB<a class="headerlink" href="#mongodb" title="Permanent link">#</a></h3>
-<p>At the moment, only MongoDB is supported as a production-ready <code>TracingDatabase</code>. In order to use it, you have to either place a file named <code>mongo.ini</code> in your working directory, or explicitly call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.MongoDbDriver">MongoDbDriver.configure_credentials_from_file</a> or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.persistence.mongodb_driver.MongoDbDriver.configure_credentials">MongoDbDriver.configure_credentials</a>.</p>
+<p>At the moment, only MongoDB is supported as a production-ready <code>TracingDatabase</code>. In order to use it, you have to either place a file named <code>mongo.ini</code> in your working directory, or explicitly call either <a class="autorefs autorefs-internal" href="../../reference/#great_ai.MongoDbDriver">MongoDbDriver.configure_credentials_from_file</a> or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.persistence.mongodb_driver.MongoDbDriver.configure_credentials">MongoDbDriver.configure_credentials</a>.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
       
     
   </small>

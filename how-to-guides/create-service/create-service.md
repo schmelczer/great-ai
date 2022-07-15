@@ -20,7 +20,7 @@ def greeter(your_name):
 ```
 
 ??? info "Why not simply use `@GreatAI?`"
-    The purpose of the [@GreatAI.create][great_ai.GreatAI.create] is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for `__new__` is lacking in MyPy, thus, a static factory method is used instead.
+    The purpose of [@GreatAI.create][great_ai.GreatAI.create] is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for `__new__` is lacking in MyPy, thus, a static factory method is used instead.
 
 ## With types
 
@@ -46,13 +46,13 @@ from asyncio import sleep
 
 @GreatAI.create
 async def async_greeter(your_name: str) -> str:
-    await sleep(2)  # simulate IO-heavy operation
+    await sleep(2)  # simulate IO-bound operation
     return f'Hi {your_name}!'
 ```
 
 ## With decorators
 
-GreatAI can decorate already decorated functions. The only restriction is that [@GreatAI.create][great_ai.GreatAI.create]  always has to come last. There are two built-in decorators that you can use to customise your function but you can you use any third-party decorator as well.
+GreatAI can decorate already decorated functions. The only restriction is that [@GreatAI.create][great_ai.GreatAI.create] must come last. There are two built-in decorators that you can use to customise your function but you can you use any third-party decorator as well.
 
 ### Using `@use_model`
 
@@ -72,7 +72,7 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 1.  By default, the parameter named `model` will be replaced by the loaded model. This behaviour can be customised by setting the `model_kwarg_name`. This way, even multiple models can be injected into a single function.
 
 !!! important
-    You must call [@use_model][great_ai.use_model] before [@GreatAI.create][great_ai.GreatAI.create]. Feel free to use [@use_model][great_ai.use_model] in other places of the codebase, it works equally well outside of GreatAI services. 
+    You must call [@use_model][great_ai.use_model] before [@GreatAI.create][great_ai.GreatAI.create]. Note, that decorators are applied starting from the bottom-most one. Feel free to use [@use_model][great_ai.use_model] in other places of the codebase, it works equally well outside of GreatAI services. 
 
 ### Using `@parameter`
 
@@ -93,7 +93,7 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 ```
 
 !!! important
-    You must call [@parameter][great_ai.parameter] before [@GreatAI.create][great_ai.GreatAI.create]. Feel free to use [@parameter][great_ai.parameter] in other places of the codebase, it works equally well outside of GreatAI services. 
+    You must call [@parameter][great_ai.parameter] before [@GreatAI.create][great_ai.GreatAI.create]. Note, that decorators are applied starting from the bottom-most one. Feel free to use [@parameter][great_ai.parameter] in other places of the codebase, it works equally well outside of GreatAI services. 
 
 ## Complex example
 
@@ -117,4 +117,4 @@ def add_number(positive_number: int, secret: int) -> int:
 assert add_number(1).output == 5
 ```
 
-1.  Refer to [storing models](/how-to-guides/store-models) for specifying where to store your models. 
+1.  Refer to [the configuration page](/how-to-guides/configure-service) for specifying where to store your models. 
