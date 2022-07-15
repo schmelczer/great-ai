@@ -1,4 +1,5 @@
 # <img src="https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/logo.png" alt="logo of great-ai" width=60 /> GreatAI
+
 > Easily transform your prototype AI code into production-ready software.
 
 [![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
@@ -30,7 +31,7 @@ Start it by executing `great-ai demo.py`, find the dashboard at [http://localhos
 
 ![demo screen capture](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/demo.gif)
 
-That's it. Your GreatAI service is *nearly* ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
+That's it. Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
 [Check out the full documentation here](https://great-ai.scoutinscience.com).
 
@@ -41,7 +42,7 @@ That's it. Your GreatAI service is *nearly* ready for production use. Many of th
 GreatAI fits between the prototype and deployment phases of your AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented aiming to achieve the following attributes:
 
 - **G**eneral: use any Python library without restriction
-- **R**obust: have error-handling and well-tested utilities out-of-the-box 
+- **R**obust: have error-handling and well-tested utilities out-of-the-box
 - **E**nd-to-end: utilise end-to-end feedback as a built-in, first-class concept
 - **A**utomated: focus only on what actually requires your attention
 - **T**rustworthy: deploy models that you and society can confidently trust
@@ -77,14 +78,14 @@ Contributions are welcome.
 ```sh
 python3 -m venv --copies .env
 source .env/bin/activate
-pip install flit
-flit install --symlink --deps=all
+pip install --upgrade flit pip
+flit install --symlink
 ```
 
 ### Run tests
 
 ```sh
-pytest --doctest-modules --asyncio-mode=strict
+python3 -m pytest --doctest-modules --asyncio-mode=strict .
 ```
 
 ### Serve documentation
