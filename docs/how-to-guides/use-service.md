@@ -9,7 +9,7 @@ from great_ai import GreatAI
 
 @GreatAI.create
 def greeter(your_name: str) -> str:
-    return f'Hi {your_name}'
+    return f'Hi {your_name}!'
 ```
 
 ## One-off prediction
@@ -24,7 +24,7 @@ Trace[str]({'created': '2022-07-11T14:31:46.183764',
   'logged_values': {'arg:your_name:length': 3, 'arg:your_name:value': 'Bob'},
   'models': [],
   'original_execution_time_ms': 0.0381,
-  'output': 'Hi Bob',
+  'output': 'Hi Bob!',
   'tags': ['greeter', 'online', 'development'],
   'trace_id': '7c284fd7-7f0d-4464-b5f8-3ef126df34af'})
 ```
@@ -35,7 +35,7 @@ As you can see, the original return value is wrapped in a [Trace][great_ai.Trace
 
 Likely, the main way you would like to expose your model is through an HTTP API. [@GreatAI.create][great_ai.GreatAI.create] scaffolds many REST API endpoints for your model and creates a [FastAPI](https://fastapi.tiangolo.com/){ target=_blank } app available under [GreatAI.app][great_ai.GreatAI]. This can be served using [uvicorn](https://www.uvicorn.org/){ target=_blank } or any other [ASGI server](https://asgi.readthedocs.io/en/latest/){ target=_blank }.
 
-Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To achieve this, `uvicorn` is wrapped by the `great-ai` command-line utility which, among others, takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
+Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To achieve this, `uvicorn` is wrapped by the `great-ai` command-line utility which &mdash; among others &mdash; takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
 
 ### In development
 
@@ -67,7 +67,7 @@ ENVIRONMENT=production great-ai greeter.py
 ```
 
 Simply run `ENVIRONMENT=production great-ai deploy.ipynb` in the command-line of a production machine.
-> This is the crudest approach, however, it might be fitting for some contexts.
+> This is the crudest approach; however, it might be fitting for some contexts.
 
 #### Containerised deployment
 
@@ -81,7 +81,7 @@ docker run -p 6060:6060 --volume `pwd`:/app --rm \
 
 #### Use a Platform-as-a-Service
 
-Similarly to the previous approach, your code will run in a container. However, instead of manually managing it, you can just choose from a plethora of PaaS providers (such as [AWS ECS](https://aws.amazon.com/ecs/){ target=_blank }, [DO App platform](https://www.digitalocean.com/products/app-platform){ target=_blank }, [MLEM](https://mlem.ai/){ target=_blank }, [Streamlit](https://streamlit.io/){ target=_blank }) that take a Docker image as a source and handle the rest of the deployment.
+Similar to the previous approach, your code will run in a container. However, instead of manually managing it, you can just choose from a plethora of PaaS providers (such as [AWS ECS](https://aws.amazon.com/ecs/){ target=_blank }, [DO App platform](https://www.digitalocean.com/products/app-platform){ target=_blank }, [MLEM](https://mlem.ai/){ target=_blank }, [Streamlit](https://streamlit.io/){ target=_blank }) that take a Docker image as a source and handle the rest of the deployment.
 
 To this end, you can also create a custom Docker image. It is especially useful if you have third-party dependencies, such as [PyTorch](https://pytorch.org/){ target=_blank } or [TensorFlow](https://www.tensorflow.org/){ target=_blank }.
 
@@ -117,7 +117,7 @@ Processing larger amounts of data on a single machine is made easy by the [Great
    'logged_values': {'arg:your_name:length': 5, 'arg:your_name:value': 'Alice'},
    'models': [],
    'original_execution_time_ms':  0.1251,
-   'output': 'Hi Alice',
+   'output': 'Hi Alice!',
    'tags': ['greeter', 'online', 'development'],
    'trace_id': '90ffa15f-e839-41c4-8e7a-3211168bc138'}),
  Trace[str]({'created': '2022-07-11T14:36:37.166659',
@@ -126,7 +126,7 @@ Processing larger amounts of data on a single machine is made easy by the [Great
    'logged_values': {'arg:your_name:length': 3, 'arg:your_name:value': 'Bob'},
    'models': [],
    'original_execution_time_ms':  0.0571,
-   'output': 'Hi Bob',
+   'output': 'Hi Bob!',
    'tags': ['greeter', 'online', 'development'],
    'trace_id': 'f48e94c7-0815-48b3-a864-41349d3dae84'})]
 ```

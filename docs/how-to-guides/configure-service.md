@@ -1,6 +1,6 @@
 # How to configure GreatAI
 
-GreatAI aims to provide reasonable defaults wherever possible. The current configuration is always prominently displayed (and updated) on the dashboard and in the command-line startup banner.
+GreatAI aims to provide reasonable defaults wherever possible. The current configuration is always prominently displayed (and updated) on the dashboard and in the command-line start-up banner.
 
 ## Using [great_ai.configure][]
 
@@ -37,7 +37,7 @@ The only aspect that cannot be automated is choosing the backing storage for the
 
 Right now, you have 3 options for storing the models and large datasets: [LargeFileLocal][great_ai.large_file.LargeFileLocal], [LargeFileMongo][great_ai.large_file.LargeFileMongo], and [LargeFileS3][great_ai.large_file.LargeFileS3].
 
-Without explicit configuration, [LargeFileLocal][great_ai.large_file.LargeFileLocal] is selected by default. This one still version-controls your files but it only stores them in a local path.
+Without explicit configuration, [LargeFileLocal][great_ai.large_file.LargeFileLocal] is selected by default. This one still version-controls your files but it only stores them in a local path (which of course can be a remote volume attached by [NFS](https://en.wikipedia.org/wiki/Network_File_System){ target=_blank }, [HDFS](https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html){ target=_blank }, etc.).
 
 !!! important
     If your working directory contains a `mongo.ini` or `s3.ini` file, an attempt is made to auto-configure [LargeFileMongo][great_ai.large_file.LargeFileMongo] or [LargeFileS3][great_ai.large_file.LargeFileS3] respectively.
@@ -63,7 +63,7 @@ model = [4, 3]
 save_model(model, 'my-model')
 ```
 
-1.  This line isn't strictly necceseary because if `s3.ini` (or `mongo.ini`) is available in the current working directory, they are automatically used to configure their respective LargeFile implementations/databases.
+1.  This line isn't strictly necessary because if `s3.ini` (or `mongo.ini`) is available in the current working directory, they are automatically used to configure their respective LargeFile implementations/databases.
 
 ??? note "Departing from AWS"
     With the `aws_endpoint_url` argument, it is possible to use any other S3-compatible service such as [Backblaze](https://www.backblaze.com/){ target=_blank }. In that case, it would be `aws_endpoint_url=https://s3.us-west-002.backblazeb2.com`.
@@ -99,4 +99,4 @@ By default, a thread-safe version of [TinyDB](https://tinydb.readthedocs.io/en/l
 
 ### MongoDB
 
-At the moment, only MongoDB is supported as a production-ready `TracingDatabase`. In order to use it, you have to either place a file named `mongo.ini` in your working directory, or explicitly call [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver] or [MongoDbDriver.configure_credentials][great_ai.MongoDbDriver.configure_credentials].
+At the moment, only MongoDB is supported as a production-ready `TracingDatabase`. In order to use it, you have to either place a file named `mongo.ini` in your working directory, or explicitly call either [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver] or [MongoDbDriver.configure_credentials][great_ai.MongoDbDriver.configure_credentials].

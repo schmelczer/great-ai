@@ -56,7 +56,7 @@ As you can see, everything worked as expected. There is one way to improve it th
 Let's send multiple requests at the same time to speed up the overall execution time. To do this, we will use the [call_remote_great_ai_async][great_ai.call_remote_great_ai_async] function.
 
 ??? note "Why is this possible?"
-    Note, that in `server.py`, the inference function is declared `async`. This means that multiple "copies" of it can run at the same time in the same thread. Since, there is no CPU-bottleneck, the server has a quite large throughpout (requests responded to per second), but its latency will stay around 2 seconds due to the async `sleep` command.
+    Note, that in `server.py`, the inference function is declared `async`. This means that multiple "copies" of it can run at the same time in the same thread. Since, there is no CPU bottleneck, the server has a quite large throughput (requests responded to per second), but its latency will stay around 2 seconds due to the async `sleep` command.
 
     If your great-ai server is not `async`, higher throughput can be achieved by running multiple instances of it, either manually, or by running it with multiple `uvicorn` workers like this: `ENVIRONMENT=production great-ai server.py --worker_count 4`
 
@@ -88,4 +88,4 @@ asyncio.run(main())
 
 ![screenshot of result](/media/remote-async.png){ loading=lazy }
 
-This also works, and in some use cases might be considerably quicker.
+This also works, and in some use-cases might be considerably quicker.

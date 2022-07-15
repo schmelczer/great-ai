@@ -31,8 +31,6 @@ Multiprocessing and multithreading-based parallelism with support for `async` fu
 
 Because both [threaded_parallel_map][great_ai.utilities.parallel_map.threaded_parallel_map.threaded_parallel_map] and [parallel_map][great_ai.utilities.parallel_map.parallel_map.parallel_map] have a streaming interface, it is easy to compose them and end up with, for example, a process for each CPU core with its own thread-pool or event-loop. Longer pipelines are also easy to imagine. The chunking methods help in these compositions.
 
-For more info, check-out [the scraping guide](/how-to-guides/scraping).
-
 ::: great_ai.utilities.chunk
 ::: great_ai.utilities.unchunk
 
