@@ -39,7 +39,7 @@ That's it. Your GreatAI service is _nearly_ ready for production use. Many of th
 
 ![scope of GreatAI](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/scope-simple.drawio.svg)
 
-GreatAI fits between the prototype and deployment phases of your AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented aiming to achieve the following attributes:
+GreatAI fits between the prototype and deployment phases of your AI development lifecycle. This is highlighted with blue in the diagram. Here, several best practices can be automatically implemented aiming to achieve the following attributes:
 
 - **G**eneral: use any Python library without restriction
 - **R**obust: have error-handling and well-tested utilities out-of-the-box
@@ -82,14 +82,22 @@ pip install --upgrade flit pip
 flit install --symlink
 ```
 
-### Run tests
+### Develop
+
+```sh
+scripts/format-python.sh great_ai docs tests
+```
+
+> Format code.
 
 ```sh
 python3 -m pytest --doctest-modules --asyncio-mode=strict .
 ```
 
-### Serve documentation
+> Run tests.
 
 ```sh
 mkdocs serve
 ```
+
+> Serve documentation.
