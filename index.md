@@ -86,7 +86,7 @@ great-ai demo.py
 
 ![scope of GreatAI](media/scope-simple.drawio.svg)
 
-GreatAI fits between the prototype and deployment phases of your (or your organisation's) AI development lifecycle. This is highlighted with blue in the diagram. Here, a number of best practices can be automatically implemented aiming to achieve the following attributes:
+GreatAI fits between the prototype and deployment phases of your (or your organisation's) AI development lifecycle. This is highlighted with blue in the diagram. Here, several best practices can be automatically implemented aiming to achieve the following attributes:
 
 - **G**eneral: use any Python library without restriction
 - **R**obust: have error-handling and well-tested utilities out-of-the-box 

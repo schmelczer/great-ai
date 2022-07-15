@@ -1896,8 +1896,8 @@ Licensed under the Apache License, Version 2.0.
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>First, we have to get some data. After downloading it <a href="https://github.com/allenai/scibert/tree/master/data/text_classification/mag">from here</a>, we might notice that the dataset is in <a href="https://jsonlines.org/">JSON Lines</a> format (each line is a seperate JSON document).</p>
-<p>Let's write a function which takes a single line, and returns the sentence and the corresponding label from it. Before returning, the sentence is also <a href="/reference/utilities/#great_ai.utilities.clean.clean">cleaned</a> to remove any LaTeX, XML, unicode, PDF-extraction artifacts.</p>
+<p>First, we have to get some data. After downloading it <a href="https://github.com/allenai/scibert/tree/master/data/text_classification/mag">from here</a>, we might notice that the dataset is in <a href="https://jsonlines.org/">JSON Lines</a> format (each line is a separate JSON document).</p>
+<p>Let's write a function which takes a single line and returns the sentence and the corresponding label from it. Before returning, the sentence is also <a href="/reference/utilities/#great_ai.utilities.clean.clean">cleaned</a> to remove any LaTeX, XML, unicode, PDF-extraction artifacts.</p>
 
 </div>
 </div>
@@ -2367,7 +2367,7 @@ class="
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Great work, we can be rightfully satisfied with our model. Seeing the results, we achieved an F1-score of 0.69 which is about <strong>5% better than SciBERT's</strong> 0.6571!</p>
 <p>You might wonder that <em>"this is great, but besides some utility functions (<code>clean</code>, <code>simple_parallel_map</code>, ...) what more value does GreatAI add?"</em>. This would be a valid argument because the scope of GreatAI actually only starts here.</p>
-<blockquote><p>Not coincidentally, this is the point where the scope of Data Science ends but it's still a grey-zone for software engineering.</p>
+<blockquote><p>Not coincidentally, this is the point where the scope of Data Science ends but it's still a grey zone for software engineering.</p>
 </blockquote>
 <p>In order to use this model in production, we have to make it available on some possibly shared infrastructure.</p>
 
@@ -2484,7 +2484,7 @@ save_model(model, key="my-domain-predictor")</div>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 13, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
       
     
   </small>

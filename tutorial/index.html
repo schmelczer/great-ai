@@ -862,12 +862,12 @@
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">#</a></h2>
 <ol>
 <li>You will see how the <a href="/reference/utilities">great_ai.utilities</a> can integrate into your Data Science workflow.</li>
-<li>You will use <a href="/reference/large_file">great_ai.large_file</a> to version and store your trained model.</li>
+<li>You will use <a href="/reference/large-file">great_ai.large_file</a> to version and store your trained model.</li>
 <li>You will use <a class="autorefs autorefs-internal" href="../reference/#great_ai.GreatAI">GreatAI</a> to prepare your model for a robust and responsible deployment.</li>
 </ol>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
-<p>You are going to train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the <a href="https://arxiv.org/abs/1903.10676">SciBERT paper</a> in which SciBERT <a href="https://paperswithcode.com/sota/sentence-classification-on-paper-field">achieved an F1-score of 0.6571</a>. We are going to outperform it using a trivial text classification model: a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html">Linear SVM</a>.</p>
-<p>We use the same synthetic dataset derived from the <a href="https://www.microsoft.com/en-us/research/project/microsoft-academic-graph/">Microsoft Academic Graph</a>. The dataset is <a href="https://github.com/allenai/scibert/tree/master/data/text_classification/mag">available here</a>.</p>
+<p>You are going to train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the <a href="https://arxiv.org/abs/1903.10676" target="_blank">SciBERT paper</a> in which SciBERT <a href="https://paperswithcode.com/sota/sentence-classification-on-paper-field" target="_blank">achieved an F1-score of 0.6571</a>. We are going to outperform it using a trivial text classification model: a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html" target="_blank">Linear SVM</a>.</p>
+<p>We use the same synthetic dataset derived from the <a href="https://www.microsoft.com/en-us/research/project/microsoft-academic-graph/" target="_blank">Microsoft Academic Graph</a>. The dataset is <a href="https://github.com/allenai/scibert/tree/master/data/text_classification/mag" target="_blank">available here</a>.</p>
 <div class="admonition success">
 <p class="admonition-title">Success</p>
 <p>You are ready to start the tutorial. Feel free to come back to the <a href="#summary">summary</a> section once you're finished.</p>
@@ -914,7 +914,7 @@
 <li><a class="autorefs autorefs-internal" href="../reference/#great_ai.use_model">@use_model</a> loads and injects your model into the <code>predict_domain</code> function's <code>model</code> argument.
     You can freely reference it knowing that the function is always provided with it.</li>
 </ol>
-<p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened-service properly.</a></p>
+<p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened service properly.</a></p>
 <div style="display: flex; justify-content: space-evenly;">
 <p><a class="md-button md-button--primary" href="/how-to-guides/create-service"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12Z"/></svg></span> Learn about all the features</a></p>
 <p><a class="md-button md-button--secondary" href="/examples/simple/data"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2v2h1v14a4 4 0 0 0 4 4 4 4 0 0 0 4-4V4h1V2H7m4 14c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1m2-4c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1m1-5h-4V4h4v3Z"/></svg></span> Look at more examples</a></p>
@@ -925,7 +925,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
       
     
   </small>

@@ -2083,9 +2083,7 @@ f"""Processing {len(chunks)} out of the {
     <span class="n">unchunk</span><span class="p">,</span>
 <span class="p">)</span>
 
-
 <span class="k">def</span> <span class="nf">preprocess_chunk</span><span class="p">(</span><span class="n">chunk_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
-    <span class="c1"># Extract</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/&quot;</span>
         <span class="s2">&quot;open-corpus/2022-02-01/</span><span class="si">{chunk_key}</span><span class="s2">&quot;</span>
@@ -2125,9 +2123,7 @@ from great_ai.utilities import (
     unchunk,
 )
 
-
 def preprocess_chunk(chunk_key: str) -> List[Tuple[str, List[str]]]:
-    # Extract
     response = urllib.request.urlopen(
         f"https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/"
         "open-corpus/2022-02-01/{chunk_key}"
@@ -2294,7 +2290,7 @@ add_ground_truth(X, y, train_split_ratio=0.8, test_split_ratio=0.2)</div>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 12, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
       
     
   </small>
