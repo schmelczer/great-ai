@@ -196,6 +196,7 @@
               \fi}
 
 \newcommand\chapter{\clearpage
+                    \setcounter{section}{0}
                     \global\@topnum\z@
                     \@afterindentfalse
                     \secdef\@chapter\@schapter}
@@ -1086,8 +1087,8 @@ to0pt{\kern0.55\wd0\vrule height0.45\ht0\hss}\box0}}}}
       \item[\hskip\labelsep{##3##1}]{##3##2\@thmcounterend\ }}
       }
 
-\renewenvironment{abstract}{%
-      \list{}{\advance\topsep by0.35cm\relax\small
+\renewenvironment{abstract}{
+      \list{}{\advance\topsep by 0.35cm\relax\small
       \leftmargin=1cm
       \labelwidth=\z@
       \listparindent=\z@
@@ -1096,7 +1097,7 @@ to0pt{\kern0.55\wd0\vrule height0.45\ht0\hss}\box0}}}}
       \item[\labelsep\bfseries]
       \section*{Abstract}
 }
-    {\endlist}
+{\endlist}
 
 \newdimen\headlineindent             % dimension for space between
 \headlineindent=1.166cm              % number and text of headings.
