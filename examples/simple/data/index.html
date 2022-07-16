@@ -2083,10 +2083,11 @@ f"""Processing {len(chunks)} out of the {
     <span class="n">unchunk</span><span class="p">,</span>
 <span class="p">)</span>
 
+
 <span class="k">def</span> <span class="nf">preprocess_chunk</span><span class="p">(</span><span class="n">chunk_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/&quot;</span>
-        <span class="s2">&quot;open-corpus/2022-02-01/</span><span class="si">{chunk_key}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;open-corpus/2022-02-01/</span><span class="si">{</span><span class="n">chunk_key</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>  <span class="c1"># a gzipped JSON Lines file</span>
 
     <span class="n">decompressed</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
@@ -2123,10 +2124,11 @@ from great_ai.utilities import (
     unchunk,
 )
 
+
 def preprocess_chunk(chunk_key: str) -> List[Tuple[str, List[str]]]:
     response = urllib.request.urlopen(
         f"https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/"
-        "open-corpus/2022-02-01/{chunk_key}"
+        f"open-corpus/2022-02-01/{chunk_key}"
     )  # a gzipped JSON Lines file
 
     decompressed = gzip.decompress(response.read())
@@ -2172,7 +2174,7 @@ preprocessed_data = unchunk(
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|██████████| 4/4 [04:42&lt;00:00, 70.62s/it] 
+<pre>100%|██████████| 4/4 [04:22&lt;00:00, 65.51s/it] 
 </pre>
 </div>
 </div>
@@ -2233,13 +2235,13 @@ preprocessed_data = unchunk(
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -2268,6 +2270,41 @@ add_ground_truth(X, y, train_split_ratio=0.8, test_split_ratio=0.2)</div>
 </div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre><span style="color: rgb(255,255,0)">Environment variable ENVIRONMENT is not set, defaulting to development mode ‼️</span>
+<span style="color: rgb(255,255,0)">Cannot find credentials files, defaulting to using ParallelTinyDbDriver</span>
+<span style="color: rgb(255,255,0)">The selected tracing database (ParallelTinyDbDriver) is not recommended for production</span>
+<span style="color: rgb(255,255,0)">Cannot find credentials files, defaulting to using LargeFileLocal</span>
+<span style="color: rgb(0,175,255)">GreatAI (v0.1.6): configured ✅</span>
+<span style="color: rgb(0,175,255)">  🔩 tracing_database: ParallelTinyDbDriver</span>
+<span style="color: rgb(0,175,255)">  🔩 large_file_implementation: LargeFileLocal</span>
+<span style="color: rgb(0,175,255)">  🔩 is_production: False</span>
+<span style="color: rgb(0,175,255)">  🔩 should_log_exception_stack: True</span>
+<span style="color: rgb(0,175,255)">  🔩 prediction_cache_size: 512</span>
+<span style="color: rgb(0,175,255)">  🔩 dashboard_table_size: 50</span>
+<span style="color: rgb(255,255,0)">You still need to check whether you follow all best practices before trusting your deployment.</span>
+<span style="color: rgb(255,255,0)">&gt; Find out more at https://se-ml.github.io/practices</span>
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
 </div>
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
@@ -2290,7 +2327,7 @@ add_ground_truth(X, y, train_split_ratio=0.8, test_split_ratio=0.2)</div>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 16, 2022</span>
       
     
   </small>
