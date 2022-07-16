@@ -43,7 +43,11 @@ def mapper_function(
                                     ),
                                 )
                             except Exception as e:
-                                return MapResult(i, None, e, traceback.format_exc())
+                                # `e` has to be stringified in order to avoid any
+                                # surprising serialization error when returning it
+                                return MapResult(
+                                    i, None, str(e), traceback.format_exc()
+                                )
 
                         async def main() -> List[MapResult]:
                             return await asyncio.gather(
