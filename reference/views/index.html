@@ -435,7 +435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to-guides/large_file/" class="md-nav__link">
+      <a href="../../how-to-guides/large-file/" class="md-nav__link">
         How to use LargeFiles
       </a>
     </li>
@@ -877,161 +877,276 @@
       <p class="doc doc-class-bases">
         Bases: <code><span title="typing.Generic">Generic</span>[<span title="great_ai.views.trace.T">T</span>]</code>, <code><span title="great_ai.views.hashable_base_model.HashableBaseModel">HashableBaseModel</span></code></p>
 
+  
+      <p>Universal structure for storing prediction traces and training data.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>trace_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>UUID4 identifier for uniquely referring to a trace.</p></td>
+        </tr>
+        <tr>
+          <td><code>created</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Timestamp of its (original) construction.</p></td>
+        </tr>
+        <tr>
+          <td><code>original_execution_time_ms</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Wall-time elapsed while its generating
+TracingContext was alive.</p></td>
+        </tr>
+        <tr>
+          <td><code>logged_values</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+          </td>
+          <td><p>Values persisted through using <code>@parameter</code> or <code>log_metric()</code>.</p></td>
+        </tr>
+        <tr>
+          <td><code>models</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[<span title="great_ai.views.model.Model">Model</span>]</code>
+          </td>
+          <td><p>Marks left by each encountered <code>@use_model</code> decorated function.</p></td>
+        </tr>
+        <tr>
+          <td><code>exception</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[str]</code>
+          </td>
+          <td><p>Exception description if any was encountered.</p></td>
+        </tr>
+        <tr>
+          <td><code>output</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="great_ai.views.trace.T">T</span>]</code>
+          </td>
+          <td><p>Return value of the function wrapped by GreatAI.</p></td>
+        </tr>
+        <tr>
+          <td><code>feedback</code></td>
+          <td>
+                <code><span title="typing.Any">Any</span></code>
+          </td>
+          <td><p>Feedback obtained using the REST API of <code>add_ground_truth</code>.</p></td>
+        </tr>
+        <tr>
+          <td><code>tags</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td><p>Tags used for filtering traces. Contains the name of the original
+function, value of <code>ENVIRONMENT</code>, its split if has any, and either
+<code>ground_truth</code> or <code>online</code> depending on the origin of the Trace.</p></td>
+        </tr>
+    </tbody>
+  </table>
 
 
         <details class="quote">
           <summary>Source code in <code>great_ai/views/trace.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-12">12</a></span>
-<span class="normal"><a href="#__codelineno-0-13">13</a></span>
-<span class="normal"><a href="#__codelineno-0-14">14</a></span>
-<span class="normal"><a href="#__codelineno-0-15">15</a></span>
-<span class="normal"><a href="#__codelineno-0-16">16</a></span>
-<span class="normal"><a href="#__codelineno-0-17">17</a></span>
-<span class="normal"><a href="#__codelineno-0-18">18</a></span>
-<span class="normal"><a href="#__codelineno-0-19">19</a></span>
-<span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span>
-<span class="normal"><a href="#__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span>
-<span class="normal"><a href="#__codelineno-0-37">37</a></span>
-<span class="normal"><a href="#__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#__codelineno-0-39">39</a></span>
-<span class="normal"><a href="#__codelineno-0-40">40</a></span>
-<span class="normal"><a href="#__codelineno-0-41">41</a></span>
-<span class="normal"><a href="#__codelineno-0-42">42</a></span>
-<span class="normal"><a href="#__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#__codelineno-0-44">44</a></span>
-<span class="normal"><a href="#__codelineno-0-45">45</a></span>
-<span class="normal"><a href="#__codelineno-0-46">46</a></span>
-<span class="normal"><a href="#__codelineno-0-47">47</a></span>
-<span class="normal"><a href="#__codelineno-0-48">48</a></span>
-<span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span>
-<span class="normal"><a href="#__codelineno-0-51">51</a></span>
-<span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span>
-<span class="normal"><a href="#__codelineno-0-77">77</a></span>
-<span class="normal"><a href="#__codelineno-0-78">78</a></span>
-<span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span>
-<span class="normal"><a href="#__codelineno-0-83">83</a></span>
-<span class="normal"><a href="#__codelineno-0-84">84</a></span>
-<span class="normal"><a href="#__codelineno-0-85">85</a></span>
-<span class="normal"><a href="#__codelineno-0-86">86</a></span>
-<span class="normal"><a href="#__codelineno-0-87">87</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">class</span> <span class="nc">Trace</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">HashableBaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="n">trace_id</span><span class="p">:</span> <span class="nb">str</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">created</span><span class="p">:</span> <span class="nb">str</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">original_execution_time_ms</span><span class="p">:</span> <span class="nb">float</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a>    <span class="n">logged_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Model</span><span class="p">]</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">exception</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">feedback</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="n">extra</span> <span class="o">=</span> <span class="n">Extra</span><span class="o">.</span><span class="n">ignore</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>            <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a>        <span class="p">)</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="k">def</span> <span class="nf">models_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>        <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="k">def</span> <span class="nf">output_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a>        <span class="k">return</span> <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="k">def</span> <span class="nf">exception_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>        <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>            <span class="s2">&quot;null&quot;</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>            <span class="k">else</span> <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="p">)</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="k">def</span> <span class="nf">feedback_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>            <span class="s2">&quot;null&quot;</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="ow">is</span> <span class="kc">None</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>            <span class="k">else</span> <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="p">)</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="nd">@property</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">def</span> <span class="nf">tags_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="k">return</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="k">def</span> <span class="nf">to_flat_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_original</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="k">return</span> <span class="p">{</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="o">**</span><span class="p">(</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>                <span class="k">if</span> <span class="n">include_original</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>                <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>                    <span class="s2">&quot;trace_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_id</span><span class="p">,</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>                    <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">,</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>                    <span class="s2">&quot;original_execution_time_ms&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_execution_time_ms</span><span class="p">,</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>                <span class="p">}</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="p">),</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="o">**</span><span class="p">{</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>                <span class="n">k</span><span class="p">:</span> <span class="n">pformat</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>            <span class="p">},</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>            <span class="s2">&quot;models_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_flat</span><span class="p">,</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a>            <span class="s2">&quot;exception_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception_flat</span><span class="p">,</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a>            <span class="s2">&quot;output_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_flat</span><span class="p">,</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>            <span class="s2">&quot;feedback_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback_flat</span><span class="p">,</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="s2">&quot;tags_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_flat</span><span class="p">,</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="p">}</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Trace[</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{ &#39;</span><span class="p">,</span> <span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-12"> 12</a></span>
+<span class="normal"><a href="#__codelineno-0-13"> 13</a></span>
+<span class="normal"><a href="#__codelineno-0-14"> 14</a></span>
+<span class="normal"><a href="#__codelineno-0-15"> 15</a></span>
+<span class="normal"><a href="#__codelineno-0-16"> 16</a></span>
+<span class="normal"><a href="#__codelineno-0-17"> 17</a></span>
+<span class="normal"><a href="#__codelineno-0-18"> 18</a></span>
+<span class="normal"><a href="#__codelineno-0-19"> 19</a></span>
+<span class="normal"><a href="#__codelineno-0-20"> 20</a></span>
+<span class="normal"><a href="#__codelineno-0-21"> 21</a></span>
+<span class="normal"><a href="#__codelineno-0-22"> 22</a></span>
+<span class="normal"><a href="#__codelineno-0-23"> 23</a></span>
+<span class="normal"><a href="#__codelineno-0-24"> 24</a></span>
+<span class="normal"><a href="#__codelineno-0-25"> 25</a></span>
+<span class="normal"><a href="#__codelineno-0-26"> 26</a></span>
+<span class="normal"><a href="#__codelineno-0-27"> 27</a></span>
+<span class="normal"><a href="#__codelineno-0-28"> 28</a></span>
+<span class="normal"><a href="#__codelineno-0-29"> 29</a></span>
+<span class="normal"><a href="#__codelineno-0-30"> 30</a></span>
+<span class="normal"><a href="#__codelineno-0-31"> 31</a></span>
+<span class="normal"><a href="#__codelineno-0-32"> 32</a></span>
+<span class="normal"><a href="#__codelineno-0-33"> 33</a></span>
+<span class="normal"><a href="#__codelineno-0-34"> 34</a></span>
+<span class="normal"><a href="#__codelineno-0-35"> 35</a></span>
+<span class="normal"><a href="#__codelineno-0-36"> 36</a></span>
+<span class="normal"><a href="#__codelineno-0-37"> 37</a></span>
+<span class="normal"><a href="#__codelineno-0-38"> 38</a></span>
+<span class="normal"><a href="#__codelineno-0-39"> 39</a></span>
+<span class="normal"><a href="#__codelineno-0-40"> 40</a></span>
+<span class="normal"><a href="#__codelineno-0-41"> 41</a></span>
+<span class="normal"><a href="#__codelineno-0-42"> 42</a></span>
+<span class="normal"><a href="#__codelineno-0-43"> 43</a></span>
+<span class="normal"><a href="#__codelineno-0-44"> 44</a></span>
+<span class="normal"><a href="#__codelineno-0-45"> 45</a></span>
+<span class="normal"><a href="#__codelineno-0-46"> 46</a></span>
+<span class="normal"><a href="#__codelineno-0-47"> 47</a></span>
+<span class="normal"><a href="#__codelineno-0-48"> 48</a></span>
+<span class="normal"><a href="#__codelineno-0-49"> 49</a></span>
+<span class="normal"><a href="#__codelineno-0-50"> 50</a></span>
+<span class="normal"><a href="#__codelineno-0-51"> 51</a></span>
+<span class="normal"><a href="#__codelineno-0-52"> 52</a></span>
+<span class="normal"><a href="#__codelineno-0-53"> 53</a></span>
+<span class="normal"><a href="#__codelineno-0-54"> 54</a></span>
+<span class="normal"><a href="#__codelineno-0-55"> 55</a></span>
+<span class="normal"><a href="#__codelineno-0-56"> 56</a></span>
+<span class="normal"><a href="#__codelineno-0-57"> 57</a></span>
+<span class="normal"><a href="#__codelineno-0-58"> 58</a></span>
+<span class="normal"><a href="#__codelineno-0-59"> 59</a></span>
+<span class="normal"><a href="#__codelineno-0-60"> 60</a></span>
+<span class="normal"><a href="#__codelineno-0-61"> 61</a></span>
+<span class="normal"><a href="#__codelineno-0-62"> 62</a></span>
+<span class="normal"><a href="#__codelineno-0-63"> 63</a></span>
+<span class="normal"><a href="#__codelineno-0-64"> 64</a></span>
+<span class="normal"><a href="#__codelineno-0-65"> 65</a></span>
+<span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
+<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
+<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
+<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
+<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
+<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
+<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
+<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
+<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
+<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
+<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
+<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
+<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
+<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
+<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
+<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
+<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
+<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#__codelineno-0-104">104</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">class</span> <span class="nc">Trace</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">HashableBaseModel</span><span class="p">):</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="sd">&quot;&quot;&quot;Universal structure for storing prediction traces and training data.</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="sd">    Attributes:</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">        trace_id: UUID4 identifier for uniquely referring to a trace.</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">        created: Timestamp of its (original) construction.</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">        original_execution_time_ms: Wall-time elapsed while its generating</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">            TracingContext was alive.</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">        logged_values: Values persisted through using `@parameter` or `log_metric()`.</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="sd">        models: Marks left by each encountered `@use_model` decorated function.</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">        exception: Exception description if any was encountered.</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="sd">        output: Return value of the function wrapped by GreatAI.</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">        feedback: Feedback obtained using the REST API of `add_ground_truth`.</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">        tags: Tags used for filtering traces. Contains the name of the original</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">            function, value of `ENVIRONMENT`, its split if has any, and either</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">            `ground_truth` or `online` depending on the origin of the Trace.</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">trace_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="n">created</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="n">original_execution_time_ms</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="n">logged_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="n">models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Model</span><span class="p">]</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="n">exception</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">feedback</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">tags</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>        <span class="n">extra</span> <span class="o">=</span> <span class="n">Extra</span><span class="o">.</span><span class="n">ignore</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a>            <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="p">)</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="k">def</span> <span class="nf">models_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="k">def</span> <span class="nf">output_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="k">return</span> <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="k">def</span> <span class="nf">exception_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>            <span class="s2">&quot;null&quot;</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="k">else</span> <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="p">)</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="k">def</span> <span class="nf">feedback_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="s2">&quot;null&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="ow">is</span> <span class="kc">None</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="k">else</span> <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="p">)</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="nd">@property</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="k">def</span> <span class="nf">tags_flat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="k">return</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">def</span> <span class="nf">to_flat_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_original</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="o">**</span><span class="p">(</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>                <span class="k">if</span> <span class="n">include_original</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>                <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>                    <span class="s2">&quot;trace_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_id</span><span class="p">,</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>                    <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">,</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>                    <span class="s2">&quot;original_execution_time_ms&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_execution_time_ms</span><span class="p">,</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>                <span class="p">}</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>            <span class="p">),</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>            <span class="o">**</span><span class="p">{</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>                <span class="n">k</span><span class="p">:</span> <span class="n">pformat</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logged_values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>            <span class="p">},</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="s2">&quot;models_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_flat</span><span class="p">,</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>            <span class="s2">&quot;exception_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception_flat</span><span class="p">,</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>            <span class="s2">&quot;output_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_flat</span><span class="p">,</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>            <span class="s2">&quot;feedback_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback_flat</span><span class="p">,</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="s2">&quot;tags_flat&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags_flat</span><span class="p">,</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="p">}</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Trace[</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>            <span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compact</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{ &#39;</span><span class="p">,</span> <span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="si">}</span><span class="s2">)&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
