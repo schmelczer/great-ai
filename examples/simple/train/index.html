@@ -2130,6 +2130,7 @@ def create_pipeline() -> Pipeline:
             </clipboard-copy>
         </div>
             <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">optimisation_pipeline</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
     <span class="n">create_pipeline</span><span class="p">(),</span>
@@ -2150,6 +2151,7 @@ def create_pipeline() -> Pipeline:
 <span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;rank_test_score&quot;</span><span class="p">)</span>
 </pre></div>
 <div id="cell-4" class="clipboard-copy-txt">from sklearn.model_selection import GridSearchCV
+import pandas as pd
 
 optimisation_pipeline = GridSearchCV(
     create_pipeline(),
@@ -2197,26 +2199,484 @@ results.sort_values("rank_test_score")</div>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
 
 
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-intense-fg ansi-bold">/data/projects/great-ai/docs/examples/simple/train.ipynb Cell 6</span> in <span class="ansi-cyan-fg">&lt;cell line: 18&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=2&#39;&gt;3&lt;/a&gt;</span> optimisation_pipeline = GridSearchCV(
-<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=3&#39;&gt;4&lt;/a&gt;</span>     create_pipeline(),
-<span class="ansi-green-intense-fg ansi-bold">      &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=4&#39;&gt;5&lt;/a&gt;</span>     {
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">     &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=13&#39;&gt;14&lt;/a&gt;</span>     verbose=1,
-<span class="ansi-green-intense-fg ansi-bold">     &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=14&#39;&gt;15&lt;/a&gt;</span> )
-<span class="ansi-green-intense-fg ansi-bold">     &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=15&#39;&gt;16&lt;/a&gt;</span> optimisation_pipeline.fit(X, y)
-<span class="ansi-green-fg">---&gt; &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=17&#39;&gt;18&lt;/a&gt;</span> results = pd.DataFrame(optimisation_pipeline.cv_results_)
-<span class="ansi-green-intense-fg ansi-bold">     &lt;a href=&#39;vscode-notebook-cell:/data/projects/great-ai/docs/examples/simple/train.ipynb#ch0000005?line=18&#39;&gt;19&lt;/a&gt;</span> results.sort_values(&#34;rank_test_score&#34;)
 
-<span class="ansi-red-fg">NameError</span>: name &#39;pd&#39; is not defined</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean_fit_time</th>
+      <th>std_fit_time</th>
+      <th>mean_score_time</th>
+      <th>std_score_time</th>
+      <th>param_classifier__alpha</th>
+      <th>param_classifier__fit_prior</th>
+      <th>param_vectorizer__max_df</th>
+      <th>param_vectorizer__min_df</th>
+      <th>params</th>
+      <th>split0_test_score</th>
+      <th>split1_test_score</th>
+      <th>split2_test_score</th>
+      <th>mean_test_score</th>
+      <th>std_test_score</th>
+      <th>rank_test_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>7</th>
+      <td>14.549476</td>
+      <td>0.361685</td>
+      <td>8.476837</td>
+      <td>0.222398</td>
+      <td>0.5</td>
+      <td>False</td>
+      <td>0.05</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.518061</td>
+      <td>0.514842</td>
+      <td>0.511599</td>
+      <td>0.514834</td>
+      <td>0.002638</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11.235289</td>
+      <td>0.130426</td>
+      <td>4.092868</td>
+      <td>0.082518</td>
+      <td>0.5</td>
+      <td>False</td>
+      <td>0.1</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.513897</td>
+      <td>0.515661</td>
+      <td>0.507867</td>
+      <td>0.512475</td>
+      <td>0.003337</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>7.383645</td>
+      <td>0.138110</td>
+      <td>4.130709</td>
+      <td>0.250048</td>
+      <td>1</td>
+      <td>False</td>
+      <td>0.05</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.496825</td>
+      <td>0.501045</td>
+      <td>0.496854</td>
+      <td>0.498241</td>
+      <td>0.001983</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>10.435154</td>
+      <td>0.305144</td>
+      <td>3.882101</td>
+      <td>0.128886</td>
+      <td>0.5</td>
+      <td>False</td>
+      <td>0.1</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.493247</td>
+      <td>0.497814</td>
+      <td>0.502245</td>
+      <td>0.497769</td>
+      <td>0.003674</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>13.643193</td>
+      <td>0.310696</td>
+      <td>4.173707</td>
+      <td>0.142980</td>
+      <td>0.5</td>
+      <td>False</td>
+      <td>0.05</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.489609</td>
+      <td>0.495207</td>
+      <td>0.498154</td>
+      <td>0.494323</td>
+      <td>0.003544</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>7.048340</td>
+      <td>0.050070</td>
+      <td>3.172948</td>
+      <td>0.152418</td>
+      <td>1</td>
+      <td>False</td>
+      <td>0.1</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.487456</td>
+      <td>0.493865</td>
+      <td>0.491157</td>
+      <td>0.490826</td>
+      <td>0.002627</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>7.564685</td>
+      <td>0.146092</td>
+      <td>2.374111</td>
+      <td>0.285026</td>
+      <td>1</td>
+      <td>False</td>
+      <td>0.1</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.485160</td>
+      <td>0.494039</td>
+      <td>0.490127</td>
+      <td>0.489776</td>
+      <td>0.003633</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>7.172353</td>
+      <td>0.212599</td>
+      <td>3.747219</td>
+      <td>0.130217</td>
+      <td>1</td>
+      <td>False</td>
+      <td>0.05</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.481303</td>
+      <td>0.490002</td>
+      <td>0.488269</td>
+      <td>0.486524</td>
+      <td>0.003759</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>14.276345</td>
+      <td>0.456576</td>
+      <td>8.318859</td>
+      <td>0.268701</td>
+      <td>0.5</td>
+      <td>False</td>
+      <td>0.05</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.482429</td>
+      <td>0.487735</td>
+      <td>0.484888</td>
+      <td>0.485017</td>
+      <td>0.002168</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>14.902358</td>
+      <td>0.737693</td>
+      <td>5.975091</td>
+      <td>0.171150</td>
+      <td>0.5</td>
+      <td>True</td>
+      <td>0.05</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.469598</td>
+      <td>0.474490</td>
+      <td>0.473637</td>
+      <td>0.472575</td>
+      <td>0.002134</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>12.677349</td>
+      <td>0.145143</td>
+      <td>4.374204</td>
+      <td>0.175674</td>
+      <td>0.5</td>
+      <td>False</td>
+      <td>0.1</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.468872</td>
+      <td>0.476451</td>
+      <td>0.470921</td>
+      <td>0.472082</td>
+      <td>0.003201</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>13.423686</td>
+      <td>0.482872</td>
+      <td>8.008324</td>
+      <td>0.442975</td>
+      <td>0.5</td>
+      <td>True</td>
+      <td>0.1</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.465726</td>
+      <td>0.474548</td>
+      <td>0.471879</td>
+      <td>0.470718</td>
+      <td>0.003694</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>13.819117</td>
+      <td>0.838347</td>
+      <td>6.161175</td>
+      <td>0.336590</td>
+      <td>0.5</td>
+      <td>True</td>
+      <td>0.05</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.463395</td>
+      <td>0.473982</td>
+      <td>0.471262</td>
+      <td>0.469546</td>
+      <td>0.004489</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>13.281476</td>
+      <td>0.588822</td>
+      <td>8.335852</td>
+      <td>0.254627</td>
+      <td>0.5</td>
+      <td>True</td>
+      <td>0.1</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.458734</td>
+      <td>0.468053</td>
+      <td>0.464418</td>
+      <td>0.463735</td>
+      <td>0.003835</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>7.282247</td>
+      <td>0.444940</td>
+      <td>3.567094</td>
+      <td>0.044519</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.05</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.438189</td>
+      <td>0.450160</td>
+      <td>0.446180</td>
+      <td>0.444843</td>
+      <td>0.004978</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>7.098797</td>
+      <td>0.196241</td>
+      <td>3.838628</td>
+      <td>0.091128</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.1</td>
+      <td>100</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.436488</td>
+      <td>0.444503</td>
+      <td>0.445900</td>
+      <td>0.442297</td>
+      <td>0.004147</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>7.492791</td>
+      <td>0.288889</td>
+      <td>3.843224</td>
+      <td>0.073438</td>
+      <td>1</td>
+      <td>False</td>
+      <td>0.05</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.428196</td>
+      <td>0.431945</td>
+      <td>0.430160</td>
+      <td>0.430100</td>
+      <td>0.001531</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>7.229826</td>
+      <td>0.099823</td>
+      <td>3.656332</td>
+      <td>0.073780</td>
+      <td>1</td>
+      <td>False</td>
+      <td>0.1</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.403130</td>
+      <td>0.410170</td>
+      <td>0.409801</td>
+      <td>0.407700</td>
+      <td>0.003235</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>7.158370</td>
+      <td>0.169818</td>
+      <td>3.765632</td>
+      <td>0.082924</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.05</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.399237</td>
+      <td>0.412872</td>
+      <td>0.407982</td>
+      <td>0.406697</td>
+      <td>0.005640</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>7.064643</td>
+      <td>0.119529</td>
+      <td>3.810983</td>
+      <td>0.125897</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.1</td>
+      <td>20</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.388060</td>
+      <td>0.399247</td>
+      <td>0.396325</td>
+      <td>0.394544</td>
+      <td>0.004737</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>13.749660</td>
+      <td>0.465174</td>
+      <td>6.407841</td>
+      <td>0.549166</td>
+      <td>0.5</td>
+      <td>True</td>
+      <td>0.05</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.384852</td>
+      <td>0.386487</td>
+      <td>0.386796</td>
+      <td>0.386045</td>
+      <td>0.000853</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>15.954147</td>
+      <td>0.318013</td>
+      <td>6.337361</td>
+      <td>0.261697</td>
+      <td>0.5</td>
+      <td>True</td>
+      <td>0.1</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 0.5, 'classifier__fit_pr...</td>
+      <td>0.369785</td>
+      <td>0.375645</td>
+      <td>0.375858</td>
+      <td>0.373763</td>
+      <td>0.002814</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>7.120198</td>
+      <td>0.050452</td>
+      <td>3.833905</td>
+      <td>0.069540</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.05</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.277741</td>
+      <td>0.280564</td>
+      <td>0.285337</td>
+      <td>0.281214</td>
+      <td>0.003135</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>7.497707</td>
+      <td>0.183054</td>
+      <td>3.870714</td>
+      <td>0.062888</td>
+      <td>1</td>
+      <td>True</td>
+      <td>0.1</td>
+      <td>5</td>
+      <td>{'classifier__alpha': 1, 'classifier__fit_prio...</td>
+      <td>0.255578</td>
+      <td>0.263381</td>
+      <td>0.266184</td>
+      <td>0.261714</td>
+      <td>0.004487</td>
+      <td>24</td>
+    </tr>
+  </tbody>
+</table>
 </div>
+</div>
+
 </div>
 
 </div>
@@ -2230,7 +2690,7 @@ results.sort_values("rank_test_score")</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -2277,7 +2737,7 @@ classifier.fit(X, y)</div>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 
 
 
@@ -2313,7 +2773,7 @@ classifier.fit(X, y)</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
         
         
         <div class="CodeMirror cm-s-jupyter">
@@ -2359,9 +2819,9 @@ save_model(classifier, key="small-domain-prediction", keep_last_n=5)</div>
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
 <pre><span style="color: rgb(0,175,255)">Fetching cached versions of small-domain-prediction</span>
-<span style="color: rgb(0,175,255)">Copying file for small-domain-prediction-1</span>
-<span style="color: rgb(0,175,255)">Compressing small-domain-prediction-1</span>
-<span style="color: rgb(0,175,255)">Model small-domain-prediction uploaded with version 1</span>
+<span style="color: rgb(0,175,255)">Copying file for small-domain-prediction-2</span>
+<span style="color: rgb(0,175,255)">Compressing small-domain-prediction-2</span>
+<span style="color: rgb(0,175,255)">Model small-domain-prediction uploaded with version 2</span>
 </pre>
 </div>
 </div>
@@ -2369,13 +2829,13 @@ save_model(classifier, key="small-domain-prediction", keep_last_n=5)</div>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>&#39;small-domain-prediction:1&#39;</pre>
+<pre>&#39;small-domain-prediction:2&#39;</pre>
 </div>
 
 </div>

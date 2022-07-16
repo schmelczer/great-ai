@@ -1,6 +1,6 @@
 \chapter{Designing the framework} \label{chapter:design}
 
-Providing the users with a high-level of abstraction is not unheard of in the domain of practical AI platforms. Many software-as-a-service products offer features for hiding the details of machine learning applications. However --- as we saw in Section \ref{section:existing} --- these tend to abstract away the details of both data science and AI-engineering, overall hindering the development process. The design proposed here aims to simplify only the deployment related concepts.
+Providing users with a high-level of abstraction is not unheard of in the domain of practical AI platforms. Many software-as-a-service products offer features for hiding the details of machine learning applications. However --- as we saw in Section \ref{section:existing} --- these tend to abstract away the details of both data science and AI-engineering, overall hindering the development process. The design proposed here aims to simplify only the deployment related concepts.
 
 \section{Scope} \label{section:scope}
 
@@ -15,7 +15,27 @@ There have been attempts that at least partially address this issue, however, as
     \label{fig:scope}
 \end{figure}
 
-It is interesting to mention that there is a proliferation\footnote{\href{https://xkcd.com/927/}{xkcd.com/927}} of platform/software as a service (PaaS/SaaS) products for deploying AI\footnote{Such as \href{https://mlem.ai/}{MLEM} or any AutoML SaaS platform, for example, \href{https://www.akkio.com/role/software-engineers}{Akkio} as these often have a one-click deployment feature as well.}. At first, these may look promising, however, they tend to only focus on getting code easily deployed in the cloud: AI best practices are not prioritised in this setup. Nevertheless, in many cases, it may be a suitable option to use such a service and these can also complement GreatAI as illustrated in Figure \ref{fig:scope}. First, the prototype is transformed into a GREAT service and materialised as a common software artifact implementing the best practices. Then, it is either deployed using a deployment SaaS, or by using the organisation's existing software deployment setup.
+It is interesting to mention that there is a proliferation\footnote{\href{https://xkcd.com/927/}{xkcd.com/927}} of platform/software as a service (PaaS/SaaS) products for deploying AI\footnote{Such as \href{https://mlem.ai/}{MLEM}, \href{https://streamlit.io/cloud}{Streamlit} or any AutoML SaaS platform, for example, \href{https://www.akkio.com/role/software-engineers}{Akkio} as these often have a one-click deployment feature as well.}. At first, these may look promising, however, they tend to only focus on getting code easily deployed in the cloud: AI best practices are not prioritised in this setup. Nevertheless, in many cases, it may be a suitable option to use such a service and these can also complement GreatAI as illustrated in Figure \ref{fig:scope}. First, the prototype is transformed into a GREAT service and materialised as a common software artifact implementing the best practices. Then, it is either deployed using a deployment SaaS, or by using the organisation's existing software deployment setup.
+
+\section{Requirements} \label{section:requirements}
+
+The best practices (which will be referenced throughout the thesis) with which the \textit{GreatAI} design is concerned are a subset of those compiled by Serban et al. \cite{serban2020adoption}. The core requirements --- sets of covered best practices --- for a software solution that has the potential of improving our problem context are presented in the following along with some explanation and clarification of each of them.
+
+\paragraph{General} Albeit not explicitly in the list of best practices, compatibility is vital in encouraging adoption. Large projects oftentimes end up depending on numerous packages, each of which may impose some restrictions on the code: since these all have to be satisfied simultaneously, this can result in severe constraints on the application. 
+
+The open-source scene of data-related libraries is vibrant. To take the example of data validation, there are at least 4 popular choices which offer varying but similar features: \href{https://github.com/SeldonIO/alibi-detect}{Alibi detect}, \href{https://github.com/PAIR-code/facets}{Facets}, \href{https://github.com/great-expectations/great_expectations}{Great Expectations}, and Data Linter \cite{hynes2017data}. The responsibility of choosing the most fitting solution falls on the user, thus, they should not be limited in this by \textit{GreatAI}.
+
+The programming language (PL) of the library should be its only non-general property. Fortunately, the de facto PL for data science is Python, hence, implementing the library in it should not significantly limit its applicability.
+
+\paragraph{Robustness} in software development can be achieved by preparing the application to gracefully handle errors, even unexpected ones \cite{bishop1998robust}. Errors can and will happen in practice: storing and investigating what has led to them is required to prevent future ones. In the case of ML, errors might not be as obvious to detect as in more traditional applications (see the above mentioned data validators). Even if a single feature's value falls outside the expected distribution, unexpected results can happen. In cases where this might lead to real-world repercussions, extra care has to be taken to construct as many safe-guards as feasible. \textit{GreatAI} should support its clients in doing so.
+
+\paragraph{End-to-end} In this case, it refers to end-to-end feedback. That is, feedback should be gathered on the real-world performance of the system, and this should be taken into account when designing/training the next iteration of the model. Static datasets may fail to capture the changing nature of real-life and can become outdated if they are not revised continuously. A well packaged deployment should make it trivial to integrate new training data.
+
+\paragraph{Automated} The available time of data scientists and software engineers is limited and expensive. For this reason, humans should only be involved when their involvement is necessary. Steps in the development process that can be automated without negative consequences must be automated in order to achieve efficient development processes and let the experts focus on the issues that require their attention the most.
+
+\paragraph{Trustworthy} As detailed by the \textit{Ethics guidelines for trustworthy AI}\footnote{\href{https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai}{digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai}}, human oversight, transparency, and accountability are some of the key requirements for trustworthy AI applications. For increasing public acceptance and trust while minimising negative societal impact, trustworthiness is essential.
+
+These requirements were chosen stemming from their general importance and potential to be mostly handled (implemented) by a software framework\footnote{The terms \textit{framework} and \textit{library} are used interchangeably in this work stemming from their vague and often holistic differentiation.}. That is why, these provide an ideal initial direction for tackling the issue. Of course, these do not cover all best practices, for instance, the ones relating to organisational processes fall outside the realm of software engineering.
 
 \section{Design principles}
 
@@ -44,6 +64,8 @@ To resolve this conflict, GreatAI should have recommended values instead of defa
 This way, the library attempts to notify its user about the existence of these decisions but does not force them to manually decide. As a result, no initial configuration is needed for starting out with the library (high \textit{Provisionality}, low \textit{Diffuseness}) and the dependencies are not hidden since they are explicitly highlighted.
 
 \subsection{Documentation}
+
+For structuring the documentation, the diátaxis approach is taken \cite{Procida_Diataxis_documentation_framework} which prescribes dividing documentation into 4 parts along 2 axes: practical-theoretical and passive-active consumption. The four quadrants derived from this are tutorials, how-to guides, reference, and explanation.
 
 Without a doubt, good documentation is a prerequisite for adoption. Documentation comes in multiple forms: modern integrated development environments (IDEs) tend to show a popup of a function's documentation when requested, at the same time a more comprehensive online documentation and example projects are also still expected. But descriptive error messages can be also viewed as documentation. The library should have quality documentation for all categories.
 
