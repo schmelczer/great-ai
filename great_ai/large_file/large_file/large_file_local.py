@@ -9,6 +9,30 @@ logger = get_logger("large_file")
 
 
 class LargeFileLocal(LargeFileBase):
+    """LargeFile implementation using local filesystem as a backend.
+
+    Store large files remotely using the familiar API of `open()`. With built-in
+    versioning, pruning and local cache.
+
+    IMPORTANT: If LargeFileLocal.max_cache_size is too small, it won't be enough to
+    store all your files and they can end up deleted.
+
+    See parent for more details.
+
+    Examples:
+        >>> LargeFileLocal.cache_path = Path(".cache")
+
+        >>> LargeFileLocal.max_cache_size = "30GB"
+
+        >>> with LargeFileLocal("my_test.txt", "w", keep_last_n=2) as f:
+        ...     f.write('test')
+        4
+
+        >>> with LargeFileLocal("my_test.txt") as f:
+        ...     print(f.read())
+        test
+    """
+
     def __init__(
         self,
         name: str,
@@ -40,6 +64,7 @@ class LargeFileLocal(LargeFileBase):
     def _download(
         self, remote_path: Any, local_path: Path, hide_progress: bool
     ) -> None:
+        # This will never be called because the file must be in the cache
         raise NotImplementedError()
 
     def _upload(self, local_path: Path, hide_progress: bool) -> None:

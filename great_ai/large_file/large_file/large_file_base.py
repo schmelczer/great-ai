@@ -21,31 +21,26 @@ ARCHIVE_EXTENSION = ".tar.gz"
 
 
 class LargeFileBase(ABC):
-    """
-    Store large files remotely. Use local cache for speed up.
+    """Base for LargeFile implementations with different backends.
+
+    Store large files remotely using the familiar API of `open()`. With built-in
+    versioning, pruning and local cache.
+
+    By default, files are stored in the ".cache" folder and the least recently used is
+    deleted after the overall size reaches 30 GBs.
 
     Examples:
+        >>> LargeFileBase.cache_path = Path(".cache")
 
-    ```
-    with LargeFile("test.txt", "w", keep_last_n=3) as f:
-        for i in range(1000000):
-            f.write('test\n')
+        >>> LargeFileBase.max_cache_size = "30GB"
 
-    with LargeFile("test.txt", "r") as f:
-        print(f.readlines()[0])
-
-    path_to_cached_text_file = LargeFile("test.txt", version=0).get()
-    ```
-
-    By default, files are stored in the ".cache" folder and the
-    least recently use is deleted after the overall size reaches 30 GBs.
-
-    Change it with the following properties.
-
-    ```
-    LargeFile.cache_path = Path(".cache")
-    LargeFile.max_cache_size = "30GB"
-    ```
+    Attributes:
+        initialized: Tell whether `configure_credentials` or
+            `configure_credentials_from_file` has been already called.
+        cache_path: Storage location for cached files.
+        max_cache_size: Delete files until the folder at `cache_path` is smaller than
+            this value. Examples: "5 GB", "10MB", "0.3 TB". Set to `None` for no
+            automatic cache-pruning.
     """
 
     initialized = False
@@ -86,12 +81,19 @@ class LargeFileBase(ABC):
         cls,
         secrets: Union[Path, str, ConfigFile],
     ) -> None:
+        """Load file and feed its content to `configure_credentials`.
+
+        Extra keys are ignored.
+        """
+
         if not isinstance(secrets, ConfigFile):
             secrets = ConfigFile(secrets)
         cls.configure_credentials(**{k.lower(): v for k, v in secrets.items()})
 
     @classmethod
     def configure_credentials(cls, **kwargs: str) -> None:
+        """Configure required credentials for the LargeFile backend."""
+
         cls.initialized = True
 
     def __enter__(self) -> IO:
@@ -136,15 +138,21 @@ class LargeFileBase(ABC):
         return False
 
     @property
-    def _local_name(self) -> str:
-        return f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}{self.version}"
-
-    @property
     def version(self) -> int:
+        """Numeric version of the file proxied by this LargeFile instance."""
+
         return cast(int, self._version)
 
     @lru_cache(1)
     def get(self, hide_progress: bool = False) -> Path:
+        """Return path to the proxy of a file (or directory).
+
+        If not available in the local cache, an attempt is made to download it.
+
+        Args:
+            hide_progress: Do not show a progress update after each 10% of progress.
+        """
+
         remote_path = next(
             i.remote_path for i in self._instances if i.version == self._version
         )
@@ -171,6 +179,14 @@ class LargeFileBase(ABC):
         return destination
 
     def push(self, path: Union[Path, str], hide_progress: bool = False) -> None:
+        """Upload a file (or directory) as a new version of `key`.
+
+        The file/directory is compressed before upload.
+
+        Args:
+            hide_progress: Do not show a progress update after each 10% of progress.
+        """
+
         if isinstance(path, str):
             path = Path(path)
 
@@ -208,8 +224,25 @@ class LargeFileBase(ABC):
         self.clean_up()
 
     def delete(self) -> None:
+        """Delete all versions of the files under this `key`."""
+
         self._keep_last_n = 0
         self._delete_old_remote_versions()
+
+    @property
+    def versions_pretty(self) -> str:
+        """Formatted string of all available versions."""
+        return ", ".join((str(i.version) for i in self._instances))
+
+    def clean_up(self) -> None:
+        """Delete local and remote versions according to currently set cache and retention policy."""
+
+        self._delete_old_remote_versions()
+        self._prune_cache()
+
+    @property
+    def _local_name(self) -> str:
+        return f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}{self.version}"
 
     def _find_instances(self) -> None:
         if self._cache_only_mode:
@@ -268,14 +301,6 @@ class LargeFileBase(ABC):
                 )
         else:
             raise ValueError("Unsupported file mode.")
-
-    @property
-    def versions_pretty(self) -> str:
-        return ", ".join((str(i.version) for i in self._instances))
-
-    def clean_up(self) -> None:
-        self._delete_old_remote_versions()
-        self._prune_cache()
 
     def _prune_cache(self) -> None:
         self.cache_path.mkdir(parents=True, exist_ok=True)

@@ -18,6 +18,14 @@ MONGO_NAME_VERSION_SEPARATOR = "_"
 
 
 class LargeFileMongo(LargeFileBase):
+    """LargeFile implementation using GridFS (MongoDB) as a backend.
+
+    Store large files remotely using the familiar API of `open()`. With built-in
+    versioning, pruning and local cache.
+
+    See parent for more details.
+    """
+
     mongo_connection_string = None
     mongo_database = None
 

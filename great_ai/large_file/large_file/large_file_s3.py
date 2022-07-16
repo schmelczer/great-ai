@@ -16,31 +16,12 @@ S3_NAME_VERSION_SEPARATOR = "/"
 
 
 class LargeFileS3(LargeFileBase):
-    """
-    Store large files in S3. Use local cache for speed up.
+    """LargeFile implementation using S3-compatible storage as a backend.
 
-    Examples:
+    Store large files remotely using the familiar API of `open()`. With built-in
+    versioning, pruning and local cache.
 
-    ```
-    with LargeFile("test.txt", "w", keep_last_n=3) as f:
-        for i in range(1000000):
-            f.write('test\n')
-
-    with LargeFile("test.txt", "r") as f:
-        print(f.readlines()[0])
-
-    path_to_cached_text_file = LargeFile("test.txt", version=0).get()
-    ```
-
-    By default, files are stored in the ".cache" folder and the
-    least recently use is deleted after the overall size reaches 30 GBs.
-
-    Change it with the following properties.
-
-    ```
-    LargeFile.cache_path = Path(".cache")
-    LargeFile.max_cache_size = "30GB"
-    ```
+    See parent for more details.
     """
 
     region_name = None
