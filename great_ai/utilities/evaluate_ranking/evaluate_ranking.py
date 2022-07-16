@@ -34,7 +34,7 @@ def evaluate_ranking(
             `expected`)
         title: Title of the plot.
         disable_interpolation: Do not interpolate.
-        axes: Matplotlib axes for ploting inside a subplot.
+        axes: Matplotlib axes for plotting inside a subplot.
         output_svg: If specified, save the chart as an svg to the given Path.
         reverse_order: Reverse the ranking specified by `expected`.
         plot: Display a plot on the screen.

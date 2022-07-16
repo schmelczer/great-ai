@@ -1,4 +1,5 @@
-"""GreatAI."""
+"""Transform your prototype AI code into production-ready software."""
+
 __version__ = "0.1.6"
 
 
