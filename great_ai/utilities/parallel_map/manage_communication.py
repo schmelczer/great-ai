@@ -40,7 +40,9 @@ def manage_communication(
             except Exception as e:
                 if ignore_exceptions:
                     logger.error(
-                        f"Exception {e} encountered in input, traceback:\n{traceback.format_exc()}"
+                        f"""Exception {e} encountered in input, traceback:\n{
+                            traceback.format_exc()
+                        }"""
                     )
                 else:
                     raise
@@ -51,10 +53,12 @@ def manage_communication(
                 if r.exception is not None:
                     if ignore_exceptions:
                         logger.error(
-                            f"Exception {r.exception} encountered in worker, traceback:\n{r.worker_traceback}"
+                            f"""Exception {
+                                r.exception
+                            } encountered in worker, traceback:\n{r.worker_traceback}"""
                         )
                     else:
-                        raise WorkerException from r.exception
+                        raise WorkerException(r.exception)
 
                 if unordered:
 

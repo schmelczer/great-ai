@@ -57,7 +57,9 @@ def mapper_function(
                                 last_chunk.append(MapResult(i, func(value)))
                             except Exception as e:
                                 last_chunk.append(
-                                    MapResult(i, None, e, traceback.format_exc())
+                                    # `e` has to be stringified in order to avoid any
+                                    # surprising serialization error when returning it
+                                    MapResult(i, None, str(e), traceback.format_exc())
                                 )
                 except queue.Empty:
                     pass
