@@ -47,6 +47,10 @@ class GreatAI(Generic[T, V]):
     Provides caching (with argument freezing), a TracingContext during execution, the
     scaffolding of HTTP endpoints using FastAPI and a dashboard using Dash.
 
+    IMPORTANT: when a request is served from cache, no new trace is created. Thus, the
+    same trace can be returned multiple times. If this is undesirable turn off caching
+    using `configure(prediction_cache_size=0)`.
+
     Supports wrapping async and synchronous functions while also maintaining correct
     typing.
 

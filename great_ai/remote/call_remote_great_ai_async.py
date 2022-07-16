@@ -28,7 +28,7 @@ async def call_remote_great_ai_async(
         base_uri: Address of the remote instance, example: 'http://localhost:6060'
         data: The input sent as a json to the remote instance.
         retry_count: Retry on any HTTP communication failure.
-        timeout_in_seconds: Overall permissable max length of the request. `None` means
+        timeout_in_seconds: Overall permissible max length of the request. `None` means
             no timeout.
         model_class: A subtype of BaseModel to be used for deserialising the `.output`
             of the trace.

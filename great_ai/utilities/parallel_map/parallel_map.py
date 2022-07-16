@@ -91,7 +91,7 @@ def parallel_map(
     or ignored.
 
     The new processes are forked if the OS allows it, otherwise, new Python processes
-    are bootstrapped which can incur some startup cost. Each process processes a single
+    are bootstrapped which can incur some start-sup cost. Each process processes a single
     chunk at once.
 
     Examples:

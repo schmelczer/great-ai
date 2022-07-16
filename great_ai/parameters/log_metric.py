@@ -6,6 +6,15 @@ from ..tracing import TracingContext
 
 
 def log_metric(argument_name: str, value: Any) -> None:
+    """Log a key (argument_name)-value pair that is persisted inside the trace.
+
+    The name of the function from where this is called is also stored.
+
+    Args:
+        argument_name: The key for storing the value.
+        value: Value to log. Must be JSON-serialisable.
+    """
+
     tracing_context = TracingContext.get_current_tracing_context()
     caller = inspect.stack()[1].function
     actual_name = f"metric:{caller}:{argument_name}"

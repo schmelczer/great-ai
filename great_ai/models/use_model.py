@@ -50,12 +50,12 @@ def use_model(
             >>> my_function(4)
             7
 
-        Args:
-            key: The model's name as stored by the LargeFile implementation.
-            version: The model's version as stored by the LargeFile implementation.
-            model_kwarg_name: the parameter to use for injecting the loaded model
-        Returns:
-            A decorator for model injection.
+    Args:
+        key: The model's name as stored by the LargeFile implementation.
+        version: The model's version as stored by the LargeFile implementation.
+        model_kwarg_name: the parameter to use for injecting the loaded model
+    Returns:
+        A decorator for model injection.
     """
 
     assert (

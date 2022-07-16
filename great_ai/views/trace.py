@@ -10,6 +10,23 @@ T = TypeVar("T")
 
 
 class Trace(Generic[T], HashableBaseModel):
+    """Universal structure for storing prediction traces and training data.
+
+    Attributes:
+        trace_id: UUID4 identifier for uniquely referring to a trace.
+        created: Timestamp of its (original) construction.
+        original_execution_time_ms: Wall-time elapsed while its generating
+            TracingContext was alive.
+        logged_values: Values persisted through using `@parameter` or `log_metric()`.
+        models: Marks left by each encountered `@use_model` decorated function.
+        exception: Exception description if any was encountered.
+        output: Return value of the function wrapped by GreatAI.
+        feedback: Feedback obtained using the REST API of `add_ground_truth`.
+        tags: Tags used for filtering traces. Contains the name of the original
+            function, value of `ENVIRONMENT`, its split if has any, and either
+            `ground_truth` or `online` depending on the origin of the Trace.
+    """
+
     trace_id: str
     created: str
     original_execution_time_ms: float

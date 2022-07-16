@@ -19,6 +19,10 @@ def parameter(
 ) -> Callable[[F], F]:
     """Control the validation and logging of function parameters.
 
+    Basically, a parameter decorator. Unfortunately, Python does not have that concept,
+    thus, it's a method decorator that expects the name of the to-be-decorated
+    parameter.
+
     Examples:
         >>> @parameter('a')
         ... def my_function(a: int):
@@ -39,7 +43,7 @@ def parameter(
         great_ai.errors.argument_validation_error.ArgumentValidationError: ...
 
     Args:
-        parameter_name: Name of parameter to consider
+        parameter_name: Name of parameter to consider.
         validate: Optional validate to run against the concrete argument.
             ArgumentValidationError is thrown when the return value is False.
         disable_logging: Do not save the value in any active TracingContext.
