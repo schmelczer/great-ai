@@ -14,7 +14,7 @@ This is a simplified example illustrating how `great-ai` is used in practice at 
 
 ## Overview
 
-One of the core features of the ScoutinScience platform is summarising research papers form a tech-transfer perspective. In short, extractive summarisation is preferred using a binary classifier trained on clients' judgement of sentence interestingness. Thus, documents are sentences and the expected output is a binary label showing whether a sentence is "worthy" of being in the tech-transfer summary. Providing an explanation for each decision is imperative since ScoutinScience embraces applying only explainable AI (XAI) methods wherever feasible.
+One of the core features of the ScoutinScience platform is summarising research papers from a tech-transfer perspective. In short, extractive summarisation is preferred using a binary classifier trained on clients' judgement of sentence interestingness. Thus, documents are sentences and the expected output is a binary label showing whether a sentence is "worthy" of being in the tech-transfer summary. Providing an explanation for each decision is imperative since ScoutinScience embraces applying only explainable AI (XAI) methods wherever feasible.
 
 !!! success
     You are ready to start the tutorial. Feel free to come back to the [summary](#summary) section once you're finished.
