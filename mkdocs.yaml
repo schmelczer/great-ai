@@ -63,7 +63,6 @@ plugins:
   - search
   - mkdocs-jupyter:
       include_source: true
-      ignore: ["docs/examples/scibert/*.ipynb"]
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -111,5 +110,10 @@ nav:
           - examples/simple/data.ipynb
           - examples/simple/train.ipynb
           - examples/simple/deploy.ipynb
-      - Explainable SciBERT: examples/scibert.md
+      - Explainable SciBERT:
+          - examples/scibert/index.md
+          - examples/scibert/data.ipynb
+          - examples/scibert/train.ipynb
+          - examples/scibert/deploy.ipynb
+          - examples/scibert/additional-files.md
   - explanation.md
