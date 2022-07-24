@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, TypeVar
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import average_precision_score, precision_recall_curve
+from sklearn.metrics import average_precision_score
 
 from ..unique import unique
 from .draw_f1_iso_lines import draw_f1_iso_lines
@@ -67,15 +67,23 @@ def evaluate_ranking(
                 (v < classes[i]) if reverse_order else (v > classes[i])
                 for v in expected
             ]
-            precision, recall, _ = precision_recall_curve(
-                binarized_expected, actual_scores
+
+            sorted_expected_actual = sorted(
+                zip(binarized_expected, actual_scores), key=lambda v: v[1], reverse=True
             )
+            precision = []
+            recall = []
+            correct = 0
+            for all, (e, score) in enumerate(sorted_expected_actual, start=1):
+                correct += int(e)
+                precision.append(correct / all)
+                recall.append(all / len(sorted_expected_actual))
 
             if not disable_interpolation:
-                for j in range(1, len(precision)):
-                    precision[j] = max(precision[j - 1], precision[j])
+                for j in range(len(precision) - 2, -1, -1):
+                    precision[j] = max(precision[j], precision[j + 1])
 
-            closest_recall_index = np.argmin(np.abs(recall - target_recall))
+            closest_recall_index = np.argmin(np.abs(np.array(recall) - target_recall))
             precision_at_closest_recall = precision[closest_recall_index]
             average_precision = average_precision_score(
                 binarized_expected, actual_scores
