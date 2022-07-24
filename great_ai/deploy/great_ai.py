@@ -42,7 +42,7 @@ V = TypeVar("V")
 
 
 class GreatAI(Generic[T, V]):
-    """Wrapper for a prediction function providing the implementation of SE4ML best-practices.
+    """Wrapper for a prediction function providing the implementation of SE4ML best practices.
 
     Provides caching (with argument freezing), a TracingContext during execution, the
     scaffolding of HTTP endpoints using FastAPI and a dashboard using Dash.

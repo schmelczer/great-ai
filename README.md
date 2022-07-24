@@ -31,7 +31,7 @@ Start it by executing `great-ai demo.py`, find the dashboard at [http://localhos
 
 ![demo screen capture](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/demo.gif)
 
-That's it. Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best-practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
+That's it. Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
 [Check out the full documentation here](https://great-ai.scoutinscience.com).
 
@@ -51,7 +51,7 @@ GreatAI fits between the prototype and deployment phases of your AI development 
 
 There are other, existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker) and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core) provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.
 
-However, [research indicates](https://great-ai.scoutinscience.com) that professionals rarely use them. This may be due to their inherent setup and operating complexity. **GreatAI is designed to be as simple to use as possible.** Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best-practices](https://se-ml.github.io), and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
+However, [research indicates](https://great-ai.scoutinscience.com) that professionals rarely use them. This may be due to their inherent setup and operating complexity. **GreatAI is designed to be as simple to use as possible.** Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best practices](https://se-ml.github.io), and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
 
 ## [Learn more](https://great-ai.scoutinscience.com)
 

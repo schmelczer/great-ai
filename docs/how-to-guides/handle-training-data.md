@@ -7,7 +7,7 @@ In order to simplify your training data management, `great-ai` provide two compl
 At the start of your experiments' first iteration, after you've gathered suitable samples for training, you can call [great_ai.add_ground_truth][]. This automatically stores a timestamp and also allows you to assign tags to the data. Using these attributes, [great_ai.query_ground_truth][] can be called to get a filtered view of the training data.
 
 !!! important "Train-test-validation splits"
-    It is a best-practice to lock-away the test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it, or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results, hence, care must be taken to avoid it.
+    It is a best practice to lock-away the test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it, or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results, hence, care must be taken to avoid it.
     
     With [great_ai.add_ground_truth][], there is an option to tag the samples with `train`, `test`, and `validation` randomly, following a predefined distribution. This happens as soon as they're written in the database. Later, these can be queried by providing the name of the appropriate tags.
 

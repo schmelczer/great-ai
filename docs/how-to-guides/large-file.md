@@ -70,7 +70,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
 
 ## From the command-line 
 
-The main reason for using the `large-file` or `python3 -m great_ai.large_file` commands is to upload or download models from the terminal. For example, when building a docker image, it is best-practice to cache the referred models.
+The main reason for using the `large-file` or `python3 -m great_ai.large_file` commands is to upload or download models from the terminal. For example, when building a docker image, it is best practice to cache the referred models.
 
 ### Setup
 
