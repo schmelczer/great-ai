@@ -13,7 +13,7 @@
       
       
       <link rel="icon" href="../../media/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
     
     
       
@@ -912,7 +912,7 @@
 <p>At the start of your experiments' first iteration, after you've gathered suitable samples for training, you can call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>. This automatically stores a timestamp and also allows you to assign tags to the data. Using these attributes, <a class="autorefs autorefs-internal" href="../../reference/#great_ai.query_ground_truth">great_ai.query_ground_truth</a> can be called to get a filtered view of the training data.</p>
 <div class="admonition important">
 <p class="admonition-title">Train-test-validation splits</p>
-<p>It is a best-practice to lock-away the test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it, or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results, hence, care must be taken to avoid it.</p>
+<p>It is a best practice to lock-away the test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it, or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results, hence, care must be taken to avoid it.</p>
 <p>With <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>, there is an option to tag the samples with <code>train</code>, <code>test</code>, and <code>validation</code> randomly, following a predefined distribution. This happens as soon as they're written in the database. Later, these can be queried by providing the name of the appropriate tags.</p>
 </div>
 <p>The nice thing about this is that the 'input-expected output' pairs are stored as traces. Thus, they behave exactly like regular prediction traces.</p>
@@ -968,7 +968,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 24, 2022</span>
       
     
   </small>
