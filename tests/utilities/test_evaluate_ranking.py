@@ -16,7 +16,7 @@ def test_default() -> None:
         reverse_order=True,
     )
 
-    assert results == {"d": 1.0, "c": 0.6666666666666666, "b": 0.4}
+    assert results == {"d": 5 / 6, "c": 2 / 3, "b": 2 / 5}
 
     results = evaluate_ranking(
         ["a", "a", "b", "b", "c", "d", "d", "d"],
@@ -26,11 +26,7 @@ def test_default() -> None:
         disable_interpolation=True,
     )
 
-    assert results == {
-        "a": 0.6666666666666666,
-        "b": 0.3333333333333333,
-        "c": 0.2857142857142857,
-    }
+    assert results == {"a": 0.6, "b": 0.4, "c": 0.2}
 
 
 def test_mismatching_lengths() -> None:
