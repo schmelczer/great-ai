@@ -100,5 +100,5 @@ class TracingContext(Generic[T]):
 
 
 _current_tracing_context: ContextVar[Optional[TracingContext]] = ContextVar(
-    "_current_tracing_context"
+    "_current_tracing_context", default=None
 )
