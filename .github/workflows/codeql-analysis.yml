@@ -2,10 +2,11 @@ name: analyse with CodeQL
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - main
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches: 
+      - main
   schedule:
     - cron: '45 13 * * 5'
 
@@ -21,7 +22,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python' ]
+        language:
+          - python
 
     steps:
     - name: Checkout repository
