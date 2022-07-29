@@ -3,7 +3,6 @@ from typing import (
     Awaitable,
     Callable,
     Iterable,
-    Literal,
     Optional,
     Sequence,
     TypeVar,
@@ -12,6 +11,7 @@ from typing import (
 )
 
 import dill
+from typing_extensions import Literal  # <= Python 3.7
 
 from .get_config import get_config
 from .manage_communication import manage_communication

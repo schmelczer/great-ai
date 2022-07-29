@@ -5,7 +5,9 @@ from abc import ABC, abstractmethod
 from functools import lru_cache
 from pathlib import Path
 from types import TracebackType
-from typing import IO, Any, List, Literal, Optional, Type, Union, cast
+from typing import IO, Any, List, Optional, Type, Union, cast
+
+from typing_extensions import Literal  # <= Python 3.7
 
 from great_ai.utilities import ConfigFile, get_logger
 

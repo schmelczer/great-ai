@@ -2,8 +2,10 @@ from contextvars import ContextVar
 from datetime import datetime
 from time import perf_counter
 from types import TracebackType
-from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar, cast
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, cast
 from uuid import uuid4
+
+from typing_extensions import Literal  # <= Python 3.7
 
 from ..constants import DEVELOPMENT_TAG_NAME, ONLINE_TAG_NAME, PRODUCTION_TAG_NAME
 from ..context import get_context
