@@ -18,11 +18,27 @@
       }
     },
     {
-      "label": "Test",
+      "label": "Test (quick)",
       "type": "shell",
-      "command": "source .env/bin/activate && python3 -m pytest . --doctest-modules",
+      "command": "source .env/bin/activate && python3 -m pytest . --doctest-modules --asyncio-mode=strict",
       "windows": {
-        "command": ".env\\bin\\activate.bat; python3 -m pytest . --doctest-modules"
+        "command": ".env\\bin\\activate.bat; python3 -m pytest . --doctest-modules --asyncio-mode=strict"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Test (all Python versions)",
+      "type": "shell",
+      "command": "source .env/bin/activate && python3 -m tox",
+      "windows": {
+        "command": ".env\\bin\\activate.bat; python3 -m tox"
       },
       "group": "test",
       "presentation": {
