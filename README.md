@@ -17,7 +17,7 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 pip install great-ai
 ```
 
-> Create a new file called `demo.py`
+Create a new file called `demo.py`
 
 ```python
 from great_ai import GreatAI
