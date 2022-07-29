@@ -2238,9 +2238,8 @@ def get_tokenizer_and_model(
         <span class="n">positive_likelihood</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)(</span><span class="n">result</span><span class="o">.</span><span class="n">logits</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="n">tensors</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="n">attentions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">attentions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span>
-        <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span>
-    <span class="p">]</span>  <span class="c1"># Tuple of `torch.FloatTensor` (one for each layer) of shape</span>
+    <span class="n">attentions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">attentions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Tuple of `torch.FloatTensor` (one for each layer) of shape</span>
     <span class="c1"># `(batch_size, num_heads, sequence_length, sequence_length)`.</span>
 
     <span class="n">explanation</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2302,9 +2301,8 @@ def find_highlights(sentence: str) -> EvaluatedSentence:
         positive_likelihood = torch.nn.Softmax(dim=1)(result.logits)[0][1]
     tokens = tensors["input_ids"][0]
 
-    attentions = np.sum(result.attentions[-1].numpy()[0], axis=0)[0][
-        1:-1
-    ]  # Tuple of `torch.FloatTensor` (one for each layer) of shape
+    attentions = np.sum(result.attentions[-1].numpy()[0], axis=0)[0][1:-1]
+    # Tuple of `torch.FloatTensor` (one for each layer) of shape
     # `(batch_size, num_heads, sequence_length, sequence_length)`.
 
     explanation = []
@@ -2480,7 +2478,7 @@ To check out the Dockerimage, go to <a href="/examples/scibert/additional-files"
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 17, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 29, 2022</span>
       
     
   </small>

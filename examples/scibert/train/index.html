@@ -2057,7 +2057,7 @@ If you're only here for <code>great-ai</code>, feel free to skip the next cell.<
     <span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
     <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">batched</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="o">.</span><span class="n">remove_columns</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># test is actually validation</span>
 <span class="p">)</span>
 
 <span class="n">f1_score</span> <span class="o">=</span> <span class="n">load_metric</span><span class="p">(</span><span class="s2">&quot;f1&quot;</span><span class="p">)</span>
@@ -2121,7 +2121,7 @@ dataset = (
     Dataset.from_dict({"text": X, "label": y})
     .map(lambda v: tokenizer(v["text"], truncation=True), batched=True)
     .remove_columns("text")
-    .train_test_split(test_size=0.2, shuffle=True)
+    .train_test_split(test_size=0.2, shuffle=True)  # test is actually validation
 )
 
 f1_score = load_metric("f1")
@@ -2430,7 +2430,7 @@ Model weights saved in pretrained/pytorch_model.bin
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 17, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 29, 2022</span>
       
     
   </small>
