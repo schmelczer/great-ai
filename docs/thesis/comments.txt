@@ -1,0 +1,7 @@
+% I use a toy example when quickly experimenting, it's important not to overfit on it ( moving it into the library would result in a online for it, so I have to consciously avoid that), but having a very simple 
+
+% Argumetn/parameter names were confusing 
+% offlinemode -> cacheonly mode 
+
+% Should the order of the decorators matter? all except in one case, they're written in a way that the order doesn't matter even with the original semantics of decorators. In that one case, it cannot be written in that way. Instead of correcting a user's error, there's a mechanism looking for this error and the user is notified. Guessing the unspecified is cool, but correcting the wrong is not
+
