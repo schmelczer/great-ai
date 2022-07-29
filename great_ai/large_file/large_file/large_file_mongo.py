@@ -1,5 +1,4 @@
 import re
-from functools import cached_property
 from pathlib import Path
 from typing import Any, List
 
@@ -7,7 +6,7 @@ from gridfs import DEFAULT_CHUNK_SIZE, Database, GridFSBucket
 from pymongo import MongoClient
 
 from ...utilities import get_logger
-from ..helper import DownloadProgressBar, UploadProgressBar
+from ..helper import DownloadProgressBar, UploadProgressBar, cached_property
 from ..models import DataInstance
 from .large_file_base import LargeFileBase
 

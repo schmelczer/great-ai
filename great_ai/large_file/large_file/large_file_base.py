@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 import tempfile
 from abc import ABC, abstractmethod
 from functools import lru_cache
@@ -70,7 +71,13 @@ class LargeFileBase(ABC):
 
         self._buffering = buffering
         self._encoding = encoding
+
+        if errors is not None and sys.version_info[1] < 8:
+            raise RuntimeError(
+                "The `errors` kwarg is only supported in 3.8 <= Python versions."
+            )
         self._errors = errors
+
         self._newline = newline
 
         LargeFileBase.cache_path.mkdir(parents=True, exist_ok=True)
@@ -99,16 +106,20 @@ class LargeFileBase(ABC):
         cls.initialized = True
 
     def __enter__(self) -> IO:
+        params = dict(
+            mode=self._mode,
+            buffering=self._buffering,
+            encoding=self._encoding,
+            newline=self._newline,
+            delete=False,
+            prefix="large_file-",
+        )
+
+        if sys.version_info[1] >= 8:
+            params["errors"] = self._errors
+
         self._file: IO[Any] = (
-            tempfile.NamedTemporaryFile(
-                mode=self._mode,
-                buffering=self._buffering,
-                encoding=self._encoding,
-                newline=self._newline,
-                errors=self._errors,
-                delete=False,
-                prefix="large_file-",
-            )
+            tempfile.NamedTemporaryFile(**params)  # type: ignore
             if "w" in self._mode
             else open(
                 self.get(),

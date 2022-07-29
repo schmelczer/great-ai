@@ -41,6 +41,7 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 - [x] Docker support for deployment
 - [x] Deployable Jupyter Notebooks
 - [x] Dashboard for online monitoring and analysing traces
+- [x] Active support for Python 3.7, 3.8, 3.9, and 3.10
 
 ## Roadmap
 

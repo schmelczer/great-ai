@@ -34,6 +34,41 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
         ],
     )
 
+    execution_time_histogram_container = html.Div()
+    configuration_container = html.Div(
+        className="configuration-container",
+    )
+    table = get_traces_table()
+    traces_table_container = html.Div(
+        [
+            html.Header(
+                [
+                    html.H2("Latest traces"),
+                    html.P(
+                        "Recent traces and aggregated metrics are presented below. Try filtering the table."
+                    ),
+                    html.A(
+                        "Filtering syntax.",
+                        href="https://dash.plotly.com/datatable/filtering",
+                        target="_blank",
+                    ),
+                ]
+            ),
+            table,
+        ],
+        className="traces-table-container",
+    )
+    parallel_coordinates = dcc.Graph(
+        className="parallel-coordinates", config={"displaylogo": False}
+    )
+    interval = dcc.Interval(
+        interval=2 * 1000,  # in milliseconds
+        n_intervals=0,
+        max_intervals=1
+        if get_context().is_production
+        else -1,  # will be incremented in production upon each successful request
+    )
+
     app.layout = html.Main(
         [
             html.Div(
@@ -49,43 +84,15 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
                         function_docs=function_docs,
                         accent_color=accent_color,
                     ),
-                    execution_time_histogram_container := html.Div(),
+                    execution_time_histogram_container,
                 ],
             ),
-            configuration_container := html.Div(
-                className="configuration-container",
-            ),
-            traces_table_container := html.Div(
-                [
-                    html.Header(
-                        [
-                            html.H2("Latest traces"),
-                            html.P(
-                                "Recent traces and aggregated metrics are presented below. Try filtering the table."
-                            ),
-                            html.A(
-                                "Filtering syntax.",
-                                href="https://dash.plotly.com/datatable/filtering",
-                                target="_blank",
-                            ),
-                        ]
-                    ),
-                    table := get_traces_table(),
-                ],
-                className="traces-table-container",
-            ),
-            parallel_coordinates := dcc.Graph(
-                className="parallel-coordinates", config={"displaylogo": False}
-            ),
+            configuration_container,
+            traces_table_container,
+            parallel_coordinates,
             html.Div(className="space-filler"),
             get_footer(),
-            interval := dcc.Interval(
-                interval=2 * 1000,  # in milliseconds
-                n_intervals=0,
-                max_intervals=1
-                if get_context().is_production
-                else -1,  # will be incremented in production upon each successful request
-            ),
+            interval,
         ]
     )
 

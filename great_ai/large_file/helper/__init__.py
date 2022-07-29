@@ -1,2 +1,3 @@
+from .cached_property import cached_property
 from .human_readable_to_byte import human_readable_to_byte
 from .progress_bar import DownloadProgressBar, UploadProgressBar

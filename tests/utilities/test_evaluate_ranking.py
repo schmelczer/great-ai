@@ -77,7 +77,11 @@ def test_empty() -> None:
 
 def test_save() -> None:
     path = Path("test.svg")
-    path.unlink(missing_ok=True)
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        # missing_ok only exists >= Python 3.8
+        pass
 
     evaluate_ranking(
         ["a", "a", "b", "b", "c", "d", "d", "d"],

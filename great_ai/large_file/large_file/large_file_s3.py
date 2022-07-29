@@ -1,11 +1,10 @@
-from functools import cached_property
 from pathlib import Path
 from typing import Any, List, Optional
 
 import boto3
 
 from ...utilities import get_logger
-from ..helper import DownloadProgressBar, UploadProgressBar
+from ..helper import DownloadProgressBar, UploadProgressBar, cached_property
 from ..models import DataInstance
 from .large_file_base import LargeFileBase
 

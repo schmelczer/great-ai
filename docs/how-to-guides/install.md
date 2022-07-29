@@ -5,7 +5,7 @@ Provided you already have [Python3](https://www.python.org/downloads/){ target=_
 ```sh
 pip install great-ai
 ```
-> Python 3.8 or later is required.
+> Python 3.7 or later is required.
 
 This will work on all major operating systems.
 

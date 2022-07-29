@@ -25,13 +25,13 @@ def test_create_trivial_cases() -> None:
 
 def test_create_with_other_decorator() -> None:
     @GreatAI.create
-    @lru_cache
+    @lru_cache()
     def hello_world_1(name: str) -> str:
         return f"Hello {name}!"
 
     assert hello_world_1("andras").output == "Hello andras!"
 
-    @lru_cache
+    @lru_cache()
     @GreatAI.create
     def hello_world_2(name: str) -> str:
         return f"Hello {name}!"

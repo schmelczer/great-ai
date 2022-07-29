@@ -15,13 +15,13 @@ from typing import (
     overload,
 )
 
-from async_lru import alru_cache
 from fastapi import FastAPI
 from tqdm.cli import tqdm
 from typing_extensions import Literal  # <= Python 3.7
 
 from ..constants import DASHBOARD_PATH
 from ..context import get_context
+from ..external.async_lru import alru_cache
 from ..helper import freeze_arguments, get_function_metadata_store, snake_case_to_text
 from ..models.use_model import model_versions
 from ..parameters.automatically_decorate_parameters import (
