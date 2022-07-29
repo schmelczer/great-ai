@@ -1,4 +1,4 @@
-\documentclass[runningheads]{llncs}
+\documentclass{report}
 
 \usepackage{graphicx}
 \usepackage{pdfpages}
@@ -12,7 +12,15 @@
 \usepackage{framed}
 \usepackage{quoting}
 \usepackage{xcolor}
+\usepackage{minted}
 
+\usepackage[a4paper,
+            bindingoffset=0,
+            left=3cm,
+            right=3cm,
+            top=3cm,
+            bottom=4cm,
+            footskip=1.5cm]{geometry}
 
 % Header & footer
 \pagestyle{fancy}
@@ -78,6 +86,56 @@
 \renewcommand\thesection{\thechapter.\arabic{section}}
 \renewcommand\thesubsection{\thesection.\arabic{subsection}}
 
+\makeatletter
+\renewcommand\small{%
+   \@setfontsize\small\@ixpt{11}%
+   \abovedisplayskip 8.5\p@ \@plus3\p@ \@minus4\p@
+   \abovedisplayshortskip \z@ \@plus2\p@
+   \belowdisplayshortskip 4\p@ \@plus2\p@ \@minus2\p@
+   \def\@listi{\leftmargin\leftmargini
+               \parsep 0\p@ \@plus1\p@ \@minus\p@
+               \topsep 8\p@ \@plus2\p@ \@minus4\p@
+               \itemsep0\p@}%
+   \belowdisplayskip \abovedisplayskip
+}
+
+\frenchspacing
+\widowpenalty=10000
+\clubpenalty=10000
+
+\setlength\footnotesep{12\p@}
+\setlength\textfloatsep{8mm\@plus 2\p@ \@minus 4\p@}
+\setlength\intextsep   {8mm\@plus 2\p@ \@minus 2\p@}
+
+\setcounter{secnumdepth}{2}
+
+\renewcommand\@pnumwidth{2em}
+\renewcommand\@tocrmarg{3.5em}
+\setcounter{tocdepth}{1}
+\setlength{\parskip}{0.55em}
+\linespread{1.2}
+
+\def\@dottedtocline#1#2#3#4#5{%
+  \ifnum #1>\c@tocdepth \else
+    \vskip \z@ \@plus.2\p@
+    {\leftskip #2\relax \rightskip \@tocrmarg \advance\rightskip by 0pt plus 2cm
+               \parfillskip -\rightskip \pretolerance=10000
+     \parindent #2\relax\@afterindenttrue
+     \interlinepenalty\@M
+     \leavevmode
+     \@tempdima #3\relax
+     \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+     {#4}\nobreak
+     \leaders\hbox{$\m@th
+        \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
+        mu$}\hfill
+     \nobreak
+     \hb@xt@\@pnumwidth{\hfil\normalfont \normalcolor #5}%
+     \par}%
+  \fi}
+\makeatother
+
+
 \begin{document}
 
 \includepdf[pages=-]{frontpage/frontpage.pdf}
@@ -88,9 +146,11 @@
 \input{chapters/2_background}
 \input{chapters/3_methods}
 \input{chapters/4_design}
-\input{chapters/5_case/main}
+\input{chapters/5_cases/main}
 \input{chapters/6_interviews}
 \input{chapters/7_conclusion}
+
+\input{chapters/appendix}
 
 \clearpage
 \bibliographystyle{splncs04}

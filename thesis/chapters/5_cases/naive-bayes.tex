@@ -1,0 +1,198 @@
+\section{Domain classification with Naïve Bayes} \label{section:simple-case}
+
+Using different models for slight variations of the same problem is quite commonplace in the industry. For instance, UberEats has a vast, hierarchical set of models for every country, region, and city for calculating the estimated time of delivery \cite{li2017scaling}. We have also found, that in order to best process an academic publication, knowing its domain is essential. The reason for this can be (among others) the wildly different vocabularies of different domains. For example, the term \textit{framework} in computer science almost always refers to a software artifact (usually implying high tech-transfer potential), while in most other domains, \textit{framework} is used to describe theoretical models that are less central to practical applications. Of course, it is not merely the meaning of the terms but more importantly: their distribution that varies significantly. Therefore, the topic of this section is to design and develop a domain prediction model for academic papers.
+
+\subsection{Background}
+
+Fortunately, this is one of the oldest text classification tasks. In fact, Maron introduced the Naïve Bayes classifier in 1961 \cite{maron1961automatic} for exactly this purpose: classifying documents' subjects. However, it is still an active problem when it comes to academic texts as indicated by Elsevier funded research carried out by Rivest et al. \cite{rivest2021level}. They created a 176-class classification problem for comparing bibliometric and deep-learning approaches but this comparison is made difficult because 44\% of the labels are \textit{assigned suboptimally} in the ground-truth dataset.
+
+Prior work evaluated SciBERT \cite{beltagy2019scibert} --- a BERT \cite{devlin2018bert} model pretrained on academic publications --- on a simpler version of the task in which the domains of sentences\footnote{Sentences are more appropriate units for processing due to SciBERT's maximum token length of 512 (which comes from its attention mechanism's quadratic complexity \cite{vaswani2017attention}).} have to be decided\footnote{\href{https://paperswithcode.com/sota/sentence-classification-on-paper-field}{paperswithcode.com/sota/sentence-classification-on-paper-field}}. It achieved an F1-score of $0.6571$ after being pretrained on the Semantic Scholar Corpus (SSC) \cite{Lo2020S2ORCTS} and finetuned on the train split of the Microsoft Academic Graph (MAG) dataset \cite{wang2019review}\footnote{SciBERT was applied to a preprocessed version of this dataset available at \href{https://github.com/allenai/scibert/tree/master/data/text_classification/mag}{github.com/allenai/scibert/tree/master/data/text\_classification/mag}}. To the best of my knowledge, no other published work exists on this sentence-classification task. This may be explained by the lack of practical relevance and contrived nature (uniform label distribution) of the task as we will see in the next subsection.
+
+\begin{displayquote}
+\textbf{Design note} After getting familiar with the context, it is time to focus on experimenting and developing our domain prediction service. At the same time, the difficulties encountered should be noted and integrated into GreatAI's design.
+\end{displayquote}
+
+\subsection{Data}
+
+Two datasets will be considered for the experiments. SciBERT's MAG and the SSC. The former is used to compare the results with SciBERT's, while the latter is utilised for training a model for production purposes because it has 19 labels compared with MAG's 7 and it also contains abstracts instead of just sentences, thus, it is more fitting for our use-case.
+
+SciBERT's version of the MAG dataset has 84 thousand and 22.3 thousand sentences in its train and test splits respectively. These are mostly in English and have all punctuation and casing removed. Each sentence is classified as belonging to one of seven fields. Figure \ref{fig:mag-distribtion} shows that the classes have a uniform distribution. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/mag-distribution.png}
+    \caption{Class distribution of the MAG  \cite{wang2019review} dataset's 84000 sentences in its \textit{train} split.}
+    \label{fig:mag-distribtion}
+\end{figure}
+
+SSC is much larger: it contains over 80 million abstracts. Having more data certainly helps in sampling the term distribution more accurately, nonetheless, the law of diminishing returns apply, especially when using simple models. Therefore, the data will be randomly downsampled to leave us with a more manageable couple of hundreds of megabytes of abstracts. We can see the distribution of class labels in Figure \ref{fig:ss-distribution}. The dataset is considerably less balanced: \textit{medicine} is by far the most voluminous field.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/ss-distribution.png}
+    \caption{Label distribution of the Semantic Scholar dataset \cite{Lo2020S2ORCTS}. Each publication may be assigned at most 3 domains.}
+    \label{fig:ss-distribution}
+\end{figure}
+
+\begin{displayquote}
+\textbf{Where should we store this data?} ``On my machine'' seems like an easy answer. However, if we have a team working with the data or it has intrinsic value, it must be stored in an easy-to-access, potentially redundant way. Serban et al. \cite{serban2020adoption} expressed this need in the following best practice: \textit{Make Data Sets Available on Shared Infrastructure (private or public)}. Meanwhile, wherever data is stored, it should also be versioned to satisfy the next best practice: \textit{Use Versioning for Data, Model, Configurations and Training Scripts}.
+\end{displayquote}
+
+MAG needs no further preprocessing if we aim to match SciBERT's setup \cite{beltagy2019scibert}. But since SSC contains a heap of metadata, the relevant parts have to be extracted and preprocessed. In this case, these are the concatenation of the abstract's text, paper's title and the journal's name along with the paper's domains (there can be multiple domains for a single paper, it is a multi-label classification task). Lastly, the non-English entries are discarded because we only expect to process papers in  English.
+
+\begin{displayquote}
+\textbf{How should we preprocess the data?} These simple processing steps (filter, map, project) are almost always present in the data science life-cycle. For example, cleaning the input text from various HTML, OCR, PDF, or \LaTeX \hskip 0.12cm extraction artifacts is almost always necessary for text analysis. This is captured in the AI best practices collection under the following category: \textit{Write Reusable Scripts for Data Cleaning and Merging}. Also, the best practice of \textit{Test all Feature Extraction Code} is somewhat applicable: the applied processing steps must not introduce unwanted artifacts.
+\end{displayquote}
+
+\subsection{Methods}
+
+Our aims are twofold: (1) to evaluate a sentence classification model on MAG and compare it with prior art; and (2) to retrain and apply this model for classifying publication metadata (including abstracts). This would allow the ScoutinScience platform to select an appropriate processing pipeline which has been trained on a matching vocabulary (and domain) for each publication. 
+
+It seems reasonable that only considering the distribution (frequencies) of individual terms may be sufficient. To test this hypothesis, a unigram language model (Multinomial Naïve Bayes) is constructed and its accuracy is compared with SciBERT's. The former definitely aligns with the advice to \textit{Use The Most Efficient Models}\footnote{\href{https://se-ml.github.io/best_practices/02-efficient-models/}{se-ml.github.io/best\_practices/02-efficient-models}}.
+
+Using the MNB implementation of scikit-learn \cite{pedregosa2011scikit}, it only took a couple of lines to create, hyperparameter-optimise, and test a text classifier. Including data loading and visualisations, it takes 71 lines of code (LOC) to be more precise. \footnote{The code is available at \href{https://great-ai.scoutinscience.com/tutorial/}{great-ai.scoutinscience.com/tutorial}.} This further proves relatively how simple it is to use standard packages. The code can be considered for satisfying the \textit{Automate Hyper-Parameter Optimisation} best practice, since it also implements an automated hyperparameter sweep. 
+
+The sentences are tokenised into words and vectorised with TF-IDF (with logarithmic term frequency) \cite{buckley1985implementation}, the hyperparameters found via 3-fold cross-validation on the \textit{train} split lead to filtering out tokens which occur in fewer than 5 documents or more than 5\% of the documents.
+
+\begin{displayquote}
+\textbf{What could be automated here?} As discussed in Section \ref{section:accessible-ai}, libraries exposing algorithms and state-of-the-art models can already be considered mature and accessible. In this case, only scikit-learn was utilised, but subjectively, most popular libraries have a similarly easy to use use API. Therefore, I see no urgent need for further action regarding the \textit{experimentation} step of the life-cycle in connection with the AI best practices.
+\end{displayquote}
+
+\subsection{Results \& Discussion}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/mag-confusion.png}
+    \caption{Confusion matrix of a Naïve Bayes classifier on the MAG dataset's sentences. The matrix is normalised column-wise. Notice, how most mistakes happen between semantically similar classes, for instance: \textit{politics} -- \textit{sociology} or \textit{business} -- \textit{economics}.}
+    \label{fig:mag-confusion}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/ss-confusion.png}
+    \caption{Confusion matrix of a Naïve Bayes classifier on the SSC dataset's sentences. The matrix is normalised column-wise. Notice, how most mistakes happen between semantically similar classes, for instance:  \textit{philosohpy} -- \textit{sociology} or \textit{history} -- \textit{art}.}
+    \label{fig:ss-confusion}
+\end{figure}
+
+When this model is applied to the \textit{test} split of MAG, we get the confusion matrix of Figure \ref{fig:mag-confusion}. This Naïve Bayes classifier achieves a whopping $0.6795$ F1-score. This is $2.3\%$ more than SciBERT's on the same dataset. Thus, it seems, MNB clearly outperforms SciBERT for this particular use-case: it is not only more accurate, its model is magnitudes smaller, while it is also considerably faster to train (or finetune in the case of SciBERT) and use (its running time is in the order of milliseconds per publication). It also has no upper-limit on the input length. Thus, this experiment validates the choice of picking MNB for the task over SciBERT.
+
+It is, of course, not entirely surprising that the sophisticated transformer architecture of SciBERT is not necessary for a plain task like this. Apart from phrases, the relation between separate words of a sentence do not carry nearly as much discriminative power as the identity of the terms\footnote{On a similar note, the independence assumption of Naïve Bayes is often less wrong than it might seem \cite{hand2001idiot}.}, hence there is little reason for using an attention mechanism. The fact that SciBERT even works in any way on this task is already a testament to its general applicability. Nevertheless, this short experiment has proved that we can safely opt for using MNB for production.
+
+Since Multinomial Naïve Bayes is best at returning a single label and SSC has multiple labels per datapoint: for evaluation purposes, it is checked whether the returned label is contained in the labels of the ground truth. On this dataset, MNB achieves lower macro-average F1-score which is 0.59.\footnote{The code for this is available at \href{https://great-ai.scoutinscience.com/examples/simple/deploy}{great-ai.scoutinscience.com/examples/simple/deploy}.} The weighted-average F1 is 0.70 and the overall accuracy is also 70\%. The substantial difference between the macro and weighted averages come from the unbalanced distribution of the labels.
+
+The lower F1-score is not surprising because there are more than twice as many classes in this dataset,  Additionally, the mistakes made are defensible when we look at Figure \ref{fig:ss-confusion}: most of them are between close or related classes.
+
+\begin{displayquote}
+This is the usual point where papers conclude: a proof-of-concept/prototype has been built and its performance demonstrated, measured --- and usually --- explained. Nonetheless, in an industrial setting, our problem is far from being solved: it has yet to be deployed.
+\end{displayquote}
+
+\subsection{Deployment}
+
+First, an inference function needs to be written that can take an input on the fly and calculate a corresponding prediction. Since we aim to follow the best practices, namely: \textit{Explain Results and Decisions to Users} and \textit{Employ Interpretable Models When Possible}, giving an explanation of the results is expected. Fortunately, with our simple model it is easy to determine the most influential weights, thus, words; the explanations are derived by taking the top 5 tokens from the input text ranked by their feature weights. The last deployment step may be to provide access to our model for others.
+
+\begin{displayquote}
+\textbf{How do we provide an interface for the inference function?} We either have an offline or online inference workflow (or both). For the former, we have to provide a way to use it in batch processing; a simple Python function may be adequate for this purpose, though, allowing it to be easily (or automatically) parallelised would make its consumers' DX better. If it is an online-workflow, we must have a service running continuously and accepting input at any time. This can be achieved by a remote procedure call (RPC) interface, or more commonly, a web API. Developers usually refer to these as REST API-s, sometimes, they even follow the conventions of REST. Either way, we must develop a wrapper over the service in order to make it available for other internal/external consumers.
+\end{displayquote}
+
+According to the body of research on the adoption of best practices, this is where many real-world projects conclude. This also happens to be \textbf{the gap}. Believing that solely focusing on the research and experiments is good enough is a fallacy: when following this approach, the deployment step ends up being a rushed attempt of wrapping the \textit{AI} and putting it in the production environment. This is inarguably a deployment. However, it likely follows very few of the best practices which can lead to suboptimal real-life performance, lack of accountability, lack of opportunity to improve, and possibly an overall negative societal impact.
+
+\begin{displayquote}
+\textbf{How could we implement more best practices?} The most notable missing best practices are the lack of automated deployment, automated regression testing, online monitoring, persisting the traces, graceful error-handling, taking feedback on the results (if possible in the use-case), calculating the online accuracy based on the feedback, and retraining the model if necessary using novel data. These all correspond to best practices.
+\end{displayquote}
+
+\section{Bridging \textbf{the gap} with GreatAI}
+
+First, let us revisit the library's scope for clarification. As concluded in Section \ref{section:scope}, GreatAI should ease the \textit{transition} step between prototypes and production-ready deployments. However, this leaves open the question of what constitutes to this step? There are cross-cutting concerns, for example, feature extraction is implemented and used in the training phase but it is also deployed alongside the model. The robustness criterion has to be met by this procedure even though its implementation is only in focus in the earlier stages of the project. Since having an untested function deployed into production can have severe repercussions, I conclude, assuring its correctness lies within the scope of GreatAI.
+
+This section briefly explores how the problems raised can be solved using GreatAI, and the API it provides in order to best fit the needs of its users. We first focus on the aspects of data, then, the automated wrapping of services, lastly we discuss the utility of helper functions.
+
+\subsection{Handling data} \label{subsection:large-file}
+
+The obstacles coming from the intertwined nature of different models is widely recognised \cite{haakman2021ai,amershi2019software,sculley2015hidden}. This can lead to non-monotonic error propagation, meaning that improvements in one part of the system might decrease the overall system quality \cite{amershi2019software}. The importance of schema versioning in an environment of rapidly changing models and transformations is highlighted for a specific use-case in \cite{van2017versioning} and more generally by the \textit{Use Versioning for Data, Model, Configurations and Training Scripts} best practice. These emphasise the requirement for versioning models and in general, data.
+
+There are two kinds of data storage needs we have to address: training data and trained models. Because our code is probably already tracked under Git (and \href{https://octoverse.github.com/#lets-look-back-at-the-code-and-communities-built-on-git-hub-this-year}{likely synchronised with GitHub}), using the Git Large File Storage (LFS)\footnote{\href{https://git-lfs.github.com/}{git-lfs.github.com}} might seem intriguing. However, it is a paid (and surprisingly expensive) service of GitHub especially when we factor in the expected sizes of the models and training data with the fact that the only way to remove files counting towards our quota is to \href{https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository}{delete the entire repository}.
+
+An open-source tool, the Data Version Control (DVC)\footnote{\href{https://dvc.org/}{dvc.org}} provides a nearly perfect alternative. It comes with a command-line interface (CLI) inspired by Git's, and it can be integrated with several backend storage servers. Its only downside is, of course, that it is one more tool that increases the complexity of the project and the initial setup time. If this is an acceptable price to pay, then I personally recommend opting for DVC. Nevertheless, if this may prohibit a team\footnote{As was the case with MLFlow tracking in an ING team that we saw in Section \ref{section:industry}.} from properly handling data according to the best practices, I present a simpler solution.
+
+The complexity of an API can be decreased by relying on its users preexisting knowledge and known patterns \cite{hermans2021programmer,ousterhout2018philosophy}. Therefore, we can reuse familiar API-s, such as the \texttt{open()} method from Python. Therefore, a method is proposed which provides the same interface, however, the backing storage can be a mixture of local disk space, S3-compatible storage, MongoDB, or any other storage backend. It provides a superset of \texttt{open()}'s interface\footnote{\href{https://docs.python.org/3/library/functions.html\#open}{docs.python.org/3/library/functions.html\#open}}; the same parameters can be used with it resulting in similar observed behaviour.
+
+The expected features: versioning, progress bars, caching, garbage collecting the cache, automatically deleting old remote version are all present and come with recommended --- but easy to see and change --- configuration.
+
+Easing development is not merely about automating everything but also making the code easy to change (which is the \textit{Viscosity} dimension of CDCB). Going from opening a local file on the disk with the built-in open method, to opening  a file from S3 is as easy as changing \texttt{open('file.txt', 'w')} to \texttt{LargeFileS3('file.txt', 'w')}. In the case of the latter, an additional \texttt{version} keyword argument can also be given to lock ourselves in using a certain version which is very much desired in the case of models.
+
+\subsection{Deployment approach}
+
+Some of the expectations one might have for data-intensive (such as AI) software are similar to that for software in general. These are also captured by the best practices: \textit{Use Continuous Integration}, \textit{Automate Model Deployment}, \textit{Enable Automatic Roll Backs for Production Model} to name a few. It is important to notice that these have been already solved by software engineering, more specifically, by the DevOps paradigm \cite{leite2019survey}. 
+
+Inline with the findings of John et al. \cite{john2020architecting} on the SOTA of AI deployments, I suggest we wrap the applications in a format which is more compatible with existing DevOps tool-kits. Instead of reinventing the wheel, we should rely on more established DevOps best practices for implementing the SE4ML deployment best practices. Besides, organisations are expected to have their deployment processes for classical applications, thus, allowing them to reuse those for AI applications seems to be the most convenient approach.
+
+Based on personal empirical evidence, three types of software artifacts are identified (in the context of Python) for which a wide range of established practices exist. WSGI server\footnote{\href{https://peps.python.org/pep-3333/}{peps.python.org/pep-3333}} compatible applications, executable scripts, and Docker Images\footnote{\href{https://docs.docker.com/registry/spec/manifest-v2-2/}{docs.docker.com/registry/spec/manifest-v2-2}}. To achieve this, GreatAI provides a compatibility layer between simple Python inference functions and all the above common artifacts. Taking functions as input for the first step is inline with the requirement to be \textbf{General}. Nevertheless, in order to also allow customisation, additional configuration, metadata, and behavioural specification can be given as well.
+
+The main advantage of the wrapping approach is that it does not require any input from the clients (by default). I opted for a decorator which lets users wrap their function by adding a single additional line of code as shown in Listing \ref{listing:hello-world}.  After which the created WSGI application can be accessed through the \texttt{greeter.app} property. A CLI script (\texttt{great-ai}), along with a \texttt{Dockerfile} are also provided to cover the other two deployment artifacts.
+
+\begin{listing}[!ht]
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1,
+linenos
+]{python}
+from great_ai import GreatAI
+
+@GreatAI.create
+def greeter(name: str) -> str:
+    return f"Hello {name}!"
+\end{minted}
+\caption{Simplest example using GreatAI for wrapping a function. In practice, \texttt{greeter} probably would be the inference function of an ML model.}
+\label{listing:hello-world}
+\end{listing}
+
+Coincidentally, deployment best practices can be easily implemented in this wrapper layer. In the first iteration these are: input validation, persisting traces, online monitoring, and generating documentation. Input validation may be used to \textit{Check that Input Data is Complete, Balanced and Well Distributed}. Traces are important for both \textit{Log Production Predictions with the Model's Version and Input Data} and \textit{Provide Audit Trails}. However, traces can also indirectly help \textbf{Robustness}, because even production systems cannot be expected to be perfect. Saving and letting the users filter on encountered errors while allowing them to correlate it with the input causing it is imperative for facilitating debugging.
+
+Lastly, monitoring and documentation correspond with helping best practices: \textit{Continuously Monitor the Behaviour of Deployed Models} and \textit{Communicate, Align, and Collaborate With Others} respectively.
+
+To allow customising the service's behaviour to fit different use-cases, the default configurations can be overridden by calling some functions of the library. An example of this can be seen in Listing \ref{listing:complex}, while more details of the semantics can be found in the documentation\footnote{\href{https://great-ai.scoutinscience.com/how-to-guides/create-service/}{great-ai.scoutinscience.com/how-to-guides/create-service}}.
+
+\begin{listing}[!ht]
+\begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1,
+linenos
+]{python}
+from great_ai import GreatAI, parameter, use_model, log_metric
+
+@GreatAI.create
+@parameter('positive_number', validate=lambda n: n > 0)
+@use_model('secret-number', version='latest')
+def add_to_secret_number(positive_number: int, model: int) -> int:
+    """This docstring will be exported as documentation."""
+    log_metric('log directly into the Trace', positive_number * 2)
+    return secret + positive_number
+
+assert add_number(1).output == 5
+\end{minted}
+\caption{A simple GreatAI service with behavioural customisations. In practice, the function would probably be the inference function for an ML model.}
+\label{listing:complex}
+\end{listing}
+
+\subsection{Utilities}
+
+It is easy to notice multiple recurring tasks when it comes to processing text. Cleaning it from various extraction artifacts and normalising characters is one of the most common. But splitting sentences, language tagging, robustly lemmatizing are also often recurring tasks. Because having reusable and tested feature extraction code covers two best practices, it seems straightforward that a utility module could be created for this which can also be extensively tested by means of unit testing.
+
+This is exactly the motivation behind \texttt{great\_ai.utilities}. Extra care has to be taken not to overfit these utilities on the cases considered in this chapter; however, I believe these are versatile enough to be helpful in many text-related context. A conclusive answer to this assumption will be found during the interviews.
+
+Implementing the unit tests uncovered multiple edge cases and even runtime errors, hence, the merit of \textit{Test all Feature Extraction Code} best practice is unequivocal. There is one more best practice that could be partially covered here, especially, because its solution also helps both during batch inference, but also at training/feature extraction time: \textit{Enable Parallel Training Experiments}.
+
+A function called \texttt{parallel\_map()} is implemented which closely mimics the API of the built-in Python function: \texttt{map}. And it exemplifies how even a close to trivial function is able to improve the DX by magnitudes. Rooted in the global interpreter lock (GIL)\footnote{\href{https://wiki.python.org/moin/GlobalInterpreterLock}{wiki.python.org/moin/GlobalInterpreterLock}} of CPython, in almost all cases, multi-threading does not lead to higher performance of CPU-bound tasks. For this purpose, multiprocessing has to be used. Fortunately, the built-in \texttt{multiprocessing} library has a great API, however, it still takes about a dozen lines to do a parallel mapping task with a progress bar. This can deter people (at least me) from taking advantage of more than just a single CPU core during exploratory experimentation. With \texttt{parallel\_map()}, this challenge becomes a single-line, routine task. 
+
+\subsection{Summary}
+
+After implementing some features of the library it can be already used for deploying the previously discussed domain prediction model. In this case, online prediction is expected, hence, the REST API-based deployment is chosen which is created by GreatAI and packaged in a Docker image. This image can be instantiated by the company's existing DevOps pipeline and cloud infrastructure. At the end, users can see one more tag in the header section of publication evaluations where they can also see the explanation behind the model's decision as seen in Figure \ref{fig:dashboard-domains}. Let us now explore how it fares in a more complex case.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/dashboard-domains.png}
+    \caption{Screenshot of the domain prediction integrated into the ScoutinScience platform where it is used as a filtering option.}
+    \label{fig:dashboard-domains}
+\end{figure}
