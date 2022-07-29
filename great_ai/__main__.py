@@ -77,9 +77,7 @@ def serve() -> None:
         finally:
             if args.file_name.endswith(".ipynb"):
                 try:
-                    Path(get_script_name_of_notebook(args.file_name)).unlink(
-                        missing_ok=True
-                    )
+                    Path(get_script_name_of_notebook(args.file_name)).unlink()
                 except FileNotFoundError:
                     # missing_ok only exists >= Python 3.8
                     pass
@@ -129,9 +127,7 @@ def serve() -> None:
             restart_handler.stop_server()
             if args.file_name.endswith(".ipynb"):
                 try:
-                    Path(get_script_name_of_notebook(args.file_name)).unlink(
-                        missing_ok=True
-                    )
+                    Path(get_script_name_of_notebook(args.file_name)).unlink()
                 except FileNotFoundError:
                     # missing_ok only exists >= Python 3.8
                     pass
