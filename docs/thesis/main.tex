@@ -1,5 +1,6 @@
 \documentclass{report}
 
+\usepackage{placeins}
 \usepackage{graphicx}
 \usepackage{pdfpages}
 \usepackage{hyperref}
@@ -11,9 +12,10 @@
 \usepackage[compact]{titlesec}
 \usepackage{framed}
 \usepackage{quoting}
+\usepackage{caption}
 \usepackage{xcolor}
 \usepackage{minted}
-
+\usepackage{tocloft}
 \usepackage[a4paper,
             bindingoffset=0,
             left=3cm,
@@ -72,13 +74,12 @@
 % Block quote
 \definecolor{bg}{RGB}{186, 233, 255}
 \colorlet{shadecolor}{bg}
-\usepackage{lipsum}
 \newenvironment{displayquote}
- {\begin{shaded*}
+{\begin{samepage}\begin{shaded*}
   \quoting[leftmargin=0pt, vskip=0pt]
- }
- {\endquoting
- \end{shaded*}
+}
+{\endquoting
+  \end{shaded*}\end{samepage}
 }
 
 % Section numbering
@@ -109,8 +110,9 @@
 
 \setcounter{secnumdepth}{2}
 
+% \renewcommand{\cftbeforetoctitleskip}{-0.25in} % position TOC title vertically
+
 \renewcommand\@pnumwidth{2em}
-\renewcommand\@tocrmarg{3.5em}
 \setcounter{tocdepth}{1}
 \setlength{\parskip}{0.55em}
 \linespread{1.2}
@@ -140,14 +142,18 @@
 
 \includepdf[pages=-]{frontpage/frontpage.pdf}
 \include{chapters/0_abstract}
+
 \tableofcontents
+
+\chapter*{Acknowledgements}
+I wish to extend my special thanks to my supervisors, Prof. dr. ir. Joost Visser and Dr. Suzan Verberne, for their invaluable assistance and guidance. I would also like to thank ScoutinScience B.V. for our fruitful collaboration and for allowing me to use their software for experimentation, validation, and demonstration purposes. Last but not least, I would like to individually thank Name, Name, ..., and Name for participating and providing insightful feedback in our interviews.
 
 \input{chapters/1_introduction}
 \input{chapters/2_background}
 \input{chapters/3_methods}
 \input{chapters/4_design}
 \input{chapters/5_cases/main}
-\input{chapters/6_interviews}
+\input{chapters/6_results}
 \input{chapters/7_conclusion}
 
 \input{chapters/appendix}

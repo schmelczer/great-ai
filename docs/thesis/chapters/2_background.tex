@@ -26,7 +26,9 @@ Similarly, Thiée \cite{thiee2021systematic} describes the slow but ever-growing
 
 Serban et al. \cite{serban2020adoption,serban2021practices} describe the results of their global surveys aiming to ascertain the SOTA in how teams develop, deploy, and maintain ML systems. In \cite{serban2020adoption}, they compiled a set of 29 actionable best practices. These were analysed and validated with a survey of 313 participants to discover the adoption rate and relative importance of each best practice. For example, they determined the most important best practice to be \textit{logging production prediction traces}, however, the adoption was measured to be below 40\%. In more than three quarters of the cases, newcomers to AI reported that they \textit{partially} or \textit{not at all} follow best practices. This tendency decreases with more years of experience, reaching a maximum adoption rate of just above 60\%. In a similar fashion, Serban et al. in \cite{serban2021practices}, identify another 14 best practices that concern trustworthy AI mainly through data governance. They strive to complement high-level checklists with actionable best practices. Analysing 42 survey responses reveals a familiar pattern. Most best practices have less than 50\% adoption.
 
-Finally, Bosch et al. \cite{bosch2021engineering} organise and structure the problem space of AI engineering research based on their 16 primary case studies. The authors note the increasing and broad adoption of ML in the industry, while also emphasising that \textit{transition from prototype to production-quality deployment} proves to be challenging for many companies. Large amounts of software engineering expertise is required to create additional facilities for the application such as data pipelines, monitoring, and logging. They define \textit{deployment \& compliance} to be one of the four main categories of problems and describe it as highly underestimated and the source of ample struggle.
+John et al. \cite{john2020architecting} compare and contrast the recent scientific and grey literature of AI deployments from which they extract concrete challenges and practices. They also observe that most companies are placing a lot more models into production compared with previous years. Additionally, they point out that many deployment techniques are absent in contemporary literature which is speculated to be caused by the immaturity of deployment processes employed in academia. Because for instance, most models in scientific literature experience only initial deployment and are not constantly replaced or refreshed as performance degrades over time.
+
+Finally, in a follow-up study to \cite{john2020architecting}, Bosch et al. \cite{bosch2021engineering} organise and structure the problem space of AI engineering research based on their 16 primary case studies. The authors note the increasing and broad adoption of ML in the industry, while also emphasising that the \textit{transition from prototype to production-quality deployment} proves to be challenging for many companies. Large amounts of software engineering expertise is required to create additional facilities for the application such as data pipelines, monitoring, and logging. They define \textit{deployment \& compliance} to be one of the four main categories of problems and describe it as highly underestimated and the source of ample struggle.
 
 \section{Existing solutions} \label{section:existing}
 
@@ -53,22 +55,22 @@ Additionally, increasing attention is given to ML deployments in embedded system
 {\renewcommand{\arraystretch}{1.2} % for the vertical padding
 \begin{tabular}{|l|c|c|c|c|c|c|c|}
 \hline
-                             &  AutoAI    & Azure ML   & SageMaker  & TFX        & TorchX     & MLflow     & Seldon Core \\ \hline
-Open-source\textsuperscript{1}&            &            &            & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
-Self-hosted\textsuperscript{1}&            &            &            & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
-Vendor-agnostic\textsuperscript{2}&            &            &            & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
-AI-agnostic\textsuperscript{2}&            & \checkmark & \checkmark &            &            & \checkmark & \checkmark  \\ \hline
-E2E feedback\textsuperscript{3}&            & \checkmark & \checkmark &            &            &            & \checkmark  \\ \hline
-Distributed monitoring\textsuperscript{3}&            & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark\textsuperscript{*} & \checkmark  \\ \hline
-Online model selection\textsuperscript{3}& \checkmark\textsuperscript{*} & \checkmark & \checkmark &            &            &            & \checkmark  \\ \hline
-Versioning\textsuperscript{3}& \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
-Quick setup\textsuperscript{4}& \checkmark & \checkmark &            &            &            &            &             \\ \hline
+                                          &  AutoAI    & Azure ML   & SageMaker  & TFX        & TorchX     & MLflow     & Seldon Core \\ \hline
+Open-source\textsuperscript{1}            &            &            &            & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
+Self-hosted\textsuperscript{1}            &            &            &            & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
+Vendor-agnostic\textsuperscript{2}        &            &            &            & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
+AI-agnostic\textsuperscript{2}            &            & \checkmark & \checkmark &            &            & \checkmark & \checkmark  \\ \hline
+E2E feedback\textsuperscript{3}           &            & \checkmark & \checkmark &            &            &            & \checkmark  \\ \hline
+Distributed monitoring\textsuperscript{3} &            & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark\textsuperscript{*} & \checkmark  \\ \hline
+Online model selection\textsuperscript{3} & \checkmark\textsuperscript{*} & \checkmark & \checkmark &            &            &            & \checkmark  \\ \hline
+Versioning\textsuperscript{3}             & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark  \\ \hline
+Quick setup\textsuperscript{4}            & \checkmark & \checkmark &            &            &            &            &             \\ \hline
 No DevOps dependencies\textsuperscript{4}&            &            &            &            & \checkmark &            &             \\ \hline
 \end{tabular}}
 \begin{tablenotes}
 \item[1] For privacy and accountability reasons. \cite{bosch2021engineering}
 \item[2] Minimising required glue code. \cite{sculley2015hidden}
-\item[3] Implementing best practices. \cite{serban2020adoption,serban2021practices}
+\item[3] Implementing best practices. \cite{serban2020adoption,serban2021practices,john2020architecting}
 \item[4] Easy integration into existing processes. \cite{haakman2021ai,thiee2021systematic}
 \item[*] Only partial support.
 \end{tablenotes}
@@ -81,4 +83,4 @@ In summary, the problems expressed in Section \ref{section:industry} can be unde
 
 The surveys and case studies have shown the industry's continuous struggle to evolve their prototypes into robust and responsible production-ready deployments. Simultaneously, platforms aiming to help overcome this challenge already exist but lack widespread adoption. The frequently recurring explanations for not adopting existing solutions surfaced in Section \ref{section:industry} revolve around their complexity and rigidity. These complaints are validated when looking at the available frameworks in Section \ref{section:existing}. While using AI has become more accessible than ever, deploying remains challenging owing to the lack of any \textit{easy-to-use framework for robust end-to-end AI deployments}.
 
-The coexistence of multiple major obstacles along with their promised solutions and the lack of their wide-spread adoption leads us to believe that current frameworks are inadequate for many contexts. There is an unmet need for accessible AI deployment methods. The revolution brought by FLAIR, HuggingFace, and similar libraries for the domain of ML remains unmatched in the domain of AI Engineering.
+The coexistence of multiple major obstacles along with their promised solutions and the lack of their wide-spread adoption leads us to believe that current frameworks are inadequate for many contexts. Thus, the answer to \textbf{RQ1} is that the complexity of deploying AI can severely hinder industrial applications even in the presence of existing frameworks. There is an unmet need for accessible AI deployment methods. The revolution brought by FLAIR, HuggingFace, and similar libraries for the domain of ML remains unmatched in the domain of AI Engineering.
