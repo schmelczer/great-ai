@@ -1,0 +1,114 @@
+\chapter{Results} \label{chapter:interviews}
+
+It should not be surprising that neither data scientists nor software engineers can be replaced by software libraries. However, a non-negligible subset of their processes can be partially or fully automated, especially when it comes to packaging and deploying AI/ML services. My goal was to design a library with an API that finds the balance between being simple enough to adopt without friction, yet useful/powerful enough to be adopted. Simplicity is subjective and it will be discussed separately in Section \ref{section:interviews}. For now, let us look at the utility of GreatAI.
+
+For answering \textbf{RQ3} --- To what extent can GreatAI automatically implement AI deployment best practices? --- a comparison is presented in the following that illustrates which best-practices can be implemented/scaffolded/configured with little user input; hence, through a simple and streamlined API. Tables \ref{table:best-practices-1} and \ref{table:best-practices-2} summarise the implemented best practices in the context of practices found by prior surveys of scientific and grey literature \cite{serban2020adoption,serban2021practices,john2020architecting}.
+
+In order to show an accurately nuanced representation, a \textit{Level of support} is determined for each best practice on a scale of \textit{Fully automated}, \textit{Supported}, and \textit{Partially supported}. For instance, \textit{Use static analysis to check code quality} from Table \ref{table:best-practices-1} is \textit{Supported} because the entire public interface of GreatAI is correctly typed (including generics and asynchronous coroutines) and compatible with \href{https://mypy.readthedocs.io/en/stable/index.html#}{\texttt{mypy}} and \href{https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance}{\texttt{Pylance}}. This means that when GreatAI is used in any Python project, these tools can be applied to statically check the soundness of the projects' integration with GreatAI. However, if the library's user does not use typehints in their code and it contains more complex control flow, it can only be partially typechecked. In short, this best practice is supported, and a considerable part of it is already implemented by GreatAI, but clients should still keep in mind that they might also need to make effort to fully implement it.
+
+This is not the case for \textit{Log production predictions with the model's version and input data} because by default, it is automatically implemented when calling \texttt{@GreatAI.create}. Users can still specify the exact expected behaviour, e.g.: where to store traces, additional metrics to log, or disabling the logging of sensitive input. Nevertheless, without input from the library's user, the best practice is already reasonably well implemented.
+
+In Table \ref{table:best-practices-2}, six additional best practices have been added which are generally well-known software engineering considerations that are also applicable to AI/ML deployments. These have not explicitly made it into the aforementioned surveys, however according to the insights gained from Sections \ref{section:simple-case} and \ref{section:complex-case}, implementing them has a positive effect on deployment quality. In future research, attention could be given to their level of industry-wide adoption and quantitative utility.
+
+\begin{table}
+\centering
+\begin{threeparttable}
+\caption{A subset of AI lifecycle best practices and the level of support GreatAI provides for them. The level of support is one of \textit{Fully automated} (\checkmark\checkmark) which means that no action is required from the user, \textit{Supported} (\checkmark) only automates the reasonably automatable aspects, while \textit{Partially supported} ($\sim$) provides some useful features but the client is expected to build on top of these.}
+
+\label{table:best-practices-1}
+{\renewcommand{\arraystretch}{1.2} % for the vertical padding
+\begin{tabular}{p{7cm}@{\hskip 0.5cm}l@{\hskip 0cm}c} \hline
+
+\textbf{Best practice}                                                                    & \textbf{Implementation}                        & \textbf{Support}       \\\hline
+Use sanity checks for all external data sources\textsuperscript{1}                        & \texttt{@parameter}                            & \checkmark             \\\hline
+Check that input data is complete, balanced, and well distributed\textsuperscript{1}      & \texttt{@parameter}                            & $\sim$                 \\\hline
+Write reusable scripts for data cleaning and merging (for NLP)\textsuperscript{1}         & \texttt{utilities}                             & \checkmark\checkmark   \\\hline
+Make data sets available on shared infrastructure\textsuperscript{1}                      & \texttt{large\_file}                           & \checkmark\checkmark   \\\hline
+Test all feature extraction code (for NLP)\textsuperscript{1}                             & \texttt{utilities}                             & \checkmark\checkmark   \\\hline
+Employ interpretable models when possible\textsuperscript{1}                              & \texttt{views}                                 & $\sim$                 \\\hline
+Continuously measure model quality and performance\textsuperscript{1, 2}                  & Feedback API                                   & \checkmark             \\\hline
+Use versioning for data, model, configurations and training scripts\textsuperscript{1, 2} & \texttt{@use\_model}, versioning               & \checkmark\checkmark   \\\hline
+Run automated regression tests\textsuperscript{1}                                         & \texttt{*\_ground\_truth}                      & \checkmark             \\\hline
+Use continuous integration\textsuperscript{1}                                             & Docker Image, WSGI application                 & \checkmark             \\\hline
+Use static analysis to check code quality\textsuperscript{1}                              & Fully typed API with generics                  & \checkmark             \\\hline
+Assure application security\textsuperscript{1}                                            & Code is automatically audited                  & $\sim$                 \\\hline
+Automate model deployment, enable shadow deployment\textsuperscript{1, 2}                 & Docker Image \& scripts                        & \checkmark             \\\hline
+Enable automatic rollbacks for production models\textsuperscript{1, 2}                    & Docker Image \& scripts                        & $\sim$                 \\\hline
+Continuously monitor the behaviour of deployed models\textsuperscript{1, 2}               & Dashboard, metrics endpoints                   & \checkmark\checkmark   \\\hline
+Log production predictions with the model's version and input data\textsuperscript{1}     & \texttt{@GreatAI.create}                       & \checkmark\checkmark   \\\hline
+
+\end{tabular}}
+\begin{tablenotes}
+    \item[1] SE4ML best practices from Table 2 of \cite{serban2020adoption}, and Table 1 of \cite{serban2021practices}.
+    \item[2] Reported state-of-the-art and state-of-practice practices from Tables 2, 3, and 4 of \cite{john2020architecting}.
+    \end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}
+\centering
+\begin{threeparttable}
+\caption{A subset of AI lifecycle best practices and the level of support GreatAI provides for them. The level of support is one of \textit{Fully automated} (\checkmark\checkmark) which means that no action is required from the user, \textit{Supported} ($\checkmark$) only automates the reasonably automatable aspects, while \textit{Partially supported} ($\sim$) provides some useful features but the client is expected to build on top of these.}
+
+\label{table:best-practices-2}
+{\renewcommand{\arraystretch}{1.2} % for the vertical padding
+\begin{tabular}{p{7cm}@{\hskip 0.5cm}l@{\hskip 0cm}c} \hline
+
+\textbf{Best practice}                                                                    & \textbf{Implementation}                        & \textbf{Support}       \\\hline
+Execute validation techniques: error rates and cross-validation\textsuperscript{2}        & \texttt{*\_ground\_truth}                      & \checkmark             \\\hline
+% Track models, dependencies, experiments, versions\textsuperscript{2}                    & \texttt{great\_ai.use\_model}, Dashboard       & \checkmark\checkmark   \\\hline
+Store models in a single format for ease of use\textsuperscript{2}                        & \texttt{save\_model}                           & \checkmark\checkmark   \\\hline
+Rewrite from data analysis to industrial development language\textsuperscript{2}          & Jupyter Notebook deployment                    & \checkmark             \\\hline
+Equip with web interface, package image, provide REST API\textsuperscript{2}              & \texttt{@GreatAI.create}                       & \checkmark\checkmark   \\\hline
+Provide simple API for serving batch and realtime requests\textsuperscript{2}             & \texttt{@GreatAI.create}                       & \checkmark\checkmark   \\\hline
+For reproducibility, use standard runtime and configuration files\textsuperscript{2}      & \texttt{utilities.ConfigFile}, Dockerfile      & \checkmark             \\\hline
+Integration with existing data infrastructure\textsuperscript{2}                          & GridFS, S3 support                             & \checkmark\checkmark   \\\hline
+Select ML solution fully integrated with databases\textsuperscript{2}                     & MongoDB, PostgreSQL support                    & \checkmark\checkmark   \\\hline
+Querying, visualising and understanding metrics and event logging\textsuperscript{2}      & Dashboard, Traces API                          & \checkmark\checkmark   \\\hline
+% Monitor status and performance\textsuperscript{1, 2}                                    & Dashboard, Status (metadata) API               & \checkmark\checkmark   \\\hline
+Measure accuracy of deployed model to ensure data drifts are noticed\textsuperscript{2}   & Feedback API                                   & \checkmark             \\\hline
+Apply automation to trigger model retraining\textsuperscript{2}                           & Feedback API                                   & $\sim$                 \\\hline
+% Employ Agile, DevOps-style workflows, allow automatic rollback\textsuperscript{2}       & Docker Image, WSGI application                 & \checkmark             \\\hline
+% Deploy different versions of same application\textsuperscript{2}                        & Complex versioning support                     & $\sim$                 \\\hline
+Allow experimentation with the inference code\textsuperscript{3}                          & Development mode \& auto-reload                & \checkmark\checkmark   \\\hline
+Keep the model's API and documentation together\textsuperscript{3}                        & Dashboard and Swagger                          & \checkmark\checkmark   \\\hline
+Parallelise feature extraction\textsuperscript{3}                                         & \texttt{parallel\_map}                         & \checkmark\checkmark   \\\hline
+Cache predictions\textsuperscript{3}                                                      & \texttt{@GreatAI.create}                       & \checkmark\checkmark   \\\hline
+Async support for top-down chaining models\textsuperscript{3}                             & All decorators support async                   & \checkmark\checkmark   \\\hline
+Common schemas for common prediction tasks\textsuperscript{3}                             & \texttt{views}                                 & \checkmark             \\\hline
+
+\end{tabular}}
+\begin{tablenotes}
+    \item[2] Reported state-of-the-art and state-of-practice practices from Tables 2, 3, and 4 of \cite{john2020architecting}.
+    \item[3] Additional software engineering best practices applicable to AI/ML deployments encountered while designing and using GreatAI.
+    \end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Quantifying the number of implemented best practices would be misleading since their scope and importance cover a wide --- sometimes overlapping --- range. Especially because there is some overlap between the different reviews and even within the reviews. However, it is still clear that a large number of best practices can be given a \textit{Fully automated} implementation by GreatAI's design while and even larger number of them can be augmented by the library. This proves the feasibility of designing simple API's using the techniques of Chapter \ref{chapter:design} for decreasing the complexity of correctly deploying AI services (\textbf{RQ2}).
+
+\section{Interviews} \label{section:interviews}
+
+Let us finally tackle the question of generalisability.
+
+One of the takeaways of Chapter \ref{chapter:background} was that Seldon Core is useful for implementing or helping to implement most best practices. Nonetheless, it also has an initial threshold that has to be surmounted before implementing even a single best practice. According to the adoption rate surveys, this stops a large portion of practitioners from using it or other similar frameworks. GreatAI offers a different mix of features, the initial threshold is virtually non-existent: best practices can be immediately applied. But at the same time, the presented solution covers a smaller number of practices. The hypothesis is that the latter approach aligns better with the expectations of professionals. 
+
+\subsection{Threats to validity}
+
+\section{Future work} 
+
+The primary purpose of GreatAI was to serve as a proxy through which its design decisions could be tested and evaluated in their practical context. For this reason, its design aimed to be a proof-of-principle for validating hypotheses and answering research questions. After successfully doing that, it has been turned into a practical software library suitable for production-use\footnote{\href{https://pypi.org/project/great-ai/}{pypi.org/project/great-ai}}. Although it has already proved its utility, it has also shown that extending its functionality would be worthwhile. Therefore, a number of potential improvements to GreatAI are presented below.
+ 
+\subsection{More data science}
+
+The cases presented in Chapter \ref{chapter:case} revolved around NLP. This, unsurprisingly, heavily influenced the design process. The two most notable effects can be found in the REST API's \texttt{/predict} endpoint and some \texttt{utilities} functions. The former is streamlined to accept JSON compatible data while the latter gives robust feature extraction support for only textual inputs. Supporting the easy, direct upload of larger non-JSON files and extending \texttt{utilities} to handle multimedia formats should be sufficient for widely extending the scope of applicability of GreatAI.
+
+\subsection{More software engineering}
+
+In order to greatly simplify its API, each GreatAI Trace is a single document with a well-defined, multi-level schema that clients can also extend by calling \texttt{log\_metric}. MongoDB provides a convenient (and popular) method for persisting such documents, however, if there is some existing database in the environment, storing Traces in that can be favourable. \href{https://www.postgresql.org/}{PostgreSQL} is a popular choice and it also features good JSON document support. Hence, introducing first-class integration for PostgreSQL could benefit some clients.
+
+As described in Designing Data-intensive Applications \cite{kleppmann2017designing}, services can fall into three broad categories: online systems, batch processing, and stream processing (near-teal-time systems). As of yet, GreatAI only provides streamlined support for the first two. Thus, developer experience could be improved by providing simple, direct integration with popular message queues/protocols, such as \href{https://kafka.apache.org/}{Apache Kafka} \cite{kreps2011kafka}, \href{https://aws.amazon.com/sqs/}{AWS SQS} \cite{garfinkel2007evaluation}, or \href{https://www.amqp.org/}{AMQP} \cite{vinoski2006advanced}.
+
+Some metrics of GreatAI, such as the cache statistics, versions, and derived data from traces can be already conveniently queried from its REST API. Nevertheless, adding support for the de facto standard metric gathering tool \href{https://prometheus.io/}{Prometheus} could save the library's users from one more integration steps.
+
+The common theme among the above-mentioned opportunities is that they could be reasonably well implemented without any user input, making them inline with the library's philosophy. Of course, the open-source nature of GreatAI also allows anyone to already provide support for a wide range of integrations.
