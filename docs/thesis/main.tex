@@ -17,7 +17,7 @@
 \usepackage{minted}
 \usepackage{tocloft}
 \usepackage[a4paper,
-            bindingoffset=0,
+            bindingoffset=0pt,
             left=3cm,
             right=3cm,
             top=3cm,
@@ -33,8 +33,7 @@
 % 2-column bibliography
 \makeatletter
 \renewenvironment{thebibliography}[1]
-     {\begin{multicols}{2}[\section*{\refname}]%
-      \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+     {\begin{multicols}{2}[\chapter*{References}]%
       \small
       \list{\@biblabel{\@arabic\c@enumiv}}%
           {\settowidth\labelwidth{\@biblabel{#1}}%
@@ -156,10 +155,9 @@ I wish to extend my special thanks to my supervisors, Prof. dr. ir. Joost Visser
 \input{chapters/6_results}
 \input{chapters/7_conclusion}
 
-\input{chapters/appendix}
-
-\clearpage
 \bibliographystyle{splncs04}
 \bibliography{ref}
+
+\input{chapters/appendix}
 
 \end{document}
