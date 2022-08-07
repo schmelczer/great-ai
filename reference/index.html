@@ -3257,7 +3257,7 @@ ArgumentValidationError is thrown when the return value is False.</p></td>
 
 
 <h3 id="great_ai.log_metric" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">log_metric</span><span class="p">(</span><span class="n">argument_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">log_metric</span><span class="p">(</span><span class="n">argument_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">disable_logging</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 <a href="#great_ai.log_metric" class="headerlink" title="Permanent link">#</a></h3>
 
@@ -3298,6 +3298,16 @@ ArgumentValidationError is thrown when the return value is False.</p></td>
               <em>required</em>
           </td>
         </tr>
+        <tr>
+          <td><code>disable_logging</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If True, only persist in trace but don't show in console</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -3319,7 +3329,14 @@ ArgumentValidationError is thrown when the return value is False.</p></td>
 <span class="normal"><a href="#__codelineno-0-21">21</a></span>
 <span class="normal"><a href="#__codelineno-0-22">22</a></span>
 <span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="k">def</span> <span class="nf">log_metric</span><span class="p">(</span><span class="n">argument_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="k">def</span> <span class="nf">log_metric</span><span class="p">(</span><span class="n">argument_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">disable_logging</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="sd">&quot;&quot;&quot;Log a key (argument_name)-value pair that is persisted inside the trace.</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="sd">    The name of the function from where this is called is also stored.</span>
@@ -3327,15 +3344,22 @@ ArgumentValidationError is thrown when the return value is False.</p></td>
 <a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="sd">        argument_name: The key for storing the value.</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="sd">        value: Value to log. Must be JSON-serialisable.</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="n">tracing_context</span> <span class="o">=</span> <span class="n">TracingContext</span><span class="o">.</span><span class="n">get_current_tracing_context</span><span class="p">()</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">caller</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="n">actual_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;metric:</span><span class="si">{</span><span class="n">caller</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">argument_name</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">if</span> <span class="n">tracing_context</span><span class="p">:</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="n">tracing_context</span><span class="o">.</span><span class="n">log_value</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">actual_name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_name</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="sd">        disable_logging: If True, only persist in trace but don&#39;t show in console</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">tracing_context</span> <span class="o">=</span> <span class="n">TracingContext</span><span class="o">.</span><span class="n">get_current_tracing_context</span><span class="p">()</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="n">caller</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="n">actual_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;metric:</span><span class="si">{</span><span class="n">caller</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">argument_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="k">except</span><span class="p">:</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="c1"># inspect might not work in notebooks</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a>        <span class="n">actual_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;metric:</span><span class="si">{</span><span class="n">argument_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="k">if</span> <span class="n">tracing_context</span><span class="p">:</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">tracing_context</span><span class="o">.</span><span class="n">log_value</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">actual_name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">disable_logging</span><span class="p">:</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_name</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -5023,12 +5047,7 @@ not advised for production use.</p>
 <span class="normal"><a href="#__codelineno-0-106">106</a></span>
 <span class="normal"><a href="#__codelineno-0-107">107</a></span>
 <span class="normal"><a href="#__codelineno-0-108">108</a></span>
-<span class="normal"><a href="#__codelineno-0-109">109</a></span>
-<span class="normal"><a href="#__codelineno-0-110">110</a></span>
-<span class="normal"><a href="#__codelineno-0-111">111</a></span>
-<span class="normal"><a href="#__codelineno-0-112">112</a></span>
-<span class="normal"><a href="#__codelineno-0-113">113</a></span>
-<span class="normal"><a href="#__codelineno-0-114">114</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">class</span> <span class="nc">ParallelTinyDbDriver</span><span class="p">(</span><span class="n">TracingDatabaseDriver</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-109">109</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">class</span> <span class="nc">ParallelTinyDbDriver</span><span class="p">(</span><span class="n">TracingDatabaseDriver</span><span class="p">):</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>    <span class="sd">&quot;&quot;&quot;TracingDatabaseDriver with TinyDB as a backend.</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>
 <a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="sd">    Saves the database as a JSON into a single file. Highly inefficient on inserting,</span>
@@ -5075,55 +5094,50 @@ not advised for production use.</p>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>                <span class="p">)</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="p">)</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Trace</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="n">Trace</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safe_execute</span><span class="p">(</span><span class="k">lambda</span> <span class="n">db</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">does_match</span><span class="p">))</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="p">]</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">documents</span><span class="p">:</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="k">return</span> <span class="p">[],</span> <span class="mi">0</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">to_flat_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">])</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">conjunctive_filters</span><span class="p">:</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>            <span class="n">operator</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a>            <span class="k">if</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">operator_mapping</span><span class="p">:</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a>                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>                    <span class="nb">getattr</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">property</span><span class="p">],</span> <span class="n">operator_mapping</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">operator</span><span class="p">])(</span><span class="n">f</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>                <span class="p">]</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>            <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span><span class="p">:</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">property</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="k">if</span> <span class="n">sort_by</span><span class="p">:</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>                <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">column_id</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sort_by</span><span class="p">],</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>                <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;asc&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sort_by</span><span class="p">],</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>                <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>            <span class="p">)</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safe_execute</span><span class="p">(</span><span class="k">lambda</span> <span class="n">db</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">does_match</span><span class="p">))</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">documents</span><span class="p">:</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="k">return</span> <span class="p">[],</span> <span class="mi">0</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">conjunctive_filters</span><span class="p">:</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="n">operator</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>            <span class="k">if</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">operator_mapping</span><span class="p">:</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>                    <span class="nb">getattr</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">property</span><span class="p">],</span> <span class="n">operator_mapping</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">operator</span><span class="p">])(</span><span class="n">f</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>                <span class="p">]</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>            <span class="k">elif</span> <span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">property</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="k">if</span> <span class="n">sort_by</span><span class="p">:</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>            <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>                <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">column_id</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sort_by</span><span class="p">],</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>                <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s2">&quot;asc&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">sort_by</span><span class="p">],</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>                <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="p">)</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">skip</span><span class="p">:]</span> <span class="k">if</span> <span class="n">take</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">skip</span> <span class="p">:</span> <span class="n">skip</span> <span class="o">+</span> <span class="n">take</span><span class="p">]</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>        <span class="k">return</span> <span class="p">[</span><span class="n">Trace</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">trace</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()],</span> <span class="n">count</span>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">skip</span><span class="p">:]</span> <span class="k">if</span> <span class="n">take</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">skip</span> <span class="p">:</span> <span class="n">skip</span> <span class="o">+</span> <span class="n">take</span><span class="p">]</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="k">return</span> <span class="p">[</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>            <span class="nb">next</span><span class="p">(</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">documents</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">trace_id</span> <span class="o">==</span> <span class="n">trace_id</span><span class="p">)</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>            <span class="k">for</span> <span class="n">trace_id</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;trace_id&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="p">],</span> <span class="n">count</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_version</span><span class="p">:</span> <span class="n">Trace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_safe_execute</span><span class="p">(</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>            <span class="k">lambda</span> <span class="n">db</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_version</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trace_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">)</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="p">)</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_safe_execute</span><span class="p">(</span><span class="k">lambda</span> <span class="n">db</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trace_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">))</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="k">def</span> <span class="nf">delete_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="k">def</span> <span class="nf">_safe_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TinyDB</span><span class="p">],</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a>            <span class="k">with</span> <span class="n">TinyDB</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_to_db</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a>                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_version</span><span class="p">:</span> <span class="n">Trace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_safe_execute</span><span class="p">(</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="k">lambda</span> <span class="n">db</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_version</span><span class="o">.</span><span class="n">dict</span><span class="p">(),</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trace_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">)</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="p">)</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_safe_execute</span><span class="p">(</span><span class="k">lambda</span> <span class="n">db</span><span class="p">:</span> <span class="n">db</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trace_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">))</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="k">def</span> <span class="nf">delete_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>            <span class="k">with</span> <span class="n">TinyDB</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_to_db</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>                <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>                    <span class="n">db</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;trace_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">)</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="k">def</span> <span class="nf">_safe_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TinyDB</span><span class="p">],</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="k">with</span> <span class="n">lock</span><span class="p">:</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>            <span class="k">with</span> <span class="n">TinyDB</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_to_db</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
