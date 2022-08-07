@@ -46,7 +46,7 @@ def evaluate_ranking(
     assert 0 <= target_recall <= 1
 
     if plot and axes is None:
-        fig = plt.figure(figsize=(20, 20))
+        fig = plt.figure(figsize=(10, 10))
         fig.patch.set_facecolor("white")
         ax = plt.axes()
     else:
