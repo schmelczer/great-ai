@@ -5,7 +5,7 @@ from ..context import get_context
 from ..tracing import TracingContext
 
 
-def log_metric(argument_name: str, value: Any, disable_logging: bool=False) -> None:
+def log_metric(argument_name: str, value: Any, disable_logging: bool = False) -> None:
     """Log a key (argument_name)-value pair that is persisted inside the trace.
 
     The name of the function from where this is called is also stored.
