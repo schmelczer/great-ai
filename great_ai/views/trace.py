@@ -88,7 +88,9 @@ class Trace(Generic[T], HashableBaseModel):
                 }
             ),
             **{
-                k: pformat(v, indent=2, compact=True)
+                k: v
+                if (isinstance(v, float) or isinstance(v, int))
+                else pformat(v, indent=2, compact=True)
                 for k, v in self.logged_values.items()
             },
             "models_flat": self.models_flat,

@@ -67,7 +67,7 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         if not documents:
             return [], 0
 
-        df = pd.DataFrame(documents)
+        df = pd.DataFrame([Trace.parse_obj(d).to_flat_dict() for d in documents])
 
         for f in conjunctive_filters:
             operator = f.operator.lower()
@@ -76,7 +76,12 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
                     getattr(df[f.property], operator_mapping[f.operator])(f.value)
                 ]
             elif operator == "contains":
-                df = df.loc[df[f.property].str.contains(f.value, case=False)]
+                df = df.loc[
+                    df[f.property].str.contains(
+                        str(int(f.value)) if isinstance(f.value, float) else f.value,
+                        case=False,
+                    )
+                ]
 
         if sort_by:
             df.sort_values(
