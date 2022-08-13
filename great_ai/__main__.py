@@ -175,6 +175,7 @@ def find_app(file_name: str) -> Optional[str]:
     finally:
         logging.disable(logging.NOTSET)
 
+    app_name = None
     for name, value in module.__dict__.items():
         if isinstance(value, GreatAI):
             app_name = name
