@@ -184,7 +184,7 @@ def find_app(file_name: str) -> Optional[str]:
         logger.info(f"Found `{app_name}` to be the GreatAI app ")
     else:
         raise MissingArgumentError(
-            "GreatAI app could not be found, make sure to use `@GreatAI.deploy` on your prediction function"
+            "GreatAI app could not be found, make sure to use `@GreatAI.create` on your prediction function"
         )
 
     return f"{file_name}:{app_name}.app"
