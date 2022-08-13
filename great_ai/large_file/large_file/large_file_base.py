@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -63,7 +64,7 @@ class LargeFileBase(ABC):
         keep_last_n: Optional[int] = None,
         cache_only_mode: bool = False,
     ):
-        self._name = name
+        self._name = re.sub(r"[^a-zA-Z0-9._-]+", "", name)
         self._version = version
         self._mode = mode
         self._keep_last_n = keep_last_n
