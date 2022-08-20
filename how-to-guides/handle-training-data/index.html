@@ -907,12 +907,12 @@
 
 
 <h1 id="how-to-manage-training-data">How to manage training data<a class="headerlink" href="#how-to-manage-training-data" title="Permanent link">#</a></h1>
-<p>In order to simplify your training data management, <code>great-ai</code> provide two complementing approaches for inputting new data-points.</p>
+<p>In order to simplify your training data management, <code>great-ai</code> provide two complementing approaches for inputting new data points.</p>
 <h2 id="upload-data">Upload data<a class="headerlink" href="#upload-data" title="Permanent link">#</a></h2>
 <p>At the start of your experiments' first iteration, after you've gathered suitable samples for training, you can call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>. This automatically stores a timestamp and also allows you to assign tags to the data. Using these attributes, <a class="autorefs autorefs-internal" href="../../reference/#great_ai.query_ground_truth">great_ai.query_ground_truth</a> can be called to get a filtered view of the training data.</p>
 <div class="admonition important">
 <p class="admonition-title">Train-test-validation splits</p>
-<p>It is a best practice to lock-away the test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it, or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results, hence, care must be taken to avoid it.</p>
+<p>It is a best practice to lock away the test split of your data that is only used for the final quality assessment. This prevents you from accidentally training on it or inadvertently tuning the model to have the highest accuracy metrics on the test split. This, of course, may lead to dubious results; hence, care must be taken to avoid it.</p>
 <p>With <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>, there is an option to tag the samples with <code>train</code>, <code>test</code>, and <code>validation</code> randomly, following a predefined distribution. This happens as soon as they're written in the database. Later, these can be queried by providing the name of the appropriate tags.</p>
 </div>
 <p>The nice thing about this is that the 'input-expected output' pairs are stored as traces. Thus, they behave exactly like regular prediction traces.</p>
@@ -951,12 +951,12 @@
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   <span class="s1">&#39;trace_id&#39;</span><span class="p">:</span> <span class="s1">&#39;abee0671-beb9-4284-8c3b-c65e5836ce38&#39;</span><span class="p">})]</span>
 </code></pre></div>
 <ol>
-<li>Expected output. This can be also accessed through the <code>.output</code> property.</li>
+<li>Expected output. This can also be accessed through the <code>.output</code> property.</li>
 <li>The input value is stored here.</li>
 <li>Notice how <code>ground_truth</code> is always included as a tag when using <a class="autorefs autorefs-internal" href="../../reference/#great_ai.add_ground_truth">great_ai.add_ground_truth</a>. </li>
 </ol>
 <h2 id="get-feedback">Get feedback<a class="headerlink" href="#get-feedback" title="Permanent link">#</a></h2>
-<p>After the initial data gathering, end-to-end feedback can be also integrated into the dataset. </p>
+<p>After the initial data gathering, end-to-end feedback can also be integrated into the dataset. </p>
 <p>The scaffolded REST API contains endpoints for managing traces and their feedbacks.</p>
 <p><img alt="screenshot of swagger" loading="lazy" src="/media/feedback.png" /></p>
 <p>When <a class="autorefs autorefs-internal" href="../../reference/#great_ai.query_ground_truth">great_ai.query_ground_truth</a> is executed, it implicitly filters for traces that have feedback. Therefore, both the <code>ground_truth</code> and the <code>online</code> traces that have received feedback are returned. No matter the origin of the data, it can be accessed using the same API.</p>
@@ -968,7 +968,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 24, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>

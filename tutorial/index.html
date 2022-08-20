@@ -947,7 +947,7 @@
 
 
 <h1 id="train-and-deploy-a-sota-model">Train and deploy a SOTA model<a class="headerlink" href="#train-and-deploy-a-sota-model" title="Permanent link">#</a></h1>
-<p>Let's see <code>great-ai</code> in action by going over the life-cycle of a simple service.</p>
+<p>Let's see <code>great-ai</code> in action by going over the lifecycle of a simple service.</p>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">#</a></h2>
 <ol>
 <li>You will see how the <a href="/reference/utilities">great_ai.utilities</a> can integrate into your Data Science workflow.</li>
@@ -955,11 +955,11 @@
 <li>You will use <a class="autorefs autorefs-internal" href="../reference/#great_ai.GreatAI">GreatAI</a> to prepare your model for a robust and responsible deployment.</li>
 </ol>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
-<p>You are going to train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the <a href="https://arxiv.org/abs/1903.10676" target="_blank">SciBERT paper</a> in which SciBERT <a href="https://paperswithcode.com/sota/sentence-classification-on-paper-field" target="_blank">achieved an F1-score of 0.6571</a>. We are going to outperform it using a trivial text classification model: a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html" target="_blank">Linear SVM</a>.</p>
+<p>You will train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the <a href="https://arxiv.org/abs/1903.10676" target="_blank">SciBERT paper</a> in which SciBERT <a href="https://paperswithcode.com/sota/sentence-classification-on-paper-field" target="_blank">achieved an F1-score of 0.6571</a>. We are going to outperform it using a trivial text classification model: a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html" target="_blank">Linear SVM</a>.</p>
 <p>We use the same synthetic dataset derived from the <a href="https://www.microsoft.com/en-us/research/project/microsoft-academic-graph/" target="_blank">Microsoft Academic Graph</a>. The dataset is <a href="https://github.com/allenai/scibert/tree/master/data/text_classification/mag" target="_blank">available here</a>.</p>
 <div class="admonition success">
 <p class="admonition-title">Success</p>
-<p>You are ready to start the tutorial. Feel free to come back to the <a href="#summary">summary</a> section once you're finished.</p>
+<p>You are ready to start the tutorial. Feel free to return to the <a href="#summary">summary</a> section once you're finished.</p>
 </div>
 <div style="display: flex; justify-content: space-evenly;">
 <p><a class="md-button md-button--primary" href="train/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M160 80c0-26.51 21.5-48 48-48h32c26.5 0 48 21.49 48 48v352c0 26.5-21.5 48-48 48h-32c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.49-48 48-48h32c26.5 0 48 21.5 48 48v160c0 26.5-21.5 48-48 48H48c-26.51 0-48-21.5-48-48V272zM400 96c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48h-32c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h32z"/></svg></span> Train it</a></p>
@@ -971,7 +971,7 @@
 <p>After training and evaluating a model, it is exported using <a class="autorefs autorefs-internal" href="../reference/#great_ai.save_model">great_ai.save_model</a>.</p>
 <details class="tip">
 <summary>Remote storage</summary>
-<p>To store your model remotely, you need to set your credentials before calling <code>save_model</code>.</p>
+<p>To store your model remotely, you must set your credentials before calling <code>save_model</code>.</p>
 <p>For example, to use <a href="https://aws.amazon.com/s3" target="_blank">AWS S3</a>:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">great_ai.large_file</span> <span class="kn">import</span> <span class="n">LargeFileS3</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -1001,7 +1001,7 @@
 </code></pre></div>
 <ol>
 <li><a class="autorefs autorefs-internal" href="../reference/#great_ai.use_model">@use_model</a> loads and injects your model into the <code>predict_domain</code> function's <code>model</code> argument.
-    You can freely reference it knowing that the function is always provided with it.</li>
+    You can freely reference it, knowing that the function is always provided with it.</li>
 </ol>
 <p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened service properly.</a></p>
 <div style="display: flex; justify-content: space-evenly;">
@@ -1014,7 +1014,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>

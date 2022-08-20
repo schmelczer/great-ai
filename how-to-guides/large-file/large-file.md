@@ -4,12 +4,12 @@ The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_mod
 
 ## Motivation
 
-Oftentimes, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step, however, GitHub's git LFS implementation [doesn't support deleting](https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository) large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.
+Often, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step. However, GitHub's git LFS implementation [doesn't support deleting](https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository) large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.
 
-[DVC](https://dvc.org/) is a viable alternative, however, it requires users to learn to use one more CLI tool.
+[DVC](https://dvc.org/) is a viable alternative; however, it requires users to learn to use one more CLI tool.
 
 ??? note "Using LargeFile-s directly (usually not needed)"
-    LargeFile doesn't require users to learn too much new. It is a nearly exact copy of the built-in `open()` function of Python with which users are certainly already familiar.
+    LargeFile doesn't require users to learn too much new. It is a nearly exact copy of Python's built-in `open()` function, with which users are undoubtedly already familiar.
 
     ## Simple example
 
@@ -24,7 +24,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
     })
 
     # Creates a new version and deletes the older version 
-    # leaving the 3 most recently used intact
+    # leaving the three most recently used intact
     with LargeFileS3("test.txt", "w", keep_last_n=3) as f:
         for i in range(100000):
             f.write('test\n')
@@ -35,11 +35,11 @@ Oftentimes, especially when working with data-heavy applications, large files ca
         print(f.readlines()[0])
     ```
 
-    1.  In this case, the latest version is already in the local cache, no download is required.
+    1. The latest version is already in the local cache; no download is required.
 
     ### More details
 
-    `LargeFile` behaves like an opened file (in the background it is a temp file after all). Binary reads and writes are supported along with the [different keywords `open()` accepts](https://docs.python.org/3/library/functions.html#open){ target=_blank }.
+    `LargeFile` behaves like an opened file (in the background, it is a temp file after all). Binary reads and writes are supported along with the [different keywords `open()` accepts](https://docs.python.org/3/library/functions.html#open){ target=_blank }.
 
     The local cache can be configured with these properties:
 
@@ -64,7 +64,7 @@ Oftentimes, especially when working with data-heavy applications, large files ca
     LargeFileS3("folder-of-my-bert-model").push('path_to_local/folder_or_file')
     ```
 
-    > This way both regular files and folders can be handled. The uploaded file is called **folder-of-my-bert-model**, the local name is ignored.
+    > This way, both regular files and folders can be handled. The uploaded file is called **folder-of-my-bert-model**, the local name is ignored.
 
     Lastly, all version of the remote object can be deleted by calling `LargeFileS3("my-file").delete()`. It will still reside in your local cache afterwards; its deletion will happen next time your local cache has to be pruned.
 
@@ -90,14 +90,14 @@ large-file --backend s3 --secrets secrets.ini \
     --push my_first_file.json folder/my_second_file my_folder
 ```
 
-> Only the filename is used as the S3 name, the rest of the path is ignored.
+> Only the filename is used as the S3 name; the rest of the path is ignored.
 
 !!! important "Using MongoDB"
-    The possible values for `--backend` are `s3`, `mongo`, and `local`. The latter doesn't need credentials, it only versions and stores your files in a local folder. MongoDB on the other hand requires a `mongo_connection_string` and a `mongo_database` to be specified. For storing large files, it uses the [GridFS](https://www.mongodb.com/docs/manual/core/gridfs){ target=_blank } specification.
+    The possible values for `--backend` are `s3`, `mongo`, and `local`. The latter doesn't need credentials. It only versions and stores your files in a local folder. MongoDB, on the other hand, requires a `mongo_connection_string` and a `mongo_database` to be specified. For storing large files, it uses the [GridFS](https://www.mongodb.com/docs/manual/core/gridfs){ target=_blank } specification.
 
 ### Download some files to the local cache
 
-This can be useful when building a Docker image for example. This way, the files can already reside inside the container and need not be downloaded later.
+This can be useful when building a Docker image, for example. This way, the files can already reside inside the container and need not be downloaded later.
 
 ```sh
 large-file --backend s3 --secrets ~/.aws/credentials \

@@ -28,8 +28,8 @@ configure(
 )
 ```
 
-1.  Completely disable caching.
-2.  The unspecified routes are enabled by default.
+1. Completely disable caching.
+2. The unspecified routes are enabled by default.
 
 ## Using remote storage
 
@@ -63,7 +63,7 @@ model = [4, 3]
 save_model(model, 'my-model')
 ```
 
-1.  This line isn't strictly necessary because if `s3.ini` (or `mongo.ini`) is available in the current working directory, they are automatically used to configure their respective LargeFile implementations/databases.
+1. This line isn't strictly necessary because if `s3.ini` (or `mongo.ini`) is available in the current working directory, they are automatically used to configure their respective LargeFile implementations/databases.
 
 ??? note "Departing from AWS"
     With the `aws_endpoint_url` argument, it is possible to use any other S3-compatible service such as [Backblaze](https://www.backblaze.com/){ target=_blank }. In that case, it would be `aws_endpoint_url=https://s3.us-west-002.backblazeb2.com`.
@@ -77,7 +77,7 @@ MONGO_CONNECTION_STRING=mongodb://localhost:27017  # this is the default value
 # if `MONGO_CONNECTION_STRING` is specified, this default is overridden
 MONGO_CONNECTION_STRING=ENV:MONGO_CONNECTION_STRING
 
-MONGO_DATABASE=my-database  # it is automatically created if doesn't exist
+MONGO_DATABASE=my-database  # it is automatically created if it doesn't exist
 ```
 
 ```python title="use-mongo.py"
@@ -99,4 +99,4 @@ By default, a thread-safe version of [TinyDB](https://tinydb.readthedocs.io/en/l
 
 ### MongoDB
 
-At the moment, only MongoDB is supported as a production-ready `TracingDatabase`. In order to use it, you have to either place a file named `mongo.ini` in your working directory, or explicitly call either [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver] or [MongoDbDriver.configure_credentials][great_ai.MongoDbDriver.configure_credentials].
+Currently, only MongoDB is supported as a production-ready `TracingDatabase`. In order to use it, you have to either place a file named `mongo.ini` in your working directory or explicitly call either [MongoDbDriver.configure_credentials_from_file][great_ai.MongoDbDriver] or [MongoDbDriver.configure_credentials][great_ai.MongoDbDriver.configure_credentials].

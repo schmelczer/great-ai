@@ -1,6 +1,6 @@
 # Explanation
 
-A lot more details and discussion about the problem context and approaches of GreatAI along with its evaluation can be found in my thesis.
+A lot more details and discussion about the problem context and approaches of GreatAI, along with its evaluation, can be found in my thesis.
 
 <div style="display: flex; justify-content: center;">
     <img src="/media/thesis-frontpage.png" style="height: 500px;" alt="front page"/>

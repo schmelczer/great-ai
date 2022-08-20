@@ -989,23 +989,23 @@
 
 
 <h1 id="summarising-scientific-publications-from-a-tech-transfer-perspective">Summarising scientific publications from a tech-transfer perspective<a class="headerlink" href="#summarising-scientific-publications-from-a-tech-transfer-perspective" title="Permanent link">#</a></h1>
-<p>This is a simplified example illustrating how <code>great-ai</code> is used in practice at <a href="https://www.scoutinscience.com/" target="_blank">ScoutinScience</a>. The subpages show <code>great-ai</code> in action by going over the life-cycle of finetuning and deploying a BERT-based software service.</p>
+<p>This is a simplified example illustrating how <code>great-ai</code> is used in practice at <a href="https://www.scoutinscience.com/" target="_blank">ScoutinScience</a>. The subpages show <code>great-ai</code> in action by going over the lifecycle of fine-tuning and deploying a BERT-based software service.</p>
 <details class="note">
 <summary>Propriety data</summary>
-<p>The purpose of this example is to show you different ways in which <code>great-ai</code> can assist you. The exact NLP task being solved is not central. Stemming from this, and from the difficult nature of obtaining appropriate training data, the propriety dataset used for the experiments is not shared.</p>
+<p>The purpose of this example is to show you different ways in which <code>great-ai</code> can assist you. The exact NLP task being solved is not central. Stemming from this and from the difficult nature of obtaining appropriate training data, the propriety dataset used for the experiments is not shared.</p>
 </details>
 <h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">#</a></h2>
 <ol>
 <li>You will see how the <a href="/reference/utilities">great_ai.utilities</a> can integrate into your Data Science workflow.</li>
 <li>You will see how <a href="/reference/large-file">great_ai.large_file</a> can be used to version and store your trained model.</li>
-<li>You will see how <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> should be used prepare your model for a robust and responsible deployment.</li>
+<li>You will see how <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> should be used to prepare your model for a robust and responsible deployment.</li>
 <li>You will see multiple ways of customising your deployment.</li>
 </ol>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
-<p>One of the core features of the ScoutinScience platform is summarising research papers from a tech-transfer perspective. In short, extractive summarisation is preferred using a binary classifier trained on clients' judgement of sentence interestingness. Thus, documents are sentences and the expected output is a binary label showing whether a sentence is "worthy" of being in the tech-transfer summary. Providing an explanation for each decision is imperative since ScoutinScience embraces applying only explainable AI (XAI) methods wherever feasible.</p>
+<p>One of the core features of the ScoutinScience platform is summarising research papers from a tech-transfer perspective. In short, extractive summarisation is preferred using a binary classifier trained on clients' judgement of sentence interestingness. Thus, documents are sentences, and the expected output is a binary label showing whether a sentence is "worthy" of being in the tech-transfer summary. Explaining each decision is imperative since ScoutinScience embraces applying only explainable AI (XAI) methods wherever feasible.</p>
 <div class="admonition success">
 <p class="admonition-title">Success</p>
-<p>You are ready to start the tutorial. Feel free to come back to the <a href="#summary">summary</a> section once you're finished.</p>
+<p>You are ready to start the tutorial. Feel free to return to the <a href="#summary">summary</a> section once you're finished.</p>
 </div>
 <div style="display: flex; justify-content: space-evenly;">
 <p><a class="md-button md-button--primary" href="data/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4Z"/></svg></span> Examine data</a></p>
@@ -1017,19 +1017,19 @@
 <p>We load and analyse the data by calculating inter-rater reliability and checking the feasibility of using an AI-based approach by testing the accuracy of a trivial baseline method.</p>
 <h3 id="training-notebook"><a href="train/">Training notebook</a><a class="headerlink" href="#training-notebook" title="Permanent link">#</a></h3>
 <p>We simply fine-tune SciBERT.</p>
-<p>After training and evaluating a model, it is exported using <a class="autorefs autorefs-internal" href="../../reference/#great_ai.save_model">great_ai.save_model</a>. For more info, checkout <a href="/how-to-guides/configure-service">the configuration how-to page</a>.</p>
+<p>After training and evaluating a model, it is exported using <a class="autorefs autorefs-internal" href="../../reference/#great_ai.save_model">great_ai.save_model</a>. For more info, check out <a href="/how-to-guides/configure-service">the configuration how-to page</a>.</p>
 <h3 id="deployment-notebook"><a href="deploy/">Deployment notebook</a><a class="headerlink" href="#deployment-notebook" title="Permanent link">#</a></h3>
-<p>We customise the GreatAI configuration, create custom cahcing for the model and implement an inference function that can be hardened by wrapping it in a <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> instance. We also extract the attention weights as a quasi-explanation.</p>
+<p>We customise the GreatAI configuration, create custom caching for the model and implement an inference function that can be hardened by wrapping it in a <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> instance. We also extract the attention weights as a quasi-explanation.</p>
 <p>Finally, we test the model's inference function through the GreatAI dashboard. <a href="/how-to-guides/use-service">The only thing left is to deploy the hardened service properly.</a></p>
 <h4 id="additional-files"><a href="additional-files/">Additional files</a><a class="headerlink" href="#additional-files" title="Permanent link">#</a></h4>
-<p>There are some other files required for deploying the notebook. For example, the config file for S3 and MongoDB or a Dockerfile for building a custom image. These are compiled and shown on a separate page.</p>
+<p>There are some other files required for deploying the notebook. For example, the config file for S3 and MongoDB or a Dockerfile for building a custom image. These are gathered and shown on a separate page.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 17, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>

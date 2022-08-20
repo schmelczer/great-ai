@@ -1029,11 +1029,11 @@
 <h1 id="how-to-use-largefiles">How to use LargeFiles<a class="headerlink" href="#how-to-use-largefiles" title="Permanent link">#</a></h1>
 <p>The functions <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">save_model</a> and <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> wrap LargeFile instances. Hence, besides configuring <a href="/reference/large-file">LargeFile</a>, users have few reasons to use LargeFiles directly.</p>
 <h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">#</a></h2>
-<p>Oftentimes, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step, however, GitHub's git LFS implementation <a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository">doesn't support deleting</a> large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.</p>
-<p><a href="https://dvc.org/">DVC</a> is a viable alternative, however, it requires users to learn to use one more CLI tool.</p>
+<p>Often, especially when working with data-heavy applications, large files can proliferate in a repository. Version controlling them is an obvious next step. However, GitHub's git LFS implementation <a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository">doesn't support deleting</a> large files, making it easy for them to eat-up the LFS quota and explode the size of your repos.</p>
+<p><a href="https://dvc.org/">DVC</a> is a viable alternative; however, it requires users to learn to use one more CLI tool.</p>
 <details class="note">
 <summary>Using LargeFile-s directly (usually not needed)</summary>
-<p>LargeFile doesn't require users to learn too much new. It is a nearly exact copy of the built-in <code>open()</code> function of Python with which users are certainly already familiar.</p>
+<p>LargeFile doesn't require users to learn too much new. It is a nearly exact copy of Python's built-in <code>open()</code> function, with which users are undoubtedly already familiar.</p>
 <h2 id="simple-example">Simple example<a class="headerlink" href="#simple-example" title="Permanent link">#</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">great_ai.large_file</span> <span class="kn">import</span> <span class="n">LargeFileS3</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -1045,7 +1045,7 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">})</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Creates a new version and deletes the older version </span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># leaving the 3 most recently used intact</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># leaving the three most recently used intact</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">with</span> <span class="n">LargeFileS3</span><span class="p">(</span><span class="s2">&quot;test.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">keep_last_n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100000</span><span class="p">):</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -1056,10 +1056,10 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 </code></pre></div>
 <ol>
-<li>In this case, the latest version is already in the local cache, no download is required.</li>
+<li>The latest version is already in the local cache; no download is required.</li>
 </ol>
 <h3 id="more-details">More details<a class="headerlink" href="#more-details" title="Permanent link">#</a></h3>
-<p><code>LargeFile</code> behaves like an opened file (in the background it is a temp file after all). Binary reads and writes are supported along with the <a href="https://docs.python.org/3/library/functions.html#open" target="_blank">different keywords <code>open()</code> accepts</a>.</p>
+<p><code>LargeFile</code> behaves like an opened file (in the background, it is a temp file after all). Binary reads and writes are supported along with the <a href="https://docs.python.org/3/library/functions.html#open" target="_blank">different keywords <code>open()</code> accepts</a>.</p>
 <p>The local cache can be configured with these properties:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">LargeFileS3</span><span class="o">.</span><span class="n">cache_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.cache&#39;</span><span class="p">)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">LargeFileS3</span><span class="o">.</span><span class="n">max_cache_size</span> <span class="o">=</span> <span class="s2">&quot;30 GB&quot;</span>
@@ -1075,7 +1075,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">LargeFileS3</span><span class="p">(</span><span class="s2">&quot;folder-of-my-bert-model&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s1">&#39;path_to_local/folder_or_file&#39;</span><span class="p">)</span>
 </code></pre></div>
 <blockquote>
-<p>This way both regular files and folders can be handled. The uploaded file is called <strong>folder-of-my-bert-model</strong>, the local name is ignored.</p>
+<p>This way, both regular files and folders can be handled. The uploaded file is called <strong>folder-of-my-bert-model</strong>, the local name is ignored.</p>
 </blockquote>
 <p>Lastly, all version of the remote object can be deleted by calling <code>LargeFileS3("my-file").delete()</code>. It will still reside in your local cache afterwards; its deletion will happen next time your local cache has to be pruned.</p>
 </details>
@@ -1093,14 +1093,14 @@
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    --push my_first_file.json folder/my_second_file my_folder
 </code></pre></div>
 <blockquote>
-<p>Only the filename is used as the S3 name, the rest of the path is ignored.</p>
+<p>Only the filename is used as the S3 name; the rest of the path is ignored.</p>
 </blockquote>
 <div class="admonition important">
 <p class="admonition-title">Using MongoDB</p>
-<p>The possible values for <code>--backend</code> are <code>s3</code>, <code>mongo</code>, and <code>local</code>. The latter doesn't need credentials, it only versions and stores your files in a local folder. MongoDB on the other hand requires a <code>mongo_connection_string</code> and a <code>mongo_database</code> to be specified. For storing large files, it uses the <a href="https://www.mongodb.com/docs/manual/core/gridfs" target="_blank">GridFS</a> specification.</p>
+<p>The possible values for <code>--backend</code> are <code>s3</code>, <code>mongo</code>, and <code>local</code>. The latter doesn't need credentials. It only versions and stores your files in a local folder. MongoDB, on the other hand, requires a <code>mongo_connection_string</code> and a <code>mongo_database</code> to be specified. For storing large files, it uses the <a href="https://www.mongodb.com/docs/manual/core/gridfs" target="_blank">GridFS</a> specification.</p>
 </div>
 <h3 id="download-some-files-to-the-local-cache">Download some files to the local cache<a class="headerlink" href="#download-some-files-to-the-local-cache" title="Permanent link">#</a></h3>
-<p>This can be useful when building a Docker image for example. This way, the files can already reside inside the container and need not be downloaded later.</p>
+<p>This can be useful when building a Docker image, for example. This way, the files can already reside inside the container and need not be downloaded later.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>large-file --backend s3 --secrets ~/.aws/credentials <span class="se">\</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    --cache my_first_file.json:3 my_second_file my_folder:0
 </code></pre></div>
@@ -1117,7 +1117,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 24, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>

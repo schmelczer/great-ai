@@ -1037,7 +1037,7 @@
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># if `MONGO_CONNECTION_STRING` is specified, this default is overridden</span><span class="w"></span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">MONGO_CONNECTION_STRING</span><span class="o">=</span><span class="n">ENV</span><span class="p">:</span><span class="n">MONGO_CONNECTION_STRING</span><span class="w"></span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">MONGO_DATABASE</span><span class="o">=</span><span class="n">my-database</span><span class="w">  </span><span class="c1"># it is automatically created if doesn&#39;t exist</span><span class="w"></span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">MONGO_DATABASE</span><span class="o">=</span><span class="n">my-database</span><span class="w">  </span><span class="c1"># it is automatically created if it doesn&#39;t exist</span><span class="w"></span>
 </code></pre></div>
 <div class="highlight"><span class="filename">use-mongo.py</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">great_ai.large_file</span> <span class="kn">import</span> <span class="n">LargeFileMongo</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">save_model</span>
@@ -1054,14 +1054,14 @@
 <h2 id="using-a-database">Using a database<a class="headerlink" href="#using-a-database" title="Permanent link">#</a></h2>
 <p>By default, a thread-safe version of <a href="https://tinydb.readthedocs.io/en/latest/" target="_blank">TinyDB</a> is utilised for saving the prediction traces into a local file. Unfortunately, for most production needs, this method is not suitable.</p>
 <h3 id="mongodb">MongoDB<a class="headerlink" href="#mongodb" title="Permanent link">#</a></h3>
-<p>At the moment, only MongoDB is supported as a production-ready <code>TracingDatabase</code>. In order to use it, you have to either place a file named <code>mongo.ini</code> in your working directory, or explicitly call either <a class="autorefs autorefs-internal" href="../../reference/#great_ai.MongoDbDriver">MongoDbDriver.configure_credentials_from_file</a> or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.persistence.mongodb_driver.MongoDbDriver.configure_credentials">MongoDbDriver.configure_credentials</a>.</p>
+<p>Currently, only MongoDB is supported as a production-ready <code>TracingDatabase</code>. In order to use it, you have to either place a file named <code>mongo.ini</code> in your working directory or explicitly call either <a class="autorefs autorefs-internal" href="../../reference/#great_ai.MongoDbDriver">MongoDbDriver.configure_credentials_from_file</a> or <a class="autorefs autorefs-internal" href="../../reference/#great_ai.persistence.mongodb_driver.MongoDbDriver.configure_credentials">MongoDbDriver.configure_credentials</a>.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>

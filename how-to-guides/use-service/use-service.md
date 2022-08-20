@@ -35,7 +35,7 @@ As you can see, the original return value is wrapped in a [Trace][great_ai.Trace
 
 Likely, the main way you would like to expose your model is through an HTTP API. [@GreatAI.create][great_ai.GreatAI.create] scaffolds many REST API endpoints for your model and creates a [FastAPI](https://fastapi.tiangolo.com/){ target=_blank } app available under [GreatAI.app][great_ai.GreatAI]. This can be served using [uvicorn](https://www.uvicorn.org/){ target=_blank } or any other [ASGI server](https://asgi.readthedocs.io/en/latest/){ target=_blank }.
 
-Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To achieve this, `uvicorn` is wrapped by the `great-ai` command-line utility which &mdash; among others &mdash; takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
+Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To achieve this, `uvicorn` is wrapped by the `great-ai` command-line utility, which &mdash; among others &mdash; takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
 
 ### In development
 
@@ -97,12 +97,11 @@ RUN pip install --no-cache-dir --requirement requirements.txt
 # have to download it each time a container starts
 RUN large-file --backend s3 --secrets s3.ini --cache my-domain-predictor
 
-# Add you application code to the image
+# Add your application code to the image
 COPY . .
 
-# The default ENTRYPOINT is great-ai, specify its argument using CMD
+# The default ENTRYPOINT is great-ai; specify its argument using CMD
 CMD ["deploy.ipynb"]
-
 ```
 
 ## Batch prediction

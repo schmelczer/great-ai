@@ -959,7 +959,7 @@
 
 
 <h1 id="how-to-call-remote-greatai-instances">How to call remote GreatAI instances<a class="headerlink" href="#how-to-call-remote-greatai-instances" title="Permanent link">#</a></h1>
-<p>Microservices architecture (or <a href="https://en.wikipedia.org/wiki/Service-oriented_architecture">SOA</a>) work well with ML applications. This is because their interfaces are usually very narrow, while the functionality provided quite comprehensive. Hence, drawing the boundaries of responsibilities is more straightforward in the case of ML services than in the case of more traditional business applications. For this reason, it is common to have a tree of models (preferably wrapped in GreatAI instances) communicating with each other.</p>
+<p>Microservices architecture (or <a href="https://en.wikipedia.org/wiki/Service-oriented_architecture">SOA</a>) work well with ML applications. This is because their interfaces are usually very narrow, while the functionality provided is quite comprehensive. Hence, drawing the boundaries of responsibilities is more straightforward in the case of ML services than in the case of more traditional business applications. For this reason, it is common to have a tree of models (preferably wrapped in GreatAI instances) communicating with each other.</p>
 <p>Although regular HTTP POST requests could be sent to each service's <code>/predict</code> endpoint, <code>great-ai</code> comes with two convenience functions: <a class="autorefs autorefs-internal" href="../../reference/#great_ai.call_remote_great_ai">call_remote_great_ai</a> and <a class="autorefs autorefs-internal" href="../../reference/#great_ai.call_remote_great_ai_async">call_remote_great_ai_async</a> to wrap this request. These provide you with some level of robustness and deserialisation.</p>
 <div class="admonition note">
 <p class="admonition-title">Inside notebooks</p>
@@ -997,19 +997,19 @@
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </code></pre></div>
 <ol>
-<li>Only return the outputs so we don't clutter up the terminal.</li>
+<li>Only return the outputs, so we don't clutter up the terminal.</li>
 </ol>
 <blockquote>
 <p>Run this script as a regular Python script by executing <code>python3 client.py</code>.</p>
 </blockquote>
 <p><img alt="screenshot of result" loading="lazy" src="/media/remote-sync.png" /></p>
-<p>As you can see, everything worked as expected. There is one way to improve it though.</p>
+<p>As you can see, everything worked as expected. There is one way to improve it, though.</p>
 <h2 id="an-async-example">An <code>async</code> example<a class="headerlink" href="#an-async-example" title="Permanent link">#</a></h2>
-<p>Let's send multiple requests at the same time to speed up the overall execution time. To do this, we will use the <a class="autorefs autorefs-internal" href="../../reference/#great_ai.call_remote_great_ai_async">call_remote_great_ai_async</a> function.</p>
+<p>Let's send multiple requests simultaneously to speed up the overall execution time. To do this, we will use the <a class="autorefs autorefs-internal" href="../../reference/#great_ai.call_remote_great_ai_async">call_remote_great_ai_async</a> function.</p>
 <details class="note">
 <summary>Why is this possible?</summary>
-<p>Note, that in <code>server.py</code>, the inference function is declared <code>async</code>. This means that multiple "copies" of it can run at the same time in the same thread. Since, there is no CPU bottleneck, the server has a quite large throughput (requests responded to per second), but its latency will stay around 2 seconds due to the async <code>sleep</code> command.</p>
-<p>If your great-ai server is not <code>async</code>, higher throughput can be achieved by running multiple instances of it, either manually, or by running it with multiple <code>uvicorn</code> workers like this: <code>ENVIRONMENT=production great-ai server.py --worker_count 4</code></p>
+<p>Note that in <code>server.py</code>, the inference function is declared <code>async</code>. This means that multiple "copies" of it can run at the same time in the same thread. Since there is no CPU bottleneck, the server has a quite large throughput (requests responded to per second), but its latency will stay around 2 seconds due to the async <code>sleep</code> command.</p>
+<p>If your great-ai server is not <code>async</code>, higher throughput can be achieved by running multiple instances of it, either manually or by running it with multiple <code>uvicorn</code> workers like this: <code>ENVIRONMENT=production great-ai server.py --worker_count 4</code></p>
 </details>
 <h3 id="async-client">Async client<a class="headerlink" href="#async-client" title="Permanent link">#</a></h3>
 <div class="highlight"><span class="filename">async-client.py</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">call_remote_great_ai_async</span>
@@ -1033,17 +1033,17 @@
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </code></pre></div>
 <blockquote>
-<p>Replace <code>client.py</code> with this async client. Note that even though async support is significantly more streamlined in recent Python versions, it still requires a bit more boilerplate than its synchronous counterpart.</p>
+<p>Replace <code>client.py</code> with this async client. Note that although async support is significantly more streamlined in recent Python versions, it still requires a bit more boilerplate than its synchronous counterpart.</p>
 </blockquote>
 <p><img alt="screenshot of result" loading="lazy" src="/media/remote-async.png" /></p>
-<p>This also works, and in some use-cases might be considerably quicker.</p>
+<p>This also works and might be considerably quicker in some use cases.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>

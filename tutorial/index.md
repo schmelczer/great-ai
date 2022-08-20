@@ -1,6 +1,6 @@
 # Train and deploy a SOTA model
 
-Let's see `great-ai` in action by going over the life-cycle of a simple service.
+Let's see `great-ai` in action by going over the lifecycle of a simple service.
 
 ## Objectives
 
@@ -10,12 +10,12 @@ Let's see `great-ai` in action by going over the life-cycle of a simple service.
 
 ## Overview
 
-You are going to train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the [SciBERT paper](https://arxiv.org/abs/1903.10676){ target=_blank } in which SciBERT [achieved an F1-score of 0.6571](https://paperswithcode.com/sota/sentence-classification-on-paper-field){ target=_blank }. We are going to outperform it using a trivial text classification model: a [Linear SVM](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html){ target=_blank }.
+You will train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the [SciBERT paper](https://arxiv.org/abs/1903.10676){ target=_blank } in which SciBERT [achieved an F1-score of 0.6571](https://paperswithcode.com/sota/sentence-classification-on-paper-field){ target=_blank }. We are going to outperform it using a trivial text classification model: a [Linear SVM](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html){ target=_blank }.
 
 We use the same synthetic dataset derived from the [Microsoft Academic Graph](https://www.microsoft.com/en-us/research/project/microsoft-academic-graph/){ target=_blank }. The dataset is [available here](https://github.com/allenai/scibert/tree/master/data/text_classification/mag){ target=_blank }.
 
 !!! success
-    You are ready to start the tutorial. Feel free to come back to the [summary](#summary) section once you're finished.
+    You are ready to start the tutorial. Feel free to return to the [summary](#summary) section once you're finished.
 
 <div style="display: flex; justify-content: space-evenly;" markdown>
 [:fontawesome-solid-chart-simple: Train it](train.ipynb){ .md-button .md-button--primary }
@@ -32,7 +32,7 @@ We load and preprocess the dataset while relying on [great_ai.utilities.clean][g
 After training and evaluating a model, it is exported using [great_ai.save_model][].
 
 ??? tip "Remote storage"
-    To store your model remotely, you need to set your credentials before calling `save_model`.
+    To store your model remotely, you must set your credentials before calling `save_model`.
 
     For example, to use [AWS S3](https://aws.amazon.com/s3){ target=_blank }:
     ```python
@@ -68,7 +68,7 @@ def predict_domain(sentence, model):
 ```
 
 1.  [@use_model][great_ai.use_model] loads and injects your model into the `predict_domain` function's `model` argument.
-    You can freely reference it knowing that the function is always provided with it.
+    You can freely reference it, knowing that the function is always provided with it.
 
 Finally, we test the model's inference function through the GreatAI dashboard. [The only thing left is to deploy the hardened service properly.](/how-to-guides/use-service)
 

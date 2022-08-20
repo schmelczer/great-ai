@@ -961,7 +961,7 @@
 
 
 <h1 id="how-to-create-a-greatai-service">How to create a GreatAI service<a class="headerlink" href="#how-to-create-a-greatai-service" title="Permanent link">#</a></h1>
-<p>The core value of <code>great-ai</code> lies in its <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> class. In order to take advantage of it, you need to create an instance wrapping your code.</p>
+<p>The core value of <code>great-ai</code> lies in its <a class="autorefs autorefs-internal" href="../../reference/#great_ai.GreatAI">GreatAI</a> class. To take advantage of it, you need to create an instance wrapping your code.</p>
 <p>Let's say that you have the following greeter function:</p>
 <div class="highlight"><span class="filename">greeter.py</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span> <span class="nf">my_greeter_function</span><span class="p">(</span><span class="n">your_name</span><span class="p">):</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
@@ -975,19 +975,19 @@
 </code></pre></div>
 <details class="info">
 <summary>Why not simply use <code>@GreatAI?</code></summary>
-<p>The purpose of <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for <code>__new__</code> is lacking in MyPy, thus, a static factory method is used instead.</p>
+<p>The purpose of <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for <code>__new__</code> is lacking in MyPy. Thus, a static factory method is used instead.</p>
 </details>
 <h2 id="with-types">With types<a class="headerlink" href="#with-types" title="Permanent link">#</a></h2>
-<p>Even though it's not required by GreatAI, <a href="https://realpython.com/python-type-checking/" target="_blank">type annotating your codebase</a> can save you from lots of trivial mistakes, that's why it's highly advised. Simply add the expected types to your function's signature.</p>
+<p>Even though it's not required by GreatAI, <a href="https://realpython.com/python-type-checking/" target="_blank">type annotating your codebase</a> can save you from lots of trivial mistakes; that's why it's highly advised. Simply add the expected types to your function's signature.</p>
 <div class="highlight"><span class="filename">type_safe_greeter.py</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nd">@GreatAI</span><span class="o">.</span><span class="n">create</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">def</span> <span class="nf">type_safe_greeter</span><span class="p">(</span><span class="n">your_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
 </code></pre></div>
-<p>This not only allows you to statically typecheck your code, but by default, GreatAI will check it during runtime as well using <a href="https://github.com/agronholm/typeguard" target="_blank">typeguard</a>.</p>
+<p>This not only allows you to statically type-check your code, but by default, GreatAI will check it during runtime as well using <a href="https://github.com/agronholm/typeguard" target="_blank">typeguard</a>.</p>
 <h2 id="with-async">With async<a class="headerlink" href="#with-async" title="Permanent link">#</a></h2>
-<p>Asynchronous code can result in immense performance gains in certain cases. For example, you might rely on a third-party service, do database access, or <a href="/how-to-guides/call-remote">call a remote GreatAI instance</a>. In these cases, you can simply make your function <code>async</code> without any other changes.</p>
+<p>Asynchronous code can result in immense performance gains in some instances. For example, you might rely on a third-party service, do database access, or <a href="/how-to-guides/call-remote">call a remote GreatAI instance</a>. In these cases, you can make your function <code>async</code> without any other changes.</p>
 <div class="highlight"><span class="filename">async_greeter.py</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">sleep</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -997,7 +997,7 @@
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Hi </span><span class="si">{</span><span class="n">your_name</span><span class="si">}</span><span class="s1">!&#39;</span>
 </code></pre></div>
 <h2 id="with-decorators">With decorators<a class="headerlink" href="#with-decorators" title="Permanent link">#</a></h2>
-<p>GreatAI can decorate already decorated functions. The only restriction is that <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> must come last. There are two built-in decorators that you can use to customise your function but you can you use any third-party decorator as well.</p>
+<p>GreatAI can decorate already decorated functions. The only restriction is that <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a> must come last. There are two built-in decorators that you can use to customise your function, but you can use any third-party decorator as well.</p>
 <h3 id="using-use_model">Using <code>@use_model</code><a class="headerlink" href="#using-use_model" title="Permanent link">#</a></h3>
 <p>If you have previously saved a model with <a class="autorefs autorefs-internal" href="../../reference/#great_ai.save_model">save_model</a>, you can inject it into your function by calling <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a>.</p>
 <div class="highlight"><span class="filename">greeter_with_model.py</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">use_model</span>
@@ -1014,7 +1014,7 @@
 </ol>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>You must call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> before <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>. Note, that decorators are applied starting from the bottom-most one. Feel free to use <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> in other places of the codebase, it works equally well outside of GreatAI services. </p>
+<p>You must call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> before <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>. Note that decorators are applied starting from the bottom-most one. Feel free to use <a class="autorefs autorefs-internal" href="../../reference/#great_ai.use_model">@use_model</a> in other places of the codebase, and it works equally well outside GreatAI services. </p>
 </div>
 <h3 id="using-parameter">Using <code>@parameter</code><a class="headerlink" href="#using-parameter" title="Permanent link">#</a></h3>
 <p>If you wish to turn off logging or specify custom validation for your parameters, you can use the <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> decorator.</p>
@@ -1033,10 +1033,10 @@
 </code></pre></div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>You must call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> before <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>. Note, that decorators are applied starting from the bottom-most one. Feel free to use <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> in other places of the codebase, it works equally well outside of GreatAI services. </p>
+<p>You must call <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> before <a class="autorefs autorefs-internal" href="../../reference/#great_ai.deploy.great_ai.GreatAI.create">@GreatAI.create</a>. Note that decorators are applied starting from the bottom-most one. Feel free to use <a class="autorefs autorefs-internal" href="../../reference/#great_ai.parameter">@parameter</a> in other places of the codebase, and it works equally well outside GreatAI services. </p>
 </div>
 <h2 id="complex-example">Complex example<a class="headerlink" href="#complex-example" title="Permanent link">#</a></h2>
-<p>Refer to the following example summarising the options you have when instantiating a GreatAI service.</p>
+<p>The following example summarises the options you have when instantiating a GreatAI service.</p>
 <div class="highlight"><span class="filename">complex.py</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">great_ai</span> <span class="kn">import</span> <span class="n">save_model</span><span class="p">,</span> <span class="n">GreatAI</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">use_model</span><span class="p">,</span> <span class="n">log_metric</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">save_model</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;secret-number&#39;</span><span class="p">)</span>  <span class="c1">#(1)</span>
@@ -1062,7 +1062,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 15, 2022</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 20, 2022</span>
       
     
   </small>
