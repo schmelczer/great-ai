@@ -1,6 +1,6 @@
 # How to create a GreatAI service
 
-The core value of `great-ai` lies in its [GreatAI][great_ai.GreatAI] class. In order to take advantage of it, you need to create an instance wrapping your code.
+The core value of `great-ai` lies in its [GreatAI][great_ai.GreatAI] class. To take advantage of it, you need to create an instance wrapping your code.
 
 Let's say that you have the following greeter function:
 
@@ -20,11 +20,11 @@ def greeter(your_name):
 ```
 
 ??? info "Why not simply use `@GreatAI?`"
-    The purpose of [@GreatAI.create][great_ai.GreatAI.create] is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for `__new__` is lacking in MyPy, thus, a static factory method is used instead.
+    The purpose of [@GreatAI.create][great_ai.GreatAI.create] is simply to provide you with type-checking through MyPy, Pylance, and similar libraries. However, the overloading support for `__new__` is lacking in MyPy. Thus, a static factory method is used instead.
 
 ## With types
 
-Even though it's not required by GreatAI, [type annotating your codebase](https://realpython.com/python-type-checking/){ target=_blank } can save you from lots of trivial mistakes, that's why it's highly advised. Simply add the expected types to your function's signature.
+Even though it's not required by GreatAI, [type annotating your codebase](https://realpython.com/python-type-checking/){ target=_blank } can save you from lots of trivial mistakes; that's why it's highly advised. Simply add the expected types to your function's signature.
 
 ```python title="type_safe_greeter.py"
 from great_ai import GreatAI
@@ -34,11 +34,11 @@ def type_safe_greeter(your_name: str) -> str:
     return f'Hi {your_name}!'
 ```
 
-This not only allows you to statically typecheck your code, but by default, GreatAI will check it during runtime as well using [typeguard](https://github.com/agronholm/typeguard){ target=_blank }.
+This not only allows you to statically type-check your code, but by default, GreatAI will check it during runtime as well using [typeguard](https://github.com/agronholm/typeguard){ target=_blank }.
 
 ## With async
 
-Asynchronous code can result in immense performance gains in certain cases. For example, you might rely on a third-party service, do database access, or [call a remote GreatAI instance](/how-to-guides/call-remote). In these cases, you can simply make your function `async` without any other changes.
+Asynchronous code can result in immense performance gains in some instances. For example, you might rely on a third-party service, do database access, or [call a remote GreatAI instance](/how-to-guides/call-remote). In these cases, you can make your function `async` without any other changes.
 
 ```python title="async_greeter.py"
 from great_ai import GreatAI
@@ -52,7 +52,7 @@ async def async_greeter(your_name: str) -> str:
 
 ## With decorators
 
-GreatAI can decorate already decorated functions. The only restriction is that [@GreatAI.create][great_ai.GreatAI.create] must come last. There are two built-in decorators that you can use to customise your function but you can you use any third-party decorator as well.
+GreatAI can decorate already decorated functions. The only restriction is that [@GreatAI.create][great_ai.GreatAI.create] must come last. There are two built-in decorators that you can use to customise your function, but you can use any third-party decorator as well.
 
 ### Using `@use_model`
 
@@ -69,10 +69,10 @@ def type_safe_greeter(your_name: str, model) -> str:
 assert type_safe_greeter('Andras').output == 'Hi Andras'
 ```
 
-1.  By default, the parameter named `model` will be replaced by the loaded model. This behaviour can be customised by setting the `model_kwarg_name`. This way, even multiple models can be injected into a single function.
+1. By default, the parameter named `model` will be replaced by the loaded model. This behaviour can be customised by setting the `model_kwarg_name`. This way, even multiple models can be injected into a single function.
 
 !!! important
-    You must call [@use_model][great_ai.use_model] before [@GreatAI.create][great_ai.GreatAI.create]. Note, that decorators are applied starting from the bottom-most one. Feel free to use [@use_model][great_ai.use_model] in other places of the codebase, it works equally well outside of GreatAI services. 
+    You must call [@use_model][great_ai.use_model] before [@GreatAI.create][great_ai.GreatAI.create]. Note that decorators are applied starting from the bottom-most one. Feel free to use [@use_model][great_ai.use_model] in other places of the codebase, and it works equally well outside GreatAI services. 
 
 ### Using `@parameter`
 
@@ -93,11 +93,11 @@ assert type_safe_greeter('Andras').output == 'Hi Andras'
 ```
 
 !!! important
-    You must call [@parameter][great_ai.parameter] before [@GreatAI.create][great_ai.GreatAI.create]. Note, that decorators are applied starting from the bottom-most one. Feel free to use [@parameter][great_ai.parameter] in other places of the codebase, it works equally well outside of GreatAI services. 
+    You must call [@parameter][great_ai.parameter] before [@GreatAI.create][great_ai.GreatAI.create]. Note that decorators are applied starting from the bottom-most one. Feel free to use [@parameter][great_ai.parameter] in other places of the codebase, and it works equally well outside GreatAI services. 
 
 ## Complex example
 
-Refer to the following example summarising the options you have when instantiating a GreatAI service.
+The following example summarises the options you have when instantiating a GreatAI service.
 
 ```python title="complex.py"
 from great_ai import save_model, GreatAI, parameter, use_model, log_metric
@@ -117,4 +117,4 @@ def add_number(positive_number: int, secret: int) -> int:
 assert add_number(1).output == 5
 ```
 
-1.  Refer to [the configuration page](/how-to-guides/configure-service) for specifying where to store your models. 
+1. Refer to [the configuration page](/how-to-guides/configure-service) for specifying where to store your models. 

@@ -10,7 +10,7 @@
 [![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 [![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 
-Applying AI is becoming increasingly easier but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps fixing this by allowing you to ==easily transform your prototype AI code into production-ready software==.
+Applying AI is becoming increasingly easier, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps fix this by allowing you to ==easily transform your prototype AI code into production-ready software==.
 
 ??? quote "Case studies"
     "There is a need to consider and adapt well established SE practices which have been ignored or had a very narrow focus in ML literature."
@@ -20,11 +20,11 @@ Applying AI is becoming increasingly easier but many case studies have shown tha
 
     "Because a mature system might end up being (at most) 5% machine learning code and (at least) 95% glue code, it may be less costly to create a clean native solution rather than re-use a generic package." &mdash; [Sculley et al.](https://www.researchgate.net/profile/Todd-Phillips/publication/319769912_Hidden_Technical_Debt_in_Machine_Learning_Systems/links/61e716d68d338833e37a7fd6/Hidden-Technical-Debt-in-Machine-Learning-Systems.pdf){ target=_blank }
 
-    "For example, practice 25 is very important for “Traceability", yet relatively weakly adopted. We expect that the results from this type of analysis can, in the future, provide useful guidance for practitioners in terms of aiding them to assess their rate of adoption for each practice and to create roadmaps for improving their processes.  &mdash; [Serban et al.](https://dl.acm.org/doi/abs/10.1145/3382494.3410681?casa_token=uCFz0dtDR6gAAAAA:4_8OMJ-5njwopYkB1KSGAu9JfbNq4nfa8LRE0fj84ckjfo-GgtcYQivZTGxal3M4haoA8r_xwpw){ target=_blank }
+    "For example, practice 25 is very important for "Traceability", yet relatively weakly adopted. We expect that the results from this type of analysis can, in the future, provide useful guidance for practitioners in terms of aiding them to assess their rate of adoption for each practice and to create roadmaps for improving their processes.  &mdash; [Serban et al.](https://dl.acm.org/doi/abs/10.1145/3382494.3410681?casa_token=uCFz0dtDR6gAAAAA:4_8OMJ-5njwopYkB1KSGAu9JfbNq4nfa8LRE0fj84ckjfo-GgtcYQivZTGxal3M4haoA8r_xwpw){ target=_blank }
 
 ## Features
 
-- [x] Save prediction traces of each prediction including arguments and model versions
+- [x] Save prediction traces of each prediction, including arguments and model versions
 - [x] Save feedback and merge it into a ground-truth database
 - [x] Version and store models and data on shared infrastructure *(MongoDB GridFS, S3-compatible storage, shared volume)*
 - [x] Automatically scaffolded custom REST API (and OpenAPI schema) for easy integration
@@ -72,7 +72,7 @@ def greeter(name: str) -> str:  #(2)
 2.  [Typing functions](https://docs.python.org/3/library/typing.html){ target=_blank } is recommended in general, however, not required for GreatAI to work.
 
 ??? note
-    In practice, `greeter` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either way, it is [imperative to have continuous oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and data you process especially in the context of AI/ML applications.
+    In practice, `greeter` could be an inference function of some AI/ML application. But it could also just wrap a black-box solution of some SaaS. Either way, it is [imperative to have continuous oversight](https://digital-strategy.ec.europa.eu/en/library/ethics-guidelines-trustworthy-ai){ target=_blank } of the services you provide and the data you process, especially in the context of AI/ML applications.
 
 ```sh title="terminal" 
 great-ai demo.py
@@ -88,7 +88,7 @@ great-ai demo.py
 
 ![scope of GreatAI](media/scope-simple.drawio.svg)
 
-GreatAI fits between the prototype and deployment phases of your (or your organisation's) AI development lifecycle. This is highlighted with blue in the diagram. Here, several best practices can be automatically implemented aiming to achieve the following attributes:
+GreatAI fits between the prototype and deployment phases of your (or your organisation's) AI development lifecycle. This is highlighted in blue in the diagram. Here, several best practices can be automatically implemented, aiming to achieve the following attributes:
 
 - **G**eneral: use any Python library without restriction
 - **R**obust: have error-handling and well-tested utilities out-of-the-box 
@@ -98,9 +98,9 @@ GreatAI fits between the prototype and deployment phases of your (or your organi
 
 ## Why GreatAI?
 
-There are other, existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.
+There are other existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.
 
-However, research indicates that professionals rarely use them. This may be due to their inherent setup and operating complexity. ==GreatAI is designed to be as simple to use as possible.== Its clear, high-level API and sensible default configuration makes it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively large effort.
+However, research indicates that professionals rarely use them. This may be due to their inherent setup and operational complexity. ==GreatAI is designed to be as simple to use as possible.== Its straightforward, high-level API and sensible default configuration make it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively great effort.
 
 
 <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;" markdown>
