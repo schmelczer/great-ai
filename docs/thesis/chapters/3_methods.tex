@@ -1,10 +1,10 @@
 \chapter{Methods} \label{chapter:methods}
 
-The chosen methodology for this study is Design Science which emphasises the need to design and investigate artifacts in their context \cite{wieringa2014design}. It consists of a design and an empirical cycle. The purpose of the former is to improve a problem context with a new or redesigned artifact, while in the latter, the problem is investigated, and its potential treatment is validated concurrently. This procedure seems fitting for our problem in consequence of its practical nature.
+The chosen methodology for this study is Design Science which emphasises the need to design and investigate artifacts in their context \cite{wieringa2014design}. It consists of a design and an empirical cycle. The purpose of the former is to improve a problem context with a new or redesigned artifact, while in the latter, the problem is investigated, and its potential treatment is validated concurrently. This strategy seems fitting for our problem in consequence of its practical nature.
 
 The design cycle shares similarities with Action Research \cite{davison2004principles} in which researchers attempt to solve a real-world problem while simultaneously studying the experience of solving said problem. As for the empirical cycle, the pragmatist approach is taken since the value of this research lies in its utility. Moreover, pragmatism adopts an engineering approach to research \cite{shull2007guide}, which happens to be in line with the philosophy of design science. Additionally, as no research method is without flaws, it is imperative to try to compensate for their weaknesses by applying multiple methods. Hence, the study also relies on interviews with professionals to validate the design decisions and determine the generalisability of \textit{GreatAI}.
 
-\section{Design \& empirical cycles}
+\section{Design cycle}
 
 The aim of \textit{GreatAI} can be summarised using the terminology of design science in the following way: 
 \textit{Facilitate the easy adoption of AI deployment best practices
@@ -18,11 +18,21 @@ The practical cases used for the evaluation are further elaborated in Chapter \r
 
 Overall, this problem context carries the properties of typical industry use cases: it utilises a wide range of natural language processing methods, contains complex interactions between the services, benefits from the integration of end-to-end feedback, and has to provide the clients with a platform that they can rely on within their organisation's core processes. Since the final ranking affects real people, explainability and robustness are also central questions.
 
-Before generalising, the framework's design is iteratively refined using the feedback acquired from applying it in practical contexts, which in this case is the research and development of a smaller and a more complex AI component using the work-in-progress framework. The treatment is finding a simple, less cognitively-straining-to-use design that still leads to high-quality deployments, the means of which will be defined in Section \ref{section:requirements}.
+\begin{figure}
+    \centering
+    \includegraphics[width=.75\linewidth]{figures/design-cycle.drawio.png}
+    \captionsetup{width=.9\linewidth}
+    \caption{Implementation of the Design Cycle of design science \cite{wieringa2014design} for our problem context of AI/ML deployments. The thinner arrows denote smaller but more frequent iterations.}
+    \label{fig:design-cycle}
+\end{figure}
+
+The goal is to find a simpler, less cognitively-straining-to-use design that still leads to high-quality deployments, the definition of which will be described in Section \ref{section:requirements}. Before generalising, the framework's design is iteratively refined using the feedback acquired from applying it in practical contexts, which in this case are the research and development of a smaller and a more complex AI component using the work-in-progress framework. 
+
+The design cycle summarising the research approach is shown in Figure \ref{fig:design-cycle} indicating the role of the case studies. The concerns arisen in the \textit{Treatment validation} iterations and their short discussions are highlighted in the form of \textit{Design notes}. Afterwards, they are addressed in the following \textit{Treatment design} iteration. This way, the issues are immediately addressed and the proposed solutions can be traced back to the problems prompting their introduction.
 
 \section{Applicability \& generalisability} \label{section:interview-setup}
 
-To conclusively answer \textbf{RQ3} and \textbf{RQ4}, interviews are conducted with a population of software engineers and data scientists with varying levels of professional background. Since my colleagues and I are likely to have a bias for (or against) the proposed design, the first step of checking its applicability in other practical contexts is to ask the opinion of non-affiliated practitioners.
+To conclusively answer \textbf{RQ3} and \textbf{RQ4}, interviews are conducted with a population of software engineers and data scientists with varying levels of professional background. The interview candidates were recruited from the recommendations of my acquaintances, who were kindly asked to seek out people from their professional networks with any connection to AI/ML. After the first few interviews, participants were also asked to suggest other candidates, preferably from different subfields. After two iterations of reaching out to potential interviewees personally, ten engineers and researchers eventually responded positively and participated in the study.
 
 First, before their interview, participants are requested to complete a questionnaire (shown in Appendix \ref{appendix:practices}) about their last completed AI project; the questions refer to the best practices implemented by \textit{GreatAI}. They are also advised to take a quick look at the tutorial page of the documentation. The interviews are divided into two halves. In the first part, after a brief introduction, interviewees are asked to solve a real-world task by finishing a partially completed example application using \textit{GreatAI}. They are also encouraged to think aloud so their feedback can be noted. Successfully completing the task creates a system implementing a known number of best practices. This way, the added value --- in terms of a larger number of implemented best practices --- can be quantitatively analysed by comparing the qualities of the finished implementation with the previously given answers. 
 

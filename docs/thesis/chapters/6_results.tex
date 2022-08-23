@@ -74,8 +74,8 @@ Allow experimentation with the inference code\textsuperscript{3}                
 Keep the model's API and documentation together\textsuperscript{3}                        & Dashboard and Swagger                          & \checkmark\checkmark   \\\hline
 Parallelise feature extraction\textsuperscript{3}                                         & \texttt{parallel\_map}                         & \checkmark\checkmark   \\\hline
 Cache predictions\textsuperscript{3}                                                      & \texttt{@GreatAI.create}                       & \checkmark\checkmark   \\\hline
-Async support for top-down chaining models\textsuperscript{3}                             & All decorators support async                   & \checkmark\checkmark   \\\hline
-Common schemas for common prediction tasks\textsuperscript{3}                             & \texttt{views}                                 & \checkmark             \\\hline
+Support asynchronous top-down chaining of models\textsuperscript{3}                       & All decorators support async                   & \checkmark\checkmark   \\\hline
+Implement standard schemas for common prediction tasks\textsuperscript{3}                 & \texttt{views}                                 & \checkmark             \\\hline
 
 \end{tabular}}
 \begin{tablenotes}
@@ -115,9 +115,7 @@ Because the survey's 15 questions were compiled from the \textit{Fully automated
 
 \subsection{Technology acceptance}
 
-Participants filled out a form (shown in Appendix \ref{appendix:questions}) after finishing their first deployment with \textit{GreatAI} to provide data for creating the technology acceptance model of the problem context. The survey contained 12 questions from 3 categories, which could be rated on a 7-point Likert scale. Following the methodology of \cite{cruz2019catalog}, the connections between the Perceived Utility (PU), Perceived Ease Of Use (PEOU), and Intention To Use (ITU) dimensions of TAM were analysed. Two statistically significant ($P \leq 0.05$) correlations were uncovered: between PU and ITU ($r_{Pearson} = 0.81$ with $p = 0.0048$); and PEOU and ITU ($r_{Pearson} = 0.80$ with $p = 0.0068$). Learning from the findings of prior case studies, it is reasonable to believe that both the \textit{perceived utility} and the \textit{perceived ease of use} play an equally important role in influencing professionals' \textit{intention to use} the deployment framework.
-
-\begin{table}
+\begin{table}[H]
 \centering
 \captionsetup{width=.9\linewidth}
 \caption{Aggregated results of the TAM survey (sample size = 10) presented in Appendix \ref{appendix:questions}. The input values range from 1 to 7.}
@@ -130,6 +128,8 @@ Participants filled out a form (shown in Appendix \ref{appendix:questions}) afte
 \textbf{Standard deviation} & 1.039                          & 0.850                      & 1.322                     \\\hline
 \end{tabular}}
 \end{table}
+
+Participants filled out a form (shown in Appendix \ref{appendix:questions}) after finishing their first deployment with \textit{GreatAI} to provide data for creating the technology acceptance model of the problem context. The survey contained 12 questions from 3 categories, which could be rated on a 7-point Likert scale. Following the methodology of \cite{cruz2019catalog}, the connections between the Perceived Utility (PU), Perceived Ease Of Use (PEOU), and Intention To Use (ITU) dimensions of TAM were analysed. Two statistically significant ($P \leq 0.05$) correlations were uncovered: between PU and ITU ($r_{Pearson} = 0.81$ with $p = 0.0048$); and PEOU and ITU ($r_{Pearson} = 0.80$ with $p = 0.0068$). Learning from the findings of prior case studies, it is reasonable to believe that both the \textit{perceived utility} and the \textit{perceived ease of use} play an equally important role in influencing professionals' \textit{intention to use} the deployment framework.
 
 The summary of the answers is presented in Table \ref{table:tam}. The assessment of \textit{ease of use} lags behind the rest, but it is still quite high. It may be possible that PEOU would go up with further use. Nevertheless, the high \textit{perceived utility} implies that \textit{GreatAI} shows its value early on. This, combined with the correlations uncovered within the context's technology acceptance model, validates the hypothesis that focusing on good API design is just as necessary as providing practical features.
 
@@ -181,11 +181,13 @@ Secondly, the survey answers and, in general, the interviewees may be subject to
 
 \section{Future work} 
 
-The primary purpose of the library was to serve as a proxy through which its design decisions could be tested and evaluated in their practical context. For this reason, its design aimed to be a proof-of-principle for validating hypotheses and answering research questions. After successfully doing that, it has been turned into a practical software library suitable for production-use\footnote{\href{https://pypi.org/project/great-ai/}{pypi.org/project/great-ai}}. Although it has already proved its utility, it has also shown that extending its functionality would be worthwhile. Therefore, many potential improvements to \textit{GreatAI} are presented below primarily from the needs arisen during the exit interviews.
+The primary purpose of the library was to serve as a proxy through which its design decisions could be tested and evaluated in their practical context. For this reason, its design aimed to be a proof-of-principle for validating hypotheses and answering research questions. After successfully doing that, it has been turned into a practical software library suitable for production-use\footnote{\href{https://pypi.org/project/great-ai/}{pypi.org/project/great-ai}}. 
  
+The library's main limitations come from its bias toward NLP deployments. This is not unreasonable given the design's explorative nature and the context of the case studies. Nevertheless, future work must focus on introducing and balancing support for many more fields' deployments. Although \textit{GreatAI} has already proved its utility, it has also shown that generalising and extending its functionality would be worthwhile. Therefore, many potential improvements are presented below, primarily from the needs arisen during the exit interviews.
+
 \subsection{More AI/ML fields}
 
-The cases presented in Chapter \ref{chapter:case} revolved around NLP. This, of course, heavily influenced the design process. The two most notable effects can be found in the REST API's \texttt{/predict} endpoint and some \texttt{utilities} functions. The former is streamlined to accept JSON-compatible data, while the latter gives robust feature extraction support for only textual input. Supporting the easy, direct upload of larger non-JSON files --- e.g. by saving them to S3 and showing a preview for them on the Dashboard's trace table --- and extending \texttt{utilities} to handle multimedia formats should be sufficient for widely expanding the scope of applicability of \textit{GreatAI}.
+The cases presented in Chapter \ref{chapter:case} revolved around NLP. This, of course, heavily influenced the design process. The two most notable effects can be found in the REST API's \texttt{/predict} endpoint and some \texttt{utilities} functions. The former is streamlined to accept JSON-compatible data, while the latter gives robust feature extraction support for only textual input. Supporting the easy, direct upload of larger non-JSON files --- e.g. by saving them to S3 and showing a preview of them on the Dashboard's trace table --- and extending \texttt{utilities} to handle multimedia formats should be sufficient for counteracting the NLP bias. Hence, widely expanding the scope of applicability of \textit{GreatAI}. As we have seen in Section \ref{section:architecture}, the architecture is otherwise adequately general; therefore, incremental extensions can be applied.
 
 \subsection{More best practices}
 
