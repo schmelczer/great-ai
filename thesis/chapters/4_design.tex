@@ -38,7 +38,7 @@ The programming language (PL) of the library should be its only non-general prop
 
 The requirements were chosen stemming from their general importance and potential to be mostly handled (implemented) by a software framework. That is why these provide an ideal initial direction for tackling the issue. Of course, these do not cover all best practices; for instance, the ones relating to organisational processes fall outside the realm of computer science.
 
-\section{Design principles}
+\section{Design principles} \label{section:principles}
 
 Before diving into the concrete issues solved, let us detail the principles that should be used for implementing them in the scope of this framework. As implied in Section \ref{section:scope}, the Unix philosophy \cite{ritchie1978unix,salus1994quarter} of software design is followed. Most notably, the design goal that encourages to \textit{write programs that do one thing and do it well.}\footnote{Of course, \textit{write programs to work together} is also very much applicable since allowing interoperability is one of the core requirements for \textit{GreatAI}.}. Apart from providing a clear and simple picture of the intended use cases for the library, this is also in line with the main notion of \textit{A Philosophy of Software Design} \cite{ousterhout2018philosophy}: APIs should be narrow and deep. A narrow width refers to having a small exposed surface area, i.e. having a small number of functions and classes in the public API. In contrast, depth implies that each accomplishes an involved, complex goal. 
 
@@ -81,3 +81,31 @@ Subjectively, a key component of good DX is \textit{Progressive evaluation} thro
 At the same time, Python codebases are rarely strictly object-oriented (OO). They are a mix of the functional, data-driven, and OO paradigms. Consequently, relying on classes for grouping related functions is not always desirable; therefore, it is even more imperative to name similar functions similarly. This helps discoverability and chunking \cite{hermans2021programmer}, which amounts to quicker comprehension.
 
 There is one more reason to prefer consistency: humans have limited short-term memory (STM) \cite{miller1956magical}. Even though flags as function parameters are frowned upon by some \cite{martin2009clean}, they are useful, especially when configuring libraries. However, if there is no convention for the default value of a flag, clients have to remember the flag's name and initial value simultaneously, quickly overloading their STM. Thus, in the codebase, all defaults must be the same, let us say, \texttt{False}. Sometimes, it can result in a \textit{disable} prefix, which may turn into a double negation. Nevertheless, users should never encounter this since the doubly-negated version is the default; thus, it is only singly negated when overriding it. This approach also implies that something may be recommended to be turned on by default.
+
+\section{Architecture} \label{section:architecture}
+
+Although API design has been the central subject so far, it is worth remembering that APIs are usually expected to have corresponding implementations. \textit{GreatAI} is no exception. As laid out in Section \ref{section:principles}, we strive for narrow and deep interfaces; thus, it is time to address the \textit{depth} component.
+
+\textit{GreatAI} stands on the shoulders of numerous open-source packages and integrates them to provide its various features. The most fundamental dependencies and the entire library in context are shown in Figure \ref{fig:technologies}. Given a Python script or a Jupyter notebook, \textit{GreatAI} transforms the specified prediction functions into a production-ready deployment, deployable either as a Docker image, WSGI-server, or an executable relying on \texttt{uvicorn}. The complete list of dependencies can be found in the repository\footnote{\href{https://github.com/schmelczer/great-ai/blob/main/pyproject.toml}{github.com/schmelczer/great-ai/blob/main/pyproject.toml}}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.65\linewidth]{figures/technologies.png}
+    \captionsetup{width=.9\linewidth}
+    \caption{A very high-level overview of \texttt{GreatAI} in its context. The main dependencies are also highlighted.}
+    \label{fig:technologies}
+\end{figure}
+
+The general theme in the implementation is that each explicit best practice should have its distinct, loosely-coupled functions or classes. When collaboration opportunities arise, such as persisting the model versions (\nth{1} component) into prediction traces (\nth{2} component), there are three primary conduits for realising them. These are the \texttt{context} object responsible for the global configuration per process, the \texttt{FunctionMetadataStore} specifying the expected behaviour of each prediction function, and finally the \texttt{TracingContext} that is created anew for each prediction input (session).
+
+After refining the framework with feedback gathered from case studies and users, we will end up with the core architecture presented in Figure \ref{fig:architecture}. The implementation is mixed-paradigm, combining the expressiveness of functional and the design patterns of object-oriented programming (OOP) in order to maintain an overall low complexity. Reflection is also utilised, especially for run-time type-checking and generating the API definitions and Dashboard components. Regardless, the architecture is still presented with a syntax similar to the class diagrams of UML2 \cite{Rumbaugh2004} because it provides the freedom to express even the non-OOP design aspects.
+
+For the sake of brevity, Figure \ref{fig:architecture} does not show all fields, and some related entities have been combined, e.g. the \textit{GroundTruthAPI} box represents the \texttt{add\_ground\_truth}, \texttt{query\_ground\_truth}, and \texttt{delete\_ground\_truth} functions. The client project can also access most of the presented entities, but these optional dependency arrows are not shown in the diagram. The \texttt{utilities} submodule is also left unexpanded; almost all of its functions are orthogonal with the exception of \texttt{parallel\_map}. The latter follows a textbook producer-consumer model facilitated by queues and event signals \cite{wang2020producer}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/architecture.png}
+    \captionsetup{width=.9\linewidth}
+    \caption{The core architecture of \textit{GreatAI} illustrated with syntax loosely-based on UML2 \cite{Rumbaugh2004}. Given its framework nature, the expected client project and the actor integrating it are highlighted; the associations between the framework and the client project are achieved through the use of decorators.}
+    \label{fig:architecture}
+\end{figure}
