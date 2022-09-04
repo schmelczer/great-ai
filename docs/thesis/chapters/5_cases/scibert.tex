@@ -23,11 +23,11 @@ A formulaic expression is a phrase with zero or more ``slots'' which, when fille
 
 In order to compile a new dataset, experts are asked to judge sentences that passed an \textit{intention check}. This pooling approach is commonly used in information retrieval \cite{schutze2008introduction}. The filtering is expected to sieve out sentences that are probably not relevant from a technology-transfer perspective using Iwatsuki's formulaic expression intention classes. Subsequently, relevance judgements --- in the form of \textit{interesting} or \textit{not interesting} labels --- are gathered for the remaining sentences. This method turns the extractive summarisation into a binary classification task for which a SciBERT model \cite{beltagy2019scibert} can be fine-tuned. Ultimately, the summaries are derived from sentences selected by the classifier trained on the experts' annotations.
 
-We have to note two possible shortcomings of this setup: firstly, the FE intentions are assumed to be strongly correlated with the sought-after aspect. This may or may not be true. Secondly, only the individual relevance of the sentences is considered instead of the overall relevance (utility) of the summary. Nonetheless, it is expected that stemming from the length of the documents and the sparseness of the selected sentences, that any combination of them is likely to have low redundancy.
+We have to note two possible shortcomings of this setup: firstly, the FE intentions are assumed to be strongly correlated with the sought-after \textit{tech-transfer opportunities} aspect. This may or may not be true. Secondly, only the individual relevance of the sentences is considered instead of the overall relevance (utility) of the summary. Nonetheless, it is expected that stemming from the length of the documents, and the sparseness of the selected sentences, any combination of them is likely to have low redundancy.
 
 \subsection{Results}
 
-For the first iteration, 1500 sentences were selected for two experts to annotate in a binary fashion according to strict guidelines. An example is shown in Figure \ref{fig:annotator}. Afterwards, for measuring the interrater agreement, Cohen's kappa \cite{cohen1960coefficient} is calculated as shown in Equation \ref{equation:kappa}, which turns out to be \textbf{0.4310} for the two annotators. This happens to be just above the lower end of \textit{moderate agreement}. However, we have to note that the original quality ranges are often criticised for being too relaxed \cite{mchugh2012interrater}. Regardless, in the case of summarisation, Verberne et al. \cite{verberne2018creating} argue that reasonable end-quality can be reached even when the interrater agreement is relatively low. The ground truth is determined by taking the logical disjunction of the annotations.
+For the first iteration, 1500 sentences were selected for two experts to annotate in a binary fashion according to strict guidelines. An example is shown in Figure \ref{fig:annotator}. Afterwards, for measuring the interrater agreement, Cohen's kappa \cite{cohen1960coefficient} is calculated as shown in Equation \ref{equation:kappa}, which turns out to be \textbf{0.43} for the two annotators. This happens to be just above the lower end of \textit{moderate agreement}. Even though the original quality ranges are sometimes criticised for being too relaxed for the medical domain \cite{mchugh2012interrater}, some leniency is acceptable for many NLP tasks due to their subjectiveness. Regardless, in the case of summarisation, Verberne et al. \cite{verberne2018creating} argue that reasonable end-quality can be reached even when the interrater agreement is relatively low. The ground truth is determined by taking the logical disjunction of the annotations.
 
 \begin{figure}
     \centering
@@ -51,17 +51,33 @@ The next step is fine-tuning SciBERT with the help of Hugging Face \texttt{trans
 \textbf{Utility of LargeFiles} For the purposes of the documentation, the fine-tuning was conducted in the Google Colab online environment, which is excellent for providing anyone with GPU time for free. However, notebook environments are ephemeral, resulting in the need to manually upload and download all relevant data whenever a new virtual machine (VM) instance is granted. The \texttt{LargeFile} implementation alleviated this problem by automatically handling the uploads and downloads. Of course, first, backwards compatibility had to be solved for Python 3.7, the only available environment in Colab.
 \end{displayquote}
 
-The best validation results were achieved after eight epochs which is slightly more than expected but is presumably due to the weight decay. The confusion matrix on the test split can be seen in Figure \ref{fig:scibert-confusion}: regardless of the task's subjective definition, SciBERT achieves good quality indicated by an F1-score of \textbf{0.89}.
+The best validation results were achieved after eight epochs which is slightly more than expected but is presumably due to the weight decay. The confusion matrix on the test split can be seen in Figure \ref{fig:scibert-confusion}, and the per class accuracy metrics in Table \ref{table:scibert-pr}. Despite the task's subjective definition, SciBERT achieves good quality, indicated by an F1-score of \textbf{0.80}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.4\linewidth]{figures/scibert-confusion.png}
+    \includegraphics[width=0.55\linewidth]{figures/scibert-confusion.png}
     \captionsetup{width=.9\linewidth}
-    \caption{Confusion matrix of the fine-tuned SciBERT model on the \textit{summary candidate sentences} dataset. The values are globally normalised and represent percentages.}
+    \caption{Confusion matrix of the fine-tuned SciBERT model on the \textit{summary candidate sentences} dataset.}
     \label{fig:scibert-confusion}
 \end{figure}
 
-Let us check how well the selected sentences correspond with the tech-transfer potential. Users and in-house experts can rate publications (from a tech-transfer perspective) by assigning them to one of four categories: \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} with \texttt{A} being the most and \texttt{D} the least promising. This feedback is stored and used for analytic and training purposes. Since both the feedback grade and the ``highlights'' are supposed to reflect the same aspect of papers, therefore, we can reasonably expect some correlation between them.
+\begin{table}
+\centering
+\begin{threeparttable}
+\caption{Accuracty metrics of the fine-tuned SciBERT model on the \textit{summary candidate sentences} dataset.}
+\label{table:scibert-pr}
+\setlength{\tabcolsep}{0.75em} % for the horizontal padding
+{\renewcommand{\arraystretch}{1.2} % for the vertical padding
+\begin{tabular}{|l|r|r|r|}
+\hline
+{}                    & \textbf{Precision}  & \textbf{Recall}  & \textbf{Support} \\\hline
+\textsc{non-relevant} &      0.93           &     0.83         &      191         \\\hline
+\textsc{relevant}     &      0.73           &     0.88         &      109         \\\hline
+\end{tabular}}
+\end{threeparttable}
+\end{table}
+
+Let us check how well the selected sentences correspond with the tech-transfer potential. Users and in-house experts can rate publications (from a tech-transfer perspective) by assigning them to one of four categories: \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} with \texttt{A} being the most and \texttt{D} the least promising. This feedback is stored and used for analytic and training purposes. Since both the feedback grade and the relevant (summary candidate) sentences are supposed to reflect the same aspect of papers, we can reasonably expect some correlation between the grades and relevant sentence counts.
 
 Figure \ref{fig:histograms} shows the ratio of summary candidate sentences as predicted by the fine-tuned model in 4 categories (grades) of papers. This dataset does not overlap with the training data; hence, the results come solely from the model's ability to generalise. It is interesting to see that the Spearman's rank correlation coefficient \cite{spearman1961proof} between the normalised ``highlights'' counts and the ratings of papers is \textbf{0.4784} and is statistically significant ($P = 5.4 \times 10^{-74}$). This proves the presence of a monotonic association. For context, the correlation between the grades and the number of sentences chosen by the baseline approach is 0.06597 ($P = 0.03$). We can conclude that the classifier's output is indicative of publications' tech-transfer potential. 
 
@@ -69,7 +85,7 @@ Figure \ref{fig:histograms} shows the ratio of summary candidate sentences as pr
     \centering
     \includegraphics[width=0.85\linewidth]{figures/highlights-histograms.png}
     \captionsetup{width=.9\linewidth}
-    \caption{Distribution of mean predicted summary candidate sentence counts in 4 categories. Category \texttt{A} corresponds to the most, while \texttt{D} to the least interesting papers based on mean user feedback. The sample size is 1406 (\texttt{D}=715, \texttt{C}=309, \texttt{B}=198, \texttt{A}=184). The histograms are on the same scale.}
+    \caption{Distribution of mean predicted summary candidate sentence counts (refered to as \textit{highlights}) in 4 categories. Category \texttt{A} corresponds to the most, while \texttt{D} to the least interesting papers based on mean user feedback. The sample size is 1406 (\texttt{D}=715, \texttt{C}=309, \texttt{B}=198, \texttt{A}=184). The histograms are on the same scale.}
     \label{fig:histograms}
 \end{figure}
 
