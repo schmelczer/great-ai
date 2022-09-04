@@ -22,7 +22,12 @@
             left=2.5cm,
             right=2.5cm,
             top=2.5cm,
-            bottom=3cm]{geometry}
+            bottom=2.65cm]{geometry}
+\usepackage{array}
+\usepackage{ragged2e}
+
+% Left-aligned fixed-width table column
+\newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
 
 % Header & footer
 \pagestyle{fancy}
