@@ -17,7 +17,7 @@ This is not the case for \textit{Log production predictions with the model's ver
 
 \label{table:best-practices-1}
 {\renewcommand{\arraystretch}{1.2} % for the vertical padding
-\begin{tabular}{p{7cm}@{\hskip 0.5cm}l@{\hskip 0cm}c} \hline
+\begin{tabular}{P{7cm}@{\hskip 0.5cm}l@{\hskip 0cm}c} \hline
 
 \textbf{Best practice}                                                                    & \textbf{Implementation}                        & \textbf{Support}       \\\hline
 Use sanity checks for all external data sources\textsuperscript{1}                        & \texttt{@parameter}                            & \checkmark             \\\hline
@@ -52,7 +52,7 @@ Log production predictions with the model's version and input data\textsuperscri
 
 \label{table:best-practices-2}
 {\renewcommand{\arraystretch}{1.2} % for the vertical padding
-\begin{tabular}{p{7cm}@{\hskip 0.5cm}l@{\hskip 0cm}c} \hline
+\begin{tabular}{P{7cm}@{\hskip 0.5cm}l@{\hskip 0cm}c} \hline
 
 \textbf{Best practice}                                                                    & \textbf{Implementation}                        & \textbf{Support}       \\\hline
 Execute validation techniques: error rates and cross-validation\textsuperscript{2}        & \texttt{*\_ground\_truth}                      & \checkmark             \\\hline
@@ -103,13 +103,13 @@ The practitioners were first asked to fill out a questionnaire about their lates
 
 The y-axis of Figure \ref{fig:adoption} is calculated by discarding the \textit{Not applicable} answers and projecting the 5-point Likert scale to a range from 0 to 1, which is subsequently averaged over all questions. The overall mean adoption rate/extent is just above 0.5, which equates to the \textit{Neither agree nor disagree} label. These data are in line with the findings of Serban et al. \cite{serban2020adoption}.
 
-Because the survey's 15 questions were compiled from the \textit{Fully automated} rows of Tables \ref{table:best-practices-1} and \ref{table:best-practices-2}, that means that when using \textit{GreatAI}, they are all implemented automatically. Consequently, the adoption rate/extent is doubled immediately: this is the added value of \textit{GreatAI}\footnote{As explained earlier, measuring quality as a function of best practice count would be dubious. Thus, the achieved magnitude of the doubling is irrelevant; however, the direction of change is.}. Moreover, this provides further evidence for answering \textbf{RQ3} showing the extent of automatically implemented practices over non-\textit{GreatAI} deployments.
+Because the survey's 15 questions were compiled from the \textit{Fully automated} rows of Tables \ref{table:best-practices-1} and \ref{table:best-practices-2}, that means that when using \textit{GreatAI}, they are all implemented automatically. Consequently, the adoption rate/extent is doubled immediately just by wrapping the inference function with \texttt{@GreatAI.create}: this is the added value of \textit{GreatAI}\footnote{As explained earlier, measuring quality as a function of best practice count would be dubious. Thus, the achieved magnitude of the doubling is irrelevant; however, the direction of change is not.}. Moreover, this provides further evidence for answering \textbf{RQ3} showing the extent of automatically implemented practices over non-\textit{GreatAI} deployments.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{figures/best-practices.png}
     \captionsetup{width=.9\linewidth}
-    \caption{Best practices adoption rate as a function of software engineering experience. The point sizes denote the practitioners' experience in Data Science (DS). The correlation between the axes is significant ($r_{Pearson} = 0.67$ with $p = 0.0033$).}
+    \caption{Best practices adoption rate as a function of software engineering (SE) and Data Science (DS) experience. SE experience is shown on the horizontal axis, while the point sizes denote the practitioners' experience in DS. The correlation between the axes is significant ($r_{Pearson} = 0.67$ with $p = 0.0033$).}
     \label{fig:adoption}
 \end{figure}
 
@@ -118,30 +118,31 @@ Because the survey's 15 questions were compiled from the \textit{Fully automated
 \begin{table}[H]
 \centering
 \captionsetup{width=.9\linewidth}
-\caption{Aggregated results of the TAM survey (sample size = 10) presented in Appendix \ref{appendix:questions}. The input values range from 1 to 7.}
+\caption{TAM survey (presented in Appendix \ref{appendix:questions}, sample size = 10) results per variable. The input values range from 1 to 7.}
 \label{table:tam}
 {\renewcommand{\arraystretch}{1.1} % for the vertical padding
-\begin{tabular}{|c|r|r|r|} \hline
+\begin{tabular}{|r|l|l|l|} \hline
                             & \textbf{Perceived ease of use} & \textbf{Perceived utility} & \textbf{Intention to use} \\\hline
-\textbf{Median}             & 5.750                          & 6.375                      & 6.250                     \\\hline
-\textbf{Mean}               & 5.450                          & 6.125                      & 5.950                     \\\hline
-\textbf{Standard deviation} & 1.039                          & 0.850                      & 1.322                     \\\hline
+\textbf{Median}             & 5.8                          & 6.4                      & 6.3                     \\\hline
+\textbf{Mean}               & 5.5                          & 6.1                      & 6.0                     \\\hline
+\textbf{Standard deviation} & 1.0                          & 0.9                      & 1.3                     \\\hline
+\textbf{Cronbach's alpha}   & 0.77                         & 0.88                     & 0.95                     \\\hline
 \end{tabular}}
 \end{table}
 
-Participants filled out a form (shown in Appendix \ref{appendix:questions}) after finishing their first deployment with \textit{GreatAI} to provide data for creating the technology acceptance model of the problem context. The survey contained 12 questions from 3 categories, which could be rated on a 7-point Likert scale. Following the methodology of \cite{cruz2019catalog}, the connections between the Perceived Utility (PU), Perceived Ease Of Use (PEOU), and Intention To Use (ITU) dimensions of TAM were analysed. Two statistically significant ($P \leq 0.05$) correlations were uncovered: between PU and ITU ($r_{Pearson} = 0.81$ with $p = 0.0048$); and PEOU and ITU ($r_{Pearson} = 0.80$ with $p = 0.0068$). Learning from the findings of prior case studies, it is reasonable to believe that both the \textit{perceived utility} and the \textit{perceived ease of use} play an equally important role in influencing professionals' \textit{intention to use} the deployment framework.
+Participants filled out a form (shown in Appendix \ref{appendix:questions}) after finishing their first deployment with \textit{GreatAI} to provide data for creating the technology acceptance model of the problem context. The survey contained ten questions from three categories, which could be rated on a 7-point Likert scale. The summary of the answers is presented in Table \ref{table:tam}. The high Cronbach's alpha values indicate strong internal consistency \cite{nunnally1994psychometric} for each TAM dimension; thus, averaging the responses per category is semantically meaningful.
 
-The summary of the answers is presented in Table \ref{table:tam}. The assessment of \textit{ease of use} lags behind the rest, but it is still quite high. It may be possible that PEOU would go up with further use. Nevertheless, the high \textit{perceived utility} implies that \textit{GreatAI} shows its value early on. This, combined with the correlations uncovered within the context's technology acceptance model, validates the hypothesis that focusing on good API design is just as necessary as providing practical features.
+Following the methodology of \cite{cruz2019catalog}, the connections between the Perceived Utility (PU), Perceived Ease Of Use (PEOU), and Intention To Use (ITU) dimensions of TAM were analysed. Two statistically significant ($P \leq 0.05$) correlations were uncovered: between PU and ITU ($r_{Pearson} = 0.81$ with $p = 0.0048$); and PEOU and ITU ($r_{Pearson} = 0.80$ with $p = 0.0068$). Learning from the findings of prior case studies, it is reasonable to believe that both the \textit{perceived utility} and the \textit{perceived ease of use} play an equally important role in influencing professionals' \textit{intention to use} the deployment framework.
+
+The assessment of \textit{ease of use} lags behind the rest, but it is still quite high. It may be possible that PEOU would go up with further use. Nevertheless, the high \textit{perceived utility} implies that \textit{GreatAI} shows its value early on. This, combined with the correlations uncovered within the context's technology acceptance model, validates the hypothesis that focusing on good API design is just as necessary as providing practical features.
 
 \subsection{Task solving \& exit interviews}
 
-In order to give qualitative depth to the previously presented quantitative results, it is time to discuss the main segment of the interviews. The participants' backgrounds cover a vast and fascinating cross-section of industrial AI/ML: one of them researched market prediction models for the Hungarian State Treasury, but building an upcoming digital bank's core services, investigating companies' AI use as part of due diligence processes, intrusion detection from network packet traces, creating pose-recognition for people with disabilities, and predicting Sun activity at the European Space Agency are just some of the core activities they had been doing recently. Stemming from this diversity, these semi-structured interviews could be expected to provide valuable insights into the generalisability of \textit{GreatAI}.
+In order to give qualitative depth to the previously presented quantitative results, it is time to discuss the main segment of the interviews. The participants' backgrounds cover a vast and fascinating cross-section of industrial AI/ML. 
 
-First, the volunteers were asked to skim through the library's documentation beforehand, and they were also given a short verbal overview during the one-on-one sessions. This was followed by having them solve a prepared deployment task\footnote{Available at \href{https://github.com/schmelczer/great-ai-interview-task}{github.com/schmelczer/great-ai-interview-task}.}, which is a more straightforward instance of the AI development lifecycle presented in the \textit{GreatAI} tutorials. The training part of the task had already been done, and the participants only had to deploy a trained classifier. The interviews took approximately one and a half hours each.
+The financial sector was represented by a researcher working on market prediction models for the Hungarian State Treasury and two people building an upcoming digital bank's core services. Image processing contexts were illustrated by professionals predicting Sun activity at the European Space Agency and different ones creating pose-recognition at a startup for people with disabilities using 3D cameras. Moreover, investigating companies' AI use as part of due diligence processes and intrusion detection from network packet traces are just some of the other core activities the interviewees had been doing recently. Stemming from this diversity, these semi-structured interviews could be expected to provide valuable insights into the generalisability of \textit{GreatAI}.
 
-The guidelines proposed by Halcomb et al. \cite{halcomb2006verbatim} are followed for collecting information from interviews and reporting it. It is a reflexive, iterative process which starts by recording participants (with their permission) and concurrent note-taking. Reflective journaling is immediately done post-interview, which is subsequently extended and revised by listening to the recordings. Afterwards, the gathered information is interpreted by applying the methodology of thematic analysis \cite{alhojailan2012thematic}.
-
-Thematic analysis is an iterative qualitative investigation technique consisting of labelling, correlating, and structuring the central recurring topics raised during discussions. It has been successfully used in previous software engineering studies for extracting emergent patterns \cite{haakman2021ai,cruz2019catalog}. After labelling each aspect of the feedback, and two iterations of merging redundant or related topics, we end up with three overarching themes: \textit{Functionality}, \textit{API}, and \textit{Responsibility to adopt}. As we will soon see, these correspond to the \textit{perceived utility}, \textit{perceived ease of use}, and \textit{intetion to use} components of TAM moderately well.
+The methodology of Section \ref{section:interview-setup} was followed by applying reflective journaling and thematic analysis. After labelling each aspect of the feedback, and two iterations of merging redundant or related topics, we end up with three overarching themes: \textit{Functionality}, \textit{API}, and \textit{Responsibility to adopt}. As we will soon see, these correspond to the \textit{perceived utility}, \textit{perceived ease of use}, and \textit{intetion to use} components of TAM moderately well.
 
 \paragraph{Functionality} The library's feature-set was complimented during most interviews, with one participant noting that, although the overall number of features is relatively small, most of them are utilised in most cases. Similarly, the \texttt{utilities} submodule was appreciated for helping greatly in the interview task, but non-NLP researchers noted its likely inadequacy for their area. Still, they would like to see ``bundle'' or ``toolbox''-style modules for their fields because it would save them from a lot of copy-pasting.
 
@@ -181,13 +182,15 @@ Secondly, the survey answers and, in general, the interviewees may be subject to
 
 \section{Future work} 
 
-The primary purpose of the library was to serve as a proxy through which its design decisions could be tested and evaluated in their practical context. For this reason, its design aimed to be a proof-of-principle for validating hypotheses and answering research questions. After successfully doing that, it has been turned into a practical software library suitable for production-use\footnote{\href{https://pypi.org/project/great-ai/}{pypi.org/project/great-ai}}. 
+The primary purpose of the library was to serve as a proxy through which its design decisions could be tested and evaluated in their practical context. For this reason, its design aimed to be a proof-of-principle for validating hypotheses and answering research questions. After successfully doing that, it has been turned into a practical software library suitable for production-use\footnote{Available at \href{https://pypi.org/project/great-ai/}{pypi.org/project/great-ai} and \href{https://hub.docker.com/repository/docker/schmelczera/great-ai}{hub.docker.com/repository/docker/schmelczera/great-ai}.}. 
  
 The library's main limitations come from its bias toward NLP deployments. This is not unreasonable given the design's explorative nature and the context of the case studies. Nevertheless, future work must focus on introducing and balancing support for many more fields' deployments. Although \textit{GreatAI} has already proved its utility, it has also shown that generalising and extending its functionality would be worthwhile. Therefore, many potential improvements are presented below, primarily from the needs arisen during the exit interviews.
 
-\subsection{More AI/ML fields}
+\subsection{More ML fields}
 
-The cases presented in Chapter \ref{chapter:case} revolved around NLP. This, of course, heavily influenced the design process. The two most notable effects can be found in the REST API's \texttt{/predict} endpoint and some \texttt{utilities} functions. The former is streamlined to accept JSON-compatible data, while the latter gives robust feature extraction support for only textual input. Supporting the easy, direct upload of larger non-JSON files --- e.g. by saving them to S3 and showing a preview of them on the Dashboard's trace table --- and extending \texttt{utilities} to handle multimedia formats should be sufficient for counteracting the NLP bias. Hence, widely expanding the scope of applicability of \textit{GreatAI}. As we have seen in Section \ref{section:architecture}, the architecture is otherwise adequately general; therefore, incremental extensions can be applied.
+The cases presented in Chapter \ref{chapter:case} revolved around NLP. This, of course, heavily influenced the design process. The two most notable effects can be found in the REST API's \texttt{/predict} endpoint and some \texttt{utilities} functions. The former is streamlined to accept JSON-compatible data (which caters to textual and tabular data), while the latter gives robust feature extraction support only for textual input. However, sound, image, and video are also widely taken as input. Furthermore, with the rise of multimodal models \cite{gao2020survey}, even different combinations of them may be simultaneously taken as input.
+
+Supporting the easy, direct upload of larger non-JSON files --- e.g. by saving them to S3 and showing a preview of them on the Dashboard's traces table --- and extending \texttt{utilities} to handle multimedia formats should be sufficient for counteracting the NLP bias. Hence, widely expanding the scope of applicability of \textit{GreatAI}. As we have seen in Section \ref{section:architecture}, the architecture is otherwise adequately general; therefore, incremental extensions can be applied.
 
 \subsection{More best practices}
 

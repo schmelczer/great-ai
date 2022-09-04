@@ -1,3 +1,4 @@
+\newpage
 \section{Domain classification with Naïve Bayes} \label{section:simple-case}
 
 Using different models for slight variations of the same problem is commonplace in the industry. For instance, UberEats has a vast hierarchical set of models for every country, region, and city for calculating the estimated time of delivery \cite{li2017scaling}. We have also found that in order to best process an academic publication, knowing its domain is essential. One of the reasons for this can be the wildly different vocabularies of different domains. For example, the term \textit{framework} in computer science almost always refers to a software artifact (usually implying high tech-transfer potential). In contrast, in most other domains, \textit{framework} is used to describe theoretical models that are less central to practical applications. Of course, it is not merely the meaning of the terms but, more importantly, their distribution that varies significantly. Therefore, the topic of this section is to design and develop a domain prediction classifier for academic papers.
@@ -14,17 +15,17 @@ Prior work evaluated SciBERT \cite{beltagy2019scibert} --- a BERT \cite{devlin20
 
 \subsection{Data}
 
-Two datasets are considered for the experiments: SciBERT's MAG and the SSC. The former is used to compare the results with SciBERT's, while the latter is utilised for training a model for production purposes because it has 19 labels compared to MAG's seven, and it also contains abstracts instead of just sentences; thus, it is more fitting for our practical use case.
-
-SciBERT's version of the MAG dataset has 84 thousand and 22.3 thousand sentences in its train and test splits, respectively. These are mostly in English and have all punctuation and casing removed. Each sentence is classified as belonging to one of seven fields. Figure \ref{fig:mag-distribtion} shows that the classes have a uniform distribution. 
-
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\linewidth]{figures/mag-distribution.png}
+    \includegraphics[width=0.45\linewidth]{figures/mag-distribution.png}
     \captionsetup{width=.9\linewidth}
     \caption{Class distribution of the MAG  \cite{wang2019review} dataset's 84000 sentences in its \textit{train} split.}
     \label{fig:mag-distribtion}
 \end{figure}
+
+Two datasets are considered for the experiments: SciBERT's MAG and the SSC. The former is used to compare the results with SciBERT's, while the latter is utilised for training a model for production purposes because it has 19 labels compared to MAG's seven, and it also contains abstracts instead of just sentences; thus, it is more fitting for our practical use case.
+
+SciBERT's version of the MAG dataset has 84,000 and 22,300 sentences in its train and test splits, respectively. These are mostly in English and have all punctuation and casing removed. Each sentence is classified as belonging to one of seven fields. Figure \ref{fig:mag-distribtion} shows that the classes have a uniform distribution. 
 
 SSC is much larger: it contains over 80 million abstracts. Having more data certainly helps in sampling the term distribution more accurately; nonetheless, the law of diminishing returns applies, especially when using simple models. Therefore, the data are randomly downsampled to give us a more manageable couple of hundreds of megabytes of abstracts. We can see the distribution of class labels in Figure \ref{fig:ss-distribution}. The dataset is considerably less balanced: \textit{medicine} is by far the most voluminous field.
 
@@ -52,7 +53,7 @@ Our aims are twofold: (1) to evaluate a sentence classification model on MAG and
 
 It seems reasonable that only considering the distribution (frequencies) of individual terms may be sufficient. For testing this hypothesis, a unigram language model (Multinomial Naïve Bayes) is constructed, and its accuracy is compared with SciBERT's. The former definitely aligns with the advice to \textit{Use The Most Efficient Models}.
 
-Using the MNB implementation of scikit-learn \cite{pedregosa2011scikit}, it only took a couple of lines to create, hyperparameter-optimise, and test a text classifier. Including data loading and visualisations, it takes 71 lines of code (LOC) to be more precise. \footnote{The code is available at \href{https://great-ai.scoutinscience.com/tutorial/}{great-ai.scoutinscience.com/tutorial}.} This further proves how simple it is to use standard packages. The code can be considered for satisfying the \textit{Automate Hyper-Parameter Optimisation} best practice since it also implements an automated hyperparameter sweep. 
+Using the MNB implementation of scikit-learn \cite{pedregosa2011scikit}, it only took a couple of lines to create, hyperparameter optimise, and test a text classifier. Including data loading and visualisations, it takes 71 lines of code (LOC) to be more precise. \footnote{The code is available at \href{https://great-ai.scoutinscience.com/tutorial/}{great-ai.scoutinscience.com/tutorial}.} This further proves how simple it is to use standard packages. The code can be considered for satisfying the \textit{Automate Hyper-Parameter Optimisation} best practice since it also implements an automated hyperparameter sweep. 
 
 The sentences are tokenised into words and vectorised with TF-IDF (with logarithmic term frequency) \cite{buckley1985implementation}, the hyperparameters found via 10-fold cross-validation on the \textit{train} split lead to filtering out tokens which occur in fewer than five documents or more than 5\% of the documents.
 
@@ -114,7 +115,7 @@ This section briefly explores how the problems raised can be solved using \texti
 
 The obstacles coming from the intertwined nature of different models are widely recognised \cite{haakman2021ai,amershi2019software,sculley2015hidden}. This can lead to non-monotonic error propagation, meaning that improvements in one part of the system might decrease the overall system quality \cite{amershi2019software}. The importance of schema versioning in an environment of rapidly changing models and transformations is highlighted for a specific use case in \cite{van2017versioning} and more generally by the \textit{Use Versioning for Data, Model, Configurations and Training Scripts} best practice. These emphasise the requirement for versioning models and, in general, data.
 
-We must address two data storage needs: training data and trained models. Because our code is probably already tracked under Git (and \href{https://octoverse.github.com/#lets-look-back-at-the-code-and-communities-built-on-git-hub-this-year}{likely synchronised with GitHub}), using Git Large File Storage (LFS)\footnote{\href{https://git-lfs.github.com/}{git-lfs.github.com}} might seem intriguing. However, it is a paid (and surprisingly expensive) service of GitHub, especially when we factor in the expected sizes of the models and training data with the fact that the only way to remove files counting towards our quota is to \href{https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage#git-lfs-objects-in-your-repository}{delete the entire repository}.
+We must address two data storage needs: training data and trained models. Proper version control is one of the most basic expectations for commercial codebases. Based on developer surveys, it is likely that our code is already tracked under Git and synchronised with GitHub\footnote{\href{https://octoverse.github.com/\#lets-look-back-at-the-code-and-communities-built-on-git-hub-this-year}{octoverse.github.com}}. Therefore, using Git Large File Storage (LFS) might seem intriguing. However, it is a paid (and surprisingly expensive) service of GitHub, especially when we factor in the expected sizes of the models and training data with the fact that the only way to remove files counting towards our quota is to delete the entire repository\footnote{\href{https://docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage\#git-lfs-objects-in-your-repository}{docs.github.com/en/repositories/working-with-files/managing-large-files/removing-files-from-git-large-file-storage}}.
 
 An open-source tool, the Data Version Control (DVC)\footnote{\href{https://dvc.org/}{dvc.org}} provides a nearly perfect alternative. It comes with a command-line interface (CLI) inspired by Git's and can be integrated with several backend storage servers. Its only downside is, of course, that it is one more tool that increases the complexity of the project and the initial setup time. If this is an acceptable price to pay, then I personally recommend opting for DVC. Nevertheless, if this may prohibit a team\footnote{As was the case with MLFlow tracking in an ING team described in Section \ref{section:industry}.} from properly handling data according to the best practices, I present a simpler solution.
 
@@ -137,7 +138,7 @@ A function called \texttt{parallel\_map()} is implemented which closely mimics t
 Some of the expectations one might have for data-intensive (such as AI) software are similar to that for software in general. These are also captured by the best practices: \textit{Use Continuous Integration}, \textit{Automate Model Deployment}, and \textit{Enable Automatic Roll Backs for Production Model} to name a few. It is important to notice that these have already been solved by software engineering, more specifically, by the DevOps paradigm \cite{leite2019survey}. 
 In line with the findings of John et al. \cite{john2020architecting} on the SOTA of AI deployments, I suggest we wrap the applications in a format more compatible with existing DevOps toolkits. Instead of reinventing the wheel, we should rely on more established DevOps best practices for implementing the SE4ML deployment best practices. Besides, organisations are expected to have their deployment processes for classical applications; thus, allowing them to reuse those for AI applications seems to be the most convenient approach.
 
-Based on personal empirical evidence, three types of software artifacts are identified (in the context of Python) for which a wide range of established practices exist. WSGI server\footnote{\href{https://peps.python.org/pep-3333/}{peps.python.org/pep-3333}} compatible applications, executable scripts, and Docker Images\footnote{\href{https://docs.docker.com/registry/spec/manifest-v2-2/}{docs.docker.com/registry/spec/manifest-v2-2}}. To achieve this, \textit{GreatAI} provides a compatibility layer between simple Python inference functions and all the above common artifacts. Taking functions as input for the first step also satisfies the requirement to be \textbf{General}. Nevertheless, to also allow customisation, additional configuration, metadata, and behavioural specification can be given as well.
+Based on personal experiences, three types of software artifacts are identified (in the context of Python) for which a wide range of established practices exist. WSGI server\footnote{\href{https://peps.python.org/pep-3333/}{peps.python.org/pep-3333}} compatible applications, executable scripts, and Docker Images\footnote{\href{https://docs.docker.com/registry/spec/manifest-v2-2/}{docs.docker.com/registry/spec/manifest-v2-2}}. To achieve this, \textit{GreatAI} provides a compatibility layer between simple Python inference functions and all the above common artifacts. Taking functions as input for the first step also satisfies the requirement to be \textbf{General}. Nevertheless, to also allow customisation, additional configuration, metadata, and behavioural specification can be given as well.
 
 \begin{listing}[!ht]
 \begin{minted}[
@@ -160,24 +161,26 @@ def greeter(name: str) -> str:
 The main advantage of the wrapping approach is that it does not require any input from the clients (by default). I opted for a decorator \cite{gamma1995design}, which lets users wrap their function by adding a single additional line of code as shown in Listing \ref{listing:hello-world}. After which, the created WSGI application can be accessed through the \texttt{greeter.app} property where \texttt{greeter} is the identifier of the user-defined function. A CLI script (\texttt{great-ai}), along with a \texttt{Dockerfile} are also provided to cover the other two deployment artifacts.
 
 
-\begin{listing}[!ht]
+\begin{listing}
 \begin{minted}[
 frame=lines,
 framesep=2mm,
 baselinestretch=1,
 linenos
 ]{python}
-from great_ai import GreatAI, parameter, use_model, log_metric
+from great_ai import save_model, GreatAI, parameter, use_model, log_metric
+
+save_model('special_number', 405)  # this could have been called in another script
 
 @GreatAI.create
 @parameter('positive_number', validate=lambda n: n > 0)
-@use_model('secret-number', version='latest')
-def add_to_secret_number(positive_number: int, model: int) -> int:
+@use_model('special_number', version='latest', model_kwarg_name='special')
+def add_to_special_number(positive_number: int, special: int) -> int:
     """This docstring will be exported as documentation."""
-    log_metric('log directly into the Trace', positive_number * 2)
-    return secret + positive_number
+    log_metric('log directly into the Trace', positive_number ** 2)
+    return special + positive_number
 
-assert add_number(1).output == 5
+assert add_number(12).output == 417
 \end{minted}
 \captionsetup{width=.9\linewidth,position=top,skip=-20pt}
 \caption{A simple \textit{GreatAI} service with behavioural customisations.}
@@ -188,14 +191,14 @@ Coincidentally, deployment best practices can be easily implemented in this wrap
 
 To allow customising the service's behaviour to fit different use cases, the default configurations can be overridden by calling some library functions. An example of this can be seen in Listing \ref{listing:complex}, while more details of the semantics can be found in the documentation\footnote{\href{https://great-ai.scoutinscience.com/how-to-guides/create-service/}{great-ai.scoutinscience.com/how-to-guides/create-service}}.
 
-\subsection{Summary}
-
-After implementing some features of the library, it can already be used for deploying the previously discussed domain prediction model. In this case, online prediction is expected; hence, the REST API-based deployment is chosen, which is created by \texttt{GreatAI.create} and packaged in a Docker image. This image can be instantiated by the company's existing DevOps pipeline and cloud infrastructure. In the end, users can see one more tag in the header section of publication evaluations, where they can also see the explanation behind the model's decision as demonstrated in Figure \ref{fig:dashboard-domains}. Let us now explore how the franework fares in a more complex case.
-
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{figures/dashboard-domains.png}
+    \includegraphics[width=0.85\linewidth]{figures/dashboard-domains.png}
     \captionsetup{width=.9\linewidth}
     \caption{Screenshot of the domain prediction integrated into the ScoutinScience platform, where it is used as a filtering option.}
     \label{fig:dashboard-domains}
 \end{figure}
+
+\subsection{Summary}
+
+After implementing some features of the library, it can already be used for deploying the previously discussed domain prediction model. In this case, online prediction is expected; hence, the REST API-based deployment is chosen, which is created by \texttt{GreatAI.create} and packaged in a Docker image. This image can be instantiated by the company's existing DevOps pipeline and cloud infrastructure. In the end, users can see one more tag in the header section of publication evaluations, where they can also see the explanation behind the model's decision as demonstrated in Figure \ref{fig:dashboard-domains}. Let us now explore how the franework fares in a more complex case.

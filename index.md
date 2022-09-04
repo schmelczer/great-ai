@@ -5,7 +5,7 @@
 
 [![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
 [![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
-![Docker Pulls](https://img.shields.io/docker/pulls/schmelczera/great-ai)
+[![Docker Pulls](https://img.shields.io/docker/pulls/schmelczera/great-ai)](https://hub.docker.com/repository/docker/schmelczera/great-ai)
 [![Test](https://github.com/schmelczer/great-ai/actions/workflows/test.yml/badge.svg)](https://github.com/schmelczer/great-ai/actions/workflows/test.yml)
 [![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 [![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
