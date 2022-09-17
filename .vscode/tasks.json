@@ -11,7 +11,8 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "showReuseMessage": false,
+        "panel": "shared"
       },
       "options": {
         "cwd": "${workspaceFolder}"
@@ -27,7 +28,8 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "showReuseMessage": false,
+        "panel": "shared"
       },
       "options": {
         "cwd": "${workspaceFolder}"
@@ -43,7 +45,8 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "showReuseMessage": false,
+        "panel": "shared"
       },
       "options": {
         "cwd": "${workspaceFolder}"
