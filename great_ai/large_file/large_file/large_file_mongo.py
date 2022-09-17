@@ -44,7 +44,7 @@ class LargeFileMongo(LargeFileBase):
     def _client(self) -> GridFSBucket:
         if self.mongo_connection_string is None or self.mongo_database is None:
             raise ValueError(
-                "Please configure the MongoDB access options by calling LargeFileMongo.configure_credentials or set offline_mode=True in the constructor."
+                "Please configure the MongoDB access options by calling LargeFileMongo.configure_credentials or set cache_only_mode=True in the constructor."
             )
 
         db: Database = MongoClient(self.mongo_connection_string)[self.mongo_database]

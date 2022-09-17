@@ -56,7 +56,7 @@ class LargeFileS3(LargeFileBase):
             or self.bucket_name is None
         ):
             raise ValueError(
-                "Please configure the S3 access options by calling LargeFileS3.configure_credentials or set offline_mode=True in the constructor."
+                "Please configure the S3 access options by calling LargeFileS3.configure_credentials or set cache_only_mode=True in the constructor."
             )
 
         return boto3.client(

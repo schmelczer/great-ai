@@ -64,7 +64,13 @@ class LargeFileBase(ABC):
         keep_last_n: Optional[int] = None,
         cache_only_mode: bool = False,
     ):
-        self._name = re.sub(r"[^a-zA-Z0-9._-]+", "", name)
+        clean_name = re.sub(r"[^!a-zA-Z0-9._-]+", "", name)
+        if clean_name != name:
+            raise ValueError(
+                f"Given name contains illegal characters, consider changing it to: `{clean_name}`"
+            )
+
+        self._name = name
         self._version = version
         self._mode = mode
         self._keep_last_n = keep_last_n

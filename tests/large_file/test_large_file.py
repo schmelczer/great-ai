@@ -24,6 +24,20 @@ def test_uninitialized() -> None:
         LargeFileS3("test-file")
 
 
+def test_bad_file_name() -> None:
+    with pytest.raises(ValueError):
+        LargeFileS3("../no-no", cache_only_mode=True)
+
+    with pytest.raises(ValueError):
+        LargeFileS3("is this wrong?", cache_only_mode=True)
+
+    with pytest.raises(FileNotFoundError):
+        LargeFileS3("!378378_fer-ef", cache_only_mode=True)  # this should work
+
+    with pytest.raises(FileNotFoundError):
+        LargeFileS3("3", cache_only_mode=True)  # this should work
+
+
 def test_bad_file_modes() -> None:
     with pytest.raises(ValueError):
         LargeFileS3("test-file", "w", version=3)
