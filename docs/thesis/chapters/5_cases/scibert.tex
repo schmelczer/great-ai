@@ -27,7 +27,7 @@ In order to compile a new dataset, experts are asked to judge sentences that pas
     \centering
     \includegraphics[width=0.75\linewidth]{figures/annotator.png}
     \captionsetup{width=.9\linewidth}
-    \caption{The annotator UI showing a single sentence and the two labels that can be assigned based on its relevance to technology-transfer.}
+    \caption{The annotator GUI showing a single sentence and the two labels that can be assigned based on its relevance to technology-transfer.}
     \label{fig:annotator}
 \end{figure}
 
@@ -99,10 +99,10 @@ Figure \ref{fig:histograms} shows the ratio of summary candidate sentences as pr
 
 \subsection{Deployment}
 
-To implement the summarisation, at most, the top 7 selected sentences are chosen as ranked by their log probabilities. They are subsequently reordered according to their position in the text. As a quasi-explanation, the tokens' attention scores are visualised and overlaid on the highlighted sentences. The \textit{i}-th token's visualised attention comes from summing up the attention weights of each of the last layer's heads between the \texttt{[CLS]} and the \textit{i}-th token. To improve the end-user experience, a high-pass filter and a stop-word list are applied to the scores to avoid highlighting the syntax-related tokens (punctuation, determiners). The service --- after being integrated into the dashboard --- can be seen in Figure \ref{fig:dashboard-highlights}.
+To implement the summarisation, at most, the top 7 selected sentences are chosen as ranked by their log probabilities. They are subsequently reordered according to their position in the text. As a quasi-explanation, the tokens' attention scores are visualised and overlaid on the highlighted sentences. The \textit{i}-th token's visualised attention comes from summing up the attention weights of each of the last layer's heads between the \texttt{[CLS]} and the \textit{i}-th token. To improve the end-user experience, a high-pass filter and a stop-word list are applied to the scores to avoid highlighting the syntax-related tokens (punctuation, determiners). The service --- after being integrated into the Dashboard --- can be seen in Figure \ref{fig:dashboard-highlights}.
 
 \begin{displayquote}
-\textbf{Design inspiration} In order to get insights into their inner workings, Hugging Face models can be given \texttt{output\_attentions=True} in their constructor, which results in a new property becoming accessible on the results for querying the attentions. The only issue with it is that it is a 5-dimensional matrix which makes exploring and understanding it non-obvious. In short, it has very low \textit{Discoveribility}. For example, the attention weights for the UI are calculated with this expression:
+\textbf{Design inspiration} In order to get insights into their inner workings, Hugging Face models can be given \texttt{output\_attentions=True} in their constructor, which results in a new property becoming accessible on the results for querying the attentions. The only issue with it is that it is a 5-dimensional matrix which makes exploring and understanding it non-obvious. In short, it has very low \textit{Discoveribility}. For example, the attention weights for the GUI are calculated with this expression:
 \begin{minted}[
 baselinestretch=1,
 ]{python}

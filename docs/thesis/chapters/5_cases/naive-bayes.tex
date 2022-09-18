@@ -48,7 +48,7 @@ MAG needs no further preprocessing if we aim to match SciBERT's setup \cite{belt
 
 \subsection{Methods}
 
-Our aims are twofold: (1) to evaluate a sentence classification model on MAG and compare it with the prior art; and (2) to retrain and apply this model for classifying publication metadata (including abstracts). This would allow the ScoutinScience platform to select an appropriate processing pipeline which has been trained on a matching vocabulary (and domain) for each publication. 
+Our aims are twofold: (1) to evaluate a sentence classification model on MAG and compare it with the prior art; and (2) to retrain and apply this model for classifying publication metadata (including abstracts). This would allow the ScoutinScience Platform to select an appropriate processing pipeline which has been trained on a matching vocabulary (and domain) for each publication. 
 
 It seems reasonable that only considering the distribution (frequencies) of individual terms may be sufficient. For testing this hypothesis, a unigram language model --- Multinomial Naïve Bayes (MNB) --- is constructed, and its accuracy is compared with SciBERT's. The former definitely aligns with the advice to \textit{Use The Most Efficient Models}. Using the MNB implementation of scikit-learn \cite{pedregosa2011scikit}, it only took 71 lines of code to create, hyperparameter optimise, and test a text classifier.\footnote{The code is available at \href{https://great-ai.scoutinscience.com/tutorial/}{great-ai.scoutinscience.com/tutorial}.} This further proves how simple it is to use standard packages. The code can be considered for satisfying the \textit{Automate Hyper-Parameter Optimisation} best practice since it also implements an automated hyperparameter sweep. 
 
