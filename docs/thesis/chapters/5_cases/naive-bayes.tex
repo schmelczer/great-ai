@@ -135,7 +135,7 @@ In line with the findings of John et al. \cite{john2020architecting} on the SOTA
 
 Based on personal experiences, three types of software artifacts are identified (in the context of Python) for which a wide range of established practices exist. WSGI server\footnote{\href{https://peps.python.org/pep-3333/}{peps.python.org/pep-3333}} compatible applications, executable scripts, and Docker Images\footnote{\href{https://docs.docker.com/registry/spec/manifest-v2-2/}{docs.docker.com/registry/spec/manifest-v2-2}}. To achieve this, \textit{GreatAI} provides a compatibility layer between simple Python inference functions and all the abovementioned common artifacts. Taking functions as input for the first step also satisfies the requirement to be \textbf{General}. Nevertheless, to also allow customisation, additional configuration, metadata, and behavioural specification can be given as well.
 
-\begin{listing}[!ht]
+\begin{listing}[h]
 \begin{minted}[
 frame=lines,
 framesep=2mm,
@@ -155,7 +155,7 @@ def greeter(name: str) -> str:
 
 The main advantage of the wrapping approach is that it does not require any input from the clients (by default). We opted for a decorator \cite{gamma1995design}, which lets users wrap their function by adding a single additional line of code as shown in Listing \ref{listing:hello-world}. After which, the created WSGI application can be accessed through the \texttt{greeter.app} property where \texttt{greeter} is the identifier of the user-defined function. A CLI script (\texttt{great-ai}), along with a \texttt{Dockerfile} are also provided to cover the other two deployment artifacts.
 
-\begin{listing}[!ht]
+\begin{listing}[h]
 \begin{minted}[
 frame=lines,
 framesep=2mm,

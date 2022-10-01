@@ -21,9 +21,9 @@ A formulaic expression is a phrase with zero or more ``slots'' which, when fille
 
 \subsection{Methods}
 
-In order to compile a new dataset, experts are asked to judge sentences that passed an \textit{intention check}. This pooling approach is commonly used in information retrieval \cite{schutze2008introduction}. The filtering is expected to sieve out sentences that are probably not relevant from a technology-transfer perspective using Iwatsuki's formulaic expression intention classes. Subsequently, relevance judgements --- in the form of \textit{interesting} or \textit{not interesting} labels --- are gathered for the remaining sentences. This method turns the extractive summarisation into a binary classification task for which a SciBERT model \cite{beltagy2019scibert} can be fine-tuned. Ultimately, the summaries are derived from sentences selected by the classifier trained on the experts' annotations.
+In order to compile a new dataset, experts are asked to judge sentences that passed an \textit{intention check}. This pooling approach is commonly used in information retrieval \cite{schutze2008introduction}. The filtering is expected to sieve out sentences that are probably not relevant from a technology-transfer perspective using Iwatsuki's formulaic expression intention classes. Subsequently, relevance judgements --- in the form of \textit{interesting} or \textit{not interesting} labels --- are gathered for the remaining sentences. Figure \ref{fig:annotator} shows an example of the annotation task. Our method turns the extractive summarisation into a binary classification task for which a SciBERT model \cite{beltagy2019scibert} can be fine-tuned. Ultimately, the summaries are derived from sentences selected by the classifier trained on the experts' annotations. 
 
-\begin{figure}[!ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.75\linewidth]{figures/annotator.png}
     \captionsetup{width=.9\linewidth}
@@ -35,7 +35,7 @@ We have to note two possible shortcomings of this setup: firstly, the FE intenti
 
 \subsection{Results}
 
-For the first iteration, 1500 sentences were selected for two experts to annotate in a binary fashion according to strict guidelines. An example is shown in Figure \ref{fig:annotator}. Afterwards, for measuring the interrater agreement, we calculated Cohen's kappa \cite{cohen1960coefficient} as shown in Equation \ref{equation:kappa}, which turned out to be \textbf{0.43} for the two annotators. This happens to be just above the lower end of \textit{moderate agreement}. Even though the original quality ranges are sometimes criticised for being too relaxed for the medical domain \cite{mchugh2012interrater}, some leniency is acceptable for many NLP tasks due to their subjectiveness. Regardless, in the case of summarisation, Verberne et al. \cite{verberne2018creating} argue that reasonable end-quality can be reached even when the interrater agreement is relatively low. The ground truth is determined by taking the logical disjunction of the annotations. This is reasonable because the annotators have dissimilar backgrounds and likely judged slightly different aspects of the sentences.
+For the first iteration, 1500 sentences were selected for two experts to annotate in a binary fashion according to strict guidelines. Afterwards, for measuring the interrater agreement, we calculated Cohen's kappa \cite{cohen1960coefficient} as shown in Equation \ref{equation:kappa}, which turned out to be \textbf{0.43} for the two annotators. This happens to be just above the lower end of \textit{moderate agreement}. Even though the original quality ranges are sometimes criticised for being too relaxed for the medical domain \cite{mchugh2012interrater}, some leniency is acceptable for many NLP tasks due to their subjectiveness. Regardless, in the case of summarisation, Verberne et al. \cite{verberne2018creating} argue that reasonable end-quality can be reached even when the interrater agreement is relatively low. The ground truth is determined by taking the logical disjunction of the annotations. This is reasonable because the annotators have dissimilar backgrounds and likely judged slightly different aspects of the sentences.
 
 \begin{equation} \label{equation:kappa}
 \kappa_{agreement} \equiv \frac{p_{observed} - p_{expected}}{1 - p_{expected}} = 1 - \frac{1 - p_{observed}}{1 - p_{expected}} 
@@ -45,7 +45,7 @@ For the first iteration, 1500 sentences were selected for two experts to annotat
 \textbf{Reproducibility} Reproducible experiments are generally preferred. It is easy to forget to set some seed values and, for example, end up with different data points in the test-train splits during training and validation in a Continuous Integration (CI) pipeline, thus, data leakage. For facilitating reproducibility, it would be useful to reset the seeds of each imported library's random number generators (RNGs) when \textit{GreatAI} is configured. Thus, a feature has been added to detect and reset RNGs of installed and imported libraries. This certainly will not solve the reproducibility crisis \cite{hutson2018artificial} on its own; however, in some cases, it can result in one fewer step to miss.
 \end{displayquote}
 
-\begin{figure}[!ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.7\linewidth]{figures/scibert-confusion.png}
     \captionsetup{width=.9\linewidth}
@@ -59,7 +59,7 @@ The next step is fine-tuning SciBERT with the help of Hugging Face \texttt{trans
 \textbf{Utility of LargeFiles} For the purposes of the documentation, the fine-tuning was conducted in the Google Colab online environment, which is excellent for providing anyone with GPU time for free. However, notebook environments are ephemeral, resulting in the need to manually upload and download all relevant data whenever a new virtual machine instance is granted. The \texttt{LargeFile} implementation alleviated this problem by automatically handling the uploads and downloads. Of course, first, backwards compatibility had to be solved for Python 3.7, the only available environment in Colab.
 \end{displayquote}
 
-\begin{table}[!ht]
+\begin{table}[ht]
     \centering
     \begin{threeparttable}
     \caption{Accuracty metrics of the fine-tuned SciBERT model on the \textit{summary candidate sentences} dataset.}
@@ -77,7 +77,7 @@ The next step is fine-tuning SciBERT with the help of Hugging Face \texttt{trans
 
 Let us check how well the selected sentences correspond with the tech-transfer potential. Users and in-house experts can rate publications (from a tech-transfer perspective) by assigning them to one of four categories: \texttt{A}, \texttt{B}, \texttt{C}, and \texttt{D} with \texttt{A} being the most and \texttt{D} the least promising. This feedback is stored and used for analytic and training purposes. Since both the feedback grade and the relevant (summary candidate) sentences are supposed to reflect the same aspect of papers, we can reasonably expect some correlation between the grades and relevant sentence counts.
 
-\begin{figure}[!ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/highlights-histograms.png}
     \captionsetup{width=.9\linewidth}
@@ -89,7 +89,7 @@ The best validation results were achieved after eight epochs which is slightly m
 
 Figure \ref{fig:histograms} shows the ratio of summary candidate sentences as predicted by the fine-tuned model in 4 categories (grades) of papers. This dataset does not overlap with the training data; hence, the results come solely from the model's ability to generalise. It is interesting to see that the Spearman's rank correlation coefficient \cite{spearman1961proof} between the normalised ``highlights'' counts and the ratings of papers is \textbf{0.4784} and is statistically significant ($P = 5.4 \times 10^{-74}$). This proves the presence of a monotonic association. For context, the correlation between the grades and the number of sentences chosen by the baseline approach is 0.06597 ($P = 0.03$). We can conclude that the classifier's output is indicative of publications' tech-transfer potential. 
 
-\begin{figure}[!ht]
+\begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/dashboard-highlights.png}
     \captionsetup{width=.9\linewidth}
@@ -121,7 +121,7 @@ Sustainability is an increasingly crucial concern of ethical AI \cite{van2021sus
 
 \subsection{Revisiting \texttt{parallel\_map}}
 
-Even though most inference functions are CPU-bound, it turns out that sometimes they involve IO, especially when relying on the results of other remote models. This means a significant performance improvement can be achieved by implementing some inference functions asynchronously \cite{tilkov2010node}. Thus, \textit{GreatAI} also has to support decorating both regular (synchronous) and asynchronous functions. One notable consequence is that the batch processing feature must also be compatible with \texttt{async} inference functions. Batch processing is still a helpful feature since it is likely that async inference functions are both IO (remote calls) and CPU (local evaluation) constrained at the same time. Thus, they can benefit from multi-core parallelisation. 
+Even though most inference functions are CPU-bound (or GPU-bound), it turns out that sometimes they involve IO, especially when relying on the results of other remote models. This means a significant performance improvement can be achieved by implementing some inference functions asynchronously \cite{tilkov2010node}. Thus, \textit{GreatAI} also has to support decorating both regular (synchronous) and asynchronous functions. One notable consequence is that the batch processing feature must also be compatible with \texttt{async} inference functions. Batch processing is still a helpful feature since it is likely that async inference functions are both IO (remote calls) and CPU (local evaluation) constrained at the same time. Thus, they can benefit from multi-core parallelisation. 
 
 However, the standard library's \texttt{multiprocessing}, the third party \texttt{multiprocess} \cite{mckerns2012building}, and, another popular library, \texttt{joblib}\footnote{\href{https://joblib.readthedocs.io/en/latest/}{joblib.readthedocs.io/en/latest}} all lack the support for efficiently parallelising async functions. For this reason, \texttt{parallel\_map} was reimplemented to create an event-loop in each worker process to keep the efficiency of non-blocking IO while also providing parallelisation for the CPU-bound sections of code.
 
