@@ -31,7 +31,7 @@ def bootstrap_feedback_endpoints(app: FastAPI) -> None:
         return trace.feedback
 
     @router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
-    def delete_feedback(trace_id: str) -> Any:
+    def delete_feedback(trace_id: str) -> Response:
         trace = get_context().tracing_database.get(trace_id)
         if trace is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)

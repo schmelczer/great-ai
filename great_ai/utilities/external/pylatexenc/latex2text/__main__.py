@@ -289,7 +289,7 @@ def main(argv=None):
         latex, tolerant_parsing=args.tolerant_parsing, strict_braces=args.strict_braces
     )
 
-    (nodelist, pos, len_) = lw.get_latex_nodes()
+    nodelist, pos, len_ = lw.get_latex_nodes()
 
     ln2t = LatexNodes2Text(
         math_mode=args.math_mode,

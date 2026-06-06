@@ -51,15 +51,19 @@ class TracingContext(Generic[T]):
                     logged_values=self._values,
                     models=self._models,
                     output=output,
-                    exception=None
-                    if exception is None
-                    else f"{type(exception).__name__}: {exception}",
+                    exception=(
+                        None
+                        if exception is None
+                        else f"{type(exception).__name__}: {exception}"
+                    ),
                     tags=[
                         self._name,
                         ONLINE_TAG_NAME,
-                        PRODUCTION_TAG_NAME
-                        if get_context().is_production
-                        else DEVELOPMENT_TAG_NAME,
+                        (
+                            PRODUCTION_TAG_NAME
+                            if get_context().is_production
+                            else DEVELOPMENT_TAG_NAME
+                        ),
                     ],
                 ),
             )

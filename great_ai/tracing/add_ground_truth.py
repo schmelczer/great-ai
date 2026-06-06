@@ -23,7 +23,7 @@ def add_ground_truth(
     tags: Union[List[str], str] = [],
     train_split_ratio: float = 1,
     test_split_ratio: float = 0,
-    validation_split_ratio: float = 0
+    validation_split_ratio: float = 0,
 ) -> None:
     """Add training data (with optional train-test splitting).
 

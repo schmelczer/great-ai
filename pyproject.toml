@@ -66,6 +66,11 @@ dev = [
     "pytest-asyncio",
 ]
 
+[tool.pytest.ini_options]
+# `...` in doctests (e.g. third-party exception messages that drift between
+# dependency versions) is treated as a wildcard rather than a literal.
+doctest_optionflags = ["ELLIPSIS"]
+
 [project.urls]
 Documentation = "https://great-ai.scoutinscience.com"
 GitHub = "https://github.com/schmelczer/great-ai"

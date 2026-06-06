@@ -6,4 +6,4 @@ from ..hashable_base_model import HashableBaseModel
 class ClassificationOutput(HashableBaseModel):
     label: Union[str, int]
     confidence: float
-    explanation: Optional[Any]
+    explanation: Optional[Any] = None

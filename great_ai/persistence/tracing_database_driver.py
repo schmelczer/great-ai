@@ -54,7 +54,7 @@ class TracingDatabaseDriver(ABC):
         until: Optional[datetime] = None,
         since: Optional[datetime] = None,
         has_feedback: Optional[bool] = None,
-        sort_by: Sequence[SortBy] = []
+        sort_by: Sequence[SortBy] = [],
     ) -> Tuple[List[Trace], int]:
         pass
 

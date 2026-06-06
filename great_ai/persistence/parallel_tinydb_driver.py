@@ -29,16 +29,16 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
     path_to_db = Path(DEFAULT_TRACING_DB_FILENAME)
 
     def save(self, trace: Trace) -> str:
-        return self._safe_execute(lambda db: db.insert(trace.dict()))
+        return self._safe_execute(lambda db: db.insert(trace.model_dump()))
 
     def save_batch(self, documents: List[Trace]) -> List[str]:
-        traces = [d.dict() for d in documents]
+        traces = [d.model_dump() for d in documents]
         return self._safe_execute(lambda db: db.insert_multiple(traces))
 
     def get(self, id: str) -> Optional[Trace]:
         value = self._safe_execute(lambda db: db.get(lambda d: d["trace_id"] == id))
         if value:
-            value = Trace.parse_obj(value)
+            value = Trace.model_validate(value)
         return value
 
     def query(
@@ -51,7 +51,7 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         since: Optional[datetime] = None,
         until: Optional[datetime] = None,
         has_feedback: Optional[bool] = None,
-        sort_by: Sequence[SortBy] = []
+        sort_by: Sequence[SortBy] = [],
     ) -> Tuple[List[Trace], int]:
         def does_match(d: Dict[str, Any]) -> bool:
             return (
@@ -67,7 +67,11 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         if not documents:
             return [], 0
 
-        df = pd.DataFrame([Trace.parse_obj(d).to_flat_dict() for d in documents])
+        traces: List[Trace] = [Trace.model_validate(d) for d in documents]
+        # The DataFrame keeps its default 0..n-1 index, so filtering/sorting below
+        # preserve the row labels that index back into `traces`. This avoids
+        # reconstructing Traces from the lossy flattened rows.
+        df = pd.DataFrame([t.to_flat_dict() for t in traces])
 
         for f in conjunctive_filters:
             operator = f.operator.lower()
@@ -92,11 +96,13 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
 
         count = len(df)
         result = df.iloc[skip:] if take is None else df.iloc[skip : skip + take]
-        return [Trace.parse_obj(trace) for _, trace in result.iterrows()], count
+        return [traces[i] for i in result.index], count
 
     def update(self, id: str, new_version: Trace) -> None:
         self._safe_execute(
-            lambda db: db.update(new_version.dict(), lambda d: d["trace_id"] == id)
+            lambda db: db.update(
+                new_version.model_dump(), lambda d: d["trace_id"] == id
+            )
         )
 
     def delete(self, id: str) -> None:

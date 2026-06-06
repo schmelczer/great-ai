@@ -1,10 +1,12 @@
+from typing import Any
+
 from dash import dash_table
 
 from ....context import get_context
 
 
-def get_traces_table() -> dash_table.DataTable:
-    return dash_table.DataTable(
+def get_traces_table() -> Any:
+    return dash_table.DataTable(  # type: ignore[attr-defined]
         page_current=0,
         page_size=get_context().dashboard_table_size,
         page_action="custom",

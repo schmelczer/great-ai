@@ -1,7 +1,7 @@
 from functools import wraps
 from typing import Any, Callable, Dict, TypeVar, cast
 
-from typeguard import check_type
+from typeguard import TypeCheckError, check_type
 
 from ..errors import ArgumentValidationError
 from ..helper import get_arguments, get_function_metadata_store
@@ -32,7 +32,7 @@ def parameter(
         >>> my_function('3')
         Traceback (most recent call last):
             ...
-        TypeError: type of a must be int; got str instead
+        TypeError: argument a is not of the expected type: ...
 
         >>> @parameter('positive_a', validate=lambda v: v > 0)
         ... def my_function(positive_a: int):
@@ -65,13 +65,16 @@ def parameter(
             expected_type = func.__annotations__.get(parameter_name)
 
             if expected_type is not None:
-                check_type(parameter_name, argument, expected_type)
+                try:
+                    check_type(argument, expected_type)
+                except TypeCheckError as error:
+                    raise TypeError(
+                        f"argument {parameter_name} is not of the expected type: {error}"
+                    ) from error
 
             if not validate(argument):
                 raise ArgumentValidationError(
-                    f"""Argument {parameter_name} in {
-                        func.__name__
-                    } did not pass validation"""
+                    f"Argument {parameter_name} in {func.__name__} did not pass validation"
                 )
 
             context = TracingContext.get_current_tracing_context()

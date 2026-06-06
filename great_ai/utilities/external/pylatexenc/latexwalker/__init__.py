@@ -477,7 +477,7 @@ class LatexNode(object):
         parsing_state=None,
         pos=None,
         len=None,
-        **kwargs
+        **kwargs,
     ):
 
         # Important: subclasses must specify a list of fields they set in the
@@ -607,7 +607,7 @@ class LatexGroupNode(LatexNode):
                 "nodelist",
                 "delimiters",
             ),
-            **kwargs
+            **kwargs,
         )
         self.nodelist = nodelist
         self.delimiters = delimiters
@@ -639,7 +639,7 @@ class LatexCommentNode(LatexNode):
                 "comment",
                 "comment_post_space",
             ),
-            **kwargs
+            **kwargs,
         )
 
         self.comment = comment
@@ -715,7 +715,7 @@ class LatexMacroNode(LatexNode):
         super(LatexMacroNode, self).__init__(
             _fields=("macroname", "nodeargd", "macro_post_space"),
             _redundant_fields=("nodeoptarg", "nodeargs"),
-            **kwargs
+            **kwargs,
         )
 
         self.macroname = macroname
@@ -801,7 +801,7 @@ class LatexEnvironmentNode(LatexNode):
                 "optargs",
                 "args",
             ),
-            **kwargs
+            **kwargs,
         )
 
         self.environmentname = environmentname
@@ -1264,7 +1264,7 @@ class LatexWalker(object):
         environments=True,
         keep_inline_math=None,
         parsing_state=None,
-        **kwargs
+        **kwargs,
     ):
         r"""
         Parses the latex content given to the constructor (and stored in `self.s`),
@@ -1628,7 +1628,7 @@ class LatexWalker(object):
                             r"Expected expression, got \end",
                             self.s,
                             pos,
-                            **self.pos_to_lineno_colno(pos, as_dict=True)
+                            **self.pos_to_lineno_colno(pos, as_dict=True),
                         )
                     else:
                         return self._mknodeposlen(
@@ -1674,7 +1674,7 @@ class LatexWalker(object):
                         "Expected expression, got closing brace '{}'".format(tok.arg),
                         self.s,
                         pos,
-                        **self.pos_to_lineno_colno(pos, as_dict=True)
+                        **self.pos_to_lineno_colno(pos, as_dict=True),
                     )
                 return self._mknodeposlen(
                     LatexCharsNode,
@@ -1717,7 +1717,7 @@ class LatexWalker(object):
                 "Unknown token type: {}".format(tok.tok),
                 self.s,
                 pos,
-                **self.pos_to_lineno_colno(pos, as_dict=True)
+                **self.pos_to_lineno_colno(pos, as_dict=True),
             )
 
     def get_latex_maybe_optional_arg(self, pos, parsing_state=None):
@@ -1821,10 +1821,10 @@ class LatexWalker(object):
                 pos=pos,
                 msg="get_latex_braced_group: not an opening brace/bracket: %s"
                 % (self.s[pos]),
-                **self.pos_to_lineno_colno(pos, as_dict=True)
+                **self.pos_to_lineno_colno(pos, as_dict=True),
             )
 
-        (nodelist, npos, nlen) = self.get_latex_nodes(
+        nodelist, npos, nlen = self.get_latex_nodes(
             firsttok.pos + firsttok.len,
             stop_upon_closing_brace=(brace_type, closing_brace),
             parsing_state=parsing_state,
@@ -1883,12 +1883,14 @@ class LatexWalker(object):
                 pos=pos,
                 msg=r"get_latex_environment: expected \begin{%s}: %s"
                 % (
-                    environmentname
-                    if environmentname is not None
-                    else "<environment name>",
+                    (
+                        environmentname
+                        if environmentname is not None
+                        else "<environment name>"
+                    ),
                     firsttok.arg,
                 ),
-                **self.pos_to_lineno_colno(pos, as_dict=True)
+                **self.pos_to_lineno_colno(pos, as_dict=True),
             )
         if environmentname is None:
             environmentname = firsttok.arg
@@ -1915,9 +1917,9 @@ class LatexWalker(object):
             argsresult = (None, pos, 0, {})
 
         if len(argsresult) == 4:
-            (argd, apos, alen, adic) = argsresult
+            argd, apos, alen, adic = argsresult
         else:
-            (argd, apos, alen) = argsresult
+            argd, apos, alen = argsresult
             adic = {}
 
         pos = apos + alen
@@ -1930,7 +1932,7 @@ class LatexWalker(object):
                 math_mode_delimiter="{" + environmentname + "}",
             )
 
-        (nodelist, npos, nlen) = self.get_latex_nodes(
+        nodelist, npos, nlen = self.get_latex_nodes(
             pos,
             stop_upon_end_environment=environmentname,
             parsing_state=parsing_state_inner,
@@ -1975,7 +1977,7 @@ class LatexWalker(object):
                 s=self.s,
                 pos=tok.pos,
                 msg="End of input while parsing {}".format(what),
-                **self.pos_to_lineno_colno(tok.pos, as_dict=True)
+                **self.pos_to_lineno_colno(tok.pos, as_dict=True),
             )
 
         if getattr(e, "pos", None) is not None and e.lineno is None and e.colno is None:
@@ -2227,7 +2229,7 @@ class LatexWalker(object):
                         s=self.s,
                         pos=tok.pos,
                         msg="Unexpected mismatching closing brace: '%s'" % (tok.arg),
-                        **self.pos_to_lineno_colno(tok.pos, as_dict=True)
+                        **self.pos_to_lineno_colno(tok.pos, as_dict=True),
                     )
                 return True
 
@@ -2239,7 +2241,7 @@ class LatexWalker(object):
                         s=self.s,
                         pos=tok.pos,
                         msg=("Unexpected closing environment: '{}'".format(tok.arg)),
-                        **self.pos_to_lineno_colno(tok.pos, as_dict=True)
+                        **self.pos_to_lineno_colno(tok.pos, as_dict=True),
                     )
                 elif tok.arg != stop_upon_end_environment:
                     # p.push_lastchars(tok_to_pos_and_chars_from_ppos(tok))
@@ -2252,7 +2254,7 @@ class LatexWalker(object):
                                 tok.arg, stop_upon_end_environment
                             )
                         ),
-                        **self.pos_to_lineno_colno(tok.pos, as_dict=True)
+                        **self.pos_to_lineno_colno(tok.pos, as_dict=True),
                     )
                 return True
 
@@ -2276,7 +2278,7 @@ class LatexWalker(object):
                                 tok.arg,
                                 stop_upon_closing_mathmode,
                             ),
-                            **self.pos_to_lineno_colno(tok.pos, as_dict=True)
+                            **self.pos_to_lineno_colno(tok.pos, as_dict=True),
                         )
                     # all ok, this is a new math mode opening.  Keep an assert
                     # in case we forget to include some math-mode delimiters in
@@ -2291,7 +2293,7 @@ class LatexWalker(object):
                         s=self.s,
                         pos=tok.pos,
                         msg="Unexpected closing math mode: '{}'".format(tok.arg),
-                        **self.pos_to_lineno_colno(tok.pos, as_dict=True)
+                        **self.pos_to_lineno_colno(tok.pos, as_dict=True),
                     )
 
                 # we have encountered a new math inline, parse the math expression
@@ -2306,7 +2308,7 @@ class LatexWalker(object):
                 )
 
                 try:
-                    (mathinline_nodelist, mpos, mlen) = self.get_latex_nodes(
+                    mathinline_nodelist, mpos, mlen = self.get_latex_nodes(
                         p.pos,
                         stop_upon_closing_mathmode=corresponding_closing_mathmode,
                         parsing_state=parsing_state_inner,
@@ -2316,7 +2318,7 @@ class LatexWalker(object):
                         _maketuple(
                             'math mode "{}"'.format(tok.arg),
                             tok.pos,
-                            *self.pos_to_lineno_colno(tok.pos)
+                            *self.pos_to_lineno_colno(tok.pos),
                         )
                     )
                     raise
@@ -2354,7 +2356,7 @@ class LatexWalker(object):
             if tok.tok == "brace_open":
                 # another braced group to read.
                 try:
-                    (groupnode, bpos, blen) = self.get_latex_braced_group(
+                    groupnode, bpos, blen = self.get_latex_braced_group(
                         tok.pos, brace_type=tok.arg, parsing_state=p.parsing_state
                     )
                 # except LatexWalkerEndOfStream as e:
@@ -2376,7 +2378,7 @@ class LatexWalker(object):
             if tok.tok == "begin_environment":
                 # an environment to read.
                 try:
-                    (envnode, epos, elen) = self.get_latex_environment(
+                    envnode, epos, elen = self.get_latex_environment(
                         tok.pos, environmentname=tok.arg, parsing_state=p.parsing_state
                     )
                 except LatexWalkerParseError as e:
@@ -2384,7 +2386,7 @@ class LatexWalker(object):
                         _maketuple(
                             'begin environment "{}"'.format(tok.arg),
                             tok.pos,
-                            *self.pos_to_lineno_colno(tok.pos)
+                            *self.pos_to_lineno_colno(tok.pos),
                         )
                     )
                     raise
@@ -2415,9 +2417,9 @@ class LatexWalker(object):
                     margsresult = (None, tok.pos + tok.len, 0, {})
 
                 if len(margsresult) == 4:
-                    (nodeargd, mapos, malen, mdic) = margsresult
+                    nodeargd, mapos, malen, mdic = margsresult
                 else:
-                    (nodeargd, mapos, malen) = margsresult
+                    nodeargd, mapos, malen = margsresult
                     mdic = {}
 
                 p.pos = mapos + malen
@@ -2473,9 +2475,9 @@ class LatexWalker(object):
                 if res is not None:
                     # specials expects arguments, read them
                     if len(res) == 4:
-                        (nodeargd, mapos, malen, spdic) = res
+                        nodeargd, mapos, malen, spdic = res
                     else:
-                        (nodeargd, mapos, malen) = res
+                        nodeargd, mapos, malen = res
                         spdic = {}
 
                     p.pos = mapos + malen
@@ -2505,7 +2507,7 @@ class LatexWalker(object):
                 s=self.s,
                 pos=p.pos,
                 msg="Unknown token: {!r}".format(tok),
-                **self.pos_to_lineno_colno(p.pos, as_dict=True)
+                **self.pos_to_lineno_colno(p.pos, as_dict=True),
             )
 
         while True:
@@ -2531,7 +2533,7 @@ class LatexWalker(object):
                         msg="Unexpected end of stream, was expecting {}".format(
                             expecting
                         ),
-                        **self.pos_to_lineno_colno(len(self.s), as_dict=True)
+                        **self.pos_to_lineno_colno(len(self.s), as_dict=True),
                     )
                     if self.tolerant_parsing:
                         r_endnow = True
@@ -2651,7 +2653,7 @@ def get_latex_nodes(
     stop_upon_closing_brace=None,
     stop_upon_end_environment=None,
     stop_upon_closing_mathmode=None,
-    **parse_flags
+    **parse_flags,
 ):
     """
     Parses latex content `s`.

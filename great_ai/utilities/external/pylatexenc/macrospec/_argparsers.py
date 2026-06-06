@@ -296,7 +296,7 @@ class MacroStandardArgsParser(object):
 
         for j, argt in enumerate(self.argspec):
             if argt == "{":
-                (node, np, nl) = w.get_latex_expression(
+                node, np, nl = w.get_latex_expression(
                     p, strict_braces=False, parsing_state=get_inner_parsing_state(j)
                 )
                 p = np + nl
@@ -315,7 +315,7 @@ class MacroStandardArgsParser(object):
                 if optarginfotuple is None:
                     argnlist.append(None)
                     continue
-                (node, np, nl) = optarginfotuple
+                node, np, nl = optarginfotuple
                 p = np + nl
                 argnlist.append(node)
 

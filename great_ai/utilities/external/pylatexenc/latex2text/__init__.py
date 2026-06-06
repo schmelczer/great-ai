@@ -1549,7 +1549,7 @@ def latex2text(
         "in favor of the `pylatexenc.latex2text.LatexNodes2Text` class.",
     )
 
-    (nodelist, tpos, tlen) = latexwalker.get_latex_nodes(
+    nodelist, tpos, tlen = latexwalker.get_latex_nodes(
         content, keep_inline_math=keep_inline_math, tolerant_parsing=tolerant_parsing
     )
 

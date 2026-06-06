@@ -64,7 +64,7 @@ async def call_remote_great_ai_async(
         )
     try:
         if model_class is not None:
-            trace["output"] = model_class.parse_obj(trace["output"])
-        return Trace.parse_obj(trace)
+            trace["output"] = model_class.model_validate(trace["output"])
+        return Trace.model_validate(trace)
     except Exception:
         raise RemoteCallError("Could not parse Trace")

@@ -5,4 +5,4 @@ from ..hashable_base_model import HashableBaseModel
 
 class RegressionOutput(HashableBaseModel):
     value: Union[int, float]
-    explanation: Optional[Any]
+    explanation: Optional[Any] = None

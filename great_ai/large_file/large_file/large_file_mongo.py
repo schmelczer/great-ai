@@ -2,8 +2,9 @@ import re
 from pathlib import Path
 from typing import Any, List
 
-from gridfs import DEFAULT_CHUNK_SIZE, Database, GridFSBucket
+from gridfs import DEFAULT_CHUNK_SIZE, GridFSBucket
 from pymongo import MongoClient
+from pymongo.database import Database
 
 from ...utilities import get_logger
 from ..helper import DownloadProgressBar, UploadProgressBar, cached_property
@@ -60,7 +61,6 @@ class LargeFileMongo(LargeFileBase):
                 ),
                 version=int(f.name.split(MONGO_NAME_VERSION_SEPARATOR)[-1]),
                 remote_path=(f._id, f.length),
-                origin="mongodb",
             )
             for f in self._client.find(
                 {

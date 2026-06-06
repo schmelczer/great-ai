@@ -26,9 +26,9 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
     app = Dash(
         function_name,
         requests_pathname_prefix=DASHBOARD_PATH + "/",
-        server=Flask(__name__),
+        server=Flask(__name__),  # type: ignore[arg-type]
         title=function_name,
-        update_title=None,
+        update_title=None,  # type: ignore[arg-type]
         external_stylesheets=[
             "/assets/index.css",
         ],
@@ -64,9 +64,9 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
     interval = dcc.Interval(
         interval=2 * 1000,  # in milliseconds
         n_intervals=0,
-        max_intervals=1
-        if get_context().is_production
-        else -1,  # will be incremented in production upon each successful request
+        max_intervals=(
+            1 if get_context().is_production else -1
+        ),  # will be incremented in production upon each successful request
     )
 
     app.layout = html.Main(
@@ -159,7 +159,7 @@ def create_dash_app(function_name: str, version: str, function_docs: str) -> Fla
             take=page_size,
             conjunctive_filters=non_null_conjunctive_filters,
             conjunctive_tags=[ONLINE_TAG_NAME],
-            sort_by=[SortBy.parse_obj(s) for s in sort_by],
+            sort_by=[SortBy.model_validate(s) for s in sort_by],
         )
 
         if non_null_conjunctive_filters:
@@ -244,7 +244,7 @@ def update_charts(
     fig.update_layout(
         margin=dict(l=0, r=0, b=0, t=0, pad=0),
     )
-    execution_time_histogram.figure = fig
+    execution_time_histogram.figure = fig  # type: ignore[attr-defined]
 
     parallel_coords_fig = go.Figure(
         go.Parcoords(

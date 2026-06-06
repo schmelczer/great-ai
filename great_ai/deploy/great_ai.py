@@ -16,7 +16,7 @@ from typing import (
 )
 
 from fastapi import FastAPI
-from tqdm.cli import tqdm
+from tqdm import tqdm
 from typing_extensions import Literal  # <= Python 3.7
 
 from ..constants import DASHBOARD_PATH
@@ -103,15 +103,13 @@ class GreatAI(Generic[T, V]):
         # Overloaded function signatures 1 and 2 overlap with incompatible return types
         # https://github.com/python/mypy/issues/12759
         func: Callable[..., Awaitable[V]],
-    ) -> "GreatAI[Awaitable[Trace[V]], V]":
-        ...
+    ) -> "GreatAI[Awaitable[Trace[V]], V]": ...
 
     @overload
     @staticmethod
     def create(
         func: Callable[..., V],
-    ) -> "GreatAI[Trace[V], V]":
-        ...
+    ) -> "GreatAI[Trace[V], V]": ...
 
     @staticmethod
     def create(
@@ -146,7 +144,7 @@ class GreatAI(Generic[T, V]):
             >>> my_function('3').output
             Traceback (most recent call last):
                 ...
-            TypeError: type of a must be int; got str instead
+            TypeError: argument a is not of the expected type: ...
 
         Args:
             func: The prediction function that needs to be decorated.
@@ -170,8 +168,7 @@ class GreatAI(Generic[T, V]):
         concurrency: Optional[int] = None,
         unpack_arguments: Literal[True],
         do_not_persist_traces: bool = ...,
-    ) -> List[Trace[V]]:
-        ...
+    ) -> List[Trace[V]]: ...
 
     @overload
     def process_batch(
@@ -181,8 +178,7 @@ class GreatAI(Generic[T, V]):
         concurrency: Optional[int] = None,
         unpack_arguments: Literal[False] = ...,
         do_not_persist_traces: bool = ...,
-    ) -> List[Trace[V]]:
-        ...
+    ) -> List[Trace[V]]: ...
 
     def process_batch(
         self,
@@ -237,9 +233,11 @@ class GreatAI(Generic[T, V]):
         return list(
             tqdm(
                 parallel_map(
-                    inner_async
-                    if get_function_metadata_store(self).is_asynchronous
-                    else inner,
+                    (
+                        inner_async
+                        if get_function_metadata_store(self).is_asynchronous
+                        else inner
+                    ),
                     batch,
                     concurrency=concurrency,
                 ),
@@ -249,7 +247,7 @@ class GreatAI(Generic[T, V]):
 
     @staticmethod
     def _get_cached_traced_function(
-        func: Callable[..., Union[V, Awaitable[V]]]
+        func: Callable[..., Union[V, Awaitable[V]]],
     ) -> Callable[..., T]:
         @lru_cache(maxsize=get_context().prediction_cache_size)
         def func_in_tracing_context_sync(

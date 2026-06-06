@@ -23,9 +23,7 @@ def test_with_iterable() -> None:
 
     expected = [v**3 for v in range(10)]
 
-    assert (
-        list(parallel_map(lambda x: x**3, my_generator(), chunk_size=1)) == expected
-    )
+    assert list(parallel_map(lambda x: x**3, my_generator(), chunk_size=1)) == expected
 
 
 def test_simple_case_invalid_values() -> None:
@@ -44,14 +42,10 @@ def test_this_process_exception() -> None:
         assert False
 
     with pytest.raises(AssertionError):
-        list(
-            parallel_map(lambda v: v**2, my_generator(), concurrency=2, chunk_size=2)
-        )
+        list(parallel_map(lambda v: v**2, my_generator(), concurrency=2, chunk_size=2))
 
     with pytest.raises(AssertionError):
-        list(
-            parallel_map(lambda v: v**2, my_generator(), concurrency=1, chunk_size=2)
-        )
+        list(parallel_map(lambda v: v**2, my_generator(), concurrency=1, chunk_size=2))
 
 
 def test_ignore_this_process_exception() -> None:

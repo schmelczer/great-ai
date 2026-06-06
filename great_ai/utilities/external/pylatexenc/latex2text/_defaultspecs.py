@@ -1774,7 +1774,7 @@ def make_accented_char(node, combining, l2tobj):
 
 
 for u in unicode_accents_list:
-    (mname, mcombining) = u
+    mname, mcombining = u
     _latex_specs_base["macros"].append(
         MacroTextSpec(
             mname, lambda x, l2tobj, c=mcombining: make_accented_char(x, c, l2tobj)

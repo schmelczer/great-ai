@@ -1,6 +1,6 @@
 from typing import Awaitable, Callable, List, Optional, Sequence, TypeVar, Union
 
-from tqdm.cli import tqdm
+from tqdm import tqdm
 
 from .parallel_map import parallel_map
 

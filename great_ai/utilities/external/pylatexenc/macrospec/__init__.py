@@ -34,7 +34,6 @@ macros and environments, specifying how they should be parsed by
    `pylatexenc 2.0`.
 """
 
-
 import sys
 
 if sys.version_info.major > 2:
@@ -154,7 +153,7 @@ class EnvironmentSpec(object):
         environmentname,
         args_parser=MacroStandardArgsParser(),
         is_math_mode=False,
-        **kwargs
+        **kwargs,
     ):
         super(EnvironmentSpec, self).__init__(**kwargs)
         self.environmentname = environmentname
@@ -776,9 +775,9 @@ class LatexContextDb(object):
             new_context.add_context_category(
                 cat,
                 macros=self.d[cat]["macros"].values() if keep_macros else [],
-                environments=self.d[cat]["environments"].values()
-                if keep_environments
-                else [],
+                environments=(
+                    self.d[cat]["environments"].values() if keep_environments else []
+                ),
                 specials=self.d[cat]["specials"].values() if keep_specials else [],
             )
 

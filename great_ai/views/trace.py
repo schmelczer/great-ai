@@ -1,7 +1,7 @@
 from pprint import pformat
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
-from pydantic import Extra
+from pydantic import ConfigDict
 
 from .hashable_base_model import HashableBaseModel
 from .model import Model
@@ -32,13 +32,12 @@ class Trace(Generic[T], HashableBaseModel):
     original_execution_time_ms: float
     logged_values: Dict[str, Any]
     models: List[Model]
-    exception: Optional[str]
-    output: Optional[T]
+    exception: Optional[str] = None
+    output: Optional[T] = None
     feedback: Any = None
     tags: List[str]
 
-    class Config:
-        extra = Extra.ignore
+    model_config = ConfigDict(extra="ignore")
 
     @property
     def input(self) -> Any:
@@ -79,7 +78,7 @@ class Trace(Generic[T], HashableBaseModel):
     def to_flat_dict(self, include_original: bool = True) -> Dict[str, Any]:
         return {
             **(
-                self.dict()
+                self.model_dump()
                 if include_original
                 else {
                     "trace_id": self.trace_id,
@@ -88,9 +87,11 @@ class Trace(Generic[T], HashableBaseModel):
                 }
             ),
             **{
-                k: v
-                if (isinstance(v, float) or isinstance(v, int))
-                else pformat(v, indent=2, compact=True)
+                k: (
+                    v
+                    if (isinstance(v, float) or isinstance(v, int))
+                    else pformat(v, indent=2, compact=True)
+                )
                 for k, v in self.logged_values.items()
             },
             "models_flat": self.models_flat,
@@ -101,6 +102,7 @@ class Trace(Generic[T], HashableBaseModel):
         }
 
     def __repr__(self) -> str:
-        return f"""Trace[{type(self.output).__name__}]({
-            pformat(self.dict(), indent=2, compact=True).replace('{ ', '{', 1)
-        })"""
+        formatted = pformat(self.model_dump(), indent=2, compact=True).replace(
+            "{ ", "{", 1
+        )
+        return f"Trace[{type(self.output).__name__}]({formatted})"

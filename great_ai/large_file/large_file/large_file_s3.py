@@ -100,9 +100,13 @@ class LargeFileS3(LargeFileBase):
             Bucket=self.bucket_name,
             Key=remote_path,
             Filename=str(local_path),
-            Callback=None
-            if hide_progress
-            else DownloadProgressBar(name=str(remote_path), size=size, logger=logger),
+            Callback=(
+                None
+                if hide_progress
+                else DownloadProgressBar(
+                    name=str(remote_path), size=size, logger=logger
+                )
+            ),
         )
 
     def _upload(self, local_path: Path, hide_progress: bool) -> None:
@@ -113,9 +117,11 @@ class LargeFileS3(LargeFileBase):
             Filename=str(local_path),
             Bucket=self.bucket_name,
             Key=key,
-            Callback=None
-            if hide_progress
-            else UploadProgressBar(path=local_path, logger=logger),
+            Callback=(
+                None
+                if hide_progress
+                else UploadProgressBar(path=local_path, logger=logger)
+            ),
         )
 
     def _delete_old_remote_versions(self) -> None:

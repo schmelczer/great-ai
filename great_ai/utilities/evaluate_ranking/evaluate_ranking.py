@@ -50,7 +50,7 @@ def evaluate_ranking(
         fig.patch.set_facecolor("white")
         ax = plt.axes()
     else:
-        ax = axes
+        ax = axes  # type: ignore[assignment]
 
     classes = sorted(unique(expected), reverse=reverse_order)
     str_classes = [str(c) for c in classes]

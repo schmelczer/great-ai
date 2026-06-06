@@ -1,10 +1,22 @@
 import inspect
-from functools import wraps
-from typing import Any, Callable, Mapping, Sequence, Set, TypeVar, Union, cast
+from functools import lru_cache, wraps
+from typing import Any, Callable, Mapping, Sequence, Set, Type, TypeVar, Union, cast
 
 from pydantic import BaseModel
 
 F = TypeVar("F", bound=Callable)
+
+
+@lru_cache(maxsize=None)
+def _hashable_model_type(model_type: Type[BaseModel]) -> Type[BaseModel]:
+    # The subclass is cached per model type: Pydantic v2's __eq__ requires both
+    # operands to share a type, so creating a fresh subclass on every freeze()
+    # call would make even identical models compare unequal.
+    class HashableValue(model_type):  # type: ignore
+        def __hash__(self) -> int:
+            return hash(frozenset((k, freeze(v)) for k, v in self.model_dump().items()))
+
+    return HashableValue
 
 
 class FrozenDict(dict):
@@ -55,11 +67,6 @@ def freeze(value: Union[Sequence[Any], Mapping[str, Any], Set[Any], BaseModel]) 
         return FrozenSet(value)
 
     if isinstance(value, BaseModel):
-
-        class HashableValue(type(value)):  # type: ignore
-            def __hash__(self) -> int:
-                return hash(frozenset((k, freeze(v)) for k, v in self.dict().items()))
-
-        return HashableValue(**value.dict())
+        return _hashable_model_type(type(value))(**value.model_dump())
 
     return value

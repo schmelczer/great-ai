@@ -4,7 +4,7 @@ from logging import DEBUG, Logger
 from pathlib import Path
 from typing import Any, Dict, Optional, Type, Union, cast
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from great_ai import __version__
 
@@ -34,8 +34,7 @@ class Context(BaseModel):
     dashboard_table_size: int
     route_config: RouteConfig
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def to_flat_dict(self) -> Dict[str, Any]:
         return {
@@ -137,9 +136,11 @@ def configure(
         ),
         is_production=is_production,
         logger=logger,
-        should_log_exception_stack=not is_production
-        if should_log_exception_stack is None
-        else should_log_exception_stack,
+        should_log_exception_stack=(
+            not is_production
+            if should_log_exception_stack is None
+            else should_log_exception_stack
+        ),
         prediction_cache_size=prediction_cache_size,
         dashboard_table_size=dashboard_table_size,
         route_config=route_config,

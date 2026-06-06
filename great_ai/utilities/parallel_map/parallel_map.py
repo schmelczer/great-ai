@@ -31,8 +31,7 @@ def parallel_map(
     chunk_size: Optional[int] = ...,
     concurrency: Optional[int] = ...,
     unordered: bool = ...,
-) -> Iterable[Optional[V]]:
-    ...
+) -> Iterable[Optional[V]]: ...
 
 
 @overload
@@ -44,8 +43,7 @@ def parallel_map(
     ignore_exceptions: Literal[True],
     concurrency: Optional[int] = ...,
     unordered: bool = ...,
-) -> Iterable[Optional[V]]:
-    ...
+) -> Iterable[Optional[V]]: ...
 
 
 @overload
@@ -57,8 +55,7 @@ def parallel_map(
     ignore_exceptions: Literal[False] = ...,
     concurrency: Optional[int] = ...,
     unordered: bool = ...,
-) -> Iterable[V]:
-    ...
+) -> Iterable[V]: ...
 
 
 @overload
@@ -70,8 +67,7 @@ def parallel_map(
     ignore_exceptions: Literal[False] = ...,
     concurrency: Optional[int] = ...,
     unordered: bool = ...,
-) -> Iterable[V]:
-    ...
+) -> Iterable[V]: ...
 
 
 def parallel_map(

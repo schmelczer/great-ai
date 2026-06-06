@@ -94,11 +94,9 @@ class ConfigFile(Mapping[str, str]):
             try:
                 value = next(v for v in values if v)
             except StopIteration:
-                raise ParseError(
-                    f"""Cannot parse config file ({
+                raise ParseError(f"""Cannot parse config file ({
                         self._path.absolute()
-                        }), error at key `{key}`"""
-                )
+                        }), error at key `{key}`""")
 
             already_exists = key in self._key_values
             if already_exists and not value.startswith(

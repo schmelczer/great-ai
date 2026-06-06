@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, Sequence
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from .filter import Filter
 from .sort_by import SortBy
@@ -15,8 +15,8 @@ class Query(BaseModel):
     until: Optional[datetime] = None
     has_feedback: Optional[bool] = None
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "filter": [
                     {
@@ -33,3 +33,4 @@ class Query(BaseModel):
                 "has_feedback": False,
             }
         }
+    )

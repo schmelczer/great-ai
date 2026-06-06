@@ -617,7 +617,7 @@ class UnicodeToLatexEncoder(object):
         res = rulecallable(s, p.pos)
         if res is None:
             return None
-        (consumed, repl) = res
+        consumed, repl = res
         self._apply_replacement(p, repl, consumed, rule)
         return True
 

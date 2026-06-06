@@ -9,9 +9,9 @@ class LabeledToken(HashableBaseModel):
     token: str
     tag: Literal["B", "I", "O", "E", "S"]
     confidence: float
-    explanation: Optional[Any]
+    explanation: Optional[Any] = None
 
 
 class SequenceLabelingOutput(HashableBaseModel):
     labeled_tokens: List[LabeledToken]
-    explanation: Optional[Any]
+    explanation: Optional[Any] = None

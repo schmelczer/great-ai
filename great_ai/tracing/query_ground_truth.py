@@ -10,7 +10,7 @@ def query_ground_truth(
     *,
     since: Optional[datetime] = None,
     until: Optional[datetime] = None,
-    return_max_count: Optional[int] = None
+    return_max_count: Optional[int] = None,
 ) -> List[Trace]:
     """Return training samples.
 

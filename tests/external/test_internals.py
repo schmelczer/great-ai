@@ -24,7 +24,8 @@ class Wrapped:
 
 
 @pytest.mark.asyncio
-async def test_done_callback_cancelled(loop):
+async def test_done_callback_cancelled():
+    loop = asyncio.get_running_loop()
     task = loop.create_future()
     fut = loop.create_future()
 
@@ -38,7 +39,8 @@ async def test_done_callback_cancelled(loop):
 
 
 @pytest.mark.asyncio
-async def test_done_callback_exception(loop):
+async def test_done_callback_exception():
+    loop = asyncio.get_running_loop()
     task = loop.create_future()
     fut = loop.create_future()
 
@@ -60,7 +62,8 @@ async def test_done_callback_exception(loop):
 
 
 @pytest.mark.asyncio
-async def test_done_callback(loop):
+async def test_done_callback():
+    loop = asyncio.get_running_loop()
     task = loop.create_future()
     fut = loop.create_future()
 
@@ -228,7 +231,8 @@ def test_close(loop):
 
 
 @pytest.mark.asyncio
-async def test_wait_closed(loop):
+async def test_wait_closed():
+    loop = asyncio.get_running_loop()
     wrapped = Wrapped()
     wrapped.tasks = set()
 

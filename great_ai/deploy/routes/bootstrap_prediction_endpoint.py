@@ -22,10 +22,10 @@ def bootstrap_prediction_endpoint(
         try:
             if inspect.iscoroutinefunction(func):
                 return await cast(Callable[..., Awaitable[Trace]], func)(
-                    **cast(BaseModel, input_value).dict()
+                    **cast(BaseModel, input_value).model_dump()
                 )
             return cast(Callable[..., Trace], func)(
-                **cast(BaseModel, input_value).dict()
+                **cast(BaseModel, input_value).model_dump()
             )
         except Exception as e:
             raise HTTPException(

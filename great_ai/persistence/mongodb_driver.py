@@ -90,7 +90,7 @@ class MongoDbDriver(TracingDatabaseDriver):
             value = client[self.mongo_database].traces.find_one(id)
 
         if value:
-            value = Trace.parse_obj(value)
+            value = Trace.model_validate(value)
 
         return value
 
@@ -150,7 +150,7 @@ class MongoDbDriver(TracingDatabaseDriver):
             ]
 
             with client[self.mongo_database].traces.find(**query) as cursor:
-                documents = [Trace[Any].parse_obj(t) for t in cursor]
+                documents = [Trace[Any].model_validate(t) for t in cursor]
         return documents, count
 
     def update(self, id: str, new_version: Trace) -> None:

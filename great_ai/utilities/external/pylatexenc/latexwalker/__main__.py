@@ -184,7 +184,7 @@ def main(argv=None):
         latex, tolerant_parsing=args.tolerant_parsing, strict_braces=args.strict_braces
     )
 
-    (nodelist, pos, len_) = latexwalker.get_latex_nodes()
+    nodelist, pos, len_ = latexwalker.get_latex_nodes()
 
     if args.output_format == "human":
         print("\n--- NODES ---\n")
