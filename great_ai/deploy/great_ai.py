@@ -230,17 +230,17 @@ class GreatAI(Generic[T, V]):
                 ),
             )
 
+        # inner/inner_async return the class' T (bound to Trace | Awaitable[Trace]);
+        # in this method T resolves to Trace[V], but that is not provable to mypy, so
+        # cast to the concrete shape parallel_map expects.
+        map_function = cast(
+            Callable[[Any], Union[Trace[V], Awaitable[Trace[V]]]],
+            inner_async if get_function_metadata_store(self).is_asynchronous else inner,
+        )
+
         return list(
             tqdm(
-                parallel_map(
-                    (
-                        inner_async
-                        if get_function_metadata_store(self).is_asynchronous
-                        else inner
-                    ),
-                    batch,
-                    concurrency=concurrency,
-                ),
+                parallel_map(map_function, batch, concurrency=concurrency),
                 total=len(batch),
             )
         )

@@ -242,7 +242,7 @@ async def test_wait_closed():
             return_exceptions=True,
         )
         assert ret == []
-        assert mocked.called_once()
+        mocked.assert_called_once()
 
     asyncio.set_event_loop(loop)
     with mock.patch("great_ai.external.async_lru._close_waited") as mocked:
@@ -251,7 +251,7 @@ async def test_wait_closed():
             return_exceptions=True,
         )
         assert ret == []
-        assert mocked.called_once()
+        mocked.assert_called_once()
     asyncio.set_event_loop(None)
 
     fut = loop.create_future()
@@ -263,7 +263,7 @@ async def test_wait_closed():
             return_exceptions=True,
         )
         assert ret == [None]
-        assert mocked.called_once()
+        mocked.assert_called_once()
 
     exc = ZeroDivisionError()
     fut = loop.create_future()
@@ -275,7 +275,7 @@ async def test_wait_closed():
             return_exceptions=True,
         )
         assert ret == [exc]
-        assert mocked.called_once()
+        mocked.assert_called_once()
 
     fut = loop.create_future()
     fut.set_exception(ZeroDivisionError)
@@ -286,17 +286,21 @@ async def test_wait_closed():
                 wrapped,
                 return_exceptions=False,
             )
-        assert mocked.called_once()
+        # the awaited result raised before _wait_closed could flush its done
+        # callback, so yield once to let the scheduled _close_waited run
+        await asyncio.sleep(0)
+        mocked.assert_called_once()
 
 
 def test_close_waited():
     wrapped = Wrapped()
-    wrapped.cache_clear = partial(_cache_clear, wrapped)
+    # _close_waited calls wrapped.cache_clear(); mock that directly (patching the
+    # module-level _cache_clear would not affect the already-bound partial).
+    wrapped.cache_clear = mock.Mock()
 
-    with mock.patch("great_ai.external.async_lru._cache_clear") as mocked:
-        _close_waited(wrapped, None)
+    _close_waited(wrapped, None)
 
-        assert mocked.called_once()
+    wrapped.cache_clear.assert_called_once()
 
 
 def test_cache_info():
@@ -343,7 +347,7 @@ def test_cache_hit():
     with mock.patch("great_ai.external.async_lru.__cache_touch") as mocked:
         _cache_hit(wrapped, 1)
 
-        assert mocked.called_once()
+        mocked.assert_called_once()
 
     assert wrapped.hits == 2
 
@@ -361,7 +365,7 @@ def test_cache_miss():
     with mock.patch("great_ai.external.async_lru.__cache_touch") as mocked:
         _cache_miss(wrapped, 1)
 
-        assert mocked.called_once()
+        mocked.assert_called_once()
 
     assert wrapped.misses == 2
 
