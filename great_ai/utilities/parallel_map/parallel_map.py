@@ -147,7 +147,7 @@ def parallel_map(
     serialized_map_function = dill.dumps(func, byref=True, recurse=False)
 
     processes = [
-        ctx.Process(  # type: ignore
+        ctx.Process(
             name=f"parallel_map_{config.function_name}_{i}",
             target=mapper_function,
             daemon=True,

@@ -1,0 +1,28 @@
+name: Publish on PyPI
+
+on:
+  push:
+    tags: ['*']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Set up Python
+        run: uv python install 3.10
+
+      # Forgejo cannot use PyPI trusted publishing (OIDC), so authenticate with
+      # an API token, the same way the sibling repos publish their packages.
+      - name: Build and publish
+        env:
+          FLIT_USERNAME: __token__
+          FLIT_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: uvx flit publish

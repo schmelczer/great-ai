@@ -1,0 +1,73 @@
+name: Check
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ gitea.workflow }}-${{ gitea.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint, format & type checks
+    runs-on: docker
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Set up Python
+        run: uv python install 3.10
+
+      - name: Install dependencies
+        # --seed gives the venv its own pip, which scripts/check-python.sh shells
+        # out to for its linters; '.[dev]' provides the rest (mypy resolves the
+        # package's own imports against the installed tree).
+        run: |
+          uv venv --seed --python 3.10
+          uv pip install '.[dev]'
+
+      - name: Check code and formatting
+        run: |
+          . .venv/bin/activate
+          scripts/check-python.sh great_ai tests
+
+  test:
+    name: Test on Python ${{ matrix.python-version }}
+    runs-on: docker
+    strategy:
+      fail-fast: false
+      matrix:
+        # pyproject declares >= 3.7, but uv's standalone CPython and the current
+        # dependency floors (scikit-learn/numpy now require >= 3.9) no longer
+        # build on 3.7/3.8. Re-add those rows if the constraints are relaxed.
+        # The windows leg of the old GitHub matrix is dropped: this Forgejo
+        # instance only has a Linux `docker` runner.
+        python-version: ['3.9', '3.10']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          uv venv --python ${{ matrix.python-version }}
+          uv pip install '.[dev]'
+
+      - name: Run tests
+        run: |
+          . .venv/bin/activate
+          pytest --doctest-modules --asyncio-mode=strict
