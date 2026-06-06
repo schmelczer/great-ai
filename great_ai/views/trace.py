@@ -9,7 +9,7 @@ from .model import Model
 T = TypeVar("T")
 
 
-class Trace(Generic[T], HashableBaseModel):
+class Trace(HashableBaseModel, Generic[T]):
     """Universal structure for storing prediction traces and training data.
 
     Attributes:

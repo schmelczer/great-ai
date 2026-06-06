@@ -1,11 +1,9 @@
 from contextvars import ContextVar
-from datetime import datetime
+from datetime import datetime, timezone
 from time import perf_counter
 from types import TracebackType
-from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, cast
+from typing import Any, Dict, Generic, List, Literal, Optional, Type, TypeVar, cast
 from uuid import uuid4
-
-from typing_extensions import Literal  # <= Python 3.7
 
 from ..constants import DEVELOPMENT_TAG_NAME, ONLINE_TAG_NAME, PRODUCTION_TAG_NAME
 from ..context import get_context
@@ -25,7 +23,7 @@ class TracingContext(Generic[T]):
         self._models: List[Model] = []
         self._values: Dict[str, Any] = {}
         self._trace: Optional[Trace[T]] = None
-        self._start_datetime = datetime.utcnow()
+        self._start_datetime = datetime.now(timezone.utc).replace(tzinfo=None)
         self._start_time = perf_counter()
         self._name = function_name
 

@@ -1,6 +1,4 @@
-from typing import Any, List, Optional
-
-from typing_extensions import Literal  # <= Python 3.7
+from typing import Any, List, Literal, Optional
 
 from ..hashable_base_model import HashableBaseModel
 

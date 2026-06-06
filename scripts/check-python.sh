@@ -3,7 +3,7 @@
 set -e
 
 echo "Installing dependencies if necessary"
-python3 -m pip install --upgrade autoflake isort black[jupyter] mypy flake8
+python3 -m pip install autoflake isort black[jupyter] mypy flake8
 
 for dir in "$@"; do
     echo "Checking $dir"
@@ -19,7 +19,7 @@ for dir in "$@"; do
         python3 -m mypy --namespace-packages --ignore-missing-imports --install-types --non-interactive --disallow-untyped-defs --disallow-incomplete-defs --follow-imports=silent --exclude=external/ --exclude=/build/ --exclude='(^|/)__main__\.py$' --pretty .
     fi
 
-    python3 -m flake8 . --count --show-source --statistics --exclude=__init__.py,.env,external --ignore=E501,E402,F821,W503,E722,E203,E704
+    python3 -m flake8 . --count --show-source --statistics --exclude=__init__.py,.env,external --extend-ignore=E501,E402,F821,W503,E722,E203,E704
 
     cd -
 done

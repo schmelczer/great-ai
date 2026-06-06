@@ -1,8 +1,19 @@
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple, TypeVar, Union, cast
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from dill import load
-from typing_extensions import Literal  # <= Python 3.7
 
 from ..context import get_context
 from ..helper import get_function_metadata_store

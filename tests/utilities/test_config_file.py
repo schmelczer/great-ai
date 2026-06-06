@@ -14,11 +14,14 @@ def test_simple() -> None:
     assert c.first_key == "András"
     assert c.second_key == "test 2"
     assert c.third_key == "test= 2=="
-    assert c.fourth_key == """
+    assert (
+        c.fourth_key
+        == """
 this#
 is
 multiline
 """
+    )
     assert c.whitespace == "hardly  matters"
     with pytest.raises(KeyError):
         c.this
@@ -31,11 +34,14 @@ def test_simple_dict() -> None:
     assert c["my_hashtag"] == "#great_ai"
     assert c["second_key"] == "test 2"
     assert c["third_key"] == "test= 2=="
-    assert c["fourth_key"] == """
+    assert (
+        c["fourth_key"]
+        == """
 this#
 is
 multiline
 """
+    )
     assert c["whitespace"] == "hardly  matters"
     with pytest.raises(KeyError):
         c["#this"]
@@ -49,11 +55,14 @@ def test_string_path() -> None:
 
     assert c.second_key == "test 2"
     assert c.third_key == "test= 2=="
-    assert c.fourth_key == """
+    assert (
+        c.fourth_key
+        == """
 this#
 is
 multiline
 """
+    )
     assert c.whitespace == "hardly  matters"
 
 

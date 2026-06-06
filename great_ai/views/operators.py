@@ -1,6 +1,4 @@
-from typing import List
-
-from typing_extensions import Literal  # <= Python 3.7
+from typing import List, Literal
 
 Operator = Literal[">=", "<=", "<", ">", "!=", "=", "contains"]
 

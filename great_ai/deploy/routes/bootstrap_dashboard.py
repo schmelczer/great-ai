@@ -1,7 +1,7 @@
 from pathlib import Path
 
+from a2wsgi import WSGIMiddleware
 from fastapi import FastAPI
-from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -19,7 +19,10 @@ def bootstrap_dashboard(app: FastAPI, function_name: str, documentation: str) ->
     def get_favicon() -> FileResponse:
         return FileResponse(PATH / "dashboard/assets/favicon.ico")
 
-    app.mount(DASHBOARD_PATH, WSGIMiddleware(dash_app))
+    # a2wsgi types its WSGI input (Flask) and ASGI output more strictly than
+    # Starlette's loose WSGIApp/ASGIApp aliases, so mypy flags the mount despite
+    # this being the canonical, runtime-correct way to bridge the Dash app.
+    app.mount(DASHBOARD_PATH, WSGIMiddleware(dash_app))  # type: ignore[arg-type]
 
     @app.get("/", include_in_schema=False)
     def redirect_to_entrypoint() -> RedirectResponse:

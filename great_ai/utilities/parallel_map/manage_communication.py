@@ -39,9 +39,11 @@ def manage_communication(
                 is_iteration_over = True
             except Exception as e:
                 if ignore_exceptions:
-                    logger.error(f"""Exception {e} encountered in input, traceback:\n{
+                    logger.error(
+                        f"""Exception {e} encountered in input, traceback:\n{
                             traceback.format_exc()
-                        }""")
+                        }"""
+                    )
                 else:
                     raise
 

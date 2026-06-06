@@ -16,7 +16,8 @@ def get_description(
                 style={"color": accent_color},
             ),
             dcc.Markdown(
-                strip_lines(f"""
+                strip_lines(
+                    f"""
                     > View the live data of your deployment here.
 
                     ## Using the API
@@ -26,7 +27,8 @@ def get_description(
                     ## Details
 
                     {function_docs}
-                """),
+                """
+                ),
                 className="description",
             ),
         ]

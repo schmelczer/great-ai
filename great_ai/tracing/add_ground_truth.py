@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from math import ceil
 from random import shuffle
 from typing import Any, Iterable, List, TypeVar, Union, cast
@@ -94,7 +94,7 @@ def add_ground_truth(
     )
     shuffle(split_tags)
 
-    created = datetime.utcnow().isoformat()
+    created = datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
     traces = [
         cast(
             Trace[T],

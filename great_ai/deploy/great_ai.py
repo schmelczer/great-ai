@@ -6,6 +6,7 @@ from typing import (
     Callable,
     Generic,
     List,
+    Literal,
     Optional,
     Sequence,
     Tuple,
@@ -17,7 +18,6 @@ from typing import (
 
 from fastapi import FastAPI
 from tqdm import tqdm
-from typing_extensions import Literal  # <= Python 3.7
 
 from ..constants import DASHBOARD_PATH
 from ..context import get_context
