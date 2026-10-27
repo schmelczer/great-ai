@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict
 from unittest.mock import patch
 
@@ -5,6 +6,32 @@ from great_ai import Trace
 from great_ai.persistence.mongodb_driver import MongoDbDriver
 from pymongo import MongoClient
 from pymongo.synchronous.collection import Collection
+
+
+def test_flattening_preserves_reserved_trace_fields() -> None:
+    trace = Trace(
+        trace_id="actual-id",
+        created=datetime(2026, 1, 1).isoformat(),
+        original_execution_time_ms=0,
+        models=[],
+        tags=["online"],
+        output="prediction",
+        logged_values={
+            "trace_id": "input-id",
+            "created": "input-created",
+            "output": 123,
+            "tags": ["input"],
+            "models": "input",
+            "_id": "input-id",
+            "feature": 5,
+        },
+    )
+    flat = trace.to_flat_dict()
+    for name, value in trace.model_dump().items():
+        assert flat[name] == value
+    assert "_id" not in flat
+    assert flat["feature"] == 5
+    assert Trace.model_validate(flat) == trace
 
 
 def test_mongo_update_uses_valid_replacement() -> None:

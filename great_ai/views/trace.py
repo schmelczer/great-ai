@@ -76,6 +76,7 @@ class Trace(HashableBaseModel, Generic[T]):
         return ",\n".join(self.tags)
 
     def to_flat_dict(self, include_original: bool = True) -> Dict[str, Any]:
+        reserved = set(type(self).model_fields) | {"_id"}
         return {
             **(
                 self.model_dump()
@@ -93,6 +94,7 @@ class Trace(HashableBaseModel, Generic[T]):
                     else pformat(v, indent=2, compact=True)
                 )
                 for k, v in self.logged_values.items()
+                if k not in reserved
             },
             "models_flat": self.models_flat,
             "exception_flat": self.exception_flat,
