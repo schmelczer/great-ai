@@ -16,6 +16,7 @@ import dill
 from .get_config import get_config
 from .manage_communication import manage_communication
 from .mapper_function import mapper_function
+from .worker_exception import WorkerException
 
 T = TypeVar("T")
 V = TypeVar("V")
@@ -156,6 +157,14 @@ def parallel_map(
         for i in range(config.concurrency)
     ]
 
+    def check_workers() -> None:
+        for process in processes:
+            if process.exitcode is not None:
+                raise WorkerException(
+                    f"Worker {process.name} exited unexpectedly "
+                    f"with exit code {process.exitcode}"
+                )
+
     completed = False
     try:
         for p in processes:
@@ -168,6 +177,7 @@ def parallel_map(
             output_queue=output_queue,
             unordered=unordered,
             ignore_exceptions=ignore_exceptions,
+            check_workers=check_workers,
         )
         completed = True
     finally:

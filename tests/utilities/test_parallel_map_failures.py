@@ -8,7 +8,9 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize("operation", ["close", "interrupt"])
+@pytest.mark.parametrize(
+    "operation", ["close", "interrupt", "dead_worker", "dead_worker_zero"]
+)
 def test_worker_failure_and_cancellation_finish(tmp_path: Path, operation: str) -> None:
     script = textwrap.dedent("""
         import multiprocessing as mp
