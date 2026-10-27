@@ -265,7 +265,7 @@ class GreatAI(Generic[T, V]):
                 result = func(*args, **kwargs)
                 return cast(T, t.finalise(output=result))
 
-        @alru_cache(maxsize=get_context().prediction_cache_size)
+        @alru_cache(maxsize=get_context().prediction_cache_size, cache_exceptions=False)
         async def func_in_tracing_context_async(
             *args: Any,
             do_not_persist_traces: bool = False,

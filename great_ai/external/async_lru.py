@@ -148,9 +148,9 @@ def alru_cache(
                     _cache_hit(wrapped, key)
                     return await asyncio.shield(fut)
 
-                exc = fut._exception
+                exc = None if fut.cancelled() else fut.exception()
 
-                if exc is None or cache_exceptions:
+                if not fut.cancelled() and (exc is None or cache_exceptions):
                     _cache_hit(wrapped, key)
                     return fut.result()
 
