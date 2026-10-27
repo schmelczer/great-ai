@@ -3,10 +3,10 @@ from hashlib import md5
 
 
 def text_to_hex_color(text: str) -> str:
-    ascii_bytes = text.encode("ascii")
+    encoded_text = text.encode("utf-8")
 
     digest = md5(
-        ascii_bytes
+        encoded_text
     ).hexdigest()  # the built-in hash function is salted differently in each process
 
     integer = int(digest, 16)
