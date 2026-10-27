@@ -37,7 +37,9 @@ def parameter(
 
         >>> @parameter('positive_a', validate=lambda v: v > 0)
         ... def my_function(positive_a: int):
-        ...     return a + 2
+        ...     return positive_a + 2
+        >>> my_function(4)
+        6
         >>> my_function(-1)
         Traceback (most recent call last):
             ...
