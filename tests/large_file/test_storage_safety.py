@@ -45,3 +45,14 @@ def test_cached_directories_can_be_removed(
         monkeypatch.setattr(LargeFileLocal, "max_cache_size", "0")
         reader.clean_up()
     assert not cached.exists()
+
+
+def test_cache_quota_counts_directory_contents(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "weights").write_bytes(b"x" * 100_000)
+    monkeypatch.setattr(LargeFileLocal, "max_cache_size", "1 KB")
+    LargeFileLocal("model", "w").push(source)
+    assert not (LargeFileLocal.cache_path / "model-0").exists()

@@ -327,7 +327,12 @@ class LargeFileBase(ABC):
             [f for f in self.cache_path.glob("*")], key=lambda f: f.stat().st_atime
         )
 
-        while sum(os.path.getsize(f) for f in least_recently_read) > allowed_size:
+        def size(path: Path) -> int:
+            if path.is_dir():
+                return sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
+            return path.stat().st_size
+
+        while sum(size(f) for f in least_recently_read) > allowed_size:
             file = least_recently_read.pop(0)
             logger.info(
                 f"Deleting file from cache to meet quota (max_cache_size={self.max_cache_size}): {file}"
