@@ -222,6 +222,8 @@ class LargeFileBase(ABC):
         else:
             logger.info(f"File {self._local_name} found in cache")
 
+        os.utime(destination, None)
+        self._prune_cache(protected=destination)
         return destination
 
     def push(self, path: Union[Path, str], hide_progress: bool = False) -> None:
@@ -388,7 +390,7 @@ class LargeFileBase(ABC):
         else:
             raise ValueError("Unsupported file mode.")
 
-    def _prune_cache(self) -> None:
+    def _prune_cache(self, protected: Optional[Path] = None) -> None:
         self.cache_path.mkdir(parents=True, exist_ok=True)
 
         if self.max_cache_size is None:
@@ -411,8 +413,19 @@ class LargeFileBase(ABC):
                 return sum(f.stat().st_size for f in path.rglob("*") if f.is_file())
             return path.stat().st_size
 
+        if protected is not None and size(protected) > allowed_size:
+            self._remove_cached_path(protected)
+            self._cache_identity_path.unlink(missing_ok=True)
+            raise ValueError(
+                f"File {self._name} exceeds max_cache_size={self.max_cache_size}; "
+                "increase the cache quota to read this file"
+            )
+
         while sum(size(f) for f in least_recently_read) > allowed_size:
             file = least_recently_read.pop(0)
+            if file == protected:
+                least_recently_read.append(file)
+                continue
             logger.info(
                 f"Deleting file from cache to meet quota (max_cache_size={self.max_cache_size}): {file}"
             )
@@ -420,6 +433,10 @@ class LargeFileBase(ABC):
                 shutil.rmtree(file)
             else:
                 file.unlink()
+            metadata = (
+                self.cache_path / ".metadata" / sha256(file.name.encode()).hexdigest()
+            )
+            metadata.unlink(missing_ok=True)
 
     @abstractmethod
     def _find_remote_instances(self) -> List[DataInstance]:
