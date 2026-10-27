@@ -386,7 +386,7 @@ def fmt_matrix_environment_node(node, l2tobj):
     state.new_row()  # finish the last row
 
     # now format the contents as array --
-    max_char_width = max((len(x) for row in state.matrix_rows for x in row))
+    max_char_width = max((len(x) for row in state.matrix_rows for x in row), default=0)
     matrix_contents = "; ".join(
         (
             " ".join((x.rjust(max_char_width, " ") for x in row))

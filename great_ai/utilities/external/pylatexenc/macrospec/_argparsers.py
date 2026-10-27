@@ -460,12 +460,12 @@ class VerbatimArgsParser(MacroStandardArgsParser):
         if self.verbatim_arg_type == "verb-macro":
             # read the next nonwhitespace char. This is the delimiter of the
             # argument
-            while w.s[pos].isspace():
+            while pos < len(w.s) and w.s[pos].isspace():
                 pos += 1
-                if pos >= len(w.s):
-                    raise latexwalker.LatexWalkerParseError(
-                        s=w.s, pos=pos, msg=r"Missing argument to \verb command"
-                    )
+            if pos >= len(w.s):
+                raise latexwalker.LatexWalkerParseError(
+                    s=w.s, pos=pos, msg=r"Missing argument to \verb command"
+                )
             verbdelimchar = w.s[pos]
             beginpos = pos + 1
             endpos = w.s.find(verbdelimchar, beginpos)
