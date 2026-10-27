@@ -272,10 +272,10 @@ def get_dimension_descriptor(df: pd.DataFrame, column: str) -> Dict[str, Any]:
     except (TypeError, ValueError):
         MAX_LENGTH = 40
         unique_values = unique(values, key=freeze)
-        value_mapping = {str(v)[:MAX_LENGTH]: i for i, v in enumerate(unique_values)}
+        value_mapping = {freeze(v): i for i, v in enumerate(unique_values)}
 
-        dimension["values"] = [value_mapping[str(v)[:MAX_LENGTH]] for v in values]
+        dimension["values"] = [value_mapping[freeze(v)] for v in values]
         dimension["tickvals"] = list(value_mapping.values())
-        dimension["ticktext"] = [k[:MAX_LENGTH] for k in value_mapping.keys()]
+        dimension["ticktext"] = [str(value)[:MAX_LENGTH] for value in unique_values]
 
     return dimension
