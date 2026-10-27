@@ -1,8 +1,7 @@
 import asyncio
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 import pytest
-
 from great_ai import GreatAI
 
 
@@ -42,3 +41,35 @@ async def test_async_predictions_retry_after_failure(
     assert (await predict(7)).output == 7
     assert (await predict(7)).output == 7
     assert calls == 2
+
+
+def test_prediction_mutation_does_not_change_cache_keys(isolated_context: None) -> None:
+    calls = 0
+
+    @GreatAI.create
+    def predict(values: List[int]) -> int:
+        nonlocal calls
+        calls += 1
+        values.append(1)
+        return len(values)
+
+    original: List[int] = []
+    assert predict(original).output == 1
+    assert predict([]).output == 1
+    assert original == []
+    assert calls == 1
+
+
+def test_caller_mutation_does_not_change_cached_trace_values(
+    isolated_context: None,
+) -> None:
+    @GreatAI.create
+    def predict(values: List[List[int]]) -> int:
+        return values[0][0]
+
+    original = [[1]]
+    first = predict(original)
+    original[0][0] = 2
+    assert predict(original).output == 2
+    assert predict([[1]]).trace_id == first.trace_id
+    assert first.logged_values["arg:values:value"] == [[1]]

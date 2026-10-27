@@ -23,6 +23,7 @@ from ..constants import DASHBOARD_PATH
 from ..context import get_context
 from ..external.async_lru import alru_cache
 from ..helper import freeze_arguments, get_function_metadata_store, snake_case_to_text
+from ..helper.frozen_call import FrozenCall
 from ..models.use_model import model_versions
 from ..parameters.automatically_decorate_parameters import (
     automatically_decorate_parameters,
@@ -258,37 +259,53 @@ class GreatAI(Generic[T, V]):
         func: Callable[..., Union[V, Awaitable[V]]],
     ) -> Callable[..., T]:
         @lru_cache(maxsize=get_context().prediction_cache_size)
-        def func_in_tracing_context_sync(
-            *args: Any,
-            do_not_persist_traces: bool = False,
-            **kwargs: Any,
-        ) -> T:
+        def func_in_tracing_context_sync(call: FrozenCall) -> T:
             with TracingContext[V](
-                func.__name__, do_not_persist_traces=do_not_persist_traces
+                func.__name__, do_not_persist_traces=call.do_not_persist
             ) as t:
-                result = func(*args, **kwargs)
+                result = func(*call.args, **call.kwargs)
                 return cast(T, t.finalise(output=result))
 
         @alru_cache(maxsize=get_context().prediction_cache_size, cache_exceptions=False)
-        async def func_in_tracing_context_async(
-            *args: Any,
-            do_not_persist_traces: bool = False,
-            **kwargs: Any,
-        ) -> T:
+        async def func_in_tracing_context_async(call: FrozenCall) -> T:
             with TracingContext[V](
-                func.__name__, do_not_persist_traces=do_not_persist_traces
+                func.__name__, do_not_persist_traces=call.do_not_persist
             ) as t:
-                result = await cast(Callable[..., Awaitable], func)(*args, **kwargs)
+                result = await cast(Callable[..., Awaitable], func)(
+                    *call.args, **call.kwargs
+                )
                 return cast(T, t.finalise(output=result))
 
-        return cast(
-            Callable[..., T],
-            (
-                func_in_tracing_context_async
-                if get_function_metadata_store(func).is_asynchronous
-                else func_in_tracing_context_sync
-            ),
+        @wraps(func)
+        def sync(*args: Any, do_not_persist_traces: bool = False, **kwargs: Any) -> T:
+            return func_in_tracing_context_sync(
+                FrozenCall(args, kwargs, do_not_persist_traces)
+            )
+
+        @wraps(func)
+        async def asynchronous(
+            *args: Any, do_not_persist_traces: bool = False, **kwargs: Any
+        ) -> T:
+            return await func_in_tracing_context_async(
+                FrozenCall(args, kwargs, do_not_persist_traces)
+            )
+
+        is_async = get_function_metadata_store(func).is_asynchronous
+        wrapped = asynchronous if is_async else sync
+        cached = (
+            func_in_tracing_context_async if is_async else func_in_tracing_context_sync
         )
+        for attribute in (
+            "cache_info",
+            "cache_clear",
+            "cache_parameters",
+            "invalidate",
+            "close",
+            "open",
+        ):
+            if hasattr(cached, attribute):
+                setattr(wrapped, attribute, getattr(cached, attribute))
+        return cast(Callable[..., T], wrapped)
 
     def _bootstrap_rest_api(
         self,
