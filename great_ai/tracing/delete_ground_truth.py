@@ -18,7 +18,14 @@ def delete_ground_truth(
     You can rely on the efficiency of the delete's implementation.
 
     Examples:
-        >>> delete_ground_truth(['train', 'test', 'validation'])
+        Delete training samples that also have the dataset tag `my-dataset`:
+
+        >>> delete_ground_truth(['my-dataset', 'train'])
+
+        Split tags are mutually exclusive for normally split samples. To delete all
+        splits of this dataset, filter by the dataset tag alone:
+
+        >>> delete_ground_truth('my-dataset')
 
     Args:
         conjunctive_tags: Single tag or a list of tags which the deleted traces have to
