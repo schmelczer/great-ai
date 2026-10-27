@@ -16,3 +16,4 @@ mkdocs.yaml
 **/.mypy_cache
 **/__pycache__
 **/tracing_database.json
+**/tracing_database.json.lock

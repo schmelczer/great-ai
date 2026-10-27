@@ -9,4 +9,5 @@ __pycache__
 *.egg-info
 build
 tracing_database.json
+tracing_database.json.lock
 .tox

@@ -1,16 +1,15 @@
 from datetime import datetime
-from multiprocessing import Lock
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 import pandas as pd
+from filelock import FileLock
 from tinydb import TinyDB
 
 from ..views import Filter, SortBy, Trace
 from .tracing_database_driver import TracingDatabaseDriver
 
 DEFAULT_TRACING_DB_FILENAME = "tracing_database.json"
-lock = Lock()
 
 
 operator_mapping = {"=": "eq", "!=": "ne", "<": "lt", "<=": "le", ">": "gt", ">=": "ge"}
@@ -22,7 +21,7 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
     Saves the database as a JSON into a single file. Highly inefficient on inserting,
     not advised for production use.
 
-    A multiprocessing lock protects the database file to avoid parallelisation issues.
+    A file lock protects the database across threads and independently started processes.
     """
 
     is_production_ready = False
@@ -109,12 +108,10 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         self._safe_execute(lambda db: db.remove(lambda d: d["trace_id"] == id))
 
     def delete_batch(self, ids: List[str]) -> None:
-        with lock:
-            with TinyDB(self.path_to_db) as db:
-                for id in ids:
-                    db.remove(lambda d: d["trace_id"] == id)
+        selected = set(ids)
+        self._safe_execute(lambda db: db.remove(lambda d: d["trace_id"] in selected))
 
     def _safe_execute(self, func: Callable[[TinyDB], Any]) -> Any:
-        with lock:
+        with FileLock(str(self.path_to_db.resolve()) + ".lock"):
             with TinyDB(self.path_to_db) as db:
                 return func(db)
