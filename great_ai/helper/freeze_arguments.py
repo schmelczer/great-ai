@@ -13,8 +13,10 @@ def _hashable_model_type(model_type: Type[BaseModel]) -> Type[BaseModel]:
     # operands to share a type, so creating a fresh subclass on every freeze()
     # call would make even identical models compare unequal.
     class HashableValue(model_type):  # type: ignore
+        __slots__ = ()
+
         def __hash__(self) -> int:
-            return hash(frozenset((k, freeze(v)) for k, v in self.model_dump().items()))
+            return hash(freeze(self.model_dump()))
 
     return HashableValue
 
@@ -67,6 +69,10 @@ def freeze(value: Union[Sequence[Any], Mapping[str, Any], Set[Any], BaseModel]) 
         return FrozenSet(value)
 
     if isinstance(value, BaseModel):
-        return _hashable_model_type(type(value))(**value.model_dump())
+        # Keep the already-validated values, aliases, nested types and private
+        # attributes. Reconstructing from model_dump() runs validators again.
+        frozen = value.model_copy()
+        object.__setattr__(frozen, "__class__", _hashable_model_type(type(value)))
+        return frozen
 
     return value

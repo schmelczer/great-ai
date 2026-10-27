@@ -1,11 +1,39 @@
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List
 from unittest.mock import patch
 
 from great_ai import Trace
+from great_ai.helper.freeze_arguments import freeze
 from great_ai.persistence.mongodb_driver import MongoDbDriver
+from pydantic import BaseModel, Field, field_validator
 from pymongo import MongoClient
 from pymongo.synchronous.collection import Collection
+
+
+class Item(BaseModel):
+    value: int = Field(alias="number")
+
+    @field_validator("value")
+    @classmethod
+    def increment(cls, value: int) -> int:
+        return value + 1
+
+
+class Payload(BaseModel):
+    item: Item
+    others: List[Item]
+
+
+def test_freezing_preserves_validated_models() -> None:
+    original = Payload(item=Item(number=1), others=[Item(number=2)])
+    frozen = freeze(original)
+    assert isinstance(frozen, Payload)
+    assert isinstance(frozen.item, Item)
+    assert frozen.item.value == 2
+    assert frozen.others[0].value == 3
+    assert frozen.model_dump() == original.model_dump()
+    assert hash(frozen) == hash(freeze(original))
+    assert type(original) is Payload
 
 
 def test_flattening_preserves_reserved_trace_fields() -> None:
