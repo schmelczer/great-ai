@@ -68,6 +68,12 @@ def freeze(value: Union[Sequence[Any], Mapping[str, Any], Set[Any], BaseModel]) 
     if isinstance(value, set):
         return FrozenSet(value)
 
+    if isinstance(value, tuple):
+        values = tuple(freeze(item) for item in value)
+        if hasattr(type(value), "_fields"):  # preserve named-tuple argument types
+            return type(value)(*values)
+        return values
+
     if isinstance(value, BaseModel):
         # Keep the already-validated values, aliases, nested types and private
         # attributes. Reconstructing from model_dump() runs validators again.
