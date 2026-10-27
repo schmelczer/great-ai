@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Optional, TypeVar, cast
+from typing import Dict, Optional, Sequence, TypeVar, cast
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -14,8 +14,8 @@ T = TypeVar("T", str, float)
 
 
 def evaluate_ranking(
-    expected: List[T],
-    actual_scores: List[float],
+    expected: Sequence[T],
+    actual_scores: Sequence[float],
     target_recall: float,
     title: Optional[str] = "",
     disable_interpolation: bool = False,

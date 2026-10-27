@@ -99,7 +99,7 @@ def test_flattening_preserves_reserved_trace_fields() -> None:
 
 
 def test_mongo_update_uses_valid_replacement() -> None:
-    trace = Trace(
+    trace: Trace = Trace(
         trace_id="id",
         created="2026-01-01",
         original_execution_time_ms=0,
