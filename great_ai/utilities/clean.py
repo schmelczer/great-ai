@@ -52,7 +52,7 @@ def clean(
         text: Text to be cleaned.
         ignore_xml: Do not process/remove XML-tags.
         ignore_latex: Do not process/remove LaTeX-tags.
-        remove_brackets: Do not remove brackets ([])
+        remove_brackets: Remove square brackets and their contents when True.
         convert_to_ascii: Strip (or convert) non-ascii characters.
 
     Returns:
