@@ -16,7 +16,6 @@ import dill
 from .get_config import get_config
 from .manage_communication import manage_communication
 from .mapper_function import mapper_function
-from .worker_exception import WorkerException
 
 T = TypeVar("T")
 V = TypeVar("V")
@@ -135,12 +134,12 @@ def parallel_map(
         else mp.get_context("spawn")
     )
     ctx.freeze_support()
+    serialized_map_function = dill.dumps(func, byref=True, recurse=False)
     manager = ctx.Manager()
     input_queue = manager.Queue(config.concurrency * 2)
     output_queue = manager.Queue(config.concurrency * 2)
 
     should_stop = ctx.Event()
-    serialized_map_function = dill.dumps(func, byref=True, recurse=False)
 
     processes = [
         ctx.Process(
@@ -157,10 +156,11 @@ def parallel_map(
         for i in range(config.concurrency)
     ]
 
-    for p in processes:
-        p.start()
-
+    completed = False
     try:
+        for p in processes:
+            p.start()
+
         yield from manage_communication(
             input_values=input_values,
             chunk_size=config.chunk_size,
@@ -169,18 +169,19 @@ def parallel_map(
             unordered=unordered,
             ignore_exceptions=ignore_exceptions,
         )
-        should_stop.set()
-    except WorkerException:
-        should_stop.set()
-        raise
-    except Exception:
-        for p in processes:
-            p.terminate()
-            p.kill()
-        raise
+        completed = True
     finally:
+        should_stop.set()
+        if not completed:
+            for p in processes:
+                if p.is_alive():
+                    p.terminate()
         for p in processes:
-            p.join()  # terminated processes have to be joined else they remain zombies
+            if p.pid is not None:
+                p.join(timeout=1)
+                if p.is_alive():
+                    p.kill()
+                    p.join()
             p.close()
 
         manager.shutdown()
