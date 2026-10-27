@@ -101,7 +101,7 @@ def parallel_map(
         input_values: An iterable of items that `func` is applied to.
         chunk_size: Tune the number of items processed in each step. Larger numbers
             result in smaller communication overhead but less parallelism at the start
-            and end. If `chunk_size` has a `__len__` property, the `chunk_size` is
+            and end. If `input_values` has a `__len__` method, the `chunk_size` is
             calculated automatically if not given.
         ignore_exceptions: Ignore chunks if `next()` raises an exception on
             `input_values`. And return `None` if `func` raised an exception in a worker
