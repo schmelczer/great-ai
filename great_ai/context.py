@@ -202,6 +202,8 @@ def _initialize_tracing_database(
                     )
                     tracing_driver.configure_credentials_from_file(p)
                     return tracing_driver
+    if selected is not None:
+        return selected
     logger.warning(
         "Cannot find credentials files, defaulting to using ParallelTinyDbDriver"
     )
@@ -227,6 +229,8 @@ def _initialize_large_file(
                     )
                     large_file.configure_credentials_from_file(p)
                     return large_file
+    if selected is not None:
+        return selected
     logger.warning("Cannot find credentials files, defaulting to using LargeFileLocal")
     return LargeFileLocal
 
