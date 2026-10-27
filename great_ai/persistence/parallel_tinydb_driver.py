@@ -28,10 +28,10 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
     path_to_db = Path(DEFAULT_TRACING_DB_FILENAME)
 
     def save(self, trace: Trace) -> str:
-        return self._safe_execute(lambda db: db.insert(trace.model_dump()))
+        return self._safe_execute(lambda db: db.insert(trace.model_dump(mode="json")))
 
     def save_batch(self, documents: List[Trace]) -> List[str]:
-        traces = [d.model_dump() for d in documents]
+        traces = [d.model_dump(mode="json") for d in documents]
         return self._safe_execute(lambda db: db.insert_multiple(traces))
 
     def get(self, id: str) -> Optional[Trace]:
@@ -100,7 +100,7 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
     def update(self, id: str, new_version: Trace) -> None:
         self._safe_execute(
             lambda db: db.update(
-                new_version.model_dump(), lambda d: d["trace_id"] == id
+                new_version.model_dump(mode="json"), lambda d: d["trace_id"] == id
             )
         )
 
