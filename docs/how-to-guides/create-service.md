@@ -38,7 +38,7 @@ This not only allows you to statically type-check your code, but by default, Gre
 
 ## With async
 
-Asynchronous code can result in immense performance gains in some instances. For example, you might rely on a third-party service, do database access, or [call a remote GreatAI instance](/how-to-guides/call-remote). In these cases, you can make your function `async` without any other changes.
+Asynchronous code can result in immense performance gains in some instances. For example, you might rely on a third-party service, do database access, or [call a remote GreatAI instance](https://great-ai.scoutinscience.com/how-to-guides/call-remote). In these cases, you can make your function `async` without any other changes.
 
 ```python title="async_greeter.py"
 from great_ai import GreatAI
@@ -117,4 +117,4 @@ def add_number(positive_number: int, secret: int) -> int:
 assert add_number(1).output == 5
 ```
 
-1. Refer to [the configuration page](/how-to-guides/configure-service) for specifying where to store your models. 
+1. Refer to [the configuration page](https://great-ai.scoutinscience.com/how-to-guides/configure-service) for specifying where to store your models.

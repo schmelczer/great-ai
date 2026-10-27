@@ -110,7 +110,7 @@ However, research indicates that professionals rarely use them. This may be due 
 
 [:fontawesome-brands-docker: Find it on DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai){ .md-button .md-button--primary }
 
-[:fontawesome-solid-laptop-code: Check out the tutorial](/tutorial){ .md-button .md-button--primary }
+[:fontawesome-solid-laptop-code: Check out the tutorial](https://great-ai.scoutinscience.com/tutorial){ .md-button .md-button--primary }
 </div>
 
 ## Production use

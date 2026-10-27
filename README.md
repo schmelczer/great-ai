@@ -35,7 +35,7 @@ That's it. Your GreatAI service is _nearly_ ready for production use. Many of th
 
 Before production, replace the default local TinyDB tracing database with a production-suitable backend, configure storage and deployment infrastructure, and review the remaining best practices for your use case.
 
-[Check out the full documentation here](https://great-ai.scoutinscience.com).
+> **Published documentation:** [Read the rendered guides, API reference, and notebooks](https://great-ai.scoutinscience.com). The files under `docs/` use MkDocs features that repository previews may not render.
 
 ## Why is this GREAT?
 

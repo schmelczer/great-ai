@@ -4,7 +4,7 @@
 from great_ai.large_file import *
 ```
 
-For more details about using LargeFiles, check out the [how to guide](/how-to-guides/large-file/).
+For more details about using LargeFiles, check out the [how to guide](https://great-ai.scoutinscience.com/how-to-guides/large-file/).
 
 ::: great_ai.large_file.LargeFileLocal
     options:
