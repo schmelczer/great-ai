@@ -17,7 +17,7 @@ def call_remote_great_ai(
     base_uri: str,
     data: Mapping[str, Any],
     retry_count: int = 4,
-    timeout_in_seconds: Optional[int] = 300,
+    timeout_in_seconds: Optional[float] = 300,
     model_class: Optional[Type[T]] = None,
 ) -> Trace[T]:
     """Communicate with a GreatAI object through an HTTP request.

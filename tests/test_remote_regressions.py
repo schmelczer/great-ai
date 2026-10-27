@@ -1,9 +1,10 @@
-from typing import Any
+import asyncio
+import json
+from typing import Any, AsyncIterator
 from unittest.mock import patch
 
 import httpx
 import pytest
-
 from great_ai import RemoteCallError, call_remote_great_ai_async
 
 
@@ -38,6 +39,29 @@ async def test_remote_call_retries_response_read_failures() -> None:
             await call_remote_great_ai_async("http://test", {}, retry_count=2)
         ).output == 7
     assert calls == 2
+
+
+@pytest.mark.asyncio
+async def test_overall_timeout_limits_slow_streaming_responses() -> None:
+    class SlowStream(httpx.AsyncByteStream):
+        async def __aiter__(self) -> AsyncIterator[bytes]:
+            payload = json.dumps(response_trace()).encode()
+            for offset in range(0, len(payload), 10):
+                await asyncio.sleep(0.01)
+                yield payload[offset : offset + 10]
+
+    transport = httpx.MockTransport(
+        lambda request: httpx.Response(200, stream=SlowStream())
+    )
+    with patch(
+        "great_ai.remote.call_remote_great_ai_async.httpx.AsyncHTTPTransport",
+        return_value=transport,
+    ):
+        with pytest.raises(RemoteCallError, match="overall timeout") as error:
+            await call_remote_great_ai_async(
+                "http://test", {}, timeout_in_seconds=0.025
+            )
+    assert isinstance(error.value.__cause__, TimeoutError)
 
 
 @pytest.mark.asyncio

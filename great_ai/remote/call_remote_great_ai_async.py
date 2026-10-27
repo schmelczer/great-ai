@@ -14,7 +14,7 @@ async def call_remote_great_ai_async(
     base_uri: str,
     data: Mapping[str, Any],
     retry_count: int = 4,
-    timeout_in_seconds: Optional[int] = 300,
+    timeout_in_seconds: Optional[float] = 300,
     model_class: Optional[Type[T]] = None,
 ) -> Trace[T]:
     """Communicate with a GreatAI object through an HTTP request.
@@ -47,9 +47,12 @@ async def call_remote_great_ai_async(
     transport = httpx.AsyncHTTPTransport(retries=0)
 
     try:
-        async with httpx.AsyncClient(
-            transport=transport, timeout=timeout_in_seconds
-        ) as client:
+        async with (
+            asyncio.timeout(timeout_in_seconds),
+            httpx.AsyncClient(
+                transport=transport, timeout=timeout_in_seconds
+            ) as client,
+        ):
             for attempt in range(retry_count + 1):
                 try:
                     response = await client.post(base_uri, json=data)
@@ -64,6 +67,8 @@ async def call_remote_great_ai_async(
                 raise RemoteCallError(
                     f"Unexpected status code, reason: {response.text}"
                 )
+    except TimeoutError as e:
+        raise RemoteCallError("Remote prediction exceeded its overall timeout") from e
     except Exception as e:
         raise RemoteCallError(str(e)) from e
 
