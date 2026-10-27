@@ -121,3 +121,29 @@ def test_gridfs_matches_only_exact_model_names() -> None:
         reader = LargeFileMongo("model")
     assert reader.version == 0
     assert [instance.name for instance in reader._instances] == ["model"]
+
+
+def test_s3_follows_every_listing_page() -> None:
+    backend = MagicMock()
+    backend.list_objects_v2.side_effect = [
+        {
+            "Contents": [{"Key": "model/0"}, {"Key": "model-other/99"}],
+            "IsTruncated": True,
+            "NextContinuationToken": "next",
+        },
+        {
+            "Contents": [
+                {"Key": "model/9"},
+                {"Key": "model/backup"},
+                {"Key": "model/9/extra"},
+            ]
+        },
+    ]
+    with patch.object(LargeFileS3, "_client", backend):
+        reader = LargeFileS3("model")
+    assert reader.version == 9
+    assert [instance.version for instance in reader._instances] == [0, 9]
+    assert backend.list_objects_v2.call_args_list[0].kwargs["Prefix"] == "model/"
+    assert (
+        backend.list_objects_v2.call_args_list[1].kwargs["ContinuationToken"] == "next"
+    )

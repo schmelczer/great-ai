@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import boto3
 
@@ -70,22 +70,23 @@ class LargeFileS3(LargeFileBase):
     def _find_remote_instances(self) -> List[DataInstance]:
         logger.debug(f"Fetching S3 versions of {self._name}")
 
-        found_objects = self._client.list_objects_v2(
-            Bucket=self.bucket_name, Prefix=self._name
-        )
-        return (
-            [
-                DataInstance(
-                    name=o["Key"].split(S3_NAME_VERSION_SEPARATOR)[0],
-                    version=int(o["Key"].split(S3_NAME_VERSION_SEPARATOR)[-1]),
-                    remote_path=o["Key"],
-                )
-                for o in found_objects["Contents"]
-                if o["Key"].split(S3_NAME_VERSION_SEPARATOR)[0] == self._name
-            ]
-            if "Contents" in found_objects
-            else []
-        )
+        prefix = f"{self._name}{S3_NAME_VERSION_SEPARATOR}"
+        parameters: Dict[str, Any] = {"Bucket": self.bucket_name, "Prefix": prefix}
+        instances = []
+        while True:
+            page = self._client.list_objects_v2(**parameters)
+            for item in page.get("Contents", []):
+                key = item["Key"]
+                suffix = key[len(prefix) :] if key.startswith(prefix) else ""
+                if suffix.isdigit():
+                    instances.append(
+                        DataInstance(
+                            name=self._name, version=int(suffix), remote_path=key
+                        )
+                    )
+            if not page.get("IsTruncated"):
+                return instances
+            parameters["ContinuationToken"] = page["NextContinuationToken"]
 
     def _download(
         self, remote_path: Any, local_path: Path, hide_progress: bool

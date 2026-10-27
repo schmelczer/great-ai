@@ -93,7 +93,7 @@ def test_initialized_with_dict(client: Any) -> None:
     )
 
     s3.list_objects_v2.assert_called_once_with(
-        Bucket=credentials["large_files_bucket_name"], Prefix="test-file"
+        Bucket=credentials["large_files_bucket_name"], Prefix="test-file/"
     )
 
     assert lf._version == 2
@@ -137,7 +137,7 @@ def test_initialized_with_file(client: Any) -> None:
 
     assert s3.list_objects_v2.called
     s3.list_objects_v2.assert_called_once_with(
-        Bucket=credentials["large_files_bucket_name"], Prefix="test-file"
+        Bucket=credentials["large_files_bucket_name"], Prefix="test-file/"
     )
 
     assert lf._version == 2
