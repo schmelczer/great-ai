@@ -1,11 +1,17 @@
 import io
 import tarfile
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Iterator
 from unittest.mock import MagicMock, patch
 
 import pytest
-from great_ai.large_file import LargeFileBase, LargeFileLocal, LargeFileS3
+from great_ai.large_file import (
+    LargeFileBase,
+    LargeFileLocal,
+    LargeFileMongo,
+    LargeFileS3,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -100,3 +106,18 @@ def test_evicted_remote_model_is_downloaded_again() -> None:
         cached.unlink()
         assert reader.get().read_text() == "remote weights"
     assert downloads == ["model/0", "model/0"]
+
+
+def test_gridfs_matches_only_exact_model_names() -> None:
+    files = [
+        SimpleNamespace(name=name, _id=name, length=1)
+        for name in ("model_0", "model_other_9", "other_model_10", "model_1_backup")
+    ]
+    backend = MagicMock()
+    backend.find.side_effect = lambda query: [
+        file for file in files if query["filename"].search(file.name)
+    ]
+    with patch.object(LargeFileMongo, "_client", backend):
+        reader = LargeFileMongo("model")
+    assert reader.version == 0
+    assert [instance.name for instance in reader._instances] == ["model"]

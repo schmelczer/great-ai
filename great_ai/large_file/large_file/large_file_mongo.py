@@ -65,7 +65,9 @@ class LargeFileMongo(LargeFileBase):
             for f in self._client.find(
                 {
                     "filename": re.compile(
-                        re.escape(self._name + MONGO_NAME_VERSION_SEPARATOR) + ".*"
+                        "^"
+                        + re.escape(self._name + MONGO_NAME_VERSION_SEPARATOR)
+                        + r"[0-9]+$"
                     )
                 }
             )
