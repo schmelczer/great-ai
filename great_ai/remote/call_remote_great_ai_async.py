@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any, Mapping, Optional, Type, TypeVar
 
 import httpx
@@ -19,7 +20,8 @@ async def call_remote_great_ai_async(
     """Communicate with a GreatAI object through an HTTP request.
 
     Send a POST request using [httpx](https://www.python-httpx.org/) to implement a
-    remote call. Error-handling and retries are provided by httpx.
+    remote call. Transport failures are retried up to `retry_count` times. A retry
+    may repeat a prediction when its previous response was lost.
 
     The return value is inflated into a Trace. If `model_class` is specified, the
     original output is deserialised.
@@ -40,13 +42,22 @@ async def call_remote_great_ai_async(
     if not base_uri.endswith("/predict"):
         base_uri = f"{base_uri}/predict"
 
-    transport = httpx.AsyncHTTPTransport(retries=retry_count)
+    if retry_count < 0:
+        raise ValueError("retry_count must be non-negative")
+    transport = httpx.AsyncHTTPTransport(retries=0)
 
     try:
         async with httpx.AsyncClient(
             transport=transport, timeout=timeout_in_seconds
         ) as client:
-            response = await client.post(base_uri, json=data)
+            for attempt in range(retry_count + 1):
+                try:
+                    response = await client.post(base_uri, json=data)
+                    break
+                except httpx.TransportError:
+                    if attempt == retry_count:
+                        raise
+                    await asyncio.sleep(min(0.1 * 2**attempt, 1))
             try:
                 response.raise_for_status()
             except Exception:
@@ -54,7 +65,7 @@ async def call_remote_great_ai_async(
                     f"Unexpected status code, reason: {response.text}"
                 )
     except Exception as e:
-        raise RemoteCallError from e
+        raise RemoteCallError(str(e)) from e
 
     try:
         trace = response.json()
