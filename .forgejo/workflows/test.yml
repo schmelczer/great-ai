@@ -24,14 +24,14 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Set up Python
-        run: uv python install 3.10
+        run: uv python install 3.13
 
       - name: Install dependencies
         # --seed gives the venv its own pip, which scripts/check-python.sh shells
         # out to for its linters; '.[dev]' provides the rest (mypy resolves the
         # package's own imports against the installed tree).
         run: |
-          uv venv --seed --python 3.10
+          uv venv --seed --python 3.13
           uv pip install '.[dev]'
 
       - name: Check code and formatting
@@ -45,12 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # pyproject declares >= 3.7, but uv's standalone CPython and the current
-        # dependency floors (scikit-learn/numpy now require >= 3.9) no longer
-        # build on the older interpreters, so we test the current supported set.
-        # The windows leg of the old GitHub matrix is dropped: this Forgejo
-        # instance only has a Linux `docker` runner.
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.12', '3.13']
     steps:
       - uses: actions/checkout@v4
 

@@ -5,18 +5,17 @@ Provided you already have [Python3](https://www.python.org/downloads/){ target=_
 ```sh
 pip install great-ai
 ```
-> Python 3.7 or later is required.
+> Python 3.12 or later is required. Python 3.13 is supported.
 
 This will work on all major operating systems.
 
 ## Google Colab
 
-In order to use GreatAI in [Google Colab](https://colab.research.google.com){ target=_blank }, you need to downgrade `pyyaml` to a Colab compatible version. [See related StackOverflow question](https://stackoverflow.com/questions/69564817/typeerror-load-missing-1-required-positional-argument-loader-in-google-col){ target=_blank }.
+To use GreatAI in [Google Colab](https://colab.research.google.com){ target=_blank }, select a runtime with Python 3.12 or later and install the package:
 
 ```sh
-pip install great-ai pyyaml==5.4.1
+pip install --upgrade great-ai
 ```
-> This will make GreatAI work in Colab.
 
 ## Command-line tools
 
@@ -50,4 +49,4 @@ You can also install the latest (usually unreleased) version from GitHub.
 ```sh
 pip install --upgrade git+https://github.com/schmelczer/great-ai.git
 ```
-> Python 3.7 or later is required.
+> Python 3.12 or later is required.

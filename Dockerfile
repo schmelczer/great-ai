@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM python:3.10.4-slim-bullseye
+FROM python:3.13-slim-trixie
 
 LABEL org.opencontainers.image.title="GreatAI package wrapper image"
 LABEL org.opencontainers.image.vendor="ScoutinScience B.V."

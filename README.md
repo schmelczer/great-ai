@@ -59,6 +59,8 @@ However, [research indicates](https://great-ai.scoutinscience.com) that professi
 
 ## Find `great-ai` on [PyPI](https://pypi.org/project/great-ai/)
 
+Requires Python 3.12 or later, including Python 3.13.
+
 ```sh
 pip install great-ai
 ```
@@ -78,8 +80,8 @@ Contributions are welcome.
 ```sh
 python3 -m venv --copies .env
 source .env/bin/activate
-pip install --upgrade flit pip
-flit install --symlink
+pip install --upgrade pip
+pip install --editable '.[dev]'
 ```
 
 ### Develop

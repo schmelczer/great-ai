@@ -50,7 +50,7 @@ After training and evaluating a model, it is exported using [great_ai.save_model
     save_model(model, key='my-domain-predictor')
     ```
 
-    For more info, checkout [the configuration how-to page](/how-to-guides/configure-service).
+    For more info, check out [the configuration how-to page](/how-to-guides/configure-service).
 
 ### [Deployment notebook](deploy.ipynb)
 
