@@ -2,6 +2,7 @@
 
 import logging
 import re
+import sys
 from importlib import import_module, reload
 from pathlib import Path
 from threading import Event
@@ -143,12 +144,22 @@ def get_script_name(file_name_argument: str) -> str:
         with open(file_name_argument, "w", encoding="utf-8") as f:
             f.write(content)
 
-    return re.sub(r"\.(py|ipynb)$", "", file_name_argument)
+    if file_name_argument.endswith(".py"):
+        path = Path(file_name_argument).expanduser().resolve()
+        parts = [path.stem]
+        directory = path.parent
+        while (directory / "__init__.py").is_file():
+            parts.insert(0, directory.name)
+            directory = directory.parent
+        if str(directory) not in sys.path:
+            sys.path.insert(0, str(directory))
+        return ".".join(parts)
+    return file_name_argument
 
 
 def get_script_name_of_notebook(notebook_name: str) -> str:
-    base_name = re.sub(r"\.ipynb$", "", notebook_name)
-    return f"__{base_name}__.py"
+    path = Path(notebook_name)
+    return str(path.with_name(f"__{path.stem}__.py"))
 
 
 module = None
@@ -159,7 +170,7 @@ def find_app(file_name: str) -> Optional[str]:
 
     logging.disable(logging.CRITICAL)
     try:
-        if module is None:
+        if module is None or module.__name__ != file_name:
             module = import_module(file_name)
         else:
             module = reload(module)
