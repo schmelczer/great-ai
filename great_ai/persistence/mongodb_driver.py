@@ -143,6 +143,8 @@ class MongoDbDriver(TracingDatabaseDriver):
 
         with MongoClient[Any](self.mongo_connection_string) as client:
             count = client[self.mongo_database].traces.count_documents(**query)
+            if take == 0:
+                return [], count
 
             if skip:
                 query["skip"] = skip

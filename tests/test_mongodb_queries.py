@@ -30,3 +30,11 @@ def test_mongo_date_bounds_match_stored_iso_strings(
     predicates = collection.find.call_args.kwargs["filter"]["$and"]
     assert {"created": {"$gte": "2026-01-01T00:00:00"}} in predicates
     assert {"created": {"$lte": "2026-01-02T00:00:00"}} in predicates
+
+
+def test_zero_take_preserves_count_without_fetching(
+    mongo: Tuple[MongoDbDriver, Any],
+) -> None:
+    driver, collection = mongo
+    assert driver.query(take=0) == ([], 3)
+    collection.find.assert_not_called()
