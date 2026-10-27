@@ -57,3 +57,13 @@ def test_empty() -> None:
     assert get_sentences("", ignore_partial=True) == []
     assert get_sentences("", true_case=True) == []
     assert get_sentences("", remove_punctuation=True) == []
+
+
+def test_completeness_is_checked_before_optional_transformations() -> None:
+    assert get_sentences("Hello world.", ignore_partial=True, true_case=True) == [
+        "hello world."
+    ]
+    assert get_sentences(
+        "Hello world.", ignore_partial=True, remove_punctuation=True
+    ) == ["Hello world"]
+    assert get_sentences("...", ignore_partial=True, remove_punctuation=True) == []

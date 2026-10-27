@@ -55,14 +55,16 @@ def get_sentences(
         return sentence.strip()
 
     sentences = [
-        process(tokenizer.to_text(sentence)) for sentence in segment(token_stream)
+        tokenizer.to_text(sentence).strip() for sentence in segment(token_stream)
     ]
 
     if ignore_partial:
         sentences = [
             sentence
             for sentence in sentences
-            if sentence[0].isupper() and sentence[-1] in sentence_ending_punctuations
+            if sentence
+            and sentence[0].isupper()
+            and sentence[-1] in sentence_ending_punctuations
         ]
 
-    return sentences
+    return [process(sentence) for sentence in sentences]
