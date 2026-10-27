@@ -974,11 +974,20 @@ class LatexNodes2Text(object):
             return ""
 
         fnfull = os.path.realpath(os.path.join(self.tex_input_directory, fn))
+        if not os.path.exists(fnfull) and os.path.exists(fnfull + ".tex"):
+            fnfull = fnfull + ".tex"
+        if not os.path.exists(fnfull) and os.path.exists(fnfull + ".latex"):
+            fnfull = fnfull + ".latex"
+        fnfull = os.path.realpath(fnfull)
         if self.strict_input:
             # make sure that the input file is strictly within dirfull, and
             # didn't escape with '../..' tricks or via symlinks.
             dirfull = os.path.realpath(self.tex_input_directory)
-            if not fnfull.startswith(dirfull):
+            try:
+                within_directory = os.path.commonpath([fnfull, dirfull]) == dirfull
+            except ValueError:  # paths on different Windows drives
+                within_directory = False
+            if not within_directory:
                 logger.warning(
                     "Can't access path '%s' leading outside of mandated directory "
                     "[strict input mode]",
@@ -986,10 +995,6 @@ class LatexNodes2Text(object):
                 )
                 return ""
 
-        if not os.path.exists(fnfull) and os.path.exists(fnfull + ".tex"):
-            fnfull = fnfull + ".tex"
-        if not os.path.exists(fnfull) and os.path.exists(fnfull + ".latex"):
-            fnfull = fnfull + ".latex"
         if not os.path.isfile(fnfull):
             logger.warning("Error, file doesn't exist: '%s'", fn)
             return ""
