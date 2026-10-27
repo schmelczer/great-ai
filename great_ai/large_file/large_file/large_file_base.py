@@ -9,6 +9,8 @@ from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Literal, Optional, Tuple, Type, Union, cast
 
+from filelock import FileLock
+
 from great_ai.utilities import ConfigFile, get_logger
 
 from ..helper import human_readable_to_byte
@@ -213,34 +215,41 @@ class LargeFileBase(ABC):
 
         if isinstance(path, str):
             path = Path(path)
-        if "w" not in self._mode:
+
+        lock_directory = self.cache_path / ".locks"
+        lock_directory.mkdir(parents=True, exist_ok=True)
+        lock_name = sha256(f"{self._cache_namespace}:{self._name}".encode()).hexdigest()
+        staging_directory = self.cache_path / ".staging"
+        staging_directory.mkdir(parents=True, exist_ok=True)
+        with FileLock(lock_directory / f"{lock_name}.lock"):
+            # Allocate at commit time, after earlier local writers have finished.
             self._find_instances()
             self._version = self._instances[-1].version + 1 if self._instances else 0
+            with tempfile.TemporaryDirectory(dir=staging_directory) as tmp:
+                root = Path(tmp)
+                staged = root / self._local_name
+                if path.is_dir():
+                    shutil.copytree(path, staged)
+                else:
+                    shutil.copy2(path, staged)
 
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            staged = root / self._local_name
-            if path.is_dir():
-                shutil.copytree(path, staged)
-            else:
-                shutil.copy2(path, staged)
+                with tempfile.TemporaryDirectory() as archive_directory:
+                    archive = shutil.make_archive(
+                        str(Path(archive_directory) / self._local_name),
+                        COMPRESSION_ALGORITHM,
+                        root,
+                    )
+                    # Remote backends must reject version conflicts atomically.
+                    self._upload(Path(archive), hide_progress=hide_progress)
 
-            with tempfile.TemporaryDirectory() as archive_directory:
-                archive = shutil.make_archive(
-                    str(Path(archive_directory) / self._local_name),
-                    COMPRESSION_ALGORITHM,
-                    root,
-                )
-                self._upload(Path(archive), hide_progress=hide_progress)
+                # Stage the source before publishing: it may itself be cached.
+                destination = self.cache_path / self._cache_name
+                if destination.exists():
+                    raise FileExistsError(f"Version already exists: {destination}")
+                shutil.move(str(staged), str(destination))
 
-            # Stage the source before publishing: it may itself be cached.
-            destination = self.cache_path / self._cache_name
-            if destination.exists():
-                raise FileExistsError(f"Version already exists: {destination}")
-            shutil.move(str(staged), str(destination))
-
-        self._find_instances()
-        self.clean_up()
+            self._find_instances()
+            self.clean_up()
 
     def delete(self) -> None:
         """Delete all versions of the files under this `key`."""
@@ -338,7 +347,12 @@ class LargeFileBase(ABC):
         assert allowed_size >= 0
 
         least_recently_read = sorted(
-            [f for f in self.cache_path.glob("*")], key=lambda f: f.stat().st_atime
+            [
+                f
+                for f in self.cache_path.glob("*")
+                if f.name not in {".locks", ".staging"}
+            ],
+            key=lambda f: f.stat().st_atime,
         )
 
         def size(path: Path) -> int:

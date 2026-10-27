@@ -3,6 +3,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import boto3
+from boto3.exceptions import S3UploadFailedError
+from boto3.s3.transfer import TransferConfig
+from botocore.exceptions import ClientError
 
 from ...utilities import get_logger
 from ..helper import DownloadProgressBar, UploadProgressBar, cached_property
@@ -29,7 +32,6 @@ class LargeFileS3(LargeFileBase):
     secret_access_key = None
     bucket_name = None
     endpoint_url = None
-
     _configuration_attributes = (
         "region_name",
         "access_key_id",
@@ -127,16 +129,45 @@ class LargeFileS3(LargeFileBase):
         key = f"{self._name}/{self.version}"
         logger.info(f"Uploading {self._local_name} to S3 as {key}")
 
-        self._client.upload_file(
-            Filename=str(local_path),
-            Bucket=self.bucket_name,
-            Key=key,
-            Callback=(
-                None
-                if hide_progress
-                else UploadProgressBar(path=local_path, logger=logger)
-            ),
-        )
+        def prevent_overwrite(params: Dict[str, Any], **_: Any) -> None:
+            if params.get("Bucket") == self.bucket_name and params.get("Key") == key:
+                params["IfNoneMatch"] = "*"
+
+        # S3Transfer does not accept IfNoneMatch in ExtraArgs. These botocore
+        # hooks protect both single-part and multipart commits while retaining
+        # the managed transfer's streaming, retries, and progress reporting.
+        events = self._client.meta.events
+        operations = ("PutObject", "CompleteMultipartUpload")
+        for operation in operations:
+            events.register(f"before-parameter-build.s3.{operation}", prevent_overwrite)
+        try:
+            self._client.upload_file(
+                Filename=str(local_path),
+                Bucket=self.bucket_name,
+                Key=key,
+                Callback=(
+                    None
+                    if hide_progress
+                    else UploadProgressBar(path=local_path, logger=logger)
+                ),
+                Config=TransferConfig(preferred_transfer_client="classic"),
+            )
+        except (ClientError, S3UploadFailedError) as error:
+            cause: Optional[BaseException] = error
+            while cause is not None:
+                if isinstance(cause, ClientError) and cause.response["Error"][
+                    "Code"
+                ] in {"PreconditionFailed", "ConditionalRequestConflict", "412", "409"}:
+                    raise FileExistsError(
+                        f"Version {key} was created by another writer; retry the upload"
+                    ) from error
+                cause = cause.__cause__ or cause.__context__
+            raise
+        finally:
+            for operation in operations:
+                events.unregister(
+                    f"before-parameter-build.s3.{operation}", prevent_overwrite
+                )
 
     def _delete_old_remote_versions(self) -> None:
         if self._keep_last_n is not None:

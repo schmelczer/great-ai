@@ -70,6 +70,13 @@ Often, especially when working with data-heavy applications, large files can pro
 
 ## From the command-line 
 
+Versions are allocated when an upload commits. Writers sharing a cache directory
+serialize their uploads with a file lock. S3 and GridFS also reject conflicting
+version commits from other hosts with `FileExistsError`; retry the upload to
+allocate a fresh version. S3-compatible services must support conditional writes
+(`If-None-Match`), including multipart completion. GridFS writers need permission
+to create the unique index used for GreatAI's versioned filenames.
+
 Remote cache filenames now include a storage-specific namespace. Existing local
 model stores remain readable, while remote models cached by older releases are
 downloaded again into the new namespace. Configure the same bucket or database

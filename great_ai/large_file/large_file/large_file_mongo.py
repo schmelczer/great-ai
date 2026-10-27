@@ -6,6 +6,7 @@ from typing import Any, List
 from gridfs import DEFAULT_CHUNK_SIZE, GridFSBucket
 from pymongo import MongoClient
 from pymongo.database import Database
+from pymongo.errors import DuplicateKeyError
 
 from ...utilities import get_logger
 from ..helper import DownloadProgressBar, UploadProgressBar, cached_property
@@ -29,7 +30,6 @@ class LargeFileMongo(LargeFileBase):
 
     mongo_connection_string = None
     mongo_database = None
-
     _configuration_attributes = ("mongo_connection_string", "mongo_database")
 
     def _get_cache_namespace(self) -> str:
@@ -50,14 +50,17 @@ class LargeFileMongo(LargeFileBase):
         super().configure_credentials()
 
     @cached_property
-    def _client(self) -> GridFSBucket:
+    def _database(self) -> Database:
         if self.mongo_connection_string is None or self.mongo_database is None:
             raise ValueError(
                 "Please configure the MongoDB access options by calling LargeFileMongo.configure_credentials or set cache_only_mode=True in the constructor."
             )
 
-        db: Database = MongoClient(self.mongo_connection_string)[self.mongo_database]
-        return GridFSBucket(db)
+        return MongoClient(self.mongo_connection_string)[self.mongo_database]
+
+    @cached_property
+    def _client(self) -> GridFSBucket:
+        return GridFSBucket(self._database)
 
     def _find_remote_instances(self) -> List[DataInstance]:
         logger.debug(f"Fetching Mongo (GridFS) versions of {self._name}")
@@ -112,18 +115,33 @@ class LargeFileMongo(LargeFileBase):
             if not hide_progress
             else None
         )
-        with self._client.open_upload_stream(
-            f"{self._name}{MONGO_NAME_VERSION_SEPARATOR}{self.version}"
-        ) as stream:
-            with open(local_path, "rb") as f:
-                while True:
-                    content = f.read(DEFAULT_CHUNK_SIZE)
-                    stream.write(content)
-
-                    if progress:
-                        progress(len(content))
-                    if len(content) < DEFAULT_CHUNK_SIZE:
-                        break
+        # Only GreatAI's versioned uploads participate in this unique index;
+        # unrelated GridFS users may still store duplicate filenames.
+        self._database.fs.files.create_index(
+            "filename",
+            name="great_ai_unique_version",
+            unique=True,
+            partialFilterExpression={"metadata.great_ai_version": True},
+        )
+        filename = f"{self._name}{MONGO_NAME_VERSION_SEPARATOR}{self.version}"
+        stream = self._client.open_upload_stream(
+            filename, metadata={"great_ai_version": True}
+        )
+        try:
+            with stream:
+                with open(local_path, "rb") as f:
+                    while True:
+                        content = f.read(DEFAULT_CHUNK_SIZE)
+                        stream.write(content)
+                        if progress:
+                            progress(len(content))
+                        if len(content) < DEFAULT_CHUNK_SIZE:
+                            break
+        except DuplicateKeyError as error:
+            stream.abort()
+            raise FileExistsError(
+                f"Version {filename} was created by another writer; retry the upload"
+            ) from error
 
     def _delete_old_remote_versions(self) -> None:
         if self._keep_last_n is not None:

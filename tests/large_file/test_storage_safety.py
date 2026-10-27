@@ -1,17 +1,22 @@
 import io
+import multiprocessing as mp
 import tarfile
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Iterator
 from unittest.mock import MagicMock, patch
 
+import boto3
 import pytest
+from boto3.s3.transfer import TransferConfig
+from botocore.stub import Stubber
 from great_ai.large_file import (
     LargeFileBase,
     LargeFileLocal,
     LargeFileMongo,
     LargeFileS3,
 )
+from pymongo.errors import DuplicateKeyError
 
 
 @pytest.fixture(autouse=True)
@@ -125,6 +130,52 @@ def test_retention_counts_the_new_version() -> None:
     assert reader.get().read_text() == "2"
 
 
+def write_model(root: str, value: str, barrier: Any) -> None:
+    LargeFileBase.cache_path = LargeFileLocal.cache_path = Path(root)
+    LargeFileBase.max_cache_size = LargeFileLocal.max_cache_size = None
+    writer = LargeFileLocal("model", "w")
+    barrier.wait(timeout=10)
+    with writer as file:
+        file.write(value)
+
+
+def test_overlapping_local_writers_preserve_both_versions() -> None:
+    first = LargeFileLocal("model", "w")
+    second = LargeFileLocal("model", "w")
+    for writer, value in [(first, "first"), (second, "second")]:
+        with writer as file:
+            file.write(value)
+    assert first.version == 0
+    assert second.version == 1
+    assert LargeFileLocal("model", version=0).get().read_text() == "first"
+    assert LargeFileLocal("model", version=1).get().read_text() == "second"
+
+
+def test_concurrent_processes_preserve_both_versions(tmp_path: Path) -> None:
+    ctx = mp.get_context("spawn")
+    barrier = ctx.Barrier(2)
+    processes = [
+        ctx.Process(target=write_model, args=(str(tmp_path / "cache"), value, barrier))
+        for value in ("first", "second")
+    ]
+    try:
+        for process in processes:
+            process.start()
+        for process in processes:
+            process.join(timeout=15)
+            assert process.exitcode == 0
+    finally:
+        for process in processes:
+            if process.is_alive():
+                process.kill()
+                process.join()
+            process.close()
+    assert {LargeFileLocal("model", version=v).get().read_text() for v in (0, 1)} == {
+        "first",
+        "second",
+    }
+
+
 def test_uploading_cached_directory_preserves_source(tmp_path: Path) -> None:
     source = tmp_path / "source"
     source.mkdir()
@@ -225,3 +276,89 @@ def test_s3_follows_every_listing_page() -> None:
     assert (
         backend.list_objects_v2.call_args_list[1].kwargs["ContinuationToken"] == "next"
     )
+
+
+@pytest.mark.parametrize("multipart", [False, True])
+@pytest.mark.parametrize("conflict", [False, True])
+def test_s3_commits_are_conditional(
+    tmp_path: Path, multipart: bool, conflict: bool
+) -> None:
+    client = boto3.client(
+        "s3",
+        region_name="us-east-1",
+        aws_access_key_id="test",
+        aws_secret_access_key="test",
+    )
+    writer = LargeFileS3.__new__(LargeFileS3)
+    writer._client = client
+    writer.bucket_name = "models"
+    writer._name = "model"
+    writer._version = 0
+    archive = tmp_path / "archive"
+    archive.write_bytes(b"model weights")
+    operation = "CompleteMultipartUpload" if multipart else "PutObject"
+    headers = []
+
+    def capture(model: Any, params: Any, **kwargs: Any) -> None:
+        if model.name == operation:
+            headers.append(params["headers"].get("If-None-Match"))
+
+    client.meta.events.register_first("before-call.*.*", capture)
+    config = TransferConfig(
+        multipart_threshold=1 if multipart else 1024,
+        use_threads=False,
+        preferred_transfer_client="classic",
+    )
+    with (
+        Stubber(client) as stubber,
+        patch(
+            "great_ai.large_file.large_file.large_file_s3.TransferConfig",
+            return_value=config,
+        ),
+    ):
+        if multipart:
+            stubber.add_response("create_multipart_upload", {"UploadId": "upload"})
+            stubber.add_response("upload_part", {"ETag": '"part"'})
+        commit = "complete_multipart_upload" if multipart else "put_object"
+        if conflict:
+            stubber.add_client_error(
+                commit, service_error_code="PreconditionFailed", http_status_code=412
+            )
+            if multipart:
+                stubber.add_response("abort_multipart_upload", {})
+            with pytest.raises(FileExistsError, match="another writer"):
+                writer._upload(archive, hide_progress=True)
+        else:
+            stubber.add_response(commit, {"ETag": '"model"'})
+            writer._upload(archive, hide_progress=True)
+        stubber.assert_no_pending_responses()
+    assert headers == ["*"]
+    client.close()
+
+
+def test_gridfs_rejects_conflicting_versions_and_aborts(tmp_path: Path) -> None:
+    backend = MagicMock()
+    stream = backend.open_upload_stream.return_value
+    stream.__enter__.return_value = stream
+    stream.__exit__.side_effect = DuplicateKeyError("duplicate filename")
+    database = MagicMock()
+    source = tmp_path / "weights"
+    source.write_text("weights")
+    with (
+        patch.object(LargeFileMongo, "_client", backend),
+        patch.object(LargeFileMongo, "_database", database),
+    ):
+        writer = LargeFileMongo("model", "w")
+        with pytest.raises(FileExistsError, match="another writer"):
+            writer.push(source)
+    database.fs.files.create_index.assert_called_once_with(
+        "filename",
+        name="great_ai_unique_version",
+        unique=True,
+        partialFilterExpression={"metadata.great_ai_version": True},
+    )
+    backend.open_upload_stream.assert_called_once_with(
+        "model_0", metadata={"great_ai_version": True}
+    )
+    stream.abort.assert_called_once()
+    assert not (writer.cache_path / writer._cache_name).exists()
