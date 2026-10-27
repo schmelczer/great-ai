@@ -178,7 +178,10 @@ class LargeFileBase(ABC):
         Args:
             hide_progress: Do not show a progress update after each 10% of progress.
         """
+        with self._model_lock():
+            return self._get_cached_file(hide_progress)
 
+    def _get_cached_file(self, hide_progress: bool) -> Path:
         if not self._cache_only_mode:
             self._find_instances()
         instance = next(
@@ -233,12 +236,9 @@ class LargeFileBase(ABC):
         if isinstance(path, str):
             path = Path(path)
 
-        lock_directory = self.cache_path / ".locks"
-        lock_directory.mkdir(parents=True, exist_ok=True)
-        lock_name = sha256(f"{self._cache_namespace}:{self._name}".encode()).hexdigest()
         staging_directory = self.cache_path / ".staging"
         staging_directory.mkdir(parents=True, exist_ok=True)
-        with FileLock(lock_directory / f"{lock_name}.lock"):
+        with self._model_lock():
             # Allocate at commit time, after earlier local writers have finished.
             self._find_instances()
             self._version = self._instances[-1].version + 1 if self._instances else 0
@@ -305,6 +305,12 @@ class LargeFileBase(ABC):
         return sha256(
             f"{type(self).__module__}.{type(self).__qualname__}".encode()
         ).hexdigest()
+
+    def _model_lock(self) -> FileLock:
+        directory = self.cache_path / ".locks"
+        directory.mkdir(parents=True, exist_ok=True)
+        key = sha256(f"{self._cache_namespace}:{self._name}".encode()).hexdigest()
+        return FileLock(directory / f"{key}.lock")
 
     @property
     def _cache_identity_path(self) -> Path:
