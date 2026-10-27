@@ -213,37 +213,31 @@ class LargeFileBase(ABC):
 
         if isinstance(path, str):
             path = Path(path)
+        if "w" not in self._mode:
+            self._find_instances()
+            self._version = self._instances[-1].version + 1 if self._instances else 0
 
         with tempfile.TemporaryDirectory() as tmp:
-            if path.is_file():
-                logger.info(f"Copying file for {self._local_name}")
-                copy: Any = shutil.copy
+            root = Path(tmp)
+            staged = root / self._local_name
+            if path.is_dir():
+                shutil.copytree(path, staged)
             else:
-                logger.info(f"Copying directory for {self._local_name}")
-                copy = shutil.copytree
+                shutil.copy2(path, staged)
 
-            try:
-                # Make local copy in the cache
-                shutil.rmtree(self.cache_path / self._cache_name, ignore_errors=True)
-                copy(str(path), str(self.cache_path / self._cache_name))
-            except shutil.SameFileError:
-                pass  # No worries
-
-            copy(str(path), str(Path(tmp) / self._local_name))
-
-            with tempfile.TemporaryDirectory() as tmp2:
-                # A directory has to be zipped and it cannot contain the output of the zipping
-                logger.info(f"Compressing {self._local_name}")
-                shutil.make_archive(
-                    str(Path(tmp2) / self._local_name),
+            with tempfile.TemporaryDirectory() as archive_directory:
+                archive = shutil.make_archive(
+                    str(Path(archive_directory) / self._local_name),
                     COMPRESSION_ALGORITHM,
-                    tmp,
+                    root,
                 )
+                self._upload(Path(archive), hide_progress=hide_progress)
 
-                file_to_be_uploaded = (
-                    Path(tmp2) / f"{self._local_name}{ARCHIVE_EXTENSION}"
-                )
-                self._upload(file_to_be_uploaded, hide_progress=hide_progress)
+            # Stage the source before publishing: it may itself be cached.
+            destination = self.cache_path / self._cache_name
+            if destination.exists():
+                raise FileExistsError(f"Version already exists: {destination}")
+            shutil.move(str(staged), str(destination))
 
         self.clean_up()
 

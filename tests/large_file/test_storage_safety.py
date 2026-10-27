@@ -108,6 +108,21 @@ def test_evicted_remote_model_is_downloaded_again() -> None:
     assert downloads == ["model/0", "model/0"]
 
 
+def test_uploading_cached_directory_preserves_source(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "weights").write_text("model weights")
+    LargeFileLocal("model", "w").push(source)
+    reader = LargeFileLocal("model")
+    cached = reader.get()
+    reader.push(cached)
+    assert reader.version == 1
+    assert (cached / "weights").read_text() == "model weights"
+    assert (
+        LargeFileLocal("model", version=1).get() / "weights"
+    ).read_text() == "model weights"
+
+
 def test_gridfs_matches_only_exact_model_names() -> None:
     files = [
         SimpleNamespace(name=name, _id=name, length=1)
