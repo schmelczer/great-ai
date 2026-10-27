@@ -17,7 +17,7 @@ Well-tested tools that can be used in production with confidence. The toolbox of
 
 ## Parallel processing
 
-Multiprocessing and multithreading-based parallelism with support for `async` functions. Its main purpose is to implement [great_ai.GreatAI.process_batch][], however, the parallel processing functions are also convenient for covering other types of mapping needs with a friendlier API than [joblib](https://joblib.readthedocs.io/en/latest/parallel.html){ target=_blank } or [multiprocess](https://pypi.org/project/multiprocess/){ target=_blank }.
+Multiprocessing and multithreading-based parallelism with support for `async` functions. Its main purpose is to implement [great_ai.GreatAI.process_batch][], however, the parallel processing functions are also convenient for covering other types of mapping needs with a friendlier API than [joblib](https://joblib.readthedocs.io/en/stable/user_guide/parallel.html){ target=_blank } or [multiprocess](https://pypi.org/project/multiprocess/){ target=_blank }.
 
 ::: great_ai.utilities.simple_parallel_map
     options:
