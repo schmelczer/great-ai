@@ -30,6 +30,7 @@ from ..parameters.automatically_decorate_parameters import (
 from ..tracing.tracing_context import TracingContext
 from ..utilities import parallel_map
 from ..views import ApiMetadata, Trace
+from .batch_context import BatchContext
 from .routes.bootstrap_dashboard import bootstrap_dashboard
 from .routes.bootstrap_docs_endpoints import bootstrap_docs_endpoints
 from .routes.bootstrap_feedback_endpoints import bootstrap_feedback_endpoints
@@ -210,8 +211,10 @@ class GreatAI(Generic[T, V]):
         wrapped_function = freeze_arguments(
             self._get_cached_traced_function(self._wrapped_func.__wrapped__)
         )
+        batch_context = BatchContext()
 
         def inner(value: Any) -> T:
+            batch_context.restore()
             return (
                 wrapped_function(*value, do_not_persist_traces=do_not_persist_traces)
                 if unpack_arguments
@@ -221,6 +224,7 @@ class GreatAI(Generic[T, V]):
             )
 
         async def inner_async(value: Any) -> T:
+            batch_context.restore()
             return await cast(
                 Awaitable,
                 (
