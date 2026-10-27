@@ -2,19 +2,16 @@ import re
 
 pattern = re.compile(
     r"""
-        (?:^|\n)        # new key-value pairs must start on a new line
-        \s*             # leading whitespace is allowed
-        (?!\#)          # the key cannot start with a `#` symbol
-        (\w+?)          # then comes the key
-        \s*=\s*         # the key and value are separated by an equal sign
-        (?:             # then comes the value
-              "([^"]*)"   # the value can be surrounded by quotes: "value"
-            | '([^']*)'   # the value can be surrounded by quotes: 'value'
-            | `([^`]*)`   # the value can be surrounded by quotes: `value`
-            | ([^#\n]*?)  # or it is bare, in that case, the trailing whitespace is ignored
+        [\t ]*(?P<key>\w+)[\t ]*=[\t ]*
+        (?:
+              "(?P<double>[^"]*)"
+            | '(?P<single>[^']*)'
+            | `(?P<backtick>[^`]*)`
+            | (?!["'`])(?P<bare>[^\#\r\n]*?)
         )
-        \s*(?:\#.*)?    # comments can be added with the `#` symbol
-        (?=\n|$)        # a key-value pairs are separated by new lines
+        [\t ]*(?:\#[^\r\n]*)?(?:\r?\n|$)
     """,
     flags=re.UNICODE | re.VERBOSE,
 )
+
+ignored_line = re.compile(r"[\t ]*(?:\#[^\r\n]*)?(?:\r?\n|$)")

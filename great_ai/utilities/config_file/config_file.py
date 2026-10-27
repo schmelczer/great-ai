@@ -4,7 +4,7 @@ from typing import Dict, ItemsView, Iterator, KeysView, Mapping, Union, ValuesVi
 
 from ..logger.get_logger import get_logger
 from .parse_error import ParseError
-from .pattern import pattern
+from .pattern import ignored_line, pattern
 
 logger = get_logger("ConfigFile")
 
@@ -89,14 +89,25 @@ class ConfigFile(Mapping[str, str]):
         with open(self._path, encoding="utf-8") as f:
             lines: str = f.read()
 
-        matches = pattern.findall(lines)
-        for key, *values in matches:
-            try:
-                value = next(v for v in values if v)
-            except StopIteration:
-                raise ParseError(f"""Cannot parse config file ({
-                        self._path.absolute()
-                        }), error at key `{key}`""")
+        position = 0
+        while position < len(lines):
+            ignored = ignored_line.match(lines, position)
+            if ignored is not None and ignored.end() > position:
+                position = ignored.end()
+                continue
+            match = pattern.match(lines, position)
+            if match is None:
+                line = lines.count("\n", 0, position) + 1
+                raise ParseError(
+                    f"Cannot parse config file ({self._path.absolute()}) at line {line}"
+                )
+            position = match.end()
+            key = match.group("key")
+            value = next(
+                match.group(name)
+                for name in ("double", "single", "backtick", "bare")
+                if match.group(name) is not None
+            )
 
             already_exists = key in self._key_values
             if already_exists and not value.startswith(

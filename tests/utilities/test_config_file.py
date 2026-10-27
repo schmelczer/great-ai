@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import pytest
-from great_ai.utilities import ConfigFile
+from great_ai.utilities import ConfigFile, ParseError
 
 DATA_PATH = Path(__file__).parent.resolve() / "data"
 
@@ -88,3 +88,25 @@ def test_env_exists_ignore_fallback() -> None:
 def test_duplicate_key() -> None:
     with pytest.raises(KeyError):
         ConfigFile(DATA_PATH / "bad.conf")
+
+
+def test_empty_values_do_not_consume_the_next_assignment(tmp_path: Path) -> None:
+    path = tmp_path / "empty.conf"
+    path.write_text('empty=\nquoted=""\nnext=value\nmultiline="a\nb"\n')
+    assert dict(ConfigFile(path)) == {
+        "empty": "",
+        "quoted": "",
+        "next": "value",
+        "multiline": "a\nb",
+    }
+
+
+@pytest.mark.parametrize(
+    "content",
+    ["broken syntax\nkey=value\n", 'key="unterminated\n', 'key="value" trailing\n'],
+)
+def test_malformed_configuration_is_rejected(tmp_path: Path, content: str) -> None:
+    path = tmp_path / "malformed.conf"
+    path.write_text(content)
+    with pytest.raises(ParseError):
+        ConfigFile(path)
