@@ -16,6 +16,11 @@ def bootstrap_prediction_endpoint(
     )
 
     schema = _get_schema(func)
+    positional_names = [
+        p.name
+        for p in inspect.signature(func).parameters.values()
+        if p.kind == p.POSITIONAL_ONLY and p.name in schema.model_fields
+    ]
 
     @router.post("/predict", status_code=status.HTTP_200_OK, response_model=Trace)
     async def predict(input_value: schema) -> Trace:  # type: ignore
@@ -25,9 +30,12 @@ def bootstrap_prediction_endpoint(
             arguments = {
                 name: getattr(input_value, name) for name in schema.model_fields
             }
+            positional = [arguments.pop(name) for name in positional_names]
             if inspect.iscoroutinefunction(func):
-                return await cast(Callable[..., Awaitable[Trace]], func)(**arguments)
-            return cast(Callable[..., Trace], func)(**arguments)
+                return await cast(Callable[..., Awaitable[Trace]], func)(
+                    *positional, **arguments
+                )
+            return cast(Callable[..., Trace], func)(*positional, **arguments)
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

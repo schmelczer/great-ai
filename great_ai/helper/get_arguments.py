@@ -9,16 +9,7 @@ def get_arguments(
 
     signature = inspect.signature(func)
 
-    defaults = {
-        p.name: p.default
-        for p in signature.parameters.values()
-        if p.default != inspect._empty
-    }
-
-    filter_keys = [
-        param.name
-        for param in signature.parameters.values()
-        if param.kind == param.POSITIONAL_OR_KEYWORD
-    ]
-
-    return {**defaults, **dict(zip(filter_keys, args)), **kwargs}
+    # Model-injected parameters may not have been supplied at this wrapper layer.
+    arguments = signature.bind_partial(*args, **kwargs)
+    arguments.apply_defaults()
+    return dict(arguments.arguments)
