@@ -75,6 +75,8 @@ class MongoDbDriver(TracingDatabaseDriver):
             return client[self.mongo_database].traces.insert_one(serialized).inserted_id
 
     def save_batch(self, documents: List[Trace]) -> List[str]:
+        if not documents:
+            return []
         serialized = [d.to_flat_dict() for d in documents]
         for s in serialized:
             s["_id"] = s["trace_id"]

@@ -38,3 +38,9 @@ def test_zero_take_preserves_count_without_fetching(
     driver, collection = mongo
     assert driver.query(take=0) == ([], 3)
     collection.find.assert_not_called()
+
+
+def test_empty_batch_is_a_noop(mongo: Tuple[MongoDbDriver, Any]) -> None:
+    driver, collection = mongo
+    assert driver.save_batch([]) == []
+    collection.insert_many.assert_not_called()
