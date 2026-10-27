@@ -11,7 +11,6 @@ import uvicorn
 from uvicorn._subprocess import get_subprocess
 from uvicorn.config import LOGGING_CONFIG, Config
 from uvicorn.supervisors import BaseReload, Multiprocess
-from watchdog.events import FileSystemEvent, PatternMatchingEventHandler
 from watchdog.observers import Observer
 
 from great_ai.constants import SERVER_NAME
@@ -20,6 +19,7 @@ from great_ai.deploy import GreatAI
 from great_ai.errors import ArgumentValidationError, MissingArgumentError
 from great_ai.utilities import get_logger
 
+from .deploy.reload_event_handler import ReloadEventHandler
 from .parse_arguments import parse_arguments
 
 logger = get_logger(SERVER_NAME)
@@ -83,16 +83,10 @@ def serve() -> None:
                     pass
     else:
 
-        class EventHandler(PatternMatchingEventHandler):
+        class EventHandler(ReloadEventHandler):
             def __init__(self) -> None:
-                super().__init__(
-                    patterns=["*.py", "*.ipynb"], ignore_patterns=["__*.py"]
-                )
+                super().__init__(self.restart)
                 self.server: Optional[GreatAIReload] = None
-                self.restart()
-
-            def on_closed(self, event: FileSystemEvent) -> None:
-                logger.warning(f"File {event.src_path} has triggered a restart")
                 self.restart()
 
             def restart(self) -> None:
@@ -124,6 +118,7 @@ def serve() -> None:
             Event().wait()
         finally:
             observer.stop()
+            restart_handler.close()
             restart_handler.stop_server()
             if args.file_name.endswith(".ipynb"):
                 try:
