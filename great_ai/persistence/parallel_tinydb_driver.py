@@ -84,10 +84,14 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
                     getattr(df[f.property], operator_mapping[f.operator])(f.value)
                 ]
             elif operator == "contains":
+                pattern = f.value_as_text.casefold()
                 df = df.loc[
-                    df[f.property].str.contains(
-                        str(int(f.value)) if isinstance(f.value, float) else f.value,
-                        case=False,
+                    df[f.property].map(
+                        lambda value: (
+                            pattern in value.casefold()
+                            if isinstance(value, str)
+                            else not isinstance(f.value, str) and value == f.value
+                        )
                     )
                 ]
 

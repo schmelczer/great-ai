@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -102,6 +103,19 @@ class MongoDbDriver(TracingDatabaseDriver):
             return operator_mapping["="]
         return operator_mapping[filter.operator]
 
+    def _get_filter(self, filter: Filter) -> Dict[str, Any]:
+        if filter.operator == "contains":
+            text_filter = {
+                filter.property: {
+                    "$regex": re.escape(filter.value_as_text),
+                    "$options": "i",
+                }
+            }
+            if isinstance(filter.value, str):
+                return text_filter
+            return {"$or": [{filter.property: {"$eq": filter.value}}, text_filter]}
+        return {filter.property: {self._get_operator(filter): filter.value}}
+
     def query(
         self,
         *,
@@ -121,9 +135,7 @@ class MongoDbDriver(TracingDatabaseDriver):
 
         and_query: List[Dict[str, Any]] = []
         and_query.extend({"tags": tag} for tag in conjunctive_tags)
-        and_query.extend(
-            {f.property: {self._get_operator(f): f.value}} for f in conjunctive_filters
-        )
+        and_query.extend(self._get_filter(f) for f in conjunctive_filters)
         if not and_query:
             and_query.append({})
 

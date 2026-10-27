@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any, Iterator, Tuple
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
-
 from great_ai import MongoDbDriver
+from great_ai.views import Filter
 
 
 @pytest.fixture
@@ -44,3 +44,24 @@ def test_empty_batch_is_a_noop(mongo: Tuple[MongoDbDriver, Any]) -> None:
     driver, collection = mongo
     assert driver.save_batch([]) == []
     collection.insert_many.assert_not_called()
+
+
+def test_mongo_contains_uses_literal_case_insensitive_patterns(
+    mongo: Tuple[MongoDbDriver, Any],
+) -> None:
+    driver, collection = mongo
+    driver.query(
+        conjunctive_filters=[Filter(property="text", operator="contains", value="a[")]
+    )
+    assert {
+        "text": {"$regex": r"a\[", "$options": "i"}
+    } in collection.find.call_args.kwargs["filter"]["$and"]
+    numeric = driver._get_filter(
+        Filter(property="score", operator="contains", value=2.5)
+    )
+    assert numeric == {
+        "$or": [
+            {"score": {"$eq": 2.5}},
+            {"score": {"$regex": r"2\.5", "$options": "i"}},
+        ]
+    }

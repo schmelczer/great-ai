@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
-from tinydb.table import Table
-
 from great_ai import ParallelTinyDbDriver, Trace
 from great_ai.context import get_context
+from great_ai.views import Filter
+from tinydb.table import Table
 
 
 def write_traces(path: str, index: int, barrier: Any) -> None:
@@ -74,3 +74,45 @@ def test_tinydb_date_queries_normalize_timezones(isolated_context: None) -> None
     noon = datetime(2026, 1, 1, 12, tzinfo=timezone.utc)
     assert database.query(since=noon, until=noon)[1] == 2
     assert database.query(since=noon.replace(hour=13))[1] == 0
+
+
+def test_contains_handles_numbers_and_literal_punctuation(
+    isolated_context: None,
+) -> None:
+    database = get_context().tracing_database
+    database.save(
+        Trace(
+            trace_id="contains",
+            created="2026-01-01",
+            original_execution_time_ms=2.5,
+            models=[],
+            tags=[],
+            logged_values={"text": "A[2.5"},
+        )
+    )
+    for property, value in (
+        ("original_execution_time_ms", 2.5),
+        ("text", "["),
+        ("text", 2.5),
+        ("text", "a["),
+    ):
+        assert (
+            database.query(
+                conjunctive_filters=[
+                    Filter(property=property, operator="contains", value=value)
+                ]
+            )[1]
+            == 1
+        )
+    assert (
+        database.query(
+            conjunctive_filters=[
+                Filter(
+                    property="original_execution_time_ms",
+                    operator="contains",
+                    value="[",
+                )
+            ]
+        )[1]
+        == 0
+    )
