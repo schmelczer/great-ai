@@ -2,7 +2,9 @@ from datetime import datetime
 from typing import Any, Dict, List
 from unittest.mock import patch
 
-from great_ai import Trace
+import pytest
+from fastapi.testclient import TestClient
+from great_ai import GreatAI, Trace
 from great_ai.helper.freeze_arguments import freeze
 from great_ai.persistence.mongodb_driver import MongoDbDriver
 from pydantic import BaseModel, Field, field_validator
@@ -34,6 +36,26 @@ def test_freezing_preserves_validated_models() -> None:
     assert frozen.model_dump() == original.model_dump()
     assert hash(frozen) == hash(freeze(original))
     assert type(original) is Payload
+
+
+@pytest.mark.parametrize("is_async", [False, True])
+def test_http_preserves_nested_models(isolated_context: None, is_async: bool) -> None:
+    def predict(data: Payload) -> int:
+        assert isinstance(data.item, Item)
+        assert all(isinstance(item, Item) for item in data.others)
+        return data.item.value + sum(item.value for item in data.others)
+
+    async def predict_async(data: Payload) -> int:
+        return predict(data)
+
+    service = GreatAI.create(predict_async if is_async else predict)
+    with TestClient(service.app) as client:
+        response = client.post(
+            "/predict",
+            json={"data": {"item": {"number": 1}, "others": [{"number": 2}]}},
+        )
+        assert response.status_code == 200
+        assert response.json()["output"] == 5
 
 
 def test_flattening_preserves_reserved_trace_fields() -> None:
