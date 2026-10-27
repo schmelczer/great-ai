@@ -1,4 +1,4 @@
-# Train and deploy a SOTA model
+# Train and deploy a sentence classifier
 
 Let's see `great-ai` in action by going over the lifecycle of a simple service.
 
@@ -10,7 +10,9 @@ Let's see `great-ai` in action by going over the lifecycle of a simple service.
 
 ## Overview
 
-You will train a field of study (domain) classifier for scientific sentences. The exact task was proposed by the [SciBERT paper](https://arxiv.org/abs/1903.10676){ target=_blank } in which SciBERT [achieved an F1-score of 0.6571](https://paperswithcode.com/sota/sentence-classification-on-paper-field){ target=_blank }. We are going to outperform it using a trivial text classification model: a [Linear SVM](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html){ target=_blank }.
+You will train a field of study (domain) classifier for scientific sentences using a [Linear SVM](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html){ target=_blank }. The training notebook's recorded run achieves a test macro F1-score of about 0.69 on the MAG sentence-classification dataset, compared with the historical SciBERT baseline of 0.6571 associated with the [2019 SciBERT work](https://arxiv.org/abs/1903.10676){ target=_blank }.
+
+This is a comparison with one historical baseline. A current state-of-the-art claim would require an up-to-date benchmark against comparable systems, using the same data splits, preprocessing, and evaluation metric.
 
 We use the same synthetic dataset derived from the [Microsoft Academic Graph](https://www.microsoft.com/en-us/research/project/microsoft-academic-graph/){ target=_blank }. The dataset is [available here](https://github.com/allenai/scibert/tree/master/data/text_classification/mag){ target=_blank }.
 
