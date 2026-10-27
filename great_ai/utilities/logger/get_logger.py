@@ -33,4 +33,8 @@ def get_logger(
         logger.addHandler(stdout_handler)
         loggers[name] = logger
 
-    return loggers[name]
+    logger = loggers[name]
+    logger.setLevel(level)
+    for handler in logger.handlers:
+        handler.setLevel(level)
+    return logger
