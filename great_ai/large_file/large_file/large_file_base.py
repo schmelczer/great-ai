@@ -85,7 +85,7 @@ class LargeFileBase(ABC):
 
         self._newline = newline
 
-        LargeFileBase.cache_path.mkdir(parents=True, exist_ok=True)
+        self.cache_path.mkdir(parents=True, exist_ok=True)
 
         self._find_instances()
         self._check_mode_and_set_version()
