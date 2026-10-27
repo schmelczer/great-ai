@@ -4,7 +4,6 @@ import shutil
 import sys
 import tempfile
 from abc import ABC, abstractmethod
-from functools import lru_cache
 from pathlib import Path
 from types import TracebackType
 from typing import IO, Any, List, Literal, Optional, Type, Union, cast
@@ -163,7 +162,6 @@ class LargeFileBase(ABC):
 
         return cast(int, self._version)
 
-    @lru_cache(1)
     def get(self, hide_progress: bool = False) -> Path:
         """Return path to the proxy of a file (or directory).
 

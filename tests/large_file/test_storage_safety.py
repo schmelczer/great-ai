@@ -1,8 +1,11 @@
+import io
+import tarfile
 from pathlib import Path
-from typing import Iterator
+from typing import Any, Iterator
+from unittest.mock import MagicMock, patch
 
 import pytest
-from great_ai.large_file import LargeFileBase, LargeFileLocal
+from great_ai.large_file import LargeFileBase, LargeFileLocal, LargeFileS3
 
 
 @pytest.fixture(autouse=True)
@@ -71,3 +74,29 @@ def test_failed_write_removes_temporary_file() -> None:
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
+
+
+def test_evicted_remote_model_is_downloaded_again() -> None:
+    backend = MagicMock()
+    backend.list_objects_v2.return_value = {"Contents": [{"Key": "model/0"}]}
+    downloads = []
+
+    def download(
+        self: LargeFileS3, remote_path: Any, local_path: Path, hide_progress: bool
+    ) -> None:
+        downloads.append(remote_path)
+        with tarfile.open(local_path, "w:gz") as archive:
+            payload = b"remote weights"
+            member = tarfile.TarInfo("model-0")
+            member.size = len(payload)
+            archive.addfile(member, io.BytesIO(payload))
+
+    with (
+        patch.object(LargeFileS3, "_client", backend),
+        patch.object(LargeFileS3, "_download", download),
+    ):
+        reader = LargeFileS3("model")
+        cached = reader.get()
+        cached.unlink()
+        assert reader.get().read_text() == "remote weights"
+    assert downloads == ["model/0", "model/0"]
