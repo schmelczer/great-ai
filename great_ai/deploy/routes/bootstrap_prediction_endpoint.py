@@ -5,6 +5,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, status
 from pydantic import BaseModel, create_model
 
 from ...helper import get_function_metadata_store
+from ...helper.get_function_type_hints import get_function_type_hints
 from ...views import Trace
 
 
@@ -47,9 +48,10 @@ def bootstrap_prediction_endpoint(
 
 def _get_schema(func: Callable) -> Type[BaseModel]:
     signature = inspect.signature(func)
+    type_hints = get_function_type_hints(func)
     parameters = {
         p.name: (
-            p.annotation if p.annotation != inspect._empty else Any,
+            type_hints.get(p.name, Any),
             p.default if p.default != inspect._empty else ...,
         )
         for p in signature.parameters.values()

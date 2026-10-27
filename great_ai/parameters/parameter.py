@@ -6,6 +6,7 @@ from typeguard import TypeCheckError, check_type
 from ..errors import ArgumentValidationError
 from ..helper import get_arguments, get_function_metadata_store
 from ..helper.assert_function_is_not_finalised import assert_function_is_not_finalised
+from ..helper.get_function_type_hints import get_function_type_hints
 from ..tracing.tracing_context import TracingContext
 
 F = TypeVar("F", bound=Callable)
@@ -56,13 +57,12 @@ def parameter(
         assert_function_is_not_finalised(func)
 
         actual_name = f"arg:{parameter_name}"
+        expected_type = get_function_type_hints(func).get(parameter_name)
 
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Dict[str, Any]) -> Any:
             arguments = get_arguments(func, args, kwargs)
             argument = arguments.get(parameter_name)
-
-            expected_type = func.__annotations__.get(parameter_name)
 
             if expected_type is not None:
                 try:
