@@ -212,6 +212,7 @@ def main() -> None:
         exit()
     except Exception as e:
         logger.error(e)
+        raise SystemExit(1) from e
 
 
 if __name__ == "__main__":
