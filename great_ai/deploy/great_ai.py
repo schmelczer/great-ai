@@ -205,7 +205,11 @@ class GreatAI(Generic[T, V]):
                 evaluations run part of the CI.
         """
 
-        wrapped_function = self._wrapped_func
+        # Futures in a warmed async cache cannot be serialized into worker
+        # processes. Build a fresh cache around the original decorated function.
+        wrapped_function = freeze_arguments(
+            self._get_cached_traced_function(self._wrapped_func.__wrapped__)
+        )
 
         def inner(value: Any) -> T:
             return (

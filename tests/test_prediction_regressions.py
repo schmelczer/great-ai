@@ -58,6 +58,20 @@ def test_http_preserves_nested_models(isolated_context: None, is_async: bool) ->
         assert response.json()["output"] == 5
 
 
+@pytest.mark.asyncio
+async def test_batch_after_async_prediction(isolated_context: None) -> None:
+    @GreatAI.create
+    async def predict(value: int) -> int:
+        return value + 1
+
+    assert (await predict(1)).output == 2
+    assert [trace.output for trace in predict.process_batch([1, 2], concurrency=1)] == [
+        2,
+        3,
+    ]
+    assert (await predict(1)).output == 2
+
+
 def test_flattening_preserves_reserved_trace_fields() -> None:
     trace = Trace(
         trace_id="actual-id",
