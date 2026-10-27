@@ -100,7 +100,7 @@ GreatAI fits between the prototype and deployment phases of your (or your organi
 
 ## Why GreatAI?
 
-There are other existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://www.seldon.io/solutions/open-source-projects/core){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.
+There are other existing solutions aiming to facilitate this phase. [Amazon SageMaker](https://aws.amazon.com/sagemaker){ target=_blank } and [Seldon Core](https://docs.seldon.ai/seldon-core-2){ target=_blank } provide the most comprehensive suite of features. If you have the opportunity to use them, do that because they're great.
 
 However, research indicates that professionals rarely use them. This may be due to their inherent setup and operational complexity. ==GreatAI is designed to be as simple to use as possible.== Its straightforward, high-level API and sensible default configuration make it extremely easy to start using. Despite its relative simplicity over Seldon Core, it still implements many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank }, and thus, can meaningfully improve your deployment without requiring prohibitively great effort.
 
