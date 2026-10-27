@@ -158,7 +158,7 @@ class MongoDbDriver(TracingDatabaseDriver):
         serialized["_id"] = new_version.trace_id
 
         with MongoClient[Any](self.mongo_connection_string) as client:
-            client[self.mongo_database].traces.update_one({"_id": id}, serialized)
+            client[self.mongo_database].traces.replace_one({"_id": id}, serialized)
 
     def delete(self, id: str) -> None:
         with MongoClient[Any](self.mongo_connection_string) as client:
