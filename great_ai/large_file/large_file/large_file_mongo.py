@@ -1,4 +1,5 @@
 import re
+from hashlib import sha256
 from pathlib import Path
 from typing import Any, List
 
@@ -28,6 +29,13 @@ class LargeFileMongo(LargeFileBase):
 
     mongo_connection_string = None
     mongo_database = None
+
+    _configuration_attributes = ("mongo_connection_string", "mongo_database")
+
+    def _get_cache_namespace(self) -> str:
+        return sha256(
+            repr(("gridfs", self.mongo_connection_string, self.mongo_database)).encode()
+        ).hexdigest()
 
     @classmethod
     def configure_credentials(  # type: ignore

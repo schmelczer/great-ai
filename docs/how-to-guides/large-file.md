@@ -70,6 +70,11 @@ Often, especially when working with data-heavy applications, large files can pro
 
 ## From the command-line 
 
+Remote cache filenames now include a storage-specific namespace. Existing local
+model stores remain readable, while remote models cached by older releases are
+downloaded again into the new namespace. Configure the same bucket or database
+when preparing and later using an offline remote cache.
+
 The main reason for using the `large-file` or `python3 -m great_ai.large_file` commands is to upload or download models from the terminal. For example, when building a docker image, it is best practice to cache the referred models.
 
 ### Setup

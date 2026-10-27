@@ -62,6 +62,10 @@ class LargeFileLocal(LargeFileBase):
     def _find_remote_instances(self) -> List[DataInstance]:
         return []
 
+    def _get_cache_namespace(self) -> str:
+        # Preserve existing local model stores; remote caches are namespaced.
+        return ""
+
     def _download(
         self, remote_path: Any, local_path: Path, hide_progress: bool
     ) -> None:

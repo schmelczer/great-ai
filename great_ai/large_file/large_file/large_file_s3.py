@@ -1,3 +1,4 @@
+from hashlib import sha256
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -28,6 +29,18 @@ class LargeFileS3(LargeFileBase):
     secret_access_key = None
     bucket_name = None
     endpoint_url = None
+
+    _configuration_attributes = (
+        "region_name",
+        "access_key_id",
+        "secret_access_key",
+        "bucket_name",
+        "endpoint_url",
+    )
+
+    def _get_cache_namespace(self) -> str:
+        identity = ("s3", self.endpoint_url, self.region_name, self.bucket_name)
+        return sha256(repr(identity).encode()).hexdigest()
 
     @classmethod
     def configure_credentials(  # type: ignore

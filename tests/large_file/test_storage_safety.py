@@ -123,6 +123,52 @@ def test_gridfs_matches_only_exact_model_names() -> None:
     assert [instance.name for instance in reader._instances] == ["model"]
 
 
+def test_remote_cache_is_separate_from_local_cache() -> None:
+    with LargeFileLocal("model", "w") as file:
+        file.write("local weights")
+    local_path = LargeFileLocal("model").get()
+    backend = MagicMock()
+    backend.list_objects_v2.return_value = {"Contents": [{"Key": "model/0"}]}
+
+    def download(
+        self: LargeFileS3, remote_path: Any, local_path: Path, hide_progress: bool
+    ) -> None:
+        with tarfile.open(local_path, "w:gz") as archive:
+            data = b"remote weights"
+            info = tarfile.TarInfo("model-0")
+            info.size = len(data)
+            archive.addfile(info, io.BytesIO(data))
+
+    with (
+        patch.object(LargeFileS3, "_client", backend),
+        patch.object(LargeFileS3, "_download", download),
+    ):
+        remote_path = LargeFileS3("model").get()
+    assert remote_path != local_path
+    assert remote_path.read_text() == "remote weights"
+    assert local_path.read_text() == "local weights"
+
+
+def test_cache_identity_includes_storage_configuration(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    backend = MagicMock()
+    backend.list_objects_v2.return_value = {"Contents": [{"Key": "model/0"}]}
+    monkeypatch.setattr(LargeFileS3, "bucket_name", "first")
+    with patch.object(LargeFileS3, "_client", backend):
+        first = LargeFileS3("model")
+        monkeypatch.setattr(LargeFileS3, "bucket_name", "second")
+        second = LargeFileS3("model")
+        monkeypatch.setattr(
+            LargeFileS3, "endpoint_url", "https://another-store.example"
+        )
+        third = LargeFileS3("model")
+    assert len({first._cache_name, second._cache_name, third._cache_name}) == 3
+    assert first.bucket_name == "first"
+    assert second.bucket_name == "second"
+    assert second.endpoint_url != third.endpoint_url
+
+
 def test_s3_follows_every_listing_page() -> None:
     backend = MagicMock()
     backend.list_objects_v2.side_effect = [

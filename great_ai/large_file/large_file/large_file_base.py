@@ -4,9 +4,10 @@ import shutil
 import sys
 import tempfile
 from abc import ABC, abstractmethod
+from hashlib import sha256
 from pathlib import Path
 from types import TracebackType
-from typing import IO, Any, List, Literal, Optional, Type, Union, cast
+from typing import IO, Any, List, Literal, Optional, Tuple, Type, Union, cast
 
 from great_ai.utilities import ConfigFile, get_logger
 
@@ -47,6 +48,7 @@ class LargeFileBase(ABC):
     initialized = False
     cache_path = Path(".cache")
     max_cache_size: Optional[str] = "30GB"
+    _configuration_attributes: Tuple[str, ...] = ()
 
     def __init__(
         self,
@@ -84,6 +86,10 @@ class LargeFileBase(ABC):
 
         self._newline = newline
 
+        # Existing instances keep the storage configuration they were opened with.
+        for attribute in self._configuration_attributes:
+            setattr(self, attribute, getattr(self, attribute))
+        self._cache_namespace = self._get_cache_namespace()
         self.cache_path.mkdir(parents=True, exist_ok=True)
 
         self._find_instances()
@@ -175,7 +181,7 @@ class LargeFileBase(ABC):
             i.remote_path for i in self._instances if i.version == self._version
         )
 
-        destination = self.cache_path / self._local_name
+        destination = self.cache_path / self._cache_name
         if not destination.exists():
             logger.info(f"File {self._local_name} does not exist locally")
 
@@ -218,8 +224,8 @@ class LargeFileBase(ABC):
 
             try:
                 # Make local copy in the cache
-                shutil.rmtree(self.cache_path / self._local_name, ignore_errors=True)
-                copy(str(path), str(self.cache_path / self._local_name))
+                shutil.rmtree(self.cache_path / self._cache_name, ignore_errors=True)
+                copy(str(path), str(self.cache_path / self._cache_name))
             except shutil.SameFileError:
                 pass  # No worries
 
@@ -262,6 +268,18 @@ class LargeFileBase(ABC):
     def _local_name(self) -> str:
         return f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}{self.version}"
 
+    @property
+    def _cache_name(self) -> str:
+        # '@' is forbidden in model names, so even local names that resemble
+        # namespace hashes cannot collide with remote cache entries.
+        prefix = f"@{self._cache_namespace}-" if self._cache_namespace else ""
+        return f"{prefix}{self._local_name}"
+
+    def _get_cache_namespace(self) -> str:
+        return sha256(
+            f"{type(self).__module__}.{type(self).__qualname__}".encode()
+        ).hexdigest()
+
     def _find_instances(self) -> None:
         if self._cache_only_mode:
             self._instances = self._find_instances_from_cache()
@@ -273,7 +291,8 @@ class LargeFileBase(ABC):
     def _find_instances_from_cache(self) -> List[DataInstance]:
         logger.info(f"Fetching cached versions of {self._name}")
 
-        prefix = f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}"
+        namespace = f"@{self._cache_namespace}-" if self._cache_namespace else ""
+        prefix = f"{namespace}{self._name}{CACHE_NAME_VERSION_SEPARATOR}"
         return [
             DataInstance(
                 name=self._name, version=int(f.name[len(prefix) :]), remote_path=f
