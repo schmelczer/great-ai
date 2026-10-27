@@ -10,7 +10,7 @@
 [![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 [![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 
-Applying AI is becoming increasingly easier, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps fix this by allowing you to ==easily transform your prototype AI code into production-ready software==.
+Applying AI is becoming increasingly easier, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps ==prepare prototype AI code for deployment with tracing, model versioning, and API scaffolding==. These engineering features support oversight; they do not establish a model's accuracy, fairness, or trustworthiness, which require evaluation for the intended use case.
 
 ??? quote "Case studies"
     "There is a need to consider and adapt well established SE practices which have been ignored or had a very narrow focus in ML literature."
@@ -82,7 +82,9 @@ great-ai demo.py
 ![demo screen capture](media/demo.gif){ loading=lazy }
 
 !!! success
-    Your GreatAI service is ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank } are configured and implemented automatically. To have full control over your service and to understand what else you might need to do in your use case, continue reading this documentation.
+    Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank } are configured and implemented automatically.
+
+    Before production, replace the default local TinyDB tracing database with a production-suitable backend, [configure storage](https://great-ai.scoutinscience.com/how-to-guides/configure-service/) and [deployment infrastructure](https://great-ai.scoutinscience.com/how-to-guides/use-service/), and review the remaining best practices for your use case. Wrapping a function provides tracing and API scaffolding; model trustworthiness still requires use-case-specific evaluation and ongoing oversight.
 
 ## Why is this GREAT?
 
@@ -94,7 +96,7 @@ GreatAI fits between the prototype and deployment phases of your (or your organi
 - **R**obust: have error-handling and well-tested utilities out-of-the-box 
 - **E**nd-to-end: utilise end-to-end feedback as a built-in, first-class concept
 - **A**utomated: focus only on what actually requires your attention
-- **T**rustworthy: deploy models that you and society can confidently trust
+- **T**rustworthy: support model assessment and oversight with traces and feedback; trustworthiness requires use-case-specific evaluation
 
 ## Why GreatAI?
 

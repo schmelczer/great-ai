@@ -1,6 +1,6 @@
 # <img src="https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/logo.png" alt="logo of great-ai" width=60 /> GreatAI
 
-> Easily transform your prototype AI code into production-ready software.
+> Prepare your prototype AI code for production deployment.
 
 [![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
 [![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
@@ -9,7 +9,7 @@
 [![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 [![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
 
-Applying AI is becoming increasingly more accessible, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing unintended biases. GreatAI helps fix this by allowing you to easily transform your prototype AI code into production-ready software.
+Applying AI is becoming increasingly more accessible, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing unintended biases. GreatAI helps prepare prototype AI code for deployment with tracing, model versioning, and API scaffolding. These engineering features support oversight; they do not establish a model's accuracy, fairness, or trustworthiness, which require evaluation for the intended use case.
 
 ## Example
 
@@ -33,6 +33,8 @@ Start it by executing `great-ai demo.py`, and find the dashboard at [http://loca
 
 That's it. Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
+Before production, replace the default local TinyDB tracing database with a production-suitable backend, configure storage and deployment infrastructure, and review the remaining best practices for your use case.
+
 [Check out the full documentation here](https://great-ai.scoutinscience.com).
 
 ## Why is this GREAT?
@@ -45,7 +47,7 @@ GreatAI fits between the prototype and deployment phases of your AI development 
 - **R**obust: have error-handling and well-tested utilities out-of-the-box
 - **E**nd-to-end: utilise end-to-end feedback as a built-in, first-class concept
 - **A**utomated: focus only on what actually requires your attention
-- **T**rustworthy: deploy models that you and society can confidently trust
+- **T**rustworthy: support model assessment and oversight with traces and feedback; trustworthiness requires use-case-specific evaluation
 
 ## Why GreatAI?
 
