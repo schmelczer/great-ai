@@ -239,6 +239,7 @@ class LargeFileBase(ABC):
                 raise FileExistsError(f"Version already exists: {destination}")
             shutil.move(str(staged), str(destination))
 
+        self._find_instances()
         self.clean_up()
 
     def delete(self) -> None:

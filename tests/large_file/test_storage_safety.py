@@ -108,6 +108,23 @@ def test_evicted_remote_model_is_downloaded_again() -> None:
     assert downloads == ["model/0", "model/0"]
 
 
+def test_upload_refreshes_available_versions() -> None:
+    writer = LargeFileLocal("model", "w")
+    with writer as file:
+        file.write("weights")
+    assert writer.versions_pretty == "0"
+    assert writer.get().read_text() == "weights"
+
+
+def test_retention_counts_the_new_version() -> None:
+    for version in range(3):
+        with LargeFileLocal("model", "w", keep_last_n=1) as file:
+            file.write(str(version))
+    reader = LargeFileLocal("model")
+    assert reader.versions_pretty == "2"
+    assert reader.get().read_text() == "2"
+
+
 def test_uploading_cached_directory_preserves_source(tmp_path: Path) -> None:
     source = tmp_path / "source"
     source.mkdir()
