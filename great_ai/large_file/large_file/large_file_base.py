@@ -179,11 +179,25 @@ class LargeFileBase(ABC):
             hide_progress: Do not show a progress update after each 10% of progress.
         """
 
-        remote_path = next(
-            i.remote_path for i in self._instances if i.version == self._version
+        if not self._cache_only_mode:
+            self._find_instances()
+        instance = next(
+            (i for i in self._instances if i.version == self._version), None
         )
+        if instance is None:
+            raise FileNotFoundError(
+                f"File {self._name} version {self.version} not found"
+            )
 
         destination = self.cache_path / self._cache_name
+        if destination.exists() and not self._cache_only_mode:
+            identity = instance.cache_identity
+            if (
+                identity is None
+                or not self._cache_identity_path.exists()
+                or self._cache_identity_path.read_text() != identity
+            ):
+                self._remove_cached_path(destination)
         if not destination.exists():
             logger.info(f"File {self._local_name} does not exist locally")
 
@@ -193,7 +207,7 @@ class LargeFileBase(ABC):
                     local_root_path / f"{self._local_name}{ARCHIVE_EXTENSION}"
                 )
                 self._download(
-                    remote_path, tmp_file_archive, hide_progress=hide_progress
+                    instance.remote_path, tmp_file_archive, hide_progress=hide_progress
                 )
 
                 logger.info(f"Decompressing {self._local_name}")
@@ -201,6 +215,7 @@ class LargeFileBase(ABC):
                     str(tmp_file_archive), tmp, COMPRESSION_ALGORITHM, filter="data"
                 )
                 shutil.move(str(local_root_path / self._local_name), str(destination))
+                self._write_cache_identity()
         else:
             logger.info(f"File {self._local_name} found in cache")
 
@@ -247,10 +262,15 @@ class LargeFileBase(ABC):
                 # Stage the source before publishing: it may itself be cached.
                 destination = self.cache_path / self._cache_name
                 if destination.exists():
-                    raise FileExistsError(f"Version already exists: {destination}")
+                    if self._cache_only_mode:
+                        raise FileExistsError(f"Version already exists: {destination}")
+                    # The remote conditional commit succeeded. Any existing local
+                    # entry belongs to a deleted generation of this version.
+                    self._remove_cached_path(destination)
                 shutil.move(str(staged), str(destination))
 
             self._find_instances()
+            self._write_cache_identity()
             self.clean_up()
 
     def delete(self) -> None:
@@ -285,6 +305,29 @@ class LargeFileBase(ABC):
         return sha256(
             f"{type(self).__module__}.{type(self).__qualname__}".encode()
         ).hexdigest()
+
+    @property
+    def _cache_identity_path(self) -> Path:
+        key = sha256(self._cache_name.encode()).hexdigest()
+        return self.cache_path / ".metadata" / key
+
+    def _write_cache_identity(self) -> None:
+        if self._cache_only_mode:
+            return
+        identity = next(
+            (i.cache_identity for i in self._instances if i.version == self.version),
+            None,
+        )
+        if identity is not None:
+            self._cache_identity_path.parent.mkdir(parents=True, exist_ok=True)
+            self._cache_identity_path.write_text(identity)
+
+    @staticmethod
+    def _remove_cached_path(path: Path) -> None:
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink()
 
     def _find_instances(self) -> None:
         if self._cache_only_mode:
@@ -352,7 +395,7 @@ class LargeFileBase(ABC):
             [
                 f
                 for f in self.cache_path.glob("*")
-                if f.name not in {".locks", ".staging"}
+                if f.name not in {".locks", ".staging", ".metadata"}
             ],
             key=lambda f: f.stat().st_atime,
         )

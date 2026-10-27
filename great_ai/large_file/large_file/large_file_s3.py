@@ -96,7 +96,14 @@ class LargeFileS3(LargeFileBase):
                 if suffix.isdigit():
                     instances.append(
                         DataInstance(
-                            name=self._name, version=int(suffix), remote_path=key
+                            name=self._name,
+                            version=int(suffix),
+                            remote_path=key,
+                            cache_identity=(
+                                repr((item["ETag"], item.get("LastModified")))
+                                if item.get("ETag") is not None
+                                else None
+                            ),
                         )
                     )
             if not page.get("IsTruncated"):
