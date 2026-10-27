@@ -16,7 +16,7 @@ def test_default() -> None:
         reverse_order=True,
     )
 
-    assert results == {"d": 5 / 6, "c": 2 / 3, "b": 2 / 5}
+    assert results == {"d": 1.0, "c": 1.0, "b": 1 / 2}
 
     results = evaluate_ranking(
         ["a", "a", "b", "b", "c", "d", "d", "d"],
@@ -26,7 +26,23 @@ def test_default() -> None:
         disable_interpolation=True,
     )
 
-    assert results == {"a": 0.6, "b": 0.4, "c": 0.2}
+    assert results == {"a": 2 / 3, "b": 2 / 5, "c": 2 / 7}
+
+
+@pytest.mark.parametrize("disable_interpolation", [False, True])
+def test_perfect_ranking_at_full_recall(disable_interpolation: bool) -> None:
+    assert evaluate_ranking(
+        [1, 1, 0, 0],
+        [4, 3, 2, 1],
+        target_recall=1,
+        disable_interpolation=disable_interpolation,
+        plot=False,
+    ) == {0: 1.0}
+
+
+def test_tied_scores_cannot_be_separated_by_a_threshold() -> None:
+    for labels in ([1, 0], [0, 1]):
+        assert evaluate_ranking(labels, [1, 1], target_recall=1, plot=False) == {0: 0.5}
 
 
 def test_mismatching_lengths() -> None:

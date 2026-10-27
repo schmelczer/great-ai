@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, TypeVar
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import average_precision_score
+from sklearn.metrics import average_precision_score, precision_recall_curve
 
 from ..unique import unique
 from .draw_f1_iso_lines import draw_f1_iso_lines
@@ -68,16 +68,13 @@ def evaluate_ranking(
                 for v in expected
             ]
 
-            sorted_expected_actual = sorted(
-                zip(binarized_expected, actual_scores), key=lambda v: v[1], reverse=True
+            precision_values, recall_values, _ = precision_recall_curve(
+                binarized_expected, actual_scores
             )
-            precision = []
-            recall = []
-            correct = 0
-            for all, (e, score) in enumerate(sorted_expected_actual, start=1):
-                correct += int(e)
-                precision.append(correct / all)
-                recall.append(all / len(sorted_expected_actual))
+            # Score thresholds keep tied scores together. Exclude the synthetic
+            # empty-prediction endpoint and order by increasing recall.
+            precision = precision_values[:-1][::-1].tolist()
+            recall = recall_values[:-1][::-1].tolist()
 
             if not disable_interpolation:
                 for j in range(len(precision) - 2, -1, -1):
