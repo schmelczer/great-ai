@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from pymongo import ASCENDING, DESCENDING, MongoClient
 
+from ..helper.normalise_datetime import normalise_datetime
 from ..utilities import chunk
 from ..views import Filter, SortBy, Trace
 from .tracing_database_driver import TracingDatabaseDriver
@@ -125,10 +126,14 @@ class MongoDbDriver(TracingDatabaseDriver):
             and_query.append({})
 
         if since:
-            and_query.append({"created": {"$gte": since}})
+            and_query.append(
+                {"created": {"$gte": normalise_datetime(since).isoformat()}}
+            )
 
         if until:
-            and_query.append({"created": {"$lte": until}})
+            and_query.append(
+                {"created": {"$lte": normalise_datetime(until).isoformat()}}
+            )
 
         if has_feedback is not None:
             and_query.append(
