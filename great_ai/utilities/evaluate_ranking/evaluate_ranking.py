@@ -1,9 +1,10 @@
 from pathlib import Path
-from typing import Dict, List, Optional, TypeVar
+from typing import Dict, List, Optional, TypeVar, cast
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.figure import Figure
 from sklearn.metrics import average_precision_score, precision_recall_curve
 
 from ..unique import unique
@@ -45,7 +46,8 @@ def evaluate_ranking(
 
     assert 0 <= target_recall <= 1
 
-    if plot and axes is None:
+    render = plot or output_svg is not None
+    if render and axes is None:
         fig = plt.figure(figsize=(10, 10))
         fig.patch.set_facecolor("white")
         ax = plt.axes()
@@ -56,7 +58,7 @@ def evaluate_ranking(
     str_classes = [str(c) for c in classes]
 
     with matplotlib.rc_context({"font.size": 20}):
-        if plot:
+        if render:
             ax.set_xmargin(0)
 
             draw_f1_iso_lines(axes=ax)
@@ -87,14 +89,14 @@ def evaluate_ranking(
             )
             results[classes[i]] = precision_at_closest_recall
 
-            if plot:
+            if render:
                 ax.plot(
                     recall,
                     precision,
                     label=f"{'|'.join(str_classes[:i + 1])} ↔ {'|'.join(str_classes[i+1:])} (P@{target_recall:.2f}={precision_at_closest_recall:.2f}, AP={average_precision:.2f})",
                 )
 
-        if plot:
+        if render:
             ax.legend(loc="upper right")
             ax.axvline(x=target_recall, linestyle="--", color="#55c6bb", linewidth=2.0)
 
@@ -112,6 +114,8 @@ def evaluate_ranking(
             if axes is None:
                 plt.show()
         elif output_svg:
-            plt.savefig(output_svg, format="svg")
+            cast(Figure, ax.get_figure(root=True)).savefig(output_svg, format="svg")
+            if not plot and axes is None:
+                plt.close(ax.get_figure(root=True))
 
     return results

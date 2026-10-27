@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import matplotlib
+import matplotlib.pyplot as plt
 import pytest
 
 matplotlib.use("Agg")  # don't show a window for each test
@@ -108,3 +109,32 @@ def test_save() -> None:
 
     assert path.exists()
     path.unlink()
+
+
+def test_export_saves_the_supplied_axes_figure(tmp_path: Path) -> None:
+    intended, axes = plt.subplots()
+    unrelated, other = plt.subplots()
+    other.set_title("unrelated figure")
+    output = tmp_path / "ranking.svg"
+    try:
+        evaluate_ranking(
+            [0, 1],
+            [0.1, 0.9],
+            target_recall=1,
+            axes=axes,
+            output_svg=output,
+            title="intended ranking",
+        )
+        content = output.read_text()
+        assert "intended ranking" in content
+        assert "unrelated figure" not in content
+    finally:
+        plt.close(intended)
+        plt.close(unrelated)
+
+
+def test_export_without_display_still_renders(tmp_path: Path) -> None:
+    output = tmp_path / "ranking.svg"
+    evaluate_ranking([0, 1], [0.1, 0.9], target_recall=1, plot=False, output_svg=output)
+    assert "Precision" in output.read_text()
+    assert "Recall" in output.read_text()
