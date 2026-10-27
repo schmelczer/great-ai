@@ -15,6 +15,7 @@ from typing import (
 from .get_config import get_config
 from .manage_communication import manage_communication
 from .mapper_function import mapper_function
+from .worker_exception import WorkerException
 
 T = TypeVar("T")
 V = TypeVar("V")
@@ -147,6 +148,11 @@ def threaded_parallel_map(
     for t in threads:
         t.start()
 
+    def check_workers() -> None:
+        for thread in threads:
+            if not thread.is_alive():
+                raise WorkerException(f"Worker {thread.name} exited unexpectedly")
+
     yield from manage_communication(
         input_values=input_values,
         chunk_size=config.chunk_size,
@@ -154,6 +160,7 @@ def threaded_parallel_map(
         output_queue=output_queue,
         unordered=unordered,
         ignore_exceptions=ignore_exceptions,
+        check_workers=check_workers,
     )
     should_stop.set()
     for t in threads:
