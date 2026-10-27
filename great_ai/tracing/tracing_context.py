@@ -74,7 +74,7 @@ class TracingContext(Generic[T]):
         return _current_tracing_context.get()
 
     def __enter__(self) -> "TracingContext":
-        _current_tracing_context.set(self)
+        self._token = _current_tracing_context.set(self)
         return self
 
     def __exit__(
@@ -83,7 +83,7 @@ class TracingContext(Generic[T]):
         exception: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> Literal[False]:
-        _current_tracing_context.set(None)
+        _current_tracing_context.reset(self._token)
 
         if exception is not None and type is not None:
             self.finalise(exception=exception)
