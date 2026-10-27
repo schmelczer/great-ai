@@ -197,7 +197,9 @@ class LargeFileBase(ABC):
                 )
 
                 logger.info(f"Decompressing {self._local_name}")
-                shutil.unpack_archive(str(tmp_file_archive), tmp, COMPRESSION_ALGORITHM)
+                shutil.unpack_archive(
+                    str(tmp_file_archive), tmp, COMPRESSION_ALGORITHM, filter="data"
+                )
                 shutil.move(str(local_root_path / self._local_name), str(destination))
         else:
             logger.info(f"File {self._local_name} found in cache")
