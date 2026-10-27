@@ -146,11 +146,13 @@ class LargeFileBase(ABC):
     ) -> Literal[False]:
         self._file.close()
 
-        if type is None:
-            if "w" in self._mode:
-                self.push(Path(self._file.name))
+        if "w" in self._mode:
+            try:
+                if type is None:
+                    self.push(Path(self._file.name))
+            finally:
                 os.unlink(self._file.name)
-        else:
+        elif type is not None:
             logger.exception("Could not finish operation.")
 
         return False

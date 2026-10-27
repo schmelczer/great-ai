@@ -56,3 +56,18 @@ def test_cache_quota_counts_directory_contents(
     monkeypatch.setattr(LargeFileLocal, "max_cache_size", "1 KB")
     LargeFileLocal("model", "w").push(source)
     assert not (LargeFileLocal.cache_path / "model-0").exists()
+
+
+def test_failed_write_removes_temporary_file() -> None:
+    temporary = None
+    try:
+        with pytest.raises(ValueError, match="failed"):
+            with LargeFileLocal("model", "w") as file:
+                temporary = Path(file.name)
+                file.write("unfinished")
+                raise ValueError("failed")
+        assert temporary is not None
+        assert not temporary.exists()
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
