@@ -20,3 +20,10 @@ def test_configured_cache_directory_is_created(
     with LargeFileLocal("model", "w") as file:
         file.write("weights")
     assert LargeFileLocal("model").get().read_text() == "weights"
+
+
+def test_unrelated_cache_entries_are_ignored() -> None:
+    LargeFileLocal.cache_path.mkdir(parents=True)
+    (LargeFileLocal.cache_path / "model-unrelated").write_text("unrelated")
+    (LargeFileLocal.cache_path / "model-0").write_text("weights")
+    assert LargeFileLocal("model").get().read_text() == "weights"

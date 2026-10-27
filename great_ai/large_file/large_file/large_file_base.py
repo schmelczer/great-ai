@@ -273,20 +273,14 @@ class LargeFileBase(ABC):
     def _find_instances_from_cache(self) -> List[DataInstance]:
         logger.info(f"Fetching cached versions of {self._name}")
 
-        candidates = [
+        prefix = f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}"
+        return [
             DataInstance(
-                name=CACHE_NAME_VERSION_SEPARATOR.join(
-                    f.name.split(CACHE_NAME_VERSION_SEPARATOR)[:-1]
-                ),
-                version=int(f.name.split(CACHE_NAME_VERSION_SEPARATOR)[-1]),
-                remote_path=f,
+                name=self._name, version=int(f.name[len(prefix) :]), remote_path=f
             )
-            for f in self.cache_path.glob(
-                f"{self._name}{CACHE_NAME_VERSION_SEPARATOR}*"
-            )
+            for f in self.cache_path.glob(f"{prefix}*")
+            if f.name[len(prefix) :].isdigit()
         ]
-
-        return [c for c in candidates if c.name == self._name]
 
     def _check_mode_and_set_version(self) -> None:
         if "+" in self._mode:
