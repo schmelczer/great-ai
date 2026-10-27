@@ -12,7 +12,7 @@ def automatically_decorate_parameters(func: F) -> F:
     parameter_names = [
         param.name
         for param in signature.parameters.values()
-        if param.kind == param.POSITIONAL_OR_KEYWORD
+        if param.kind in (param.POSITIONAL_OR_KEYWORD, param.KEYWORD_ONLY)
     ]
 
     metadata = get_function_metadata_store(func)
