@@ -65,6 +65,8 @@ class LargeFileBase(ABC):
         keep_last_n: Optional[int] = None,
         cache_only_mode: bool = False,
     ):
+        if keep_last_n is not None and keep_last_n < 0:
+            raise ValueError("keep_last_n must be non-negative")
         clean_name = re.sub(r"[^!a-zA-Z0-9._-]+", "", name)
         if clean_name != name:
             raise ValueError(

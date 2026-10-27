@@ -130,6 +130,19 @@ def test_retention_counts_the_new_version() -> None:
     assert reader.get().read_text() == "2"
 
 
+@pytest.mark.parametrize(
+    "implementation", [LargeFileLocal, LargeFileS3, LargeFileMongo]
+)
+def test_negative_retention_is_rejected_before_storage_access(
+    implementation: Any,
+) -> None:
+    with LargeFileLocal("preserved", "w") as file:
+        file.write("weights")
+    with pytest.raises(ValueError, match="keep_last_n must be non-negative"):
+        implementation("preserved", "w", keep_last_n=-1)
+    assert LargeFileLocal("preserved").get().read_text() == "weights"
+
+
 def write_model(root: str, value: str, barrier: Any) -> None:
     LargeFileBase.cache_path = LargeFileLocal.cache_path = Path(root)
     LargeFileBase.max_cache_size = LargeFileLocal.max_cache_size = None
