@@ -6,6 +6,7 @@ import pandas as pd
 from filelock import FileLock
 from tinydb import TinyDB
 
+from ..helper.normalise_datetime import normalise_datetime
 from ..views import Filter, SortBy, Trace
 from .tracing_database_driver import TracingDatabaseDriver
 
@@ -52,11 +53,15 @@ class ParallelTinyDbDriver(TracingDatabaseDriver):
         has_feedback: Optional[bool] = None,
         sort_by: Sequence[SortBy] = [],
     ) -> Tuple[List[Trace], int]:
+        since = normalise_datetime(since) if since is not None else None
+        until = normalise_datetime(until) if until is not None else None
+
         def does_match(d: Dict[str, Any]) -> bool:
+            created = normalise_datetime(datetime.fromisoformat(d["created"]))
             return (
                 not set(conjunctive_tags) - set(d["tags"])
-                and (since is None or datetime.fromisoformat(d["created"]) >= since)
-                and (until is None or datetime.fromisoformat(d["created"]) <= until)
+                and (since is None or created >= since)
+                and (until is None or created <= until)
                 and (
                     has_feedback is None or has_feedback == (d["feedback"] is not None)
                 )
