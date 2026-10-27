@@ -332,7 +332,10 @@ class LargeFileBase(ABC):
             logger.info(
                 f"Deleting file from cache to meet quota (max_cache_size={self.max_cache_size}): {file}"
             )
-            os.unlink(file)
+            if file.is_dir():
+                shutil.rmtree(file)
+            else:
+                file.unlink()
 
     @abstractmethod
     def _find_remote_instances(self) -> List[DataInstance]:

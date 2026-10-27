@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 from typing import Any, List, Optional
 
@@ -80,4 +81,7 @@ class LargeFileLocal(LargeFileBase):
                 logger.info(
                     f"Removing old version (keep_last_n={self._keep_last_n}): {i.remote_path}"
                 )
-                i.remote_path.unlink()
+                if i.remote_path.is_dir():
+                    shutil.rmtree(i.remote_path)
+                else:
+                    i.remote_path.unlink()
