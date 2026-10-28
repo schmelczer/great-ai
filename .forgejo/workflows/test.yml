@@ -27,8 +27,8 @@ jobs:
         run: uv python install 3.13
 
       - name: Install dependencies
-        # --seed gives the venv its own pip, which scripts/check-python.sh shells
-        # out to for its linters; '.[dev]' provides the rest (mypy resolves the
+        # --seed gives the venv its own pip for mypy's automatic type-stub
+        # installation; '.[dev]' provides the rest (mypy resolves the
         # package's own imports against the installed tree).
         run: |
           uv venv --seed --python 3.13
@@ -38,6 +38,35 @@ jobs:
         run: |
           . .venv/bin/activate
           scripts/check-python.sh great_ai tests
+
+  notebooks:
+    name: Notebooks on Python ${{ matrix.python-version }}
+    runs-on: docker
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install notebook dependencies
+        run: |
+          uv venv --python ${{ matrix.python-version }}
+          uv pip install '.[notebooks]'
+
+      - name: Execute every notebook in a fresh workspace
+        env:
+          HF_HUB_OFFLINE: '1'
+          HF_DATASETS_OFFLINE: '1'
+        run: .venv/bin/python scripts/run-notebooks.py
 
   test:
     name: Test on Python ${{ matrix.python-version }}

@@ -13,8 +13,12 @@ Applying AI is becoming increasingly more accessible, but many case studies have
 
 ## Example
 
+With [uv](https://docs.astral.sh/uv/getting-started/installation/) installed, create and activate a Python environment:
+
 ```sh
-pip install great-ai
+uv venv --python 3.13
+source .venv/bin/activate
+uv pip install great-ai
 ```
 
 Create a new file called `demo.py`
@@ -62,9 +66,10 @@ However, [research indicates](https://great-ai.scoutinscience.com) that professi
 ## Find `great-ai` on [PyPI](https://pypi.org/project/great-ai/)
 
 Requires Python 3.12 or later, including Python 3.13.
+With uv installed and your virtual environment active:
 
 ```sh
-pip install great-ai
+uv pip install great-ai
 ```
 
 ## Find `great-ai` on [DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai)
@@ -80,10 +85,9 @@ Contributions are welcome.
 ### Install for development
 
 ```sh
-python3 -m venv --copies .env
+uv venv --seed --python 3.13 .env
 source .env/bin/activate
-pip install --upgrade pip
-pip install --editable '.[dev]'
+uv pip install --editable '.[dev]'
 ```
 
 ### Develop
@@ -105,3 +109,15 @@ mkdocs serve
 ```
 
 > Serve documentation.
+
+### Release
+
+With `git`, `python3`, and `uv` installed, run from a clean `main` checkout:
+
+```sh
+scripts/release.sh 0.2.0
+```
+
+This bumps the version, builds, commits, tags, and pushes `main` and the tag
+atomically. The tag triggers the PyPI and DockerHub workflows, which require
+`PYPI_TOKEN`, `DOCKER_USERNAME`, and `DOCKER_PASSWORD` in Forgejo repository secrets.

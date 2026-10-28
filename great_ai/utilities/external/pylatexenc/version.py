@@ -35,7 +35,7 @@
 #
 #       - LGTM looks good: https://lgtm.com/projects/g/phfaist/pylatexenc/
 #
-#       - python package creation works: (python setup.py sdist, pip install
+#       - python package creation works: (python setup.py sdist, uv pip install
 #         dist/pylatexenc-xxx.tar.gz)
 #
 #   2) update change log (doc/changes.rst)

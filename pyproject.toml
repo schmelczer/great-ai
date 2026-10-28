@@ -53,6 +53,17 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+notebooks = [
+    "jupyterlab >= 4, < 5",
+    "ipykernel >= 6, < 8",
+    "ipywidgets >= 8, < 9",
+    "nbclient >= 0.10, < 1",
+    "transformers >= 5.21, < 6",
+    "datasets >= 5.1, < 6",
+    "torch >= 2.6, < 3",
+    "accelerate >= 1, < 2",
+    "pingouin >= 0.5, < 1",
+]
 dev = [
     "flit >= 4.1.0, < 5",
     "mkdocs >= 1.6.1, < 2",

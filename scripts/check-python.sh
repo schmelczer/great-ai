@@ -3,7 +3,7 @@
 set -e
 
 echo "Installing dependencies if necessary"
-python3 -m pip install autoflake isort black[jupyter] mypy flake8
+uv pip install --python "$(command -v python3)" autoflake isort 'black[jupyter]' mypy flake8
 
 for dir in "$@"; do
     echo "Checking $dir"

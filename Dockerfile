@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1.4
 FROM python:3.13-slim-trixie
 
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
 LABEL org.opencontainers.image.title="GreatAI package wrapper image"
 LABEL org.opencontainers.image.vendor="ScoutinScience B.V."
 LABEL org.opencontainers.image.authors="andras@schmelczer.dev"
@@ -18,8 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt update &&\
 
 WORKDIR /dependencies
 COPY . great_ai
-RUN python3 -m pip --no-cache-dir install --upgrade pip &&\
-	pip install --no-cache-dir ./great_ai &&\
+RUN uv pip install --system --no-cache ./great_ai &&\
 	rm -rf great_ai
 
 HEALTHCHECK \
