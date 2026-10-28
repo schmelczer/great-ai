@@ -69,7 +69,7 @@ class MongoDbDriver(TracingDatabaseDriver):
         super().configure_credentials()
 
     def save(self, trace: Trace) -> str:
-        serialized = trace.to_flat_dict()
+        serialized = trace.to_flat_dict(mode="json")
         serialized["_id"] = trace.trace_id
 
         with MongoClient[Any](self.mongo_connection_string) as client:
@@ -78,7 +78,7 @@ class MongoDbDriver(TracingDatabaseDriver):
     def save_batch(self, documents: List[Trace]) -> List[str]:
         if not documents:
             return []
-        serialized = [d.to_flat_dict() for d in documents]
+        serialized = [d.to_flat_dict(mode="json") for d in documents]
         for s in serialized:
             s["_id"] = s["trace_id"]
 
@@ -175,7 +175,7 @@ class MongoDbDriver(TracingDatabaseDriver):
         return documents, count
 
     def update(self, id: str, new_version: Trace) -> None:
-        serialized = new_version.to_flat_dict()
+        serialized = new_version.to_flat_dict(mode="json")
         serialized["_id"] = new_version.trace_id
 
         with MongoClient[Any](self.mongo_connection_string) as client:

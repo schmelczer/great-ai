@@ -102,7 +102,7 @@ def add_ground_truth(
                 trace_id=str(uuid4()),
                 created=created,
                 original_execution_time_ms=0,
-                logged_values=X if isinstance(X, dict) else {"input": X},
+                logged_values={"input": X},
                 models=[],
                 output=y,
                 feedback=y,

@@ -1,11 +1,19 @@
 from copy import deepcopy
 from typing import Any, Dict, Tuple
 
+import numpy as np
 from pydantic import BaseModel
 
 
 def make_hashable(value: Any) -> Any:
     """Build an immutable value key without retaining mutable container contents."""
+    if isinstance(value, np.ndarray):
+        contents = (
+            make_hashable(value.tolist()) if value.dtype.hasobject else value.tobytes()
+        )
+        return type(value), value.dtype, value.shape, contents
+    if isinstance(value, np.generic):
+        return type(value), value.dtype, value.tobytes()
     if isinstance(value, BaseModel):
         return type(value), make_hashable(value.model_dump())
     if isinstance(value, dict):
