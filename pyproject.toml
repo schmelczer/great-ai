@@ -88,7 +88,7 @@ dev = [
 doctest_optionflags = ["ELLIPSIS"]
 
 [project.urls]
-Documentation = "https://great-ai.scoutinscience.com"
+Documentation = "https://great-ai.schmelczer.dev"
 GitHub = "https://github.com/schmelczer/great-ai"
 DockerHub = "https://hub.docker.com/repository/docker/schmelczera/great-ai"
 

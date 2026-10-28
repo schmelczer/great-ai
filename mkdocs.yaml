@@ -1,4 +1,5 @@
 site_name: GreatAI documentation
+site_url: https://great-ai.schmelczer.dev/
 site_description: GreatAI helps you easily transform your prototype AI code into production-ready software.
 site_author: András Schmelczer
 
@@ -27,7 +28,7 @@ extra:
 theme:
   name: "material"
   custom_dir: docs/overrides
-  homepage: https://great-ai.scoutinscience.com
+  homepage: https://great-ai.schmelczer.dev
   favicon: media/favicon.ico
   features:
     - content.code.annotate

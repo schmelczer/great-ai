@@ -1,6 +1,6 @@
 # How to use LargeFiles
 
-The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring [LargeFile](https://great-ai.scoutinscience.com/reference/large-file), users have few reasons to use LargeFiles directly.
+The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring [LargeFile](https://great-ai.schmelczer.dev/reference/large-file), users have few reasons to use LargeFiles directly.
 
 ## Motivation
 

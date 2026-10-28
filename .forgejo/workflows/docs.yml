@@ -1,4 +1,4 @@
-name: Publish documentation
+name: Publish documentation to great-ai.schmelczer.dev
 
 on:
   push:
@@ -9,10 +9,18 @@ on:
       - 'mkdocs.yaml'
       - 'pyproject.toml'
       - '.forgejo/workflows/docs.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'great_ai/**'
+      - 'mkdocs.yaml'
+      - 'pyproject.toml'
+      - '.forgejo/workflows/docs.yml'
   workflow_dispatch:
 
 concurrency:
-  group: pages
+  group: docs-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -42,11 +50,10 @@ jobs:
           . .venv/bin/activate
           mkdocs build
 
-      # The old workflow ran `mkdocs gh-deploy` (GitHub Pages); on this instance
-      # built sites are rsynced into the host /pages mount that nginx serves,
-      # via the shared ci-actions/deploy-pages action — same as photos/reconcile.
-      - name: Deploy to pages mount
-        if: github.ref == 'refs/heads/main'
+      # As in reconcile, publish through the shared action to /pages/great-ai,
+      # served at https://great-ai.schmelczer.dev.
+      - name: Deploy to great-ai.schmelczer.dev
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
         uses: http://forgejo:3000/andras/ci-actions/deploy-pages@main
         with:
           source: site

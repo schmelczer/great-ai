@@ -1,6 +1,6 @@
 # How to perform prediction with GreatAI
 
-After [creating a GreatAI service](https://great-ai.scoutinscience.com/how-to-guides/create-service) by wrapping your prediction function, and optionally [configuring it](https://great-ai.scoutinscience.com/how-to-guides/configure-service), it's time to do some prediction.
+After [creating a GreatAI service](https://great-ai.schmelczer.dev/how-to-guides/create-service) by wrapping your prediction function, and optionally [configuring it](https://great-ai.schmelczer.dev/how-to-guides/configure-service), it's time to do some prediction.
 
 Let's take the following example:
 
@@ -107,7 +107,7 @@ COPY . .
 CMD ["deploy.ipynb"]
 ```
 
-Create an `s3.ini` with the S3 keys described in the [configuration guide](https://great-ai.scoutinscience.com/how-to-guides/configure-service/#s3-compatible). Use concrete values in this build configuration: `ENV:` references are resolved inside the build container, which does not inherit your shell's environment. Replace `my-domain-predictor` with the key used when saving your model.
+Create an `s3.ini` with the S3 keys described in the [configuration guide](https://great-ai.schmelczer.dev/how-to-guides/configure-service/#s3-compatible). Use concrete values in this build configuration: `ENV:` references are resolved inside the build container, which does not inherit your shell's environment. Replace `my-domain-predictor` with the key used when saving your model.
 
 Keep credentials and any local model cache out of `COPY . .` by adding these entries to your project's `.dockerignore`:
 

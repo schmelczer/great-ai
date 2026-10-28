@@ -7,8 +7,8 @@ This is a simplified example illustrating how `great-ai` is used in practice at 
 
 ## Objectives
 
-1. You will see how the [great_ai.utilities](https://great-ai.scoutinscience.com/reference/utilities) can integrate into your Data Science workflow.
-2. You will see how [great_ai.large_file](https://great-ai.scoutinscience.com/reference/large-file) can be used to version and store your trained model.
+1. You will see how the [great_ai.utilities](https://great-ai.schmelczer.dev/reference/utilities) can integrate into your Data Science workflow.
+2. You will see how [great_ai.large_file](https://great-ai.schmelczer.dev/reference/large-file) can be used to version and store your trained model.
 3. You will see how [GreatAI][great_ai.GreatAI] should be used to prepare your model for a robust and responsible deployment.
 4. You will see multiple ways of customising your deployment.
 
@@ -37,13 +37,13 @@ We load and analyse the data by calculating inter-rater reliability and checking
 
 We simply fine-tune SciBERT.
 
-After training and evaluating a model, it is exported using [great_ai.save_model][]. For more info, check out [the configuration how-to page](https://great-ai.scoutinscience.com/how-to-guides/configure-service).
+After training and evaluating a model, it is exported using [great_ai.save_model][]. For more info, check out [the configuration how-to page](https://great-ai.schmelczer.dev/how-to-guides/configure-service).
 
 ### [Deployment notebook](deploy.ipynb)
 
 We customise the GreatAI configuration, create custom caching for the model and implement an inference function that can be hardened by wrapping it in a [GreatAI][great_ai.GreatAI] instance. We also extract the attention weights as a quasi-explanation.
 
-Finally, we test the model's inference function through the GreatAI dashboard. [The only thing left is to deploy the hardened service properly.](https://great-ai.scoutinscience.com/how-to-guides/use-service)
+Finally, we test the model's inference function through the GreatAI dashboard. [The only thing left is to deploy the hardened service properly.](https://great-ai.schmelczer.dev/how-to-guides/use-service)
 
 #### [Additional files](additional-files.md)
 

@@ -22,7 +22,7 @@ async def slow_greeter(your_name):
     await sleep(2)
     return f'Hi {your_name}!'
 ```
-> Run this in development mode by executing `great-ai server.py` or `python3 -m great_ai server.py` if you're on Windows and [`great-ai` is not in your `PATH`](https://great-ai.scoutinscience.com/how-to-guides/install).
+> Run this in development mode by executing `great-ai server.py` or `python3 -m great_ai server.py` if you're on Windows and [`great-ai` is not in your `PATH`](https://great-ai.schmelczer.dev/how-to-guides/install).
 
 ### Client
 
@@ -48,7 +48,7 @@ print(results)
 
 > Run this script as a regular Python script by executing `python3 client.py`.
 
-![screenshot of result](https://great-ai.scoutinscience.com/media/remote-sync.png){ loading=lazy }
+![screenshot of result](https://great-ai.schmelczer.dev/media/remote-sync.png){ loading=lazy }
 
 As you can see, everything worked as expected. There is one way to improve it, though.
 ## An `async` example
@@ -86,6 +86,6 @@ asyncio.run(main())
 
 > Replace `client.py` with this async client. Note that although async support is significantly more streamlined in recent Python versions, it still requires a bit more boilerplate than its synchronous counterpart.
 
-![screenshot of result](https://great-ai.scoutinscience.com/media/remote-async.png){ loading=lazy }
+![screenshot of result](https://great-ai.schmelczer.dev/media/remote-async.png){ loading=lazy }
 
 This also works and might be considerably quicker in some use cases.

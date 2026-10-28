@@ -36,7 +36,7 @@ from great_ai import GreatAI
 \
 @GreatAI.create
 def hello_world(name: str) -> str:
-	"""Learn more about GreatAI at https://great-ai.scoutinscience.com"""
+	"""Learn more about GreatAI at https://great-ai.schmelczer.dev"""
 	return f"Hello {name}!"
 EOF
 

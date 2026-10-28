@@ -60,7 +60,7 @@ After the initial data gathering, end-to-end feedback can also be integrated int
 
 The scaffolded REST API contains endpoints for managing traces and their feedbacks.
 
-![screenshot of swagger](https://great-ai.scoutinscience.com/media/feedback.png){ loading=lazy }
+![screenshot of swagger](https://great-ai.schmelczer.dev/media/feedback.png){ loading=lazy }
 
 When [great_ai.query_ground_truth][] is executed, it implicitly filters for traces that have feedback. Therefore, both the `ground_truth` and the `online` traces that have received feedback are returned. No matter the origin of the data, it can be accessed using the same API.
 

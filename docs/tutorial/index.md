@@ -4,8 +4,8 @@ Let's see `great-ai` in action by going over the lifecycle of a simple service.
 
 ## Objectives
 
-1. You will see how the [great_ai.utilities](https://great-ai.scoutinscience.com/reference/utilities) can integrate into your Data Science workflow.
-2. You will use [great_ai.large_file](https://great-ai.scoutinscience.com/reference/large-file) to version and store your trained model.
+1. You will see how the [great_ai.utilities](https://great-ai.schmelczer.dev/reference/utilities) can integrate into your Data Science workflow.
+2. You will use [great_ai.large_file](https://great-ai.schmelczer.dev/reference/large-file) to version and store your trained model.
 3. You will use [GreatAI][great_ai.GreatAI] to add tracing and API scaffolding to your inference function, then review the remaining deployment requirements.
 
 ## Overview
@@ -52,7 +52,7 @@ After training and evaluating a model, it is exported using [great_ai.save_model
     save_model(model, key='my-domain-predictor')
     ```
 
-    For more info, check out [the configuration how-to page](https://great-ai.scoutinscience.com/how-to-guides/configure-service).
+    For more info, check out [the configuration how-to page](https://great-ai.schmelczer.dev/how-to-guides/configure-service).
 
 ### [Deployment notebook](deploy.ipynb)
 
@@ -72,10 +72,10 @@ def predict_domain(sentence, model):
 1.  [@use_model][great_ai.use_model] loads and injects your model into the `predict_domain` function's `model` argument.
     You can freely reference it, knowing that the function is always provided with it.
 
-Finally, we test the model's inference function through the GreatAI dashboard. Before production, configure a suitable tracing database and storage, evaluate the model for its intended use, review the remaining best practices, and [deploy the service](https://great-ai.scoutinscience.com/how-to-guides/use-service).
+Finally, we test the model's inference function through the GreatAI dashboard. Before production, configure a suitable tracing database and storage, evaluate the model for its intended use, review the remaining best practices, and [deploy the service](https://great-ai.schmelczer.dev/how-to-guides/use-service).
 
 <div style="display: flex; justify-content: space-evenly;" markdown>  
-[:material-book: Learn about all the features](https://great-ai.scoutinscience.com/how-to-guides/create-service){ .md-button .md-button--primary }
+[:material-book: Learn about all the features](https://great-ai.schmelczer.dev/how-to-guides/create-service){ .md-button .md-button--primary }
 
-[:material-test-tube: Look at more examples](https://great-ai.scoutinscience.com/examples/simple/data){ .md-button .md-button--secondary }
+[:material-test-tube: Look at more examples](https://great-ai.schmelczer.dev/examples/simple/data){ .md-button .md-button--secondary }
 </div>

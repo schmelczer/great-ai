@@ -88,7 +88,7 @@ great-ai demo.py
 !!! success
     Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank } are configured and implemented automatically.
 
-    Before production, replace the default local TinyDB tracing database with a production-suitable backend, [configure storage](https://great-ai.scoutinscience.com/how-to-guides/configure-service/) and [deployment infrastructure](https://great-ai.scoutinscience.com/how-to-guides/use-service/), and review the remaining best practices for your use case. Wrapping a function provides tracing and API scaffolding; model trustworthiness still requires use-case-specific evaluation and ongoing oversight.
+    Before production, replace the default local TinyDB tracing database with a production-suitable backend, [configure storage](https://great-ai.schmelczer.dev/how-to-guides/configure-service/) and [deployment infrastructure](https://great-ai.schmelczer.dev/how-to-guides/use-service/), and review the remaining best practices for your use case. Wrapping a function provides tracing and API scaffolding; model trustworthiness still requires use-case-specific evaluation and ongoing oversight.
 
 ## Why is this GREAT?
 
@@ -114,7 +114,7 @@ However, research indicates that professionals rarely use them. This may be due 
 
 [:fontawesome-brands-docker: Find it on DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai){ .md-button .md-button--primary }
 
-[:fontawesome-solid-laptop-code: Check out the tutorial](https://great-ai.scoutinscience.com/tutorial){ .md-button .md-button--primary }
+[:fontawesome-solid-laptop-code: Check out the tutorial](https://great-ai.schmelczer.dev/tutorial){ .md-button .md-button--primary }
 </div>
 
 ## Production use
