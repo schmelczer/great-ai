@@ -52,8 +52,12 @@ Applying AI is becoming increasingly easier, but many case studies have shown th
 
 ## Hello world
 
+With [uv](https://docs.astral.sh/uv/getting-started/installation/){ target=_blank } installed:
+
 ```sh
-pip install great-ai
+uv venv --python 3.13
+source .venv/bin/activate
+uv pip install great-ai
 ```
 
 ```python title="demo.py" 

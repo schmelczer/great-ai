@@ -86,22 +86,51 @@ Similar to the previous approach, your code will run in a container. However, in
 To this end, you can also create a custom Docker image. It is especially useful if you have third-party dependencies, such as [PyTorch](https://pytorch.org/){ target=_blank } or [TensorFlow](https://www.tensorflow.org/){ target=_blank }.
 
 ```Dockerfile
+# syntax=docker/dockerfile:1
 FROM schmelczera/great-ai:latest
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Remove this block if you don't have a requirements.txt
 COPY requirements.txt ./   
-RUN pip install --no-cache-dir --requirement requirements.txt
+RUN uv pip install --system --no-cache --requirement requirements.txt
 
-# If you store your models in S3 or GridFS, it may be a 
-# good idea to cache them in the image so that you don't
-# have to download it each time a container starts
-RUN large-file --backend s3 --secrets s3.ini --cache my-domain-predictor
+# Cache an S3 model using credentials available only during this RUN.
+# Remove this step if your application does not use a remote model.
+RUN --mount=type=secret,id=s3,target=/run/secrets/s3.ini,required=true \
+    large-file --backend s3 --secrets /run/secrets/s3.ini --cache my-domain-predictor
 
 # Add your application code to the image
 COPY . .
 
 # The default ENTRYPOINT is great-ai; specify its argument using CMD
 CMD ["deploy.ipynb"]
+```
+
+Create an `s3.ini` with the S3 keys described in the [configuration guide](https://great-ai.scoutinscience.com/how-to-guides/configure-service/#s3-compatible). Use concrete values in this build configuration: `ENV:` references are resolved inside the build container, which does not inherit your shell's environment. Replace `my-domain-predictor` with the key used when saving your model.
+
+Keep credentials and any local model cache out of `COPY . .` by adding these entries to your project's `.dockerignore`:
+
+```dockerignore
+s3.ini
+mongo.ini
+.env
+.cache
+```
+
+Build with [Docker BuildKit secrets](https://docs.docker.com/build/building/secrets/). This example disables Docker's layer cache so that the `large-file --cache` step runs and downloads the model into the image:
+
+```sh
+DOCKER_BUILDKIT=1 docker build --no-cache --progress=plain \
+  --secret id=s3,src=s3.ini --tag my-great-ai-service .
+```
+
+The secret mount is removed after the `RUN` instruction; the downloaded model cache remains in the image. Supply any configuration needed by the application separately at runtime. For example, an application that auto-configures S3 from `s3.ini` can use a read-only bind mount:
+
+```sh
+docker run --rm -p 6060:6060 \
+  --mount type=bind,source="$(pwd)/s3.ini",target=/app/s3.ini,readonly \
+  my-great-ai-service
 ```
 
 ## Batch prediction

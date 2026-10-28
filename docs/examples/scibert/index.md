@@ -2,8 +2,8 @@
 
 This is a simplified example illustrating how `great-ai` is used in practice at [ScoutinScience](https://www.scoutinscience.com/){ target=_blank }. The subpages show `great-ai` in action by going over the lifecycle of fine-tuning and deploying a BERT-based software service.
 
-??? note "Propriety data"
-    The purpose of this example is to show you different ways in which `great-ai` can assist you. The exact NLP task being solved is not central. Stemming from this and from the difficult nature of obtaining appropriate training data, the propriety dataset used for the experiments is not shared.
+??? note "Local demo and proprietary data"
+    The original dataset is not shared. The notebooks now default to synthetic annotations and a tiny randomly initialised BERT so the full workflow runs offline on a CPU. These demo scores do not reproduce the historical SciBERT experiment. See the repository README's **Run notebooks locally** section for setup, full pretrained SciBERT, and supplying your own annotations.
 
 ## Objectives
 

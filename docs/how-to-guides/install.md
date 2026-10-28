@@ -1,9 +1,11 @@
 # Installation guide
 
-Provided you already have [Python3](https://www.python.org/downloads/){ target=_blank } (and pip) installed, simply execute:
+With [uv](https://docs.astral.sh/uv/getting-started/installation/){ target=_blank } installed, create and activate a Python environment, then install GreatAI:
 
 ```sh
-pip install great-ai
+uv venv --python 3.13
+source .venv/bin/activate
+uv pip install great-ai
 ```
 > Python 3.12 or later is required. Python 3.13 is supported.
 
@@ -11,10 +13,13 @@ This will work on all major operating systems.
 
 ## Google Colab
 
-To use GreatAI in [Google Colab](https://colab.research.google.com){ target=_blank }, select a runtime with Python 3.12 or later and install the package:
+To use GreatAI in [Google Colab](https://colab.research.google.com){ target=_blank }, select a runtime with Python 3.12 or later, then run this notebook cell to install uv and GreatAI into the runtime's Python environment:
 
-```sh
-pip install --upgrade great-ai
+```python
+import sys
+
+!curl -LsSf https://astral.sh/uv/install.sh | sh
+!~/.local/bin/uv pip install --system --python {sys.executable} --upgrade great-ai
 ```
 
 ## Command-line tools
@@ -26,20 +31,17 @@ After installation, `great-ai` and `large-file` are available as commands. The f
 
     To help with the confusion, a CLI executable called `great_ai` (and `large_file`) are also installed. Thus, if you prefer, you can always refer to GreatAI using its underscored name variant (`great_ai`).
 
-!!! warning "Windows"
-    On Windows, you might encounter a similar warning from `pip`:
-    >  `WARNING: The scripts great-ai.exe, great_ai.exe, large-file.exe and large_file.exe are installed in 'C:\Users\...\Scripts', which is not on PATH.`
-    
-    > `Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.`
+!!! note "Windows"
+    Activate the environment with `.venv\Scripts\activate` in Command Prompt or `.\.venv\Scripts\Activate.ps1` in PowerShell instead of `source .venv/bin/activate`.
 
-    This means that `great-ai.exe` and `large-file.exe` are not in your `PATH`. Either add their containing directory ('C:\Users\...\Scripts' in this case) to your `PATH` or use `python3 -m great_ai` and `python3 -m great_ai.large_file` instead of the exe-s.
+    If `great-ai` or `large-file` is unavailable, check that the environment is active, or use `python -m great_ai` and `python -m great_ai.large_file` instead.
 
 ## Update
 
-If you wish to update to the latest version, execute:
+With your virtual environment active, update to the latest version:
 
 ```sh
-pip install --upgrade great-ai
+uv pip install --upgrade great-ai
 ```
 
 ## Bleeding edge
@@ -47,6 +49,6 @@ pip install --upgrade great-ai
 You can also install the latest (usually unreleased) version from GitHub.
 
 ```sh
-pip install --upgrade git+https://github.com/schmelczer/great-ai.git
+uv pip install --upgrade git+https://github.com/schmelczer/great-ai.git
 ```
 > Python 3.12 or later is required.
