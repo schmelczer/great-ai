@@ -31,6 +31,38 @@ Trace[str]({'created': '2022-07-11T14:31:46.183764',
 
 As you can see, the original return value is wrapped in a [Trace][great_ai.Trace] object (which is also persisted in your database of choice). You can access the original value under the `output` property.
 
+Repeated inputs are cached by default and reuse their trace ID. Each call returns
+an independent copy, so changing a returned output does not change later results.
+Feedback updates are reflected in subsequent calls; deleting a persisted trace
+causes the next prediction for that input to run again and receive a new trace ID.
+Set `configure(prediction_cache_size=0)` before creating the service to disable caching.
+
+### NumPy values
+
+The Python API accepts NumPy arrays and scalars. Array cache keys include their
+contents, shape, and dtype. Outputs retain their NumPy types in Python; traces
+stored in the database and HTTP responses serialize them as JSON arrays and scalars.
+Unsupported objects must be converted to JSON-compatible values before logging or
+returning them.
+
+An `np.ndarray` annotation exposes a JSON array in the HTTP API and converts the
+incoming list to an array before calling your function:
+
+```python
+import numpy as np
+from great_ai import GreatAI
+
+@GreatAI.create
+def double(values: np.ndarray) -> np.ndarray:
+    return values * 2
+
+assert double(np.array([1, 2])).output.tolist() == [2, 4]
+```
+
+For this service, send `{"values": [1, 2]}` to `/predict`. Return annotations,
+including Pydantic models, are included in the prediction response's OpenAPI schema.
+Custom validation failures from `@parameter` return HTTP 422.
+
 ## Online prediction
 
 Likely, the main way you would like to expose your model is through an HTTP API. [@GreatAI.create][great_ai.GreatAI.create] scaffolds many REST API endpoints for your model and creates a [FastAPI](https://fastapi.tiangolo.com/){ target=_blank } app available under [GreatAI.app][great_ai.GreatAI]. This can be served using [uvicorn](https://www.uvicorn.org/){ target=_blank } or any other [ASGI server](https://asgi.readthedocs.io/en/latest/){ target=_blank }.
@@ -44,7 +76,7 @@ great-ai greeter.py
 ```
 
 !!! success
-    Your model is accessible at [localhost:6060](http:/127.0.0.1:6060){ target=_blank }.
+    Your model is accessible at [localhost:6060](http://127.0.0.1:6060){ target=_blank }.
 
 Some configuration options are also supported.
 

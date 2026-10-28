@@ -64,6 +64,26 @@ The scaffolded REST API contains endpoints for managing traces and their feedbac
 
 When [great_ai.query_ground_truth][] is executed, it implicitly filters for traces that have feedback. Therefore, both the `ground_truth` and the `online` traces that have received feedback are returned. No matter the origin of the data, it can be accessed using the same API.
 
+Use `trace.input` and `trace.feedback` to build training pairs. For a prediction
+function with one logged argument, `trace.input` returns that argument's original
+value, including a dictionary if the argument itself was a dictionary. For multiple
+logged arguments, it returns a dictionary keyed by their parameter names. Upload
+data in the same shape when using `add_ground_truth`.
+
+New uploads store the original value under `logged_values["input"]`, including
+dictionary inputs. Existing traces with dictionary inputs stored directly in
+`logged_values` remain readable through `trace.input`.
+
+Argument lengths, metrics, and injected models are excluded from `trace.input`.
+Arguments with `disable_logging=True` cannot be recovered for training. Persisted
+NumPy arrays and scalars are represented as JSON lists and Python scalar values.
+
+```python
+data = query_ground_truth()
+X = [trace.input for trace in data]
+y = [trace.feedback for trace in data]
+```
+
 ## Remove clutter
 
 Traces can be deleted either through the REST API or by calling [great_ai.delete_ground_truth][]. The latter provides the same interface as [great_ai.query_ground_truth][] except it deletes the matched points.

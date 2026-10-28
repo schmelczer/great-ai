@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from functools import lru_cache, wraps
 from textwrap import dedent
 from typing import (
@@ -51,7 +53,9 @@ class GreatAI(Generic[T, V]):
 
     IMPORTANT: when a request is served from cache, no new trace is created. Thus, the
     same trace can be returned multiple times. If this is undesirable turn off caching
-    using `configure(prediction_cache_size=0)`.
+    using `configure(prediction_cache_size=0)`. Each caller receives an independent
+    copy. Persisted traces are checked for feedback updates and deletions, including
+    changes made by other workers.
 
     Supports wrapping async and synchronous functions while also maintaining correct
     typing.
@@ -259,36 +263,60 @@ class GreatAI(Generic[T, V]):
         func: Callable[..., Union[V, Awaitable[V]]],
     ) -> Callable[..., T]:
         @lru_cache(maxsize=get_context().prediction_cache_size)
-        def func_in_tracing_context_sync(call: FrozenCall) -> T:
+        def func_in_tracing_context_sync(call: FrozenCall) -> Trace[V]:
             with TracingContext[V](
                 func.__name__, do_not_persist_traces=call.do_not_persist
             ) as t:
                 result = func(*call.args, **call.kwargs)
-                return cast(T, t.finalise(output=result))
+                return t.finalise(output=result)
 
         @alru_cache(maxsize=get_context().prediction_cache_size, cache_exceptions=False)
-        async def func_in_tracing_context_async(call: FrozenCall) -> T:
+        async def func_in_tracing_context_async(call: FrozenCall) -> Trace[V]:
             with TracingContext[V](
                 func.__name__, do_not_persist_traces=call.do_not_persist
             ) as t:
                 result = await cast(Callable[..., Awaitable], func)(
                     *call.args, **call.kwargs
                 )
-                return cast(T, t.finalise(output=result))
+                return t.finalise(output=result)
+
+        def current_trace(trace: Trace[V], call: FrozenCall) -> Optional[Trace[V]]:
+            if call.do_not_persist:
+                return trace.model_copy(deep=True)
+
+            # Consult storage rather than process-local invalidation so that feedback
+            # and deletions remain visible across workers and direct database calls.
+            stored = get_context().tracing_database.get(trace.trace_id)
+            if stored is None:
+                return None
+            result = trace.model_copy(deep=True)
+            result.feedback = stored.feedback
+            return result
 
         @wraps(func)
-        def sync(*args: Any, do_not_persist_traces: bool = False, **kwargs: Any) -> T:
-            return func_in_tracing_context_sync(
-                FrozenCall(args, kwargs, do_not_persist_traces)
-            )
+        def sync(
+            *args: Any, do_not_persist_traces: bool = False, **kwargs: Any
+        ) -> Trace[V]:
+            call = FrozenCall(args, kwargs, do_not_persist_traces)
+            trace = func_in_tracing_context_sync(call)
+            result = current_trace(trace, call)
+            if result is None:
+                func_in_tracing_context_sync.cache_clear()
+                result = func_in_tracing_context_sync(call).model_copy(deep=True)
+            return result
 
         @wraps(func)
         async def asynchronous(
             *args: Any, do_not_persist_traces: bool = False, **kwargs: Any
-        ) -> T:
-            return await func_in_tracing_context_async(
-                FrozenCall(args, kwargs, do_not_persist_traces)
-            )
+        ) -> Trace[V]:
+            call = FrozenCall(args, kwargs, do_not_persist_traces)
+            trace = await func_in_tracing_context_async(call)
+            result = current_trace(trace, call)
+            if result is None:
+                func_in_tracing_context_async.invalidate(call)
+                trace = await func_in_tracing_context_async(call)
+                result = trace.model_copy(deep=True)
+            return result
 
         is_async = get_function_metadata_store(func).is_asynchronous
         wrapped = asynchronous if is_async else sync

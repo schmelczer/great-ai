@@ -1,12 +1,21 @@
 from pprint import pformat
-from typing import Any, Dict, Generic, List, Optional, TypeVar
+from typing import Any, Dict, Generic, List, Literal, Optional, TypeVar, cast
 
-from pydantic import ConfigDict
+from pydantic import (
+    ConfigDict,
+    SerializationInfo,
+    SerializerFunctionWrapHandler,
+    TypeAdapter,
+    field_serializer,
+)
+from pydantic_core import PydanticSerializationError
 
+from ..helper.numpy_to_python import numpy_to_python
 from .hashable_base_model import HashableBaseModel
 from .model import Model
 
 T = TypeVar("T")
+_json_value = TypeAdapter(Any)
 
 
 class Trace(HashableBaseModel, Generic[T]):
@@ -39,8 +48,51 @@ class Trace(HashableBaseModel, Generic[T]):
 
     model_config = ConfigDict(extra="ignore")
 
+    @field_serializer(
+        "output", "logged_values", "feedback", mode="wrap", when_used="json"
+    )
+    def serialize_numpy_values(  # type: ignore[no-untyped-def]
+        self,
+        value: Any,
+        handler: SerializerFunctionWrapHandler,
+        info: SerializationInfo,
+    ):
+        # An explicit return annotation would replace the generic output's JSON
+        # schema. Keep its declared type while providing a fallback for NumPy.
+        try:
+            return handler(value)
+        except PydanticSerializationError:
+            return _json_value.dump_python(
+                value,
+                mode="json",
+                include=cast(Any, info.include),
+                exclude=cast(Any, info.exclude),
+                by_alias=info.by_alias,
+                exclude_unset=info.exclude_unset,
+                exclude_defaults=info.exclude_defaults,
+                exclude_none=info.exclude_none,
+                round_trip=info.round_trip,
+                serialize_as_any=info.serialize_as_any,
+                context=info.context,
+                fallback=numpy_to_python,
+            )
+
     @property
     def input(self) -> Any:
+        """Original input value, or a name-to-value mapping for multiple arguments.
+
+        Online traces omit metrics and derived argument metadata. Arguments marked
+        ``disable_logging=True`` are omitted, so their values cannot be recovered.
+        """
+        if "online" in self.tags and "ground_truth" not in self.tags:
+            arguments = {
+                key[len("arg:") : -len(":value")]: value
+                for key, value in self.logged_values.items()
+                if key.startswith("arg:") and key.endswith(":value")
+            }
+            if len(arguments) == 1:
+                return next(iter(arguments.values()))
+            return arguments
         return (
             self.logged_values["input"]
             if list(self.logged_values.keys()) == ["input"]
@@ -75,11 +127,17 @@ class Trace(HashableBaseModel, Generic[T]):
     def tags_flat(self) -> str:
         return ",\n".join(self.tags)
 
-    def to_flat_dict(self, include_original: bool = True) -> Dict[str, Any]:
+    def to_flat_dict(
+        self,
+        include_original: bool = True,
+        *,
+        mode: Literal["python", "json"] = "python",
+    ) -> Dict[str, Any]:
+        serialized = self.model_dump(mode=mode)
         reserved = set(type(self).model_fields) | {"_id"}
         return {
             **(
-                self.model_dump()
+                serialized
                 if include_original
                 else {
                     "trace_id": self.trace_id,
@@ -93,7 +151,7 @@ class Trace(HashableBaseModel, Generic[T]):
                     if (isinstance(v, float) or isinstance(v, int))
                     else pformat(v, indent=2, compact=True)
                 )
-                for k, v in self.logged_values.items()
+                for k, v in serialized["logged_values"].items()
                 if k not in reserved
             },
             "models_flat": self.models_flat,
