@@ -6,7 +6,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 LABEL org.opencontainers.image.title="GreatAI package wrapper image"
 LABEL org.opencontainers.image.vendor="ScoutinScience B.V."
 LABEL org.opencontainers.image.authors="andras@schmelczer.dev"
-LABEL org.opencontainers.image.source="https://github.com/schmelczer/great-ai"
+LABEL org.opencontainers.image.source="https://git.schmelczer.dev/andras/great-ai"
 
 SHELL ["/bin/bash", "-c"]
 

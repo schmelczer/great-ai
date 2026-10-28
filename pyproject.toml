@@ -93,7 +93,7 @@ doctest_optionflags = ["ELLIPSIS"]
 [project.urls]
 Documentation = "https://great-ai.schmelczer.dev"
 GitHub = "https://github.com/schmelczer/great-ai"
-DockerHub = "https://hub.docker.com/repository/docker/schmelczera/great-ai"
+"Container image" = "https://git.schmelczer.dev/andras/great-ai/packages"
 
 [project.scripts]
 great_ai = "great_ai.__main__:main"

@@ -19,8 +19,8 @@ extra:
       link: https://github.com/schmelczer/great-ai
       name: great-ai on Github
     - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/repository/docker/schmelczera/great-ai
-      name: great-ai on DockerHub
+      link: https://git.schmelczer.dev/andras/great-ai/packages
+      name: great-ai container image on Forgejo
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/great-ai
       name: great-ai on PyPI

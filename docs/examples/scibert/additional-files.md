@@ -38,7 +38,7 @@ numpy==1.23.0
 
 ```Dockerfile title="Dockerfile"
 # syntax=docker/dockerfile:1
-FROM schmelczera/great-ai:v0.1.6
+FROM git.schmelczer.dev/andras/great-ai:latest
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
@@ -54,6 +54,9 @@ CMD ["deploy.ipynb"]
 ```
 
 > This is used by the CD pipeline to create the production deployment of the service.
+
+For reproducible deployments, replace `latest` with a release tag from the
+[Forgejo container registry](https://git.schmelczer.dev/andras/great-ai/packages).
 
 ## .dockerignore
 

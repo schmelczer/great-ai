@@ -2,12 +2,10 @@
 
 > Prepare your prototype AI code for production deployment.
 
-[![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
-[![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
-[![Docker Pulls](https://img.shields.io/docker/pulls/schmelczera/great-ai)](https://hub.docker.com/repository/docker/schmelczera/great-ai)
-[![Check](https://git.schmelczer.dev/andras/great-ai/badges/workflows/test.yml/badge.svg?branch=main)](https://git.schmelczer.dev/andras/great-ai/actions?workflow=test.yml)
-[![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
-[![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
+[![PyPI version](https://img.shields.io/pypi/v/great-ai)](https://pypi.org/project/great-ai/)
+[![Downloads](https://static.pepy.tech/badge/great-ai/month)](https://pepy.tech/projects/great-ai)
+[![Container image](https://img.shields.io/badge/container-Forgejo-orange)](https://git.schmelczer.dev/andras/great-ai/packages)
+[![Check](https://git.schmelczer.dev/andras/great-ai/badges/workflows/test.yml/badge.svg?branch=main&label=Check)](https://git.schmelczer.dev/andras/great-ai/actions?workflow=test.yml)
 
 Applying AI is becoming increasingly more accessible, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing unintended biases. GreatAI helps prepare prototype AI code for deployment with tracing, model versioning, and API scaffolding. These engineering features support oversight; they do not establish a model's accuracy, fairness, or trustworthiness, which require evaluation for the intended use case.
 
@@ -72,10 +70,10 @@ With uv installed and your virtual environment active:
 uv pip install great-ai
 ```
 
-## Find `great-ai` on [DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai)
+## Find `great-ai` on [Forgejo](https://git.schmelczer.dev/andras/great-ai/packages)
 
 ```sh
-docker run -p6060:6060 schmelczera/great-ai
+docker run -p6060:6060 git.schmelczer.dev/andras/great-ai:latest
 ```
 
 ## Contribute
@@ -119,5 +117,12 @@ scripts/release.sh 0.2.0
 ```
 
 This bumps the version, builds, commits, tags, and pushes `main` and the tag
-atomically. The tag triggers the PyPI and DockerHub workflows, which require
-`PYPI_TOKEN`, `DOCKER_USERNAME`, and `DOCKER_PASSWORD` in Forgejo repository secrets.
+atomically. The tag triggers the PyPI and Forgejo container publishing workflows,
+which require `PYPI_TOKEN` and `DOCKER_PACKAGE_TOKEN` in Forgejo Actions secrets.
+`DOCKER_PACKAGE_TOKEN` must belong to the repository owner and have
+`write:package` permission.
+
+Container images are published only to `git.schmelczer.dev/andras/great-ai` for
+Linux AMD64 and ARM64. Stable release tags publish both `vX.Y.Z` and `X.Y.Z`,
+and update `latest`. Running the container workflow manually on `main` also
+updates `latest`.

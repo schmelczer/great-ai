@@ -3,12 +3,10 @@
     <img  src="media/logo.png" width=80>
 </div>
 
-[![PyPI version](https://badge.fury.io/py/great-ai.svg)](https://badge.fury.io/py/great-ai)
-[![Downloads](https://pepy.tech/badge/great-ai/month)](https://pepy.tech/project/great-ai)
-[![Docker Pulls](https://img.shields.io/docker/pulls/schmelczera/great-ai)](https://hub.docker.com/repository/docker/schmelczera/great-ai)
-[![Check](https://git.schmelczer.dev/andras/great-ai/badges/workflows/test.yml/badge.svg?branch=main)](https://git.schmelczer.dev/andras/great-ai/actions?workflow=test.yml)
-[![Sonar line coverage](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=coverage)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
-[![Sonar LoC](https://sonar.scoutinscience.com/api/project_badges/measure?project=great-ai&metric=ncloc)](https://sonar.scoutinscience.com/dashboard?id=great-ai)
+[![PyPI version](https://img.shields.io/pypi/v/great-ai)](https://pypi.org/project/great-ai/)
+[![Downloads](https://static.pepy.tech/badge/great-ai/month)](https://pepy.tech/projects/great-ai)
+[![Container image](https://img.shields.io/badge/container-Forgejo-orange)](https://git.schmelczer.dev/andras/great-ai/packages)
+[![Check](https://git.schmelczer.dev/andras/great-ai/badges/workflows/test.yml/badge.svg?branch=main&label=Check)](https://git.schmelczer.dev/andras/great-ai/actions?workflow=test.yml)
 
 Applying AI is becoming increasingly easier, but many case studies have shown that these applications are often deployed poorly. This may lead to suboptimal performance and to introducing [unintended biases](https://en.wikipedia.org/wiki/Weapons_of_Math_Destruction){ target=_blank }. GreatAI helps ==prepare prototype AI code for deployment with tracing, model versioning, and API scaffolding==. These engineering features support oversight; they do not establish a model's accuracy, fairness, or trustworthiness, which require evaluation for the intended use case.
 
@@ -112,7 +110,7 @@ However, research indicates that professionals rarely use them. This may be due 
 <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;" markdown>
 [:fontawesome-brands-python: Find it on PyPI](https://pypi.org/project/great-ai){ .md-button .md-button--primary }
 
-[:fontawesome-brands-docker: Find it on DockerHub](https://hub.docker.com/repository/docker/schmelczera/great-ai){ .md-button .md-button--primary }
+[:fontawesome-brands-docker: Find the container image on Forgejo](https://git.schmelczer.dev/andras/great-ai/packages){ .md-button .md-button--primary }
 
 [:fontawesome-solid-laptop-code: Check out the tutorial](https://great-ai.schmelczer.dev/tutorial){ .md-button .md-button--primary }
 </div>

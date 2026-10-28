@@ -107,7 +107,7 @@ Run the notebook directly in a container or create a service for it using your f
 
 ```sh
 docker run -p 6060:6060 --volume `pwd`:/app --rm \
-  schmelczera/great-ai deploy.ipynb
+  git.schmelczer.dev/andras/great-ai:latest deploy.ipynb
 ```
 > You can replace ``pwd`` with the path to your code's folder.
 
@@ -119,7 +119,7 @@ To this end, you can also create a custom Docker image. It is especially useful 
 
 ```Dockerfile
 # syntax=docker/dockerfile:1
-FROM schmelczera/great-ai:latest
+FROM git.schmelczer.dev/andras/great-ai:latest
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
