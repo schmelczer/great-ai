@@ -1,6 +1,6 @@
 # How to use LargeFiles
 
-The functions [save_model][great_ai.use_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring [LargeFile](https://great-ai.schmelczer.dev/reference/large-file), users have few reasons to use LargeFiles directly.
+The functions [save_model][great_ai.save_model] and [@use_model][great_ai.use_model] wrap LargeFile instances. Hence, besides configuring [LargeFile](https://great-ai.schmelczer.dev/reference/large-file), users have few reasons to use LargeFiles directly.
 
 ## Motivation
 
@@ -16,12 +16,12 @@ Often, especially when working with data-heavy applications, large files can pro
     ```python
     from great_ai.large_file import LargeFileS3
 
-    LargeFileS3.configure_credentials({
-        "aws_region_name": "your_region_like_eu-west-2",
-        "aws_access_key_id": "YOUR_ACCESS_KEY_ID",
-        "aws_secret_access_key": "YOUR_VERY_SECRET_ACCESS_KEY",
-        "large_files_bucket_name": "create_a_bucket_and_put_its_name_here",
-    })
+    LargeFileS3.configure_credentials(
+        aws_region_name="your_region_like_eu-west-2",
+        aws_access_key_id="YOUR_ACCESS_KEY_ID",
+        aws_secret_access_key="YOUR_VERY_SECRET_ACCESS_KEY",
+        large_files_bucket_name="create_a_bucket_and_put_its_name_here",
+    )
 
     # Creates a new version and deletes the older version 
     # leaving the three most recently used intact
@@ -44,6 +44,8 @@ Often, especially when working with data-heavy applications, large files can pro
     The local cache can be configured with these properties:
 
     ```python
+    from pathlib import Path
+
     LargeFileS3.cache_path = Path('.cache')
     LargeFileS3.max_cache_size = "30 GB"
     ```

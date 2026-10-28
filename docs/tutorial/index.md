@@ -40,7 +40,7 @@ After training and evaluating a model, it is exported using [great_ai.save_model
     ```python
     from great_ai.large_file import LargeFileS3
 
-    LargeFileS3.configure(
+    LargeFileS3.configure_credentials(
         aws_region_name='eu-west-2',
         aws_access_key_id='MY_AWS_ACCESS_KEY',
         aws_secret_access_key='MY_AWS_SECRET_KEY',

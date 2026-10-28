@@ -66,7 +66,7 @@ from great_ai import GreatAI, use_model
 def type_safe_greeter(your_name: str, model) -> str:
     return f'Hi {your_name}!'
 
-assert type_safe_greeter('Andras').output == 'Hi Andras'
+assert type_safe_greeter('Andras').output == 'Hi Andras!'
 ```
 
 1. By default, the parameter named `model` will be replaced by the loaded model. This behaviour can be customised by setting the `model_kwarg_name`. This way, even multiple models can be injected into a single function.
@@ -82,14 +82,14 @@ If you wish to turn off logging or specify custom validation for your parameters
     By default, all parameters that are not affected by an explicit [@parameter][great_ai.parameter] or [@use_model][great_ai.use_model] are automatically decorated with [@parameter][great_ai.parameter] when [@GreatAI.create][great_ai.GreatAI.create] is called.
 
 ```python title="greeter_with_validation.py"
-from great_ai import GreatAI, use_model
+from great_ai import GreatAI, parameter
 
 @GreatAI.create
 @parameter('your_name', disable_logging=True)
-def type_safe_greeter(your_name: str, model) -> str:
+def type_safe_greeter(your_name: str) -> str:
     return f'Hi {your_name}!'
 
-assert type_safe_greeter('Andras').output == 'Hi Andras'
+assert type_safe_greeter('Andras').output == 'Hi Andras!'
 ```
 
 !!! important

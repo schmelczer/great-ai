@@ -83,6 +83,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
+# Collect doctests and tests from the checkout even when a wheel is installed.
+pythonpath = ["."]
+asyncio_default_fixture_loop_scope = "function"
 # `...` in doctests (e.g. third-party exception messages that drift between
 # dependency versions) is treated as a wildcard rather than a literal.
 doctest_optionflags = ["ELLIPSIS"]

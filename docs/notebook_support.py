@@ -4,16 +4,21 @@ import json
 import os
 from collections import Counter
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "docs/tutorial/data"
+SURVEY_DIR = ROOT / "docs/surveys"
+FULL_RUN = os.environ.get("GREAT_AI_NOTEBOOK_FULL") == "1"
 
 
-def setup_notebook(root: Path, workflow: str) -> Path:
+def setup_notebook(workflow: str) -> Path:
     """Keep related notebooks' models and traces together, outside source files."""
     from great_ai import ParallelTinyDbDriver, configure
     from great_ai.large_file import LargeFileLocal
 
-    base = Path(os.environ.get("GREAT_AI_NOTEBOOK_WORKDIR", root / ".cache/notebooks"))
-    suffix = "-full" if os.environ.get("GREAT_AI_NOTEBOOK_FULL") == "1" else ""
+    base = Path(os.environ.get("GREAT_AI_NOTEBOOK_WORKDIR", ROOT / ".cache/notebooks"))
+    suffix = "-full" if FULL_RUN else ""
     work_dir = (base / (workflow + suffix)).resolve()
     work_dir.mkdir(parents=True, exist_ok=True)
     LargeFileLocal.cache_path = work_dir / "models-cache"
@@ -43,7 +48,7 @@ def mag_lines(path: Path, per_label: Optional[int] = None) -> List[str]:
 
 def demo_annotations() -> List[dict]:
     """Synthetic annotations for exercising the pipeline, not measuring quality."""
-    annotations = [{}, {}]
+    annotations: List[Dict[str, int]] = [{}, {}]
     for index, topic in enumerate(
         ["protein", "cancer", "solar", "quantum", "neural", "genome"]
     ):
