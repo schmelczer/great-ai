@@ -68,10 +68,16 @@ def main() -> None:
     # A fresh workspace detects missing dependencies between notebook stages and
     # avoids silently passing because an old model or database happens to exist.
     with TemporaryDirectory(prefix="great-ai-notebooks-") as workspace:
-        env = dict(os.environ, GREAT_AI_NOTEBOOK_WORKDIR=workspace)
+        env = dict(os.environ)
+        env["PYTHONPATH"] = os.pathsep.join(
+            filter(None, [str(ROOT), env.get("PYTHONPATH")])
+        )
         for name in args.notebooks or NOTEBOOKS:
             path = (ROOT / name).resolve()
             relative = path.relative_to(ROOT)
+            # Related notebooks share the library's default local storage.
+            work_dir = Path(workspace) / relative.parent
+            work_dir.mkdir(parents=True, exist_ok=True)
             print(f"Running {relative}", flush=True)
             notebook = nbformat.read(path, as_version=4)
             nbformat.validate(notebook)
@@ -86,7 +92,7 @@ def main() -> None:
             ]
             client = NotebookClient(notebook, km=manager, timeout=args.timeout)
             try:
-                client.execute(cwd=str(path.parent), env=env, cleanup_kc=True)
+                client.execute(cwd=str(work_dir), env=env, cleanup_kc=True)
             finally:
                 destination = output_dir / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
@@ -100,7 +106,7 @@ def main() -> None:
                         str(destination),
                         path.parent.name,
                     ],
-                    cwd=ROOT,
+                    cwd=work_dir,
                     env=env,
                     check=True,
                     timeout=args.timeout,
