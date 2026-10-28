@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/logo.png" alt="logo of great-ai" width=60 /> GreatAI
+# <img src="https://great-ai.schmelczer.dev/media/logo.png" alt="logo of great-ai" width=60 /> GreatAI
 
 > Prepare your prototype AI code for production deployment.
 
@@ -33,7 +33,7 @@ def greeter(name: str) -> str:
 
 Start it by executing `great-ai demo.py`, and find the dashboard at [http://localhost:6060](http://localhost:6060/dashboard).
 
-![demo screen capture](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/demo.gif)
+![demo screen capture](https://great-ai.schmelczer.dev/media/demo.gif)
 
 That's it. Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io) are configured and implemented automatically (of course, these can be customised as well).
 
@@ -43,7 +43,7 @@ Before production, replace the default local TinyDB tracing database with a prod
 
 ## Why is this GREAT?
 
-![scope of GreatAI](https://raw.githubusercontent.com/schmelczer/great-ai/main/docs/media/scope-simple.drawio.svg)
+![scope of GreatAI](https://great-ai.schmelczer.dev/media/scope-simple.drawio.svg)
 
 GreatAI fits between the prototype and deployment phases of your AI development lifecycle. This is highlighted in blue in the diagram. Here, several best practices can be automatically implemented, aiming to achieve the following attributes:
 
