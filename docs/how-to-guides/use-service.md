@@ -65,7 +65,7 @@ Custom validation failures from `@parameter` return HTTP 422.
 
 ## Online prediction
 
-Likely, the main way you would like to expose your model is through an HTTP API. [@GreatAI.create][great_ai.GreatAI.create] scaffolds many REST API endpoints for your model and creates a [FastAPI](https://fastapi.tiangolo.com/){ target=_blank } app available under [GreatAI.app][great_ai.GreatAI]. This can be served using [uvicorn](https://www.uvicorn.org/){ target=_blank } or any other [ASGI server](https://asgi.readthedocs.io/en/latest/){ target=_blank }.
+Likely, the main way you would like to expose your model is through an HTTP API. [@GreatAI.create][great_ai.GreatAI.create] scaffolds many REST API endpoints for your model and creates a [FastAPI](https://fastapi.tiangolo.com/){ target=_blank } app available under [GreatAI.app][great_ai.GreatAI]. This can be served using [uvicorn](https://uvicorn.dev/){ target=_blank } or any other [ASGI server](https://asgi.readthedocs.io/en/latest/){ target=_blank }.
 
 Since most ML code lives in [Jupyter](https://jupyter.org/){ target=_blank } notebooks, therefore, deploying a notebook containing the inference function is supported. To achieve this, `uvicorn` is wrapped by the `great-ai` command-line utility, which &mdash; among others &mdash; takes care of feeding a notebook into `uvicorn`. It also supports auto-reloading.
 
@@ -84,7 +84,7 @@ Some configuration options are also supported.
 great-ai greeter.py --port 8000 --host 127.0.0.1 --timeout_keep_alive 10
 ```
 ??? note "More options"
-    For more options (but no Notebook support), simply use [uvicorn](https://www.uvicorn.org/){ target=_blank } for starting your app (available at `greeter.app`).
+    For more options (but no Notebook support), simply use [uvicorn](https://uvicorn.dev/){ target=_blank } for starting your app (available at `greeter.app`).
 
 ### In production
 

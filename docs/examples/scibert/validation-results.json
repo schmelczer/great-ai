@@ -1,0 +1,14 @@
+{
+  "description": "Historical SciBERT result transcribed from the saved notebook output, not the current synthetic demo.",
+  "source_notebook": "https://github.com/schmelczer/great-ai/blob/e446d95855949a8be932785904ae09f3977a8e78/docs/examples/scibert/train.ipynb",
+  "model": "allenai/scibert_scivocab_uncased",
+  "validation_fraction": 0.2,
+  "validation_samples": 100,
+  "split_seed": null,
+  "metric": "binary_f1",
+  "positive_label": 1,
+  "best_checkpoint": "models/checkpoint-65",
+  "best_validation_f1": 0.896551724137931,
+  "used_for_early_stopping_and_checkpoint_selection": true,
+  "independent_test_result": false
+}
