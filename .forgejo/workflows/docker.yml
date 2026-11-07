@@ -13,56 +13,16 @@ jobs:
     runs-on: docker
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: https://github.com/actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
       # The `docker` runner image is node-based and may not ship the docker CLI
       # that the docker/* actions below drive; install it idempotently, as the
       # sibling repos do for their Docker jobs.
-      - name: Ensure Docker CLI
-        run: |
-          set -eux
-          if ! command -v docker >/dev/null 2>&1; then
-            ARCH=$(uname -m)
-            curl -fsSL --retry 3 --retry-connrefused \
-              "https://download.docker.com/linux/static/stable/${ARCH}/docker-27.5.1.tgz" \
-              | tar xz --strip-components=1 -C /usr/local/bin docker/docker
-          fi
-          docker --version
-
-      # Marketplace actions must be referenced by full URL: this instance's
-      # DEFAULT_ACTIONS_URL points at code.forgejo.org, so only bare `actions/*`
-      # names resolve to GitHub automatically.
-      - name: Set up QEMU
-        uses: https://github.com/docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: https://github.com/docker/setup-buildx-action@v3
-
-      - name: Log in to the Forgejo container registry
-        uses: https://github.com/docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.DOCKER_PACKAGE_TOKEN }}
-
-      - name: Extract metadata for the Docker image
-        id: meta
-        uses: https://github.com/docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=raw,value=latest,enable={{is_default_branch}}
-          labels: |
-            org.opencontainers.image.source=https://git.schmelczer.dev/${{ github.repository }}
-
-      - name: Build and push
-        uses: https://github.com/docker/build-push-action@v6
+      - name: Build and publish in rootless sandbox
+        uses: https://git.schmelczer.dev/andras/ci-actions/docker-publish@a415e2a50992af99b7b6dd3f02cca372d87b11f6
         with:
           context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          push: ${{ github.event_name != 'pull_request' && (true) }}
+          token: ${{ secrets.DOCKER_PACKAGE_TOKEN }}
           platforms: linux/amd64,linux/arm64
+    if: ${{ github.actor != 'renovate-bot' && !startsWith(github.ref, 'refs/heads/renovate/') && !startsWith(github.head_ref, 'renovate/') }}
