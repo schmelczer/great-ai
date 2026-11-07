@@ -59,12 +59,14 @@ GreatAI can decorate already decorated functions. The only restriction is that [
 If you have previously saved a model with [save_model][great_ai.save_model], you can inject it into your function by calling [@use_model][great_ai.use_model].
 
 ```python title="greeter_with_model.py"
-from great_ai import GreatAI, use_model
+from great_ai import GreatAI, save_model, use_model
+
+save_model({'greeting': 'Hi'}, 'name_of_my_model')
 
 @GreatAI.create
 @use_model('name_of_my_model', version='latest')  #(1)
 def type_safe_greeter(your_name: str, model) -> str:
-    return f'Hi {your_name}!'
+    return f"{model['greeting']} {your_name}!"
 
 assert type_safe_greeter('Andras').output == 'Hi Andras!'
 ```

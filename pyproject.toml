@@ -71,6 +71,7 @@ dev = [
     "mkdocs-material >= 9.8.0, < 10",
     "mkdocs-jupyter >= 0.27.0, < 1",
     "mkdocs-git-revision-date-localized-plugin >= 1.6.2, < 2",
+    "beautifulsoup4 >= 4.12, < 5",
     "autoflake >= 2.4.0, < 3",
     "isort >= 9.0.2, < 10",
     "black[jupyter] >= 26.10.1, < 27",
@@ -91,7 +92,7 @@ asyncio_default_fixture_loop_scope = "function"
 doctest_optionflags = ["ELLIPSIS"]
 
 [project.urls]
-Documentation = "https://great-ai.schmelczer.dev"
+Documentation = "https://great-ai.schmelczer.dev/"
 GitHub = "https://github.com/schmelczer/great-ai"
 "Container image" = "https://git.schmelczer.dev/andras/great-ai/packages"
 

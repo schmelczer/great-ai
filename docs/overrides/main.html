@@ -3,7 +3,7 @@
 {% block extrahead %}
     <meta property="og:title" content="">
     <meta property="og:site_name" content="">
-    <meta property="og:url" content="">
+    <meta property="og:url" content="{{ page.canonical_url | default(config.site_url, true) }}">
     <meta property="og:description" content="Transform your prototype AI code into production-ready software.">
     <meta property="og:type" content="">
     <meta property="og:image" content=https://great-ai.schmelczer.dev/media/og-image.png>

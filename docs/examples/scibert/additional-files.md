@@ -27,12 +27,13 @@ LARGE_FILES_BUCKET_NAME = ENV:LARGE_FILES_BUCKET_NAME
 ## requirements.txt
 
 ```requirements.txt title="requirements.txt"
-torch==1.12.0
-transformers==4.20.1
-numpy==1.23.0
+great-ai==0.2.1
+torch==2.14.1
+transformers==5.21.0
+numpy==2.5.4
 ```
 
-> Usually, it is recommended to pin (freeze) the library versions on which we depend. This file is referenced by the [Dockerfile](#dockerfile).
+When updating dependencies, rerun the data, training, and deployment notebooks with the same versions before rebuilding the image. Serialized models should be loaded with the library versions used to save them.
 
 ## Dockerfile
 

@@ -1,6 +1,6 @@
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <h1 style="margin: 0">Overview of GreatAI</h1>
-    <img  src="media/logo.png" width=80>
+    <img src="media/logo.png" width="80" alt="GreatAI logo">
 </div>
 
 [![PyPI version](https://img.shields.io/pypi/v/great-ai)](https://pypi.org/project/great-ai/)
@@ -18,7 +18,7 @@ Applying AI is becoming increasingly easier, but many case studies have shown th
 
     "Because a mature system might end up being (at most) 5% machine learning code and (at least) 95% glue code, it may be less costly to create a clean native solution rather than re-use a generic package." &mdash; [Sculley et al.](https://www.researchgate.net/profile/Todd-Phillips/publication/319769912_Hidden_Technical_Debt_in_Machine_Learning_Systems/links/61e716d68d338833e37a7fd6/Hidden-Technical-Debt-in-Machine-Learning-Systems.pdf){ target=_blank }
 
-    "For example, practice 25 is very important for "Traceability", yet relatively weakly adopted. We expect that the results from this type of analysis can, in the future, provide useful guidance for practitioners in terms of aiding them to assess their rate of adoption for each practice and to create roadmaps for improving their processes.  &mdash; [Serban et al.](https://dl.acm.org/doi/abs/10.1145/3382494.3410681?casa_token=uCFz0dtDR6gAAAAA:4_8OMJ-5njwopYkB1KSGAu9JfbNq4nfa8LRE0fj84ckjfo-GgtcYQivZTGxal3M4haoA8r_xwpw){ target=_blank }
+    "For example, practice 25 is very important for "Traceability", yet relatively weakly adopted. We expect that the results from this type of analysis can, in the future, provide useful guidance for practitioners in terms of aiding them to assess their rate of adoption for each practice and to create roadmaps for improving their processes.  &mdash; [Serban et al.](https://dl.acm.org/doi/abs/10.1145/3382494.3410681){ target=_blank }
 
 ## Features
 
@@ -39,14 +39,11 @@ Applying AI is becoming increasingly easier, but many case studies have shown th
 - [x] Docker support for deployment
 - [x] Deployable Jupyter Notebooks
 - [x] Dashboard for online monitoring and analysing traces
-- [x] Active support for Python 3.7, 3.8, 3.9, and 3.10
+- [x] Requires Python 3.12 or later (including Python 3.13)
 
-## Roadmap
+## Project status
 
-- [ ] Prometheus & Grafana integration
-- [ ] Well-tested feature extraction code for non-NLP data
-- [ ] Support for direct file input
-- [ ] Support for PostgreSQL
+GreatAI 0.2.1 supports Python 3.12 and later. See the [release history](https://github.com/schmelczer/great-ai/releases) for shipped changes and [report bugs or suggest features](https://github.com/schmelczer/great-ai/issues) in the issue tracker.
 
 ## Hello world
 
@@ -81,7 +78,12 @@ great-ai demo.py
 ```
 > Navigate to [localhost:6060](http://127.0.0.1:6060) in your browser.
 
-![demo screen capture](media/demo.gif){ loading=lazy }
+<video controls preload="none" poster="media/demo-preview.jpg" width="837" height="585" style="width: 100%; height: auto;" aria-label="GreatAI dashboard demonstration" aria-describedby="demo-description">
+    <source src="media/demo.mp4" type="video/mp4">
+    <a href="media/demo.mp4">Watch the GreatAI dashboard demonstration (MP4, 1.6 MB)</a>.
+</video>
+
+<p id="demo-description">The silent demo shows the GreatAI dashboard: enter a name in the prediction form, run the greeter, and inspect the returned greeting and prediction trace.</p>
 
 !!! success
     Your GreatAI service is _nearly_ ready for production use. Many of the [SE4ML best practices](https://se-ml.github.io){ target=_blank } are configured and implemented automatically.

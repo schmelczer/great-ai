@@ -28,7 +28,7 @@ extra:
 theme:
   name: "material"
   custom_dir: docs/overrides
-  homepage: https://great-ai.schmelczer.dev
+  homepage: https://great-ai.schmelczer.dev/
   favicon: media/favicon.ico
   features:
     - content.code.annotate
