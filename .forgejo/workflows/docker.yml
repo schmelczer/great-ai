@@ -19,7 +19,7 @@ jobs:
       # that the docker/* actions below drive; install it idempotently, as the
       # sibling repos do for their Docker jobs.
       - name: Build and publish in rootless sandbox
-        uses: https://git.schmelczer.dev/andras/ci-actions/docker-publish@a415e2a50992af99b7b6dd3f02cca372d87b11f6
+        uses: https://git.schmelczer.dev/andras/ci-actions/docker-publish@18419c79a58572be1bb3759b334f43306be44a29
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' && (true) }}

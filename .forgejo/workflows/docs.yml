@@ -82,7 +82,7 @@ jobs:
           path: site
       - name: Deploy to great-ai.schmelczer.dev
         if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
-        uses: https://git.schmelczer.dev/andras/ci-actions/deploy-pages@a415e2a50992af99b7b6dd3f02cca372d87b11f6
+        uses: https://git.schmelczer.dev/andras/ci-actions/deploy-pages@18419c79a58572be1bb3759b334f43306be44a29
         with:
           source: site
           target: great-ai
